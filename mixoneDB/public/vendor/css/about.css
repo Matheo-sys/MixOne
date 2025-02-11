@@ -1,0 +1,25 @@
+.js-section-slider {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+  }
+  
+  .swiper-wrapper {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement si nécessaire */
+  }
+  
+  .col-auto {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement si nécessaire */
+    text-align: center; /* Centre le texte à l'intérieur */
+    width: 100%; /* S'assure qu'il occupe toute la largeur disponible */
+  }
+  
+  .swiper-slide {
+    display: flex;
+    flex-direction: column; /* Met l'image et le texte en colonne */
+    align-items: center; /* Centre horizontalement */
+    text-align: center; /* Centre le texte à l'intérieur */
+  }
