@@ -31,7 +31,7 @@
 
         <div class="preloader__title">MixOne</div>
     </div>
-    @include('components.header')
+    @include('components.header', ['whiteHeader' => isset($whiteHeader) ? $whiteHeader : true])
 
     <main>
         @yield('content')
