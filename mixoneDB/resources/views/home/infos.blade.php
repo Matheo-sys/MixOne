@@ -8,7 +8,7 @@
 
                     <div class="featureIcon -type-1 ">
                         <div class="d-flex justify-center">
-                            <img src="#" data-src="img/featureIcons/1/1.svg" alt="image" class="js-lazy">
+                            <img src="#" data-src={{asset("media/img/featureIcons/1/1.svg")}} alt="image" class="js-lazy">
                         </div>
 
                         <div class="text-center mt-30">
@@ -23,7 +23,7 @@
 
                     <div class="featureIcon -type-1 ">
                         <div class="d-flex justify-center">
-                            <img src="#" data-src="img/featureIcons/1/2.svg" alt="image" class="js-lazy">
+                            <img src="#" data-src={{asset("media/img/featureIcons/1/2.svg")}} alt="image" class="js-lazy">
                         </div>
 
                         <div class="text-center mt-30">
@@ -38,7 +38,7 @@
 
                     <div class="featureIcon -type-1 ">
                         <div class="d-flex justify-center">
-                            <img src="#" data-src="img/featureIcons/1/3.svg" alt="image" class="js-lazy">
+                            <img src="#" data-src={{asset("media/img/featureIcons/1/3.svg")}} alt="image" class="js-lazy">
                         </div>
 
                         <div class="text-center mt-30">

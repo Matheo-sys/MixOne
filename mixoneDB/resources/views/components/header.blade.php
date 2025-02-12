@@ -12,7 +12,7 @@
             <div class="col-auto">
                 <div class="d-flex items-center">
                     <a href="/" class="header-logo mr-20" data-x="header-logo" data-x-toggle="is-logo-dark">
-                        <img src = {{  $whiteHeader ? asset('media/image/logo_droit.svg') : asset('media/images/Logo_white.png') }} alt="logo icon">
+                        <img src = {{  $whiteHeader ? asset("media/images/logo_droit.svg") : asset("media/images/Logo_white.png") }} alt="logo icon">
                     </a>
 
                     <div class="header-menu " data-x="mobile-menu" data-x-toggle="is-menu-active">
@@ -72,7 +72,7 @@
                         <div class="col-auto">
                             <button class="d-flex items-center text-14 {{ $whiteHeader ? 'text-dark-1' : 'text-white' }}"
                                     data-x-click="lang">
-                                <img src="img/general/lang.png" alt="image" class="rounded-full mr-10">
+                                <img src={{asset("media/img/general/lang.png")}} alt="image" class="rounded-full mr-10">
                                 <span class="js-language-mainTitle">United Kingdom</span>
                                 <i class="icon-chevron-sm-down text-7 ml-15"></i>
                             </button>
@@ -84,7 +84,7 @@
 
                     <div class="d-flex items-center ml-20 is-menu-opened-hide md:d-none">
                         <a href="/become-expert" class="button px-30 fw-400 text-14 -white {!! $btn1Class !!} h-50">Devenez un Studio Confirmé</a>
-                        <a href="/login" class="button px-30 fw-400 text-14 {!! $btn2Class !!} -outline-white h-50 ml-20">Inscription / Se connecter</a>
+                        <a href="/login" class="button px-30 fw-400 text-14 -md -blue-1 {!! $btn2Class !!} -outline-white h-50 ml-20">Inscription / Se connecter</a>
                     </div>
 
                     <div class="d-none xl:d-flex x-gap-20 items-center pl-30 {{ $whiteHeader ? 'text-black' : 'text-white' }} data-x="header-mobile-icons" data-x-toggle="text-white">
@@ -96,7 +96,7 @@
                             <a href="#"
                                onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();"
-                               class="button px-30 fw-400 text-14 {!! $btn2Class !!} -outline-white h-50 ml-20">Déconnexion</a>
+                               class="button px-30 fw-400 text-14 -md -blue-1 {!! $btn2Class !!} -outline-white h-50 ml-20">Déconnexion</a>
                         </div>
 
                         <div class="d-none xl:d-flex x-gap-20 items-center pl-30 {{ $whiteHeader ? 'text-black' : 'text-white' }}" data-x="header-mobile-icons" data-x-toggle="text-white">

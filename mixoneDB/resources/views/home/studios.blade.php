@@ -26,15 +26,15 @@
                                             <div class="swiper-wrapper">
 
                                                 <div class="swiper-slide">
-                                                    <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                 </div>
 
                                                 <div class="swiper-slide">
-                                                    <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                 </div>
 
                                                 <div class="swiper-slide">
-                                                    <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                 </div>
 
                                             </div>

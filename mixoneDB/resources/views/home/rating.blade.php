@@ -39,7 +39,7 @@
                         <div class="swiper-slide">
                             <div class="row items-center x-gap-30 y-gap-20">
                                 <div class="col-auto">
-                                    <img src="#" data-src="img/avatars/1.png" alt="image" class="js-lazy">
+                                    <img src="#" data-src={{asset("media/img/avatars/1.png")}} alt="image" class="js-lazy">
                                 </div>
 
                                 <div class="col-auto">
@@ -54,7 +54,7 @@
                         <div class="swiper-slide">
                             <div class="row items-center x-gap-30 y-gap-20">
                                 <div class="col-auto">
-                                    <img src="#" data-src="img/avatars/1.png" alt="image" class="js-lazy">
+                                    <img src="#" data-src={{asset("media/img/avatars/1.png")}} alt="image" class="js-lazy">
                                 </div>
 
                                 <div class="col-auto">
@@ -69,7 +69,7 @@
                         <div class="swiper-slide">
                             <div class="row items-center x-gap-30 y-gap-20">
                                 <div class="col-auto">
-                                    <img src="#" data-src="img/avatars/1.png" alt="image" class="js-lazy">
+                                    <img src="#" data-src={{asset("media/img/avatars/1.png")}} alt="image" class="js-lazy">
                                 </div>
 
                                 <div class="col-auto">

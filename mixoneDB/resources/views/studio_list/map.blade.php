@@ -4,7 +4,7 @@
             <div class="col-xl-3 col-lg-4 lg:d-none">
                 <aside class="sidebar y-gap-40">
                     <div class="sidebar__item -no-border">
-                        <div class="flex-center ratio ratio-15:9 js-lazy" data-bg="img/general/map.png">
+                        <div class="flex-center ratio ratio-15:9 js-lazy" data-bg={{asset("media/img/general/map.png")}}>
                             <button data-x-click="mapFilter" class="button py-15 px-24 -blue-1 bg-white text-dark-1 absolute">
                                 <i class="icon-destination text-22 mr-10"></i>
                                 Regarder sur la carte
@@ -438,141 +438,15 @@
                                                 <div class="swiper-wrapper">
 
                                                     <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                     </div>
 
                                                     <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                     </div>
 
                                                     <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="cardImage-slider__pagination js-pagination"></div>
-
-                                                <div class="cardImage-slider__nav -prev">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
-                                                        <i class="icon-chevron-left text-10"></i>
-                                                    </button>
-                                                </div>
-
-                                                <div class="cardImage-slider__nav -next">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
-                                                        <i class="icon-chevron-right text-10"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="cardImage__wishlist">
-                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
-                                                <i class="icon-heart text-12"></i>
-                                            </button>
-                                        </div>
-
-
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md">
-                                    <div class="d-flex flex-column h-full justify-between">
-                                        <div class="">
-                                            <p class="text-14 lh-14 mb-5">Paris</p>
-                                            <h3 class="text-18 lh-16 fw-500">Studio <br> Bleu</h3>
-
-                                            <div class="row x-gap-5 items-center pt-5">
-
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row x-gap-10 y-gap-10 pt-20">
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Beatmaking</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">WiFi</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">REC</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Mix/Mastering</div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-auto text-right md:text-left">
-                                    <div class="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
-                                        <div class="col-auto">
-                                            <div class="text-14 lh-14 fw-500">Exceptional</div>
-                                            <div class="text-14 lh-14 text-light-1">3,014 reviews</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1">4.8</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-14 text-light-1 mt-40 md:mt-20">A Partir de </div>
-                                    <div class="text-22 lh-12 fw-600 mt-5">50€</div>
-                                    <div class="text-14 text-light-1 mt-5">par heures</div>
-
-
-                                    <a href="#" class="button -md -dark-1 bg-blue-1 text-white mt-24">
-                                        View Detail <div class="icon-arrow-top-right ml-15"></div>
-                                    </a>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-12">
-
-                        <div class="border-top-light pt-20">
-                            <div class="row x-gap-20 y-gap-20">
-                                <div class="col-md-auto">
-
-                                    <div class="cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4">
-                                        <div class="cardImage__content">
-
-
-                                            <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
-                                                <div class="swiper-wrapper">
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
-                                                    </div>
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
-                                                    </div>
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                     </div>
 
                                                 </div>
@@ -690,15 +564,15 @@
                                                 <div class="swiper-wrapper">
 
                                                     <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                     </div>
 
                                                     <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                     </div>
 
                                                     <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                     </div>
 
                                                 </div>
@@ -816,15 +690,141 @@
                                                 <div class="swiper-wrapper">
 
                                                     <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                     </div>
 
                                                     <div class="swiper-slide">
-                                                        <img class="col-12" src="img/background/11.jpg" alt="image">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                     </div>
 
                                                     <div class="swiper-slide">
-                                                        <img class="col-12" src="img/backgrounds/11.jpg" alt="image">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="cardImage-slider__pagination js-pagination"></div>
+
+                                                <div class="cardImage-slider__nav -prev">
+                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
+                                                        <i class="icon-chevron-left text-10"></i>
+                                                    </button>
+                                                </div>
+
+                                                <div class="cardImage-slider__nav -next">
+                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
+                                                        <i class="icon-chevron-right text-10"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="cardImage__wishlist">
+                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
+                                                <i class="icon-heart text-12"></i>
+                                            </button>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md">
+                                    <div class="d-flex flex-column h-full justify-between">
+                                        <div class="">
+                                            <p class="text-14 lh-14 mb-5">Paris</p>
+                                            <h3 class="text-18 lh-16 fw-500">Studio <br> Bleu</h3>
+
+                                            <div class="row x-gap-5 items-center pt-5">
+
+                                                <div class="col-auto">
+
+                                                </div>
+                                                <div class="col-auto">
+
+                                                </div>
+                                                <div class="col-auto">
+
+                                                </div>
+                                                <div class="col-auto">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row x-gap-10 y-gap-10 pt-20">
+
+                                            <div class="col-auto">
+                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Beatmaking</div>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">WiFi</div>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">REC</div>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Mix/Mastering</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-auto text-right md:text-left">
+                                    <div class="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
+                                        <div class="col-auto">
+                                            <div class="text-14 lh-14 fw-500">Exceptional</div>
+                                            <div class="text-14 lh-14 text-light-1">3,014 reviews</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1">4.8</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-14 text-light-1 mt-40 md:mt-20">A Partir de </div>
+                                    <div class="text-22 lh-12 fw-600 mt-5">50€</div>
+                                    <div class="text-14 text-light-1 mt-5">par heures</div>
+
+
+                                    <a href="#" class="button -md -dark-1 bg-blue-1 text-white mt-24">
+                                        View Detail <div class="icon-arrow-top-right ml-15"></div>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <div class="border-top-light pt-20">
+                            <div class="row x-gap-20 y-gap-20">
+                                <div class="col-md-auto">
+
+                                    <div class="cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4">
+                                        <div class="cardImage__content">
+
+
+                                            <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
+                                                <div class="swiper-wrapper">
+
+                                                    <div class="swiper-slide">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                    </div>
+
+                                                    <div class="swiper-slide">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                    </div>
+
+                                                    <div class="swiper-slide">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
                                                     </div>
 
                                                 </div>

@@ -15,7 +15,7 @@
 
                 <div class="swiper-slide">
                     <div class="">
-                        <img src="img/team/1.png" alt="image" class="rounded-4 col-12">
+                        <img src={{asset("media/img/team/1.png")}} alt="image" class="rounded-4 col-12">
 
                         <div class="mt-10">
                             <div class="text-18 lh-15 fw-500">Elias LOUHICHI</div>
@@ -26,7 +26,7 @@
 
                 <div class="swiper-slide">
                     <div class="">
-                        <img src="img/team/2.png" alt="image" class="rounded-4 col-12">
+                        <img src={{asset("media/img/team/2.png")}} alt="image" class="rounded-4 col-12">
 
                         <div class="mt-10">
                             <div class="text-18 lh-15 fw-500">Mathéo SORIANO</div>
@@ -37,7 +37,7 @@
 
                 <div class="swiper-slide">
                     <div class="">
-                        <img src="img/team/3.png" alt="image" class="rounded-4 col-12">
+                        <img src={{asset("media/img/team/3.png")}} alt="image" class="rounded-4 col-12">
 
                         <div class="mt-10">
                             <div class="text-18 lh-15 fw-500">Noufel HADDAD</div>

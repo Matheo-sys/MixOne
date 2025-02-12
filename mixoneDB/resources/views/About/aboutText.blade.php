@@ -13,7 +13,7 @@
             </div>
 
             <div class="col-lg-6">
-                <img src="img/pages/about/2.png" alt="image" class="rounded-4">
+                <img src={{asset("media/img/pages/about/2.png")}} alt="image" class="rounded-4">
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
             </div>
 
             <div class="col-lg-6">
-                <img src="img/pages/about/2.png" alt="image" class="rounded-4">
+                <img src={{asset("media/img/pages/about/2.png")}} alt="image" class="rounded-4">
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@
             </div>
 
             <div class="col-lg-6">
-                <img src="img/pages/about/2.png" alt="image" class="rounded-4">
+                <img src={{asset("media/img/pages/about/2.png")}} alt="image" class="rounded-4">
             </div>
         </div>
     </div>
@@ -85,7 +85,7 @@
             </div>
 
             <div class="col-lg-6">
-                <img src="img/pages/about/2.png" alt="image" class="rounded-4">
+                <img src={{asset("media/img/pages/about/2.png")}} alt="image" class="rounded-4">
             </div>
         </div>
     </div>

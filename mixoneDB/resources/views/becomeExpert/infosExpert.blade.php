@@ -14,7 +14,7 @@
             <div class="col-xl-2 col-lg-3 col-md-6">
                 <div class="d-flex flex-column items-center text-center">
                     <div class="relative size-120 flex-center rounded-full bg-green-1">
-                        <img src="img/pages/become-expert/icons/1.svg" alt="image">
+                        <img src={{asset("media/img/pages/become-expert/icons/1.svg")}} alt="image">
 
                         <div class="side-badge">
                             <div class="size-40 flex-center rounded-full bg-yellow-1">
@@ -29,7 +29,7 @@
 
             <div class="col-auto xl:d-none">
                 <div class="pt-30">
-                    <img src="img/pages/become-expert/lines/1.svg" alt="icon">
+                    <img src={{asset("media/img/pages/become-expert/lines/1.svg")}} alt="icon">
                 </div>
             </div>
 
@@ -37,7 +37,7 @@
             <div class="col-xl-2 col-lg-3 col-md-6">
                 <div class="d-flex flex-column items-center text-center">
                     <div class="relative size-120 flex-center rounded-full bg-green-1">
-                        <img src="img/pages/become-expert/icons/2.svg" alt="image">
+                        <img src={{asset("media/img/pages/become-expert/icons/2.svg")}} alt="image">
 
                         <div class="side-badge">
                             <div class="size-40 flex-center rounded-full bg-yellow-1">
@@ -52,7 +52,7 @@
 
             <div class="col-auto xl:d-none">
                 <div class="pt-30">
-                    <img src="img/pages/become-expert/lines/2.svg" alt="icon">
+                    <img src={{asset("media/img/pages/become-expert/lines/2.svg")}} alt="icon">
                 </div>
             </div>
 
@@ -60,7 +60,7 @@
             <div class="col-xl-2 col-lg-3 col-md-6">
                 <div class="d-flex flex-column items-center text-center">
                     <div class="relative size-120 flex-center rounded-full bg-green-1">
-                        <img src="img/pages/become-expert/icons/3.svg" alt="image">
+                        <img src={{asset("media/img/pages/become-expert/icons/3.svg")}} alt="image">
 
                         <div class="side-badge">
                             <div class="size-40 flex-center rounded-full bg-yellow-1">

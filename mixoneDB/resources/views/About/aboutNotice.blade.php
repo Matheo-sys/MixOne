@@ -21,7 +21,7 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src="img/avatars/1.png" alt="image">
+                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
                                 </div>
 
                                 <div class="col-auto">
@@ -41,7 +41,7 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src="img/avatars/1.png" alt="image">
+                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
                                 </div>
 
                                 <div class="col-auto">
@@ -61,7 +61,7 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src="img/avatars/1.png" alt="image">
+                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
                                 </div>
 
                                 <div class="col-auto">
@@ -81,7 +81,7 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src="img/avatars/1.png" alt="image">
+                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
                                 </div>
 
                                 <div class="col-auto">
@@ -101,7 +101,7 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src="img/avatars/1.png" alt="image">
+                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
                                 </div>
 
                                 <div class="col-auto">

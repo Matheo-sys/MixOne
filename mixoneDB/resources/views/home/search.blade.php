@@ -1,6 +1,6 @@
 <section data-anim-wrap class="masthead -type-1 z-5">
     <div data-anim-child="fade" class="masthead__bg">
-        <img src="" data-src="img/masthead/1/11.jpg" alt="image" class="js-lazy">
+        <img src="" data-src={{asset("media/img/masthead/1/11.jpg")}} alt="image" class="js-lazy">
     </div>
 
     <div class="container">

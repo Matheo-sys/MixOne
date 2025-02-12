@@ -1,6 +1,6 @@
 <section class="section-bg layout-pt-lg layout-pb-lg">
     <div class="section-bg__item col-12">
-        <img src="img/backgrounds/14.jpg" alt="image">
+        <img src={{asset("media/img/backgrounds/14.jpg")}} alt="image">
     </div>
 
     <div class="container">

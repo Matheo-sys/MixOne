@@ -1,6 +1,6 @@
 <section class="section-bg layout-pt-lg layout-pb-lg md:pt-0 md:pb-60 sm:pb-40 bg-blue-2">
     <div class="section-bg__item -right -image col-5 md:mb-60 sm:mb-40 d-flex z-2">
-        <img src="img/backgrounds/13.jpg" alt="image">
+        <img src={{asset("media/img/backgrounds/13.jpg")}} alt="image">
 
         <div class="absolute col-12 h-full flex-center z-1">
             <!--        <a href="https://www.youtube.com/watch?v=ANYfx4-jyqY" class="d-flex items-center js-gallery" data-gallery="gallery1">
@@ -22,7 +22,7 @@
 
                     <div class="col-12">
                         <div class="d-flex pr-30">
-                            <img class="size-50" src="img/featureIcons/1/1.svg" alt="image">
+                            <img class="size-50" src={{asset("media/img/featureIcons/1/1.svg")}} alt="image">
 
                             <div class="ml-15">
                                 <h4 class="text-18 fw-500">Meilleur prix garanti</h4>
@@ -33,7 +33,7 @@
 
                     <div class="col-12">
                         <div class="d-flex pr-30">
-                            <img class="size-50" src="img/featureIcons/1/2.svg" alt="image">
+                            <img class="size-50" src={{asset("media/img/featureIcons/1/2.svg")}} alt="image">
 
                             <div class="ml-15">
                                 <h4 class="text-18 fw-500">Réservation facile et rapide</h4>
@@ -44,7 +44,7 @@
 
                     <div class="col-12">
                         <div class="d-flex pr-30">
-                            <img class="size-50" src="img/featureIcons/1/3.svg" alt="image">
+                            <img class="size-50" src={{asset("media/img/featureIcons/1/3.svg")}} alt="image">
 
                             <div class="ml-15">
                                 <h4 class="text-18 fw-500">Service client 24/7</h4>
