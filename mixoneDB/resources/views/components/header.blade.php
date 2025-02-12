@@ -44,7 +44,7 @@
                                     </li>
 
                                     <li>
-                                        <a href="db-booking.html">
+                                        <a href="/dashboard">
                                             <span class="mr-10">Tableau de Bord</span>
                                         </a>
                                     </li>
