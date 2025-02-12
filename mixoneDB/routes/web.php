@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\StudioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -13,6 +14,7 @@ Route::get('/', [HomeController::class, 'index'])
 Route::group(['middleware' => 'auth'], function () {
     include 'custom/studios.php';
 
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 
 });
 
@@ -37,3 +39,7 @@ Route::get('/about', function() {
 Route::get('/studio_list', function() {
     return view('pages.studio_list');
 })->name('studio_list');
+
+Route::get('/login', function() {
+    return view('auth.login');
+})->name('login');
