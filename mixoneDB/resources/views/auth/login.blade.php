@@ -14,7 +14,7 @@
 
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
-                                <div class="col-12">
+                                <div class="col-12 mt-3">
                                     <div class="form-input">
                                         <input type="email" name="email" required class="@error('email') is-invalid @enderror" value="{{ old('email') }}">
                                         <label class="lh-1 text-14 text-light-1">Email</label>
@@ -26,7 +26,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-12 mt-3">
                                     <div class="form-input">
                                         <input type="password" name="password" required class="@error('password') is-invalid @enderror">
                                         <label class="lh-1 text-14 text-light-1">Mot de passe</label>
@@ -38,44 +38,21 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-12 mt-3">
                                     @if (Route::has('password.request'))
                                         <a href="{{ route('password.request') }}" class="text-14 fw-500 text-blue-1 underline">Mot de passe oublié ?</a>
                                     @endif
                                 </div>
 
-                                <div class="col-12">
-                                    <button type="submit" class="button py-20 -dark-1 bg-blue-1 text-white">
-                                        Se connecter <div class="icon-arrow-top-right ml-15"></div>
+                                <div class="col-12 mt-3 d-flex justify-content-center">
+                                    <button type="submit" class="button py-20 -dark-1 bg-blue-1 text-white mx-auto d-block" style="width: 530px;">
+                                        Se connecter<span class="icon-arrow-top-right ml-15"></span>
                                     </button>
                                 </div>
+
                             </form>
                         </div>
 
-                        <div class="row y-gap-20 pt-30">
-                            <div class="col-12">
-                                <div class="text-center">ou se connecter avec</div>
-
-                                <button class="button col-12 -outline-blue-1 text-blue-1 py-15 rounded-8 mt-10">
-                                    <i class="icon-facebook text-15 mr-10"></i>
-                                    Facebook
-                                </button>
-
-                                <button class="button col-12 -outline-red-1 text-red-1 py-15 rounded-8 mt-15">
-                                    <i class="icon-globe text-15 mr-10"></i>
-                                    Google
-                                </button>
-
-                                <button class="button col-12 -outline-dark-2 text-dark-2 py-15 rounded-8 mt-15">
-                                    <i class="icon-apple text-15 mr-10"></i>
-                                    Apple
-                                </button>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="text-center px-30">J'accepte les <a href="{{ url('/terms') }}" class="text-blue-1">Conditions d'utilisation</a> et la <a href="{{ url('/privacy') }}" class="text-blue-1">Politique de confidentialité</a>.</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
