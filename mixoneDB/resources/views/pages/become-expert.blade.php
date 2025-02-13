@@ -1,13 +1,13 @@
 @extends('layouts.backend')
 
 @section('content')
-    @include('becomeExpert.homeExpert')
+    @include('pages.becomeExpert.homeExpert')
 
-    @include('becomeExpert.infosExpert')
+    @include('pages.becomeExpert.infosExpert')
 
-    @include('becomeExpert.whyExpert')
+    @include('pages.becomeExpert.whyExpert')
 
-    @include('becomeExpert.faq')
+    @include('pages.becomeExpert.faq')
 
-    @include('home.newsletter')
+    @include('pages.home.newsletter')
 @endsection

@@ -1,13 +1,13 @@
 @extends('layouts.backend')
 
 @section('content')
-    @include('contact.contactMap')
+    @include('pages.contact.contactMap')
 
-    @include('contact.contactForm')
+    @include('pages.contact.contactForm')
 
-    @include('contact.contactUs')
+    @include('pages.contact.contactUs')
 
-    @include('home.infos')
+    @include('pages.home.infos')
 
-    @include('home.newsletter')
+    @include('pages.home.newsletter')
 @endsection

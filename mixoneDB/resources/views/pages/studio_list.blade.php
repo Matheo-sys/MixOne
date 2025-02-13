@@ -2,10 +2,10 @@
 
 @section('content')
 
-    @include('studio_list.ourStudios')
+    @include('pages.studio_list.ourStudios')
 
-    @include('studio_list.map')
+    @include('pages.studio_list.map')
 
-    @include('home.newsletter')
+    @include('pages.home.newsletter')
 
 @endsection

@@ -44,7 +44,7 @@ Route::get('/studio_list', function() {
 })->name('studio_list');
 
 Route::get('/dashboard', function() {
-    return view('pages.dbArtistBooking');
+    return view('dashboard.artist.booking');
 })->name('dashboard');
 
 Route::get('/dashboard/wishlist', function() {
@@ -54,3 +54,19 @@ Route::get('/dashboard/wishlist', function() {
 Route::get('/dashboard/settings', function() {
     return view('pages.dbSettings');
 })->name('dashboardSettings');
+
+Route::get('/dashboard/studio', function() {
+    return view('dashboard.studio.dashboard');
+})->name('dashboard.studio');
+
+Route::get('/dashboard/studio/booking', function() {
+    return view('dashboard.studio.booking');
+})->name('dashboard.studio.booking');
+
+Route::get('/dashboard/studio/list', function() {
+    return view('dashboard.studio.myStudios');
+})->name('dashboard.studio.list');
+
+Route::get('/dashboard/studio/create', function() {
+    return view('dashboard.studio.create');
+})->name('dashboard.studio.add');

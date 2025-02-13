@@ -33,10 +33,24 @@
 </div>
 @include('components.headerDB')
 
-<main>
-    @yield('content')
+<main class="mt-90">
+    <div class="dashboard mt-90" data-x="dashboard" data-x-toggle="-is-sidebar-open">
+        @if( auth()->user()->profile == 'artist')
+            @include('components.sidebar-artist')
+        @else
+            @include('components.sidebar-studio')
+        @endif
 
-    @include('components.footer')
+        <div class="dashboard__main">
+            <div class="dashboard__content bg-light-2">
+                @yield('content')
+
+                @include('components.footer')
+            </div>
+        </div>
+    </div>
+
+
 
     @include('components.lang-selector')
 </main>

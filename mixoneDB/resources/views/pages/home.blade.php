@@ -1,13 +1,13 @@
 @extends('layouts.backend')
 
 @section('content')
-    @include('home.search')
+    @include('pages.home.search')
 
-    @include('home.studios')
+    @include('pages.home.studios')
 
-    @include('home.infos')
+    @include('pages.home.infos')
 
-    @include('home.rating')
+    @include('pages.home.rating')
 
-    @include('home.newsletter')
+    @include('pages.home.newsletter')
 @endsection

@@ -3,5 +3,5 @@
 @section('content')
     @include('terms.cgu')
 
-    @include('home.newsletter')
+    @include('pages.home.newsletter')
 @endsection

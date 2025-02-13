@@ -1,17 +1,17 @@
 @extends('layouts.backend')
 
 @section('content')
-    @include('about.aboutBanner')
+    @include('pages.about.aboutBanner')
 
-    @include('about.aboutInfos')
+    @include('pages.about.aboutInfos')
 
-    @include('about.aboutText')
+    @include('pages.about.aboutText')
 
-    @include('about.aboutStats')
+    @include('pages.about.aboutStats')
 
-    @include('about.aboutOurTeam')
+    @include('pages.about.aboutOurTeam')
 
-    @include('about.aboutNotice')
+    @include('pages.about.aboutNotice')
 
-    @include('home.newsletter')
+    @include('pages.home.newsletter')
 @endsection
