@@ -82,7 +82,7 @@
 
                                 <div class="mt-5">
                                     <div class="fw-500">
-                                        A Partir de <span class="text-blue-1">50€</span>
+                                        A Partir de <span class="text-blue-1">{{ $studio->hourly_rate }}€</span>
                                     </div>
                                 </div>
                             </div>

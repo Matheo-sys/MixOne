@@ -42,12 +42,13 @@
                                         </a>
                                     </li>
 
+                                    @auth()
                                     <li>
                                         <a href="/dashboard">
                                             <span class="mr-10">Tableau de Bord</span>
                                         </a>
                                     </li>
-
+                                    @endif
 
                                     <li>
                                         <a href="/contact">Contacts</a>

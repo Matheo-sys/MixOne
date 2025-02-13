@@ -13,7 +13,7 @@
         <div class="col-auto">
 
 
-            <a href="dashboard.studio.create" class="button h-50 px-24 -dark-1 bg-blue-1 text-white">
+            <a href="{{ route('dashboard.studio.create') }}" class="button h-50 px-24 -dark-1 bg-blue-1 text-white">
                 Ajouter Studio <div class="icon-arrow-top-right ml-15"></div>
             </a>
 

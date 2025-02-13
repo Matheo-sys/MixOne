@@ -3,6 +3,7 @@
 use App\Http\Controllers\StudioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 
 Auth::routes();
 
@@ -16,8 +17,18 @@ Route::get('/home', [HomeController::class, 'index'])
 // User must be logged in
 Route::group(['middleware' => 'auth'], function () {
     include 'custom/studios.php';
+    include 'custom/artists.php';
 
 
+    // Dashboard generic routes
+    Route::group(['prefix' => 'dashboard'], function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+
+        Route::get('/settings', function() {
+            return view('pages.dbSettings');
+        })->name('dashboardSettings');
+    });
 });
 
 // User must not be logged in
@@ -43,30 +54,3 @@ Route::get('/studio_list', function() {
     return view('pages.studio_list');
 })->name('studio_list');
 
-Route::get('/dashboard', function() {
-    return view('dashboard.artist.booking');
-})->name('dashboard');
-
-Route::get('/dashboard/wishlist', function() {
-    return view('pages.dbArtistwishlist');
-})->name('dashboardWishlist');
-
-Route::get('/dashboard/settings', function() {
-    return view('pages.dbSettings');
-})->name('dashboardSettings');
-
-Route::get('/dashboard/studio', function() {
-    return view('dashboard.studio.dashboard');
-})->name('dashboard.studio');
-
-Route::get('/dashboard/studio/booking', function() {
-    return view('dashboard.studio.booking');
-})->name('dashboard.studio.booking');
-
-Route::get('/dashboard/studio/list', function() {
-    return view('dashboard.studio.myStudios');
-})->name('dashboard.studio.list');
-
-Route::get('/dashboard/studio/create', function() {
-    return view('dashboard.studio.create');
-})->name('dashboard.studio.add');

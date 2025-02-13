@@ -10,10 +10,13 @@ class Studio extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'description',
+        'video_url',
         'address',
         'zipcode',
         'city',
         'country',
         'hourly_rate',
+        'min_hours'
     ];
 }

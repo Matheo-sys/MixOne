@@ -33,7 +33,7 @@
 </div>
 @include('components.headerDB')
 
-<main class="mt-90">
+<main>
     <div class="dashboard mt-90" data-x="dashboard" data-x-toggle="-is-sidebar-open">
         @if( auth()->user()->profile == 'artist')
             @include('components.sidebar-artist')

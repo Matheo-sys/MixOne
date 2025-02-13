@@ -17,11 +17,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('name');
+            $table->text('description');
+            $table->string('video_url')->nullable()->default(null);
             $table->string('address');
             $table->string('zipcode');
             $table->string('city');
             $table->string('country');
             $table->double('hourly_rate');
+            $table->double('min_hours');
             $table->timestamps();
 
             // Foreign key
