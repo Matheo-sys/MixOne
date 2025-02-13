@@ -4,7 +4,6 @@
     $btn1Class      = $whiteHeader ? 'bg-dark-1 text-white' : 'bg-white text-dark-1';
     $btn2Class      = $whiteHeader ? '-outline-dark-1 text-back' : 'border-white text-white';
 @endphp
-
 <header {!! $headerClass !!} data-x="header" data-x-toggle="is-menu-opened">
     <div data-anim="fade" class="header__container px-30 sm:px-20">
         <div class="row justify-between items-center">
@@ -93,7 +92,7 @@
                     </div>
                     @else
                         <div class="d-flex items-center ml-20 is-menu-opened-hide md:d-none">
-                            <a href="#"
+                            <a href="/"
                                onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();"
                                class="button px-30 fw-400 text-14 -md -blue-1 {!! $btn2Class !!} -outline-white h-50 ml-20">Déconnexion</a>

@@ -1,7 +1,7 @@
 <header data-add-bg="" class="header -dashboard bg-white js-header" data-x="header" data-x-toggle="is-menu-opened">
     <div data-anim="fade" class="header__container px-30 sm:px-20">
         <div class="-left-side">
-            <a href="index.html" class="header-logo" data-x="header-logo" data-x-toggle="is-logo-dark">
+            <a href="/" class="header-logo" data-x="header-logo" data-x-toggle="is-logo-dark">
                 <img src={{asset("media/images/logo_droit.svg")}} alt="logo icon">
                 <img src={{asset("media/images/logo_droit.svg")}} alt="logo icon">
             </a>
@@ -35,19 +35,19 @@
                             <div class="menu js-navList">
                                 <ul class="menu__nav text-dark-1 fw-500 -is-active">
                                     <li>
-                                        <a href="index.html">
+                                        <a href="/">
                                             <span class="mr-10">Accueil</span>
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a href="studio_list.html">
+                                        <a href="/studio_list">
                                             <span class="mr-10">Nos studios</span>
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a href="about.html">
+                                        <a href="/about">
                                             <span class="mr-10">À propos</span>
                                         </a>
                                     </li>
@@ -64,13 +64,13 @@
                                                 <a href="db-booking.html"><i class="icon icon-chevron-sm-down"></i> Tableau de Bord</a>
                                             </li>
 
-                                            <li><a href="db-booking.html">Réservations</a></li>
+                                            <li><a href="/dashboard">Réservations</a></li>
 
-                                            <li><a href="db-settings.html">Liste d'envie</a></li>
+                                            <li><a href="/dashboard/wishlist">Liste d'envie</a></li>
 
-                                            <li><a href="db-wishlist.html">Paramètres</a></li>
+                                            <li><a href="/dashboard/settings">Paramètres</a></li>
 
-                                            <li><a href="index.html">Se déconnecter</a></li>
+                                            <li><a href="/">Se déconnecter</a></li>
 
                                         </ul>
 
@@ -78,7 +78,7 @@
 
 
                                     <li>
-                                        <a href="html/contact.html">Contact</a>
+                                        <a href="/contact">Contact</a>
                                     </li>
                                 </ul>
                             </div>
@@ -104,7 +104,7 @@
                     </div>
 
                     <div class="pl-15">
-                        <img src="img/avatars/3.png" alt="image" class="size-50 rounded-22 object-cover">
+                        <img src={{asset("media/img/avatars/3.png")}} alt="image" class="size-50 rounded-22 object-cover">
                     </div>
 
                     <div class="d-none xl:d-flex x-gap-20 items-center pl-20" data-x="header-mobile-icons" data-x-toggle="text-white">

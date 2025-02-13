@@ -1,4 +1,4 @@
-<div class="dashboard" data-x="dashboard" data-x-toggle="-is-sidebar-open">
+<div class="dashboard mt-90" data-x="dashboard" data-x-toggle="-is-sidebar-open">
     <div class="dashboard__sidebar bg-white scroll-bar-1">
 
 
@@ -6,7 +6,7 @@
 
             <div class="sidebar__item">
                 <div class="sidebar__button -is-active">
-                    <a href="db-booking.html" class="d-flex items-center text-15 lh-1 fw-500">
+                    <a href="/dashboard" class="d-flex items-center text-15 lh-1 fw-500 ">
                         <img src={{asset("media/img/dashboard/sidebar/booking.svg")}} alt="image" class="mr-15">
                         Historique des réservations
                     </a>
@@ -15,7 +15,7 @@
 
             <div class="sidebar__item">
                 <div class="sidebar__button ">
-                    <a href="db-wishlist.html" class="d-flex items-center text-15 lh-1 fw-500">
+                    <a href="/dashboard/wishlist" class="d-flex items-center text-15 lh-1 fw-500">
                         <img src={{asset("media/img/dashboard/sidebar/bookmark.svg")}} alt="image" class="mr-15">
                         Liste d'envie
                     </a>
@@ -33,7 +33,9 @@
 
             <div class="sidebar__item">
                 <div class="sidebar__button ">
-                    <a href="#" class="d-flex items-center text-15 lh-1 fw-500">
+                    <a href="/" onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();"
+                       class="d-flex items-center text-15 lh-1 fw-500">
                         <img src={{asset("media/img/dashboard/sidebar/log-out.svg")}} alt="image" class="mr-15">
                         Se déconnecter
                     </a>

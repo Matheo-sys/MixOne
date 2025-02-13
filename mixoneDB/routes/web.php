@@ -9,6 +9,10 @@ Auth::routes();
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
 
+Route::get('/home', [HomeController::class, 'index'])
+    ->name('home');
+
+
 // User must be logged in
 Route::group(['middleware' => 'auth'], function () {
     include 'custom/studios.php';
@@ -18,6 +22,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 // User must not be logged in
 // Become expert
+
 Route::get('/become-expert', function() {
     return view('pages.become-expert');
 })->name('become-expert');
@@ -37,3 +42,15 @@ Route::get('/about', function() {
 Route::get('/studio_list', function() {
     return view('pages.studio_list');
 })->name('studio_list');
+
+Route::get('/dashboard', function() {
+    return view('pages.dbArtistBooking');
+})->name('dashboard');
+
+Route::get('/dashboard/wishlist', function() {
+    return view('pages.dbArtistwishlist');
+})->name('dashboardWishlist');
+
+Route::get('/dashboard/settings', function() {
+    return view('pages.dbSettings');
+})->name('dashboardSettings');

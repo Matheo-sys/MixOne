@@ -2,8 +2,6 @@
 
 @section('content')
 
-    @include('dashboards.main')
-
-
+    @include('dashboards.DbWishlist.mainWishlist')
 
 @endsection
