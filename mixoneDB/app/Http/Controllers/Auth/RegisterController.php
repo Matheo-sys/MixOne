@@ -53,7 +53,28 @@ class RegisterController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&]/'],
+        ], [
+            'profile.required' => 'Veuillez sélectionner un profil.',
+
+            'first_name.required' => 'Le prénom est requis.',
+            'first_name.string' => 'Le prénom doit être une chaîne de caractères valide.',
+            'first_name.max' => 'Le prénom ne peut pas dépasser 255 caractères.',
+
+            'last_name.required' => 'Le nom de famille est requis.',
+            'last_name.string' => 'Le nom de famille doit être une chaîne de caractères valide.',
+            'last_name.max' => 'Le nom de famille ne peut pas dépasser 255 caractères.',
+
+            'email.required' => 'L\'adresse email est requise.',
+            'email.string' => 'L\'adresse email doit être une chaîne de caractères valide.',
+            'email.email' => 'L\'adresse email doit être un format valide.',
+            'email.max' => 'L\'adresse email ne peut pas dépasser 255 caractères.',
+            'email.unique' => 'Cette adresse email est déjà utilisée.',
+
+            'password.required' => 'Le mot de passe est requis.',
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+            'password.confirmed' => 'Les mots de passe ne correspondent pas.',
+            'password.regex' => 'Le mot de passe doit contenir au moins une lettre majuscule, un chiffre et un caractère spécial.',
         ]);
     }
 

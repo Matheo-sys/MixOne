@@ -37,7 +37,3 @@ Route::get('/about', function() {
 Route::get('/studio_list', function() {
     return view('pages.studio_list');
 })->name('studio_list');
-
-Route::get('/dashboard', function() {
-    return view('pages.dbArtist');
-})->name('dashboard');

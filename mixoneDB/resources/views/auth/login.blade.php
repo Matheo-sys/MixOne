@@ -14,24 +14,22 @@
 
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
-                                <div class="col-12 mt-3">
-                                    <div class="form-input">
-                                        <input type="email" name="email" required class="@error('email') is-invalid @enderror" value="{{ old('email') }}">
-                                        <label class="lh-1 text-14 text-light-1">Email</label>
-                                        @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
+                                <div class="form-input">
+                                    <input type="email" name="email" required class="@error('email') is-invalid @enderror" value="{{ old('email') }}">
+                                    <label class="lh-1 text-14 text-light-1">Email</label>
                                 </div>
+                                @error('email')
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
 
                                 <div class="col-12 mt-3">
                                     <div class="form-input">
                                         <input type="password" name="password" required class="@error('password') is-invalid @enderror">
                                         <label class="lh-1 text-14 text-light-1">Mot de passe</label>
                                         @error('password')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
