@@ -13,6 +13,32 @@ Route::get('/', [HomeController::class, 'index'])
 Route::get('/home', [HomeController::class, 'index'])
     ->name('home');
 
+Route::get('/studio/{studio}', [StudioController::class, 'show'])
+    ->name('studio.show');
+
+Route::post('/studio', [StudioController::class, 'store'])
+    ->name('studio.store');
+
+Route::get('/studios', [StudioController::class, 'index'])
+    ->name('studios.index');
+
+Route::get('/studios', [StudioController::class, 'store'])
+    ->name('studios.index');
+
+Route::get('/', [StudioController::class, 'index'])
+    ->name('studios.index');
+
+Route::get('/', [StudioController::class, 'index'])
+    ->name('home');
+
+Route::get('/', [StudioController::class, 'search'])
+    ->name('studio.search');
+
+Route::get('/studio/create', function() {
+    return view('dashboard.studio.create');
+})->name('studio.create');
+
+Route::post('/studio', [StudioController::class, 'store'])->name('studio.store');
 
 // User must be logged in
 Route::group(['middleware' => 'auth'], function () {
@@ -26,8 +52,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 
         Route::get('/settings', function() {
-            return view('pages.dbSettings');
+            return view('dashboard.artist.settings');
         })->name('dashboardSettings');
+
     });
 });
 
