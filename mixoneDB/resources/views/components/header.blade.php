@@ -1,5 +1,5 @@
 @php
-    $headerClass    = $whiteHeader ? 'data-add-bg="" class="header bg-white js-header"' :
+$headerClass    = $whiteHeader ? 'data-add-bg="" class="header bg-white js-header"' :
                                     'data-add-bg="bg-dark-1" class="header bg-green js-header"';
     $btn1Class      = $whiteHeader ? 'bg-dark-1 text-white' : 'bg-white text-dark-1';
     $btn2Class      = $whiteHeader ? '-outline-dark-1 text-back' : 'border-white text-white';
