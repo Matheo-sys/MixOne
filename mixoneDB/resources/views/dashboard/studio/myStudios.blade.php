@@ -16,7 +16,7 @@
 
     <div class="py-30 px-30 rounded-4 bg-white shadow-3">
         @if ($studios->isEmpty())
-            <p>Aucun studio trouvé</p>
+            <p>Ajouter votre premier studio !</p>
         @else
             <div class="tabs -underline-2 js-tabs">
                 <div class="tabs__content pt-30 js-tabs-content">
@@ -27,19 +27,11 @@
                                 <tr>
                                     <th>
                                         <div class="d-flex items-center">
-                                            <div class="form-checkbox">
-                                                <input type="checkbox" name="name">
-                                                <div class="form-checkbox__mark">
-                                                    <div class="form-checkbox__icon icon-check"></div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </th>
-                                    <th>Name</th>
-                                    <th>Location</th>
-                                    <th>Author</th>
-                                    <th>Status</th>
-                                    <th>Reviews</th>
+                                    <th>Nom</th>
+                                    <th>Lieu</th>
+                                    <th>Avis</th>
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -49,26 +41,14 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex items-center">
-                                                <div class="form-checkbox">
-                                                    <input type="checkbox" name="name">
-                                                    <div class="form-checkbox__mark">
-                                                        <div class="form-checkbox__icon icon-check"></div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </td>
                                         <td class="text-blue-1 fw-500">{{ $studio->name }}</td>
                                         <td>{{ $studio->city }}</td>
-                                        <td>{{ $studio->user->name ?? 'Inconnu' }}</td> <!-- Utilisation de la relation user -->
-                                        <td>
-                                                <span class="rounded-100 py-4 px-10 text-center text-14 fw-500 bg-yellow-4 text-yellow-3">
-                                                    Pending
-                                                </span>
-                                        </td>
                                         <td>
                                             <div class="rounded-4 size-35 bg-blue-1 text-white flex-center text-12 fw-600">4.8</div>
                                         </td>
-                                        <td>{{ $studio->updated_at->format('d/m/Y') }}</td>
+                                        <td>{{ $studio->created_at->format('d/m/Y') }}</td>
                                         <td>
                                             <div class="row x-gap-10 y-gap-10 items-center">
                                                 <div class="col-auto">

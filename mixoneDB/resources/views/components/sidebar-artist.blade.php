@@ -5,7 +5,7 @@
 
         <div class="sidebar__item">
             <div class="sidebar__button -is-active">
-                <a href="/dashboard" class="d-flex items-center text-15 lh-1 fw-500 ">
+                <a href={{route('dashboard')}} class="d-flex items-center text-15 lh-1 fw-500 ">
                     <img src={{asset("media/img/dashboard/sidebar/booking.svg")}} alt="image" class="mr-15">
                     Historique des réservations
                 </a>
@@ -14,7 +14,7 @@
 
         <div class="sidebar__item">
             <div class="sidebar__button ">
-                <a href="/dashboard/wishlist" class="d-flex items-center text-15 lh-1 fw-500">
+                <a href={{route('dashboardWishlist')}} class="d-flex items-center text-15 lh-1 fw-500">
                     <img src={{asset("media/img/dashboard/sidebar/bookmark.svg")}} alt="image" class="mr-15">
                     Liste d'envie
                 </a>

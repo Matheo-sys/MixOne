@@ -51,32 +51,6 @@
                                             <span class="mr-10">À propos</span>
                                         </a>
                                     </li>
-
-                                    <li class="menu-item-has-children">
-                                        <a data-barba href="">
-                                            <span class="mr-10">Tableau de bord</span>
-                                            <i class="icon icon-chevron-sm-down"></i>
-                                        </a>
-
-
-                                        <ul class="subnav">
-                                            <li class="subnav__backBtn js-nav-list-back">
-                                                <a href="db-booking.html"><i class="icon icon-chevron-sm-down"></i> Tableau de Bord</a>
-                                            </li>
-
-                                            <li><a href="/dashboard">Réservations</a></li>
-
-                                            <li><a href="/dashboard/wishlist">Liste d'envie</a></li>
-
-                                            <li><a href="/dashboard/settings">Paramètres</a></li>
-
-                                            <li><a href="/">Se déconnecter</a></li>
-
-                                        </ul>
-
-                                    </li>
-
-
                                     <li>
                                         <a href="/contact">Contact</a>
                                     </li>
