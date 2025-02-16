@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StudioController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
@@ -49,6 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Dashboard generic routes
     Route::group(['prefix' => 'dashboard'], function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
 
 
         Route::get('/settings', function() {

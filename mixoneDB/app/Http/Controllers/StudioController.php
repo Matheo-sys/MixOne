@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class StudioController extends Controller
@@ -65,8 +66,18 @@ class StudioController extends Controller
      */
     public function index(): Factory|View|Application
     {
-        $defaultStudios = Studio::all(); // Récupérer tous les studios par défaut
-        return view('pages.home', compact('defaultStudios'));
+
+        $defaultStudios = Studio::all();
+
+        return  view('pages.home', compact('defaultStudios'));
+    }
+
+    public function myStudios()
+    {
+        $user = auth()->user();
+        $studios = Studio::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        return view('dashboard.studio.myStudios', compact('studios'));
+
     }
 
     /**

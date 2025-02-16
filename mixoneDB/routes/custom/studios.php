@@ -16,9 +16,7 @@ Route::group(['prefix' => 'dashboard'], function () {
         return view('dashboard.studio.booking');
     })->name('dashboard.studio.booking');
 
-    Route::get('/studio/list', function() {
-        return view('dashboard.studio.myStudios');
-    })->name('dashboard.studio.list');
+    Route::get('/studio/list', [StudioController::class, 'myStudios'])->name('dashboard.studio.myStudios');
 
     Route::get('/studio/create', function() {
         return view('dashboard.studio.create');
