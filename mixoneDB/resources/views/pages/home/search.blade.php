@@ -27,9 +27,20 @@
                                             <input type="date" id="date" name="date" class="text-15 text-light-1 ls-2 lh-16" />
                                         </div>
 
-                                        <div class="searchMenu-guests px-30 lg:py-20 lg:px-0">
+                                        <div class="searchMenu-guests px-30 lg:py-20 lg:px-0 position-relative">
                                             <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Hours</label>
-                                            <input type="number" id="min_hours" name="min_hours" min="1" value="2" class="text-15 text-light-1 ls-2 lh-16" />
+                                            <input type="text" id="min_hours" name="min_hours" placeholder="Hours" class="text-15 text-light-1 ls-2 lh-16" onclick="toggleHoursMenu(event)" readonly />
+                                            <div id="hoursMenu" class="hours-menu hidden">
+                                                <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
+                                                    <i class="icon-minus text-12"></i>
+                                                </button>
+                                                <div class="flex-center size-20 ml-15 mr-15">
+                                                    <div id="hoursValue" class="text-15">2</div>
+                                                </div>
+                                                <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(1)">
+                                                    <i class="icon-plus text-12"></i>
+                                                </button>
+                                            </div>
                                         </div>
 
                                         <div class="button-item">
@@ -48,3 +59,60 @@
         </div>
     </div>
 </section>
+
+<style>
+    .hidden {
+        display: none;
+    }
+    .hours-menu {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        position: absolute;
+        background: white;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        z-index: 1000;
+        top: 100%;
+        left: 0;
+    }
+</style>
+
+<script>
+    function toggleHoursMenu(event) {
+        event.stopPropagation();
+        const menu = document.getElementById('hoursMenu');
+        menu.classList.toggle('hidden');
+    }
+
+    function changeHours(amount) {
+        const hoursInput = document.getElementById('min_hours');
+        const hoursValue = document.getElementById('hoursValue');
+        let currentValue = parseInt(hoursValue.textContent);
+        if (!isNaN(currentValue)) {
+            currentValue += amount;
+            if (currentValue < 1) {
+                currentValue = 1;
+            }
+            hoursValue.textContent = currentValue;
+            hoursInput.value = currentValue;
+        }
+    }
+
+    document.addEventListener('click', function(event) {
+        const hoursInput = document.getElementById('min_hours');
+        const hoursMenu = document.getElementById('hoursMenu');
+
+        // Vérifie si l'élément cliqué n'est ni le champ "Hours" ni le menu
+        if (!hoursInput.contains(event.target) && !hoursMenu.contains(event.target)) {
+            hoursMenu.classList.add('hidden');
+        }
+    });
+
+    // Empêche la fermeture immédiate du menu quand on clique dedans
+    document.getElementById('hoursMenu').addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+</script>
+
