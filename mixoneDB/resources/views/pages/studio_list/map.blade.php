@@ -14,28 +14,33 @@
 
 
 
-                    <div class="sidebar__item pb-30">
-                        <h5 class="text-18 fw-500 mb-10">Price</h5>
+                    <div class="sidebar__item">
+                        <label for="distanceSlider" class="text-15 fw-500 ls-2 lh-16">Périmetre</label>
                         <div class="row x-gap-10 y-gap-30">
                             <div class="col-12">
                                 <div class="js-price-rangeSlider">
-                                    <div class="text-14 fw-500"></div>
-
                                     <div class="d-flex justify-between mb-20">
                                         <div class="text-15 text-dark-1">
-                                            <span class="js-lower"></span>
+                                            <span class="js-lower">0km</span>
                                             -
-                                            <span class="js-upper"></span>
+                                            <span class="js-upper">35km</span>
                                         </div>
                                     </div>
 
                                     <div class="px-5">
-                                        <div class="js-slider"></div>
+                                        <input type="range" id="distance" name="distance" min="0" max="200" value="35" class="slider w-100" oninput="updateDistanceValue(this.value)">
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="button-item">
+                            <button type="submit" class="mainSearch__submit button -dark-1 h-60 px-35 col-12 bg-blue-1 text-white mt-20">
+                                <i class="icon-search text-20 mr-10"></i>
+                                Appliquer
+                            </button>
+                        </div>
                     </div>
+
 
 
 
@@ -73,7 +78,7 @@
                             <i class="icon-close"></i>
                         </div>
 
-                        <div class="sidebar__item -no-border">
+                        <<div class="sidebar__item -no-border">
                             <h5 class="text-18 fw-500 mb-10">Type of Place</h5>
                             <div class="sidebar-checkbox">
 
@@ -422,9 +427,7 @@
 
                 <div class="mt-30"></div>
 
-                <div class="row y-gap-30">
 
-                    <div class="col-12">
 
                         <div class="border-top-light pt-20">
                             <div class="row x-gap-20 y-gap-20">
@@ -548,385 +551,7 @@
                             </div>
                         </div>
 
-                    </div>
 
-                    <div class="col-12">
-
-                        <div class="border-top-light pt-20">
-                            <div class="row x-gap-20 y-gap-20">
-                                <div class="col-md-auto">
-
-                                    <div class="cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4">
-                                        <div class="cardImage__content">
-
-
-                                            <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
-                                                <div class="swiper-wrapper">
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="cardImage-slider__pagination js-pagination"></div>
-
-                                                <div class="cardImage-slider__nav -prev">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
-                                                        <i class="icon-chevron-left text-10"></i>
-                                                    </button>
-                                                </div>
-
-                                                <div class="cardImage-slider__nav -next">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
-                                                        <i class="icon-chevron-right text-10"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="cardImage__wishlist">
-                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
-                                                <i class="icon-heart text-12"></i>
-                                            </button>
-                                        </div>
-
-
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md">
-                                    <div class="d-flex flex-column h-full justify-between">
-                                        <div class="">
-                                            <p class="text-14 lh-14 mb-5">Paris</p>
-                                            <h3 class="text-18 lh-16 fw-500">Studio <br> Bleu</h3>
-
-                                            <div class="row x-gap-5 items-center pt-5">
-
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row x-gap-10 y-gap-10 pt-20">
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Beatmaking</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">WiFi</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">REC</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Mix/Mastering</div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-auto text-right md:text-left">
-                                    <div class="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
-                                        <div class="col-auto">
-                                            <div class="text-14 lh-14 fw-500">Exceptional</div>
-                                            <div class="text-14 lh-14 text-light-1">3,014 reviews</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1">4.8</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-14 text-light-1 mt-40 md:mt-20">A Partir de </div>
-                                    <div class="text-22 lh-12 fw-600 mt-5">50€</div>
-                                    <div class="text-14 text-light-1 mt-5">par heures</div>
-
-
-                                    <a href="#" class="button -md -dark-1 bg-blue-1 text-white mt-24">
-                                        View Detail <div class="icon-arrow-top-right ml-15"></div>
-                                    </a>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-12">
-
-                        <div class="border-top-light pt-20">
-                            <div class="row x-gap-20 y-gap-20">
-                                <div class="col-md-auto">
-
-                                    <div class="cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4">
-                                        <div class="cardImage__content">
-
-
-                                            <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
-                                                <div class="swiper-wrapper">
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="cardImage-slider__pagination js-pagination"></div>
-
-                                                <div class="cardImage-slider__nav -prev">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
-                                                        <i class="icon-chevron-left text-10"></i>
-                                                    </button>
-                                                </div>
-
-                                                <div class="cardImage-slider__nav -next">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
-                                                        <i class="icon-chevron-right text-10"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="cardImage__wishlist">
-                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
-                                                <i class="icon-heart text-12"></i>
-                                            </button>
-                                        </div>
-
-
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md">
-                                    <div class="d-flex flex-column h-full justify-between">
-                                        <div class="">
-                                            <p class="text-14 lh-14 mb-5">Paris</p>
-                                            <h3 class="text-18 lh-16 fw-500">Studio <br> Bleu</h3>
-
-                                            <div class="row x-gap-5 items-center pt-5">
-
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row x-gap-10 y-gap-10 pt-20">
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Beatmaking</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">WiFi</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">REC</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Mix/Mastering</div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-auto text-right md:text-left">
-                                    <div class="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
-                                        <div class="col-auto">
-                                            <div class="text-14 lh-14 fw-500">Exceptional</div>
-                                            <div class="text-14 lh-14 text-light-1">3,014 reviews</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1">4.8</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-14 text-light-1 mt-40 md:mt-20">A Partir de </div>
-                                    <div class="text-22 lh-12 fw-600 mt-5">50€</div>
-                                    <div class="text-14 text-light-1 mt-5">par heures</div>
-
-
-                                    <a href="#" class="button -md -dark-1 bg-blue-1 text-white mt-24">
-                                        View Detail <div class="icon-arrow-top-right ml-15"></div>
-                                    </a>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-12">
-
-                        <div class="border-top-light pt-20">
-                            <div class="row x-gap-20 y-gap-20">
-                                <div class="col-md-auto">
-
-                                    <div class="cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4">
-                                        <div class="cardImage__content">
-
-
-                                            <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
-                                                <div class="swiper-wrapper">
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="cardImage-slider__pagination js-pagination"></div>
-
-                                                <div class="cardImage-slider__nav -prev">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
-                                                        <i class="icon-chevron-left text-10"></i>
-                                                    </button>
-                                                </div>
-
-                                                <div class="cardImage-slider__nav -next">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
-                                                        <i class="icon-chevron-right text-10"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="cardImage__wishlist">
-                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
-                                                <i class="icon-heart text-12"></i>
-                                            </button>
-                                        </div>
-
-
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md">
-                                    <div class="d-flex flex-column h-full justify-between">
-                                        <div class="">
-                                            <p class="text-14 lh-14 mb-5">Paris</p>
-                                            <h3 class="text-18 lh-16 fw-500">Studio <br> Bleu</h3>
-
-                                            <div class="row x-gap-5 items-center pt-5">
-
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                                <div class="col-auto">
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row x-gap-10 y-gap-10 pt-20">
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Beatmaking</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">WiFi</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">REC</div>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Mix/Mastering</div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-auto text-right md:text-left">
-                                    <div class="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
-                                        <div class="col-auto">
-                                            <div class="text-14 lh-14 fw-500">Exceptional</div>
-                                            <div class="text-14 lh-14 text-light-1">3,014 reviews</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1">4.8</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-14 text-light-1 mt-40 md:mt-20">A Partir de </div>
-                                    <div class="text-22 lh-12 fw-600 mt-5">50€</div>
-                                    <div class="text-14 text-light-1 mt-5">par heures</div>
-
-
-                                    <a href="#" class="button -md -dark-1 bg-blue-1 text-white mt-24">
-                                        View Detail <div class="icon-arrow-top-right ml-15"></div>
-                                    </a>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
 
 
 
@@ -1025,3 +650,114 @@
         </div>
     </div>
 </section>
+<style>
+    /* Slider pour la distance */
+    .slider {
+        -webkit-appearance: none;
+        height: 6px;
+        border-radius: 3px;
+        background: #e0e0e0;
+        outline: none;
+        width: 100%;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #3554D1;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #3554D1;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+</style>
+
+<script>
+    function toggleHoursMenu(event) {
+        event.stopPropagation();
+        const menu = document.getElementById('hoursMenu');
+        menu.classList.toggle('hidden');
+    }
+
+    function changeHours(amount) {
+        const hoursInput = document.getElementById('min_hours');
+        const hoursValue = document.getElementById('hoursValue');
+        let currentValue = parseInt(hoursValue.textContent);
+        if (!isNaN(currentValue)) {
+            currentValue += amount;
+            if (currentValue < 1) {
+                currentValue = 1;
+            }
+            hoursValue.textContent = currentValue;
+            hoursInput.value = currentValue;
+        }
+    }
+
+    function updateDistanceValue(value) {
+        document.querySelector('.js-upper').textContent = value + "km";
+        document.getElementById('distance').value = value;
+    }
+
+    document.addEventListener('click', function(event) {
+        const hoursInput = document.getElementById('min_hours');
+        const hoursMenu = document.getElementById('hoursMenu');
+
+        if (hoursInput && hoursMenu && !hoursInput.contains(event.target) && !hoursMenu.contains(event.target)) {
+            hoursMenu.classList.add('hidden');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const geolocateBtn = document.getElementById('geolocate-btn');
+
+        if (geolocateBtn) {
+            geolocateBtn.addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        // Success
+                        function(position) {
+                            const latitude = position.coords.latitude;
+                            const longitude = position.coords.longitude;
+
+                            document.getElementById('latitude').value = latitude;
+                            document.getElementById('longitude').value = longitude;
+
+                            // Fetch the address using Nominatim API
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    const city = data.address.city || data.address.town || data.address.village || "Unknown location";
+                                    document.getElementById('city').value = city;
+                                    document.getElementById('city').disabled = true;
+
+                                    // Visual feedback
+                                    geolocateBtn.innerHTML = '<i class="icon-check text-16"></i>';
+                                    geolocateBtn.classList.add('bg-white');
+                                })
+                                .catch(error => {
+                                    alert("Impossible de récupérer l'adresse. Veuillez entrer une ville manuellement.");
+                                });
+                        },
+                        // Error
+                        function(error) {
+                            alert("Impossible d'obtenir votre position. Veuillez entrer une ville manuellement.");
+                        }
+                    );
+                } else {
+                    alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+                }
+            });
+        }
+    });
+</script>

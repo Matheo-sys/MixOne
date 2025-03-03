@@ -15,7 +15,7 @@
                     <div class="tabs__content mt-30 md:mt-20 js-tabs-content">
                         <div class="tabs__pane -tab-item-1 is-tab-el-active">
                             <div class="mainSearch bg-white px-10 py-10 lg:px-20 lg:pt-5 lg:pb-20 rounded-100">
-                                <form id="searchForm" action="index.php" method="GET">
+                                <form id="searchForm" action="{{route("studio_list")}}" method="GET">
                                     <input type="hidden" id="latitude" name="latitude" value="48.7748198">
                                     <input type="hidden" id="longitude" name="longitude" value="2.3262945">
 
@@ -43,27 +43,6 @@
                                                 <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(1)">
                                                     <i class="icon-plus text-12"></i>
                                                 </button>
-                                            </div>
-                                        </div>
-
-                                        <div class="sidebar__item">
-                                            <label for="distanceSlider" class="text-15 fw-500 ls-2 lh-16">Périmetre</label>
-                                            <div class="row x-gap-10 y-gap-30">
-                                                <div class="col-12">
-                                                    <div class="js-price-rangeSlider">
-                                                        <div class="d-flex justify-between mb-20">
-                                                            <div class="text-15 text-dark-1">
-                                                                <span class="js-lower">0km</span>
-                                                                -
-                                                                <span class="js-upper">35km</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="px-5">
-                                                            <input type="range" id="distance" name="distance" min="0" max="200" value="35" class="slider w-100" oninput="updateDistanceValue(this.value)">
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
 
@@ -182,35 +161,7 @@
         background-color: #f0f7ff;
     }
 
-    /* Slider pour la distance */
-    .slider {
-        -webkit-appearance: none;
-        height: 6px;
-        border-radius: 3px;
-        background: #e0e0e0;
-        outline: none;
-        width: 100%;
-    }
 
-    .slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #3554D1;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .slider::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #3554D1;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
 
     /* Affichage de la valeur du slider */
     .js-price-rangeSlider .d-flex {
