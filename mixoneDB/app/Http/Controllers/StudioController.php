@@ -20,7 +20,6 @@ class StudioController extends Controller
      * @return Factory|View|Application
      */
     public function show(Studio $studio) {
-
         return view('studios.single', [
             'studio' => $studio,
         ]);
@@ -33,31 +32,42 @@ class StudioController extends Controller
      */
     public function store(CreateRequest $request): RedirectResponse
     {
-        // Retrieve all form data
-        $formData = $request->all();
+        $formData = $request->validated();
 
-        // Remove _token from the array
-        unset($formData['_token']);
+        // Gestion des uploads d’images
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('uploads/studios', 'public');
+                $imagePaths[] = $path;
+            }
+        }
+        $formData['images'] = json_encode($imagePaths);
 
-        // Add id user to the form data
-        $formData['user_id'] = auth()->user()->id;
+        // Générer l’adresse complète
+        $fullAddress = trim("{$formData['address']}, {$formData['city']}, {$formData['zipcode']}, {$formData['country']}");
+        \Log::info('Adresse complète générée', ['fullAddress' => $fullAddress]);
 
-        // Get city coordinates from GeoNames API
-        $location = $this->getCityCoordinates($formData['city']);
+        // Récupération des coordonnées via Nominatim
+        $location = $this->getCoordinates($fullAddress);
 
         if ($location) {
             $formData['latitude'] = $location['latitude'];
             $formData['longitude'] = $location['longitude'];
         } else {
-            // Handle the case where the city coordinates are not found
-            return redirect()->back()->withErrors(['city' => 'City coordinates not found.']);
+            \Log::error('Coordonnées introuvables pour l\'adresse', ['fullAddress' => $fullAddress]);
+            return redirect()->back()->withErrors(['address' => 'Address coordinates not found.']);
         }
 
-        // Create the studio
-        $studio = Studio::create($formData);
+        // Ajouter l'ID de l'utilisateur
+        $formData['user_id'] = Auth::id();
 
-        return redirect()->route('home', ['studio' => $studio]);
+        // Créer le studio
+        Studio::create($formData);
+
+        return redirect()->route('home')->with('success', 'Studio created successfully!');
     }
+
 
     /**
      * Afficher la page d'accueil avec les studios par défaut
@@ -66,10 +76,16 @@ class StudioController extends Controller
      */
     public function index(): Factory|View|Application
     {
-
         $defaultStudios = Studio::all();
 
-        return  view('pages.home', compact('defaultStudios'));
+        // Valeurs par défaut pour le formulaire de recherche
+        $user_lat = 0;
+        $user_lon = 0;
+        $max_distance = 50; // Périmètre par défaut en km
+        $min_hours = 1;
+        $city = '';
+
+        return view('pages.home', compact('defaultStudios', 'user_lat', 'user_lon', 'max_distance', 'min_hours', 'city'));
     }
 
     public function myStudios()
@@ -77,73 +93,113 @@ class StudioController extends Controller
         $user = auth()->user();
         $studios = Studio::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
         return view('dashboard.studio.myStudios', compact('studios'));
-
     }
 
     /**
      * Rechercher des studios en fonction des filtres
      *
      * @param Request $request
-     * @return RedirectResponse
+     * @return View
      */
     public function search(Request $request): View
     {
+        // Initialiser les variables par défaut
+        $latitude = $request->input('latitude', 0);
+        $longitude = $request->input('longitude', 0);
+        $distance = $request->input('distance', 50);
+        $min_hours = $request->input('min_hours', 1);
+        $city = $request->input('city', '');
+
+        // Si une ville est spécifiée, obtenir ses coordonnées
+        if (!empty($city) && (!$latitude || !$longitude)) {
+            $location = $this->getCoordinates($city);
+            if ($location) {
+                $latitude = $location['latitude'];
+                $longitude = $location['longitude'];
+            }
+        }
+
+        // Requête de base
         $query = Studio::query();
 
-        if ($request->has('city')) {
-            $query->where('city', 'like', '%' . $request->input('city') . '%');
+        // Filtrage par heures minimales
+        if ($min_hours) {
+            $query->where('min_hours', '<=', $min_hours);
         }
 
-        if ($request->has('date')) {
-            $query->where('available_date', $request->input('date'));
-        }
-
-        if ($request->has('min_hours')) {
-            $query->where('min_hours', '<=', $request->input('min_hours'));
+        // Si on a des coordonnées, filtrer par distance
+        if ($latitude && $longitude) {
+            // Formule Haversine pour calculer la distance entre deux points sur une sphère
+            $query->selectRaw("*,
+                (6371 * acos(
+                    cos(radians(?)) *
+                    cos(radians(latitude)) *
+                    cos(radians(longitude) - radians(?)) +
+                    sin(radians(?)) *
+                    sin(radians(latitude))
+                )) AS distance", [$latitude, $longitude, $latitude])
+                ->having('distance', '<=', $distance)
+                ->orderBy('distance');
         }
 
         $studios = $query->get();
 
-        if ($studios->isEmpty() && $request->has('city')) {
-            $city = $request->input('city');
-            $location = $this->getCityCoordinates($city);
+        // Préparer les variables pour la vue
+        $user_lat = $latitude;
+        $user_lon = $longitude;
+        $max_distance = $distance;
 
-            if ($location) {
-                $latitude = $location['latitude'];
-                $longitude = $location['longitude'];
-
-                $studios = Studio::selectRaw(
-                    "*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance",
-                    [$latitude, $longitude, $latitude]
-                )
-                    ->orderBy('distance')
-                    ->limit(10)
-                    ->get();
-            } else {
-                return view('pages.home', ['studios' => collect(), 'error' => 'Ville non trouvée.']);
-            }
-        }
-
-        return view('pages.home', compact('studios'));
+        return view('pages.home', compact('studios', 'user_lat', 'user_lon', 'max_distance', 'min_hours', 'city'));
     }
 
-    private function getCityCoordinates(string $city): ?array
+    /**
+     * Obtenir les coordonnées d'une localisation (ville ou adresse) via Nominatim API
+     *
+     * @param string $location
+     * @return array|null
+     */
+    private function getCoordinates(string $location): ?array
     {
-        $username = 'elias.l94';
-        $response = Http::get("http://api.geonames.org/searchJSON", [
-            'q' => $city,
-            'maxRows' => 1,
-            'username' => $username,
-        ]);
+        try {
+            $userAgent = 'OneMixStudioApplication/1.0';
 
-        if ($response->successful() && isset($response['geonames'][0])) {
-            return [
-                'latitude' => $response['geonames'][0]['lat'],
-                'longitude' => $response['geonames'][0]['lng'],
-            ];
+            \Log::info('Requête Nominatim pour l\'adresse', ['address' => $location]);
+
+            $response = Http::withHeaders([
+                'User-Agent' => $userAgent
+            ])->timeout(5)->get("https://nominatim.openstreetmap.org/search", [
+                'q' => $location,
+                'format' => 'json',
+                'limit' => 1,
+            ]);
+
+            if (!$response->successful()) {
+                \Log::error('Nominatim API error', ['response' => $response->body()]);
+                return null;
+            }
+
+            $data = $response->json();
+
+            if (!empty($data)) {
+                return [
+                    'latitude' => $data[0]['lat'],
+                    'longitude' => $data[0]['lon'],
+                ];
+            }
+
+            \Log::warning('Aucune coordonnée trouvée pour cette adresse', ['location' => $location]);
+            return null;
+
+        } catch (\Exception $e) {
+            \Log::error('Échec de la requête à Nominatim', ['error' => $e->getMessage()]);
+            return null;
         }
+    }
 
-        return null;
+
+    public function destroy(Studio $studio)
+    {
+        $studio->delete();
+        return redirect()->route('dashboard.studios')->with('success', 'Studio deleted successfully.');
     }
 }
-

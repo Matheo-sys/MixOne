@@ -52,20 +52,24 @@
                                         <td>
                                             <div class="row x-gap-10 y-gap-10 items-center">
                                                 <div class="col-auto">
-                                                    <button class="flex-center bg-light-2 rounded-4 size-35">
-                                                        <i class="icon-eye text-16 text-light-1"></i>
-                                                    </button>
+                                                    <form action="{{ route('studio.show', $studio->id) }}" method="GET">
+                                                        <button type="submit" class="flex-center bg-light-2 rounded-4 size-35">
+                                                            <i class="icon-eye text-16 text-light-1"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                                 <div class="col-auto">
                                                     <button class="flex-center bg-light-2 rounded-4 size-35">
                                                         <i class="icon-edit text-16 text-light-1"></i>
                                                     </button>
                                                 </div>
-                                                <div class="col-auto">
-                                                    <button class="flex-center bg-light-2 rounded-4 size-35">
+                                                <form action="{{ route('studio.destroy', $studio->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this studio?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="flex-center bg-light-2 rounded-4 size-35">
                                                         <i class="icon-trash-2 text-16 text-light-1"></i>
                                                     </button>
-                                                </div>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
@@ -110,9 +114,11 @@
                         </div>
                     </div>
                     <div class="col-auto">
-                        <button class="button -blue-1 size-40 rounded-full border-light">
-                            <i class="icon-chevron-right text-12"></i>
-                        </button>
+                        <div class="col-auto">
+                            <button class="flex-center bg-light-2 rounded-4 size-35">
+                                <i class="icon-trash-2 text-16 text-light-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

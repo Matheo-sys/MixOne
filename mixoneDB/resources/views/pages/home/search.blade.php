@@ -14,22 +14,25 @@
                 <div data-anim-child="slide-up delay-6" class="tabs -underline mt-60 js-tabs">
                     <div class="tabs__content mt-30 md:mt-20 js-tabs-content">
                         <div class="tabs__pane -tab-item-1 is-tab-el-active">
-                            <div class="mainSearch -w-900 bg-white px-10 py-10 lg:px-20 lg:pt-5 lg:pb-20 rounded-100">
-                                <form action="{{ route('studio.search') }}" method="GET">
+                            <div class="mainSearch bg-white px-10 py-10 lg:px-20 lg:pt-5 lg:pb-20 rounded-100">
+                                <form id="searchForm" action="index.php" method="GET">
+                                    <input type="hidden" id="latitude" name="latitude" value="48.7748198">
+                                    <input type="hidden" id="longitude" name="longitude" value="2.3262945">
+
                                     <div class="button-grid items-center">
                                         <div class="searchMenu-loc px-30 lg:py-20 lg:px-0">
                                             <label for="city" class="text-15 fw-500 ls-2 lh-16">City</label>
-                                            <input type="text" id="city" name="city" placeholder="City" class="js-search js-dd-focus" />
-                                        </div>
-
-                                        <div class="searchMenu-date px-30 lg:py-20 lg:px-0">
-                                            <label for="date" class="text-15 fw-500 ls-2 lh-16">Day</label>
-                                            <input type="date" id="date" name="date" class="text-15 text-light-1 ls-2 lh-16" />
+                                            <div class="input-wrapper">
+                                                <input type="text" id="city" name="city" placeholder="City" value="" class="js-search js-dd-focus">
+                                                <button type="button" id="geolocate-btn" class="button -blue-1 h-40 px-20 ml-10 rounded-4">
+                                                    <i class="icon-location text-16"></i>
+                                                </button>
+                                            </div>
                                         </div>
 
                                         <div class="searchMenu-guests px-30 lg:py-20 lg:px-0 position-relative">
                                             <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Hours</label>
-                                            <input type="text" id="min_hours" name="min_hours" placeholder="Hours" class="text-15 text-light-1 ls-2 lh-16" onclick="toggleHoursMenu(event)" readonly />
+                                            <input type="text" id="min_hours" name="min_hours" placeholder="Hours" value="2" class="text-15 text-light-1 ls-2 lh-16" onclick="toggleHoursMenu(event)" readonly="">
                                             <div id="hoursMenu" class="hours-menu hidden">
                                                 <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
                                                     <i class="icon-minus text-12"></i>
@@ -40,6 +43,27 @@
                                                 <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(1)">
                                                     <i class="icon-plus text-12"></i>
                                                 </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="sidebar__item">
+                                            <label for="distanceSlider" class="text-15 fw-500 ls-2 lh-16">Périmetre</label>
+                                            <div class="row x-gap-10 y-gap-30">
+                                                <div class="col-12">
+                                                    <div class="js-price-rangeSlider">
+                                                        <div class="d-flex justify-between mb-20">
+                                                            <div class="text-15 text-dark-1">
+                                                                <span class="js-lower">0km</span>
+                                                                -
+                                                                <span class="js-upper">35km</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="px-5">
+                                                            <input type="range" id="distance" name="distance" min="0" max="200" value="35" class="slider w-100" oninput="updateDistanceValue(this.value)">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -60,22 +84,178 @@
     </div>
 </section>
 
+
 <style>
-    .hidden {
-        display: none;
+    /* Styles généraux */
+    .mainSearch {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
     }
+
+    .mainSearch:hover {
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Grid layout amélioré */
+    .button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        align-items: end;
+    }
+
+    /* Champs de formulaire */
+    .searchMenu-loc, .searchMenu-guests, .sidebar__item {
+        position: relative;
+    }
+
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #2c3e50;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.3s;
+        background-color: #f9f9f9;
+    }
+
+    input[type="text"]:focus {
+        border-color: #3554D1;
+        box-shadow: 0 0 0 3px rgba(53, 132, 228, 0.1);
+        outline: none;
+        background-color: white;
+    }
+
+    /* Bouton de géolocalisation */
+    #geolocate-btn {
+        background-color: #ffffff;
+        border: 1px solid #000000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    #geolocate-btn:hover {
+        background-color: #3554D1;
+    }
+
+    /* Menu des heures */
     .hours-menu {
         display: flex;
-        gap: 10px;
         align-items: center;
         position: absolute;
         background: white;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+        padding: 15px;
+        border: 1px solid #eaeaea;
+        border-radius: 8px;
         z-index: 1000;
-        top: 100%;
+        top: calc(100% + 5px);
         left: 0;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .button.-outline-blue-1 {
+        border: 1px solid #3554D1;
+        background: transparent;
+        color: #3554D1;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .button.-outline-blue-1:hover {
+        background-color: #f0f7ff;
+    }
+
+    /* Slider pour la distance */
+    .slider {
+        -webkit-appearance: none;
+        height: 6px;
+        border-radius: 3px;
+        background: #e0e0e0;
+        outline: none;
+        width: 100%;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #3554D1;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #3554D1;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Affichage de la valeur du slider */
+    .js-price-rangeSlider .d-flex {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Bouton de recherche */
+    .mainSearch__submit {
+        width: 100%;
+        background: #3554D1;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mainSearch__submit:hover {
+        background: #3554D1;
+    }
+
+    /* Pour cacher des éléments */
+    .hidden {
+        display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .button-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .button-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .px-30 {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
     }
 </style>
 
@@ -100,19 +280,60 @@
         }
     }
 
+    function updateDistanceValue(value) {
+        document.querySelector('.js-upper').textContent = value + "km";
+        document.getElementById('distance').value = value;
+    }
+
     document.addEventListener('click', function(event) {
         const hoursInput = document.getElementById('min_hours');
         const hoursMenu = document.getElementById('hoursMenu');
 
-        // Vérifie si l'élément cliqué n'est ni le champ "Hours" ni le menu
-        if (!hoursInput.contains(event.target) && !hoursMenu.contains(event.target)) {
+        if (hoursInput && hoursMenu && !hoursInput.contains(event.target) && !hoursMenu.contains(event.target)) {
             hoursMenu.classList.add('hidden');
         }
     });
 
-    // Empêche la fermeture immédiate du menu quand on clique dedans
-    document.getElementById('hoursMenu').addEventListener('click', function(event) {
-        event.stopPropagation();
+    document.addEventListener('DOMContentLoaded', function() {
+        const geolocateBtn = document.getElementById('geolocate-btn');
+
+        if (geolocateBtn) {
+            geolocateBtn.addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        // Success
+                        function(position) {
+                            const latitude = position.coords.latitude;
+                            const longitude = position.coords.longitude;
+
+                            document.getElementById('latitude').value = latitude;
+                            document.getElementById('longitude').value = longitude;
+
+                            // Fetch the address using Nominatim API
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    const city = data.address.city || data.address.town || data.address.village || "Unknown location";
+                                    document.getElementById('city').value = city;
+                                    document.getElementById('city').disabled = true;
+
+                                    // Visual feedback
+                                    geolocateBtn.innerHTML = '<i class="icon-check text-16"></i>';
+                                    geolocateBtn.classList.add('bg-white');
+                                })
+                                .catch(error => {
+                                    alert("Impossible de récupérer l'adresse. Veuillez entrer une ville manuellement.");
+                                });
+                        },
+                        // Error
+                        function(error) {
+                            alert("Impossible d'obtenir votre position. Veuillez entrer une ville manuellement.");
+                        }
+                    );
+                } else {
+                    alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+                }
+            });
+        }
     });
 </script>
-

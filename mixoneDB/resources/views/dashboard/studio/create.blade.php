@@ -280,5 +280,37 @@ To center the trash icon within its container, you can use CSS flexbox propertie
     function removeImage(element) {
         element.closest('.col-auto').remove();
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const cityInput = document.getElementById('city');
+        const postalCodeInput = document.getElementById('postal_code');
+        const countryInput = document.getElementById('country');
+        const streetInput = document.getElementById('street');
+
+        function fetchSuggestions(input, query) {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the suggestions (e.g., show them in a dropdown)
+                    console.log(data);
+                })
+                .catch(error => console.error('Error fetching suggestions:', error));
+        }
+
+        cityInput.addEventListener('input', function() {
+            fetchSuggestions(cityInput, cityInput.value);
+        });
+
+        postalCodeInput.addEventListener('input', function() {
+            fetchSuggestions(postalCodeInput, postalCodeInput.value);
+        });
+
+        countryInput.addEventListener('input', function() {
+            fetchSuggestions(countryInput, countryInput.value);
+        });
+
+        streetInput.addEventListener('input', function() {
+            fetchSuggestions(streetInput, streetInput.value);
+        });
+    });
 </script>
-```

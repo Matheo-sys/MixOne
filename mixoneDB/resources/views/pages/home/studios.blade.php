@@ -67,12 +67,20 @@
 
                             </div>
 
+                            <!-- Dans studios.blade.php dans la partie qui affiche les détails du studio -->
                             <div class="hotelsCard__content mt-10">
                                 <h4 class="hotelsCard__title text-dark-1 text-18 lh-16 fw-500">
                                     <span>{{ $studio->name }}</span>
                                 </h4>
 
                                 <p class="text-light-1 lh-14 text-14 mt-5">{{ $studio->city }}</p>
+
+                                @if(isset($studio->distance))
+                                    <p class="text-light-1 lh-14 text-14 mt-5">
+                                        <i class="icon-location text-14 mr-5"></i>
+                                        {{ number_format($studio->distance, 1) }} km de votre position
+                                    </p>
+                                @endif
 
                                 <div class="d-flex items-center mt-20">
                                     <div class="flex-center bg-blue-1 rounded-4 size-30 text-12 fw-600 text-white">4.8</div>

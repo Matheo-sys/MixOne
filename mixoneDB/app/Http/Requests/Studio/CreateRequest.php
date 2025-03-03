@@ -23,14 +23,15 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'          => 'required',
-            'description'   => 'required',
-            'address'       => 'required',
-            'zipcode'       => 'required',
-            'city'          => 'required',
-            'country'       => 'required',
-            'hourly_rate'   => ['required', 'numeric'],
-            'min_hours'     => ['required', 'numeric'],
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'address' => 'required|string|max:255',
+            'zipcode' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'hourly_rate' => 'required|numeric|min:0',
+            'min_hours' => 'required|integer|min:1',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

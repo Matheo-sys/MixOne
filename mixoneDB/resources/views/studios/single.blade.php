@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <section class="pt-40">
+    <section class="pt-40 mt-90">
         <div class="container">
             <div class="row y-gap-20 justify-between items-end">
                 <div class="col-auto">
