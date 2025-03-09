@@ -149,7 +149,7 @@ class StudioController extends Controller
         $user_lon = $longitude;
         $max_distance = $distance;
 
-        return view('pages.home', compact('studios', 'user_lat', 'user_lon', 'max_distance', 'min_hours', 'city'));
+        return view('pages.studio_list', compact('studios', 'user_lat', 'user_lon', 'max_distance', 'min_hours', 'city'));
     }
 
     /**

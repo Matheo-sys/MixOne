@@ -46,6 +46,8 @@
                                             </div>
                                         </div>
 
+
+
                                         <div class="button-item">
                                             <button type="submit" class="mainSearch__submit button -dark-1 h-60 px-35 col-12 rounded-100 bg-blue-1 text-white">
                                                 <i class="icon-search text-20 mr-10"></i>
@@ -161,7 +163,35 @@
         background-color: #f0f7ff;
     }
 
+    /* Slider pour la distance */
+    .slider {
+        -webkit-appearance: none;
+        height: 6px;
+        border-radius: 3px;
+        background: #e0e0e0;
+        outline: none;
+        width: 100%;
+    }
 
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #3554D1;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #3554D1;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
 
     /* Affichage de la valeur du slider */
     .js-price-rangeSlider .d-flex {

@@ -7,11 +7,12 @@
                 </div>
 
                 <div class="mainSearch bg-white px-10 py-10 lg:px-20 lg:pt-5 lg:pb-20 rounded-4 mt-30">
-                    <div class="button-grid items-center">
+                    <form id="searchForm" action="{{route('studio_list')}}" method="GET">
+                        <input type="hidden" id="latitude" name="latitude" value="48.7748198">
+                        <input type="hidden" id="longitude" name="longitude" value="2.3262945">
 
-                        <div class="searchMenu-loc pr-30 pl-20 lg:py-20 lg:px-0 js-form-dd js-liverSearch">
-
-                            <div class="searchMenu-loc px-30 lg:py-20 lg:px-0">
+                        <div class="button-grid items-center">
+                            <div class="searchMenu-loc pr-30 pl-20 lg:py-20 lg:px-0 js-form-dd js-liverSearch">
                                 <label for="city" class="text-15 fw-500 ls-2 lh-16">City</label>
                                 <div class="input-wrapper">
                                     <input type="text" id="city" name="city" placeholder="City" value="" class="js-search js-dd-focus">
@@ -21,88 +22,15 @@
                                 </div>
                             </div>
 
-
-                            <div class="searchMenu-loc__field shadow-2 js-popup-window" data-x-dd="searchMenu-loc" data-x-dd-toggle="-is-active">
-                                <div class="bg-white px-30 py-30 sm:px-0 sm:py-15 rounded-4">
-                                    <div class="y-gap-5 js-results">
-
-                                        <div>
-                                            <button class="-link d-block col-12 text-left rounded-4 px-20 py-15 js-search-option">
-                                                <div class="d-flex">
-                                                    <div class="icon-location-2 text-light-1 text-20 pt-4"></div>
-                                                    <div class="ml-10">
-                                                        <div class="text-15 lh-12 fw-500 js-search-option-target">London</div>
-                                                        <div class="text-14 lh-12 text-light-1 mt-5">Greater London, United Kingdom</div>
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        </div>
-
-                                        <div>
-                                            <button class="-link d-block col-12 text-left rounded-4 px-20 py-15 js-search-option">
-                                                <div class="d-flex">
-                                                    <div class="icon-location-2 text-light-1 text-20 pt-4"></div>
-                                                    <div class="ml-10">
-                                                        <div class="text-15 lh-12 fw-500 js-search-option-target">New York</div>
-                                                        <div class="text-14 lh-12 text-light-1 mt-5">New York State, United States</div>
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        </div>
-
-                                        <div>
-                                            <button class="-link d-block col-12 text-left rounded-4 px-20 py-15 js-search-option">
-                                                <div class="d-flex">
-                                                    <div class="icon-location-2 text-light-1 text-20 pt-4"></div>
-                                                    <div class="ml-10">
-                                                        <div class="text-15 lh-12 fw-500 js-search-option-target">Paris</div>
-                                                        <div class="text-14 lh-12 text-light-1 mt-5">France</div>
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        </div>
-
-                                        <div>
-                                            <button class="-link d-block col-12 text-left rounded-4 px-20 py-15 js-search-option">
-                                                <div class="d-flex">
-                                                    <div class="icon-location-2 text-light-1 text-20 pt-4"></div>
-                                                    <div class="ml-10">
-                                                        <div class="text-15 lh-12 fw-500 js-search-option-target">Madrid</div>
-                                                        <div class="text-14 lh-12 text-light-1 mt-5">Spain</div>
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        </div>
-
-                                        <div>
-                                            <button class="-link d-block col-12 text-left rounded-4 px-20 py-15 js-search-option">
-                                                <div class="d-flex">
-                                                    <div class="icon-location-2 text-light-1 text-20 pt-4"></div>
-                                                    <div class="ml-10">
-                                                        <div class="text-15 lh-12 fw-500 js-search-option-target">Santorini</div>
-                                                        <div class="text-14 lh-12 text-light-1 mt-5">Greece</div>
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar js-calendar-el">
-
-                            <div class="searchMenu-guests px-30 lg:py-20 lg:px-0 position-relative">
+                            <div class="searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar js-calendar-el">
                                 <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Hours</label>
-                                <input type="text" id="min_hours" name="min_hours" placeholder="Hours" value="2" class="text-15 text-light-1 ls-2 lh-16" onclick="toggleHoursMenu(event)" readonly="">
+                                <input type="text" id="min_hours" name="min_hours" placeholder="Hours" value="{{ request()->input('min_hours', 2) }}" class="text-15 text-light-1 ls-2 lh-16" onclick="toggleHoursMenu(event)" readonly>
                                 <div id="hoursMenu" class="hours-menu hidden">
                                     <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
                                         <i class="icon-minus text-12"></i>
                                     </button>
                                     <div class="flex-center size-20 ml-15 mr-15">
-                                        <div id="hoursValue" class="text-15">2</div>
+                                        <div id="hoursValue" class="text-15">{{ request()->input('min_hours', 2) }}</div>
                                     </div>
                                     <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(1)">
                                         <i class="icon-plus text-12"></i>
@@ -110,43 +38,349 @@
                                 </div>
                             </div>
 
-
-                            <div class="searchMenu-date__field shadow-2" data-x-dd="searchMenu-date" data-x-dd-toggle="-is-active">
-                                <div class="bg-white px-30 py-30 rounded-4">
-                                    <div class="elCalendar js-calendar-el-calendar"></div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="searchMenu-guests px-30 lg:py-20 lg:px-0 js-form-dd js-form-counters">
-
-                            <div data-x-dd-click="searchMenu-guests">
-                                <h4 class="text-15 fw-500 ls-2 lh-16"></h4>
-
-                                <div class="text-15 text-light-1 ls-2 lh-16">
-                                    <span class="js-count-adult"></span>
-
-
-                                </div>
-                            </div>
-
-
-
-
-
                             <div class="button-item">
                                 <button type="submit" class="mainSearch__submit button -dark-1 h-60 px-35 col-12 bg-blue-1 text-white">
                                     <i class="icon-search text-20 mr-10"></i>
                                     Search
                                 </button>
                             </div>
+                        </div>
+
+                </div>
+
+
+            </div>
+    </div>
+</section>
+
+<section class="layout-pt-md layout-pb-lg">
+    <div class="container">
+        <div class="row y-gap-30">
+            <div class="col-xl-3 col-lg-4 lg:d-none">
+                <aside class="sidebar y-gap-40">
+                    <div class="sidebar__item -no-border">
+                        <div class="flex-center ratio ratio-15:9 js-lazy" data-bg={{asset("media/img/general/map.png")}}>
+                            <button data-x-click="mapFilter" class="button py-15 px-24 -blue-1 bg-white text-dark-1 absolute">
+                                <i class="icon-destination text-22 mr-10"></i>
+                                Regarder sur la carte
+                            </button>
+                        </div>
+                    </div>
+
+                        <div class="sidebar__item">
+                            <label for="distanceSlider" class="text-15 fw-500 ls-2 lh-16">Périmetre</label>
+                            <div class="row x-gap-10 y-gap-30">
+                                <div class="col-12">
+                                    <div class="js-price-rangeSlider">
+                                        <div class="d-flex justify-between mb-20">
+                                            <div class="text-15 text-dark-1">
+                                                <span class="js-lower">0km</span>
+                                                -
+                                                <span class="js-upper">{{ request()->input('distance', 35) }}km</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="px-5">
+                                            <input type="range" id="distance" name="distance" min="0" max="200" value="{{ request()->input('distance', 35) }}" class="slider w-100" oninput="updateDistanceValue(this.value)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="button-grid items-center">
+
+
+                                <div class="searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar js-calendar-el">
+                                    <div id="hoursMenu" class="hours-menu hidden">
+                                        <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
+                                            <i class="icon-minus text-12"></i>
+                                        </button>
+                                        <div class="flex-center size-20 ml-15 mr-15">
+                                            <div id="hoursValue" class="text-15">2</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="button-item">
+                                <button type="submit" class="mainSearch__submit button -dark-1 h-60 px-35 col-12 bg-blue-1 text-white mt-20">
+                                    <i class="icon-search text-20 mr-10"></i>
+                                    Appliquer
+                                </button>
+                            </div>
+                    </form>
+            </div>
+            </aside>
+        </div>
+
+        <div class="col-xl-9 col-lg-8">
+            <div class="row y-gap-10 items-center justify-between">
+                <div class="col-auto">
+                    <div class="text-18"><span class="fw-500">{{ count($studios) }} studios</span> correspondent à votre recherche</div>
+                </div>
+
+                <div class="col-auto">
+                    <div class="row x-gap-20 y-gap-20">
+                        <div class="col-auto">
+                            <button class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1">
+                                <i class="icon-up-down text-14 mr-10"></i>
+                                Filtre
+                            </button>
+                        </div>
+
+                        <div class="col-auto d-none lg:d-block">
+                            <button data-x-click="filterPopup" class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1">
+                                <i class="icon-up-down text-14 mr-10"></i>
+                                Filtre
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filterPopup bg-white" data-x="filterPopup" data-x-toggle="-is-active">
+                <aside class="sidebar -mobile-filter">
+                    <div data-x-click="filterPopup" class="-icon-close">
+                        <i class="icon-close"></i>
+                    </div>
+
+                    <div class="sidebar__item -no-border">
+                        <h5 class="text-18 fw-500 mb-10">Type of Place</h5>
+                        <div class="sidebar-checkbox">
+                            <!-- Contenu des filtres conservé du premier code -->
+                            <div class="row y-gap-10 items-center justify-between">
+                                <div class="col-auto">
+                                    <div class="d-flex items-center">
+                                        <div class="form-checkbox ">
+                                            <input type="checkbox" name="name">
+                                            <div class="form-checkbox__mark">
+                                                <div class="form-checkbox__icon icon-check"></div>
+                                            </div>
+                                        </div>
+                                        <div class="text-15 ml-10">Apartments</div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="text-15 text-light-1">92</div>
+                                </div>
+                            </div>
+                            <!-- Autres options de filtre... -->
+                        </div>
+                    </div>
+                    <!-- Autres sections de filtre... -->
+                </aside>
+            </div>
+
+            <div class="mt-30">
+                <!-- Boucle sur les studios comme dans le deuxième code -->
+                @foreach($studios as $studio)
+                    <div class="border-top-light pt-20 mb-20">
+                        <div class="row x-gap-20 y-gap-20">
+                            <div class="col-md-auto">
+                                <div class="cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4">
+                                    <div class="cardImage__content">
+                                        <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
+                                            <div class="swiper-wrapper">
+                                                <div class="swiper-slide">
+                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                </div>
+                                                <div class="swiper-slide">
+                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                </div>
+                                                <div class="swiper-slide">
+                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                </div>
+                                            </div>
+                                            <div class="cardImage-slider__pagination js-pagination"></div>
+                                            <div class="cardImage-slider__nav -prev">
+                                                <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
+                                                    <i class="icon-chevron-left text-10"></i>
+                                                </button>
+                                            </div>
+                                            <div class="cardImage-slider__nav -next">
+                                                <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
+                                                    <i class="icon-chevron-right text-10"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cardImage__wishlist">
+                                        <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
+                                            <i class="icon-heart text-12"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md">
+                                <div class="d-flex flex-column h-full justify-between">
+                                    <div class="">
+                                        <p class="text-14 lh-14 mb-5">{{ $studio->city }}</p>
+                                        <h3 class="text-18 lh-16 fw-500">{{ $studio->name }}</h3>
+
+                                        <!-- Affichage de la distance si disponible -->
+                                        @if(isset($studio->distance))
+                                            <p class="text-light-1 lh-14 text-14 mt-5">
+                                                <i class="icon-location text-14 mr-5"></i>
+                                                {{ number_format($studio->distance, 1) }} km de votre position
+                                            </p>
+                                        @endif
+
+                                        <div class="row x-gap-5 items-center pt-5">
+                                            <!-- Étoiles ou autres indicateurs -->
+                                        </div>
+                                    </div>
+
+                                    <div class="row x-gap-10 y-gap-10 pt-20">
+                                        <div class="col-auto">
+                                            <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Beatmaking</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">WiFi</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">REC</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Mix/Mastering</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-auto text-right md:text-left">
+                                <div class="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
+                                    <div class="col-auto">
+                                        <div class="text-14 lh-14 fw-500">Exceptional</div>
+                                        <div class="text-14 lh-14 text-light-1">3,014 reviews</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1">4.8</div>
+                                    </div>
+                                </div>
+
+                                <div class="text-14 text-light-1 mt-40 md:mt-20">A Partir de </div>
+                                <div class="text-22 lh-12 fw-600 mt-5">{{ $studio->hourly_rate }}€</div>
+                                <div class="text-14 text-light-1 mt-5">par heures</div>
+
+                                <a href="{{ route('studio.show', $studio) }}" class="button -md -dark-1 bg-blue-1 text-white mt-24">
+                                    Voir Détails <div class="icon-arrow-top-right ml-15"></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Pagination -->
+            <div class="border-top-light mt-30 pt-30">
+                <div class="row x-gap-10 y-gap-20 justify-between md:justify-center">
+                    <div class="col-auto md:order-1">
+                        <button class="button -blue-1 size-40 rounded-full border-light">
+                            <i class="icon-chevron-left text-12"></i>
+                        </button>
+                    </div>
+
+                    <div class="col-md-auto md:order-3">
+                        <div class="row x-gap-20 y-gap-20 items-center md:d-none">
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full">1</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full">3</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full bg-light-2">4</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full">5</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full">...</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full">20</div>
+                            </div>
+                        </div>
+
+                        <div class="row x-gap-10 y-gap-20 justify-center items-center d-none md:d-flex">
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full">1</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="size-40 flex-center rounded-full">3</div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-30 md:mt-10">
+                            <div class="text-14 text-light-1">1 – 20 de {{ count($studios) }} studios trouvés</div>
+                        </div>
+                    </div>
+
+                    <div class="col-auto md:order-2">
+                        <button class="button -blue-1 size-40 rounded-full border-light">
+                            <i class="icon-chevron-right text-12"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
 </section>
+
+<!-- Ajout du script pour la fonctionnalité de recherche -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+
+        // Fonction de recherche
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const studioCards = document.querySelectorAll('.border-top-light.pt-20.mb-20');
+
+            studioCards.forEach(card => {
+                const studioName = card.querySelector('h3').textContent.toLowerCase();
+                const studioCity = card.querySelector('p.text-14.lh-14.mb-5').textContent.toLowerCase();
+
+                if (studioName.includes(searchTerm) || studioCity.includes(searchTerm)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Mise à jour du compteur de résultats
+            const visibleStudios = document.querySelectorAll('.border-top-light.pt-20.mb-20[style=""]').length;
+            document.querySelector('.text-18 .fw-500').textContent = visibleStudios + ' Studios';
+        }
+
+        // Écouteurs d'événements
+        searchButton.addEventListener('click', performSearch);
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Fonction pour mettre à jour l'affichage du périmètre
+        window.updateDistanceValue = function(value) {
+            document.querySelector('.js-lower').textContent = '0km';
+            document.querySelector('.js-upper').textContent = value + 'km';
+        };
+    });
+</script>
+
 <style>
     /* Styles généraux */
     .mainSearch {
