@@ -4,7 +4,7 @@
             <div class="row y-gap-30 justify-center text-center">
 
                 <div class="col-xl-3 col-6">
-                    <div class="text-40 lg:text-30 lh-13 fw-600">0</div>
+                    <div class="text-40 lg:text-30 lh-13 fw-600">{{ $studioCount }}</div>
                     <div class="text-14 lh-14 text-light-1 mt-5">Studios</div>
                 </div>
 
@@ -14,8 +14,8 @@
                 </div>
 
                 <div class="col-xl-3 col-6">
-                    <div class="text-40 lg:text-30 lh-13 fw-600">0</div>
-                    <div class="text-14 lh-14 text-light-1 mt-5">Utilisateurs inscrits </div>
+                    <div class="text-40 lg:text-30 lh-13 fw-600">{{ $userCount }}</div>
+                    <div class="text-14 lh-14 text-light-1 mt-5">Utilisateurs inscrits</div>
                 </div>
 
                 <div class="col-xl-3 col-6">

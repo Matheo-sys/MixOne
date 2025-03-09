@@ -109,6 +109,11 @@ class StudioController extends Controller
         $distance = $request->input('distance', 50);
         $min_hours = $request->input('min_hours', 1);
         $city = $request->input('city', '');
+        $sort_by = $request->input('sort_by', 'distance'); // Par défaut : tri par distance
+        $sort_direction = $request->input('sort_direction', 'asc'); // Par défaut : ascendant
+        $price_min = $request->input('price_min');
+        $price_max = $request->input('price_max');
+        $rating = $request->input('rating');
 
         // Si une ville est spécifiée, obtenir ses coordonnées
         if (!empty($city) && (!$latitude || !$longitude)) {
@@ -122,35 +127,65 @@ class StudioController extends Controller
         // Requête de base
         $query = Studio::query();
 
-        // Filtrage par heures minimales
+        // Filtrage des studios selon les critères
         if ($min_hours) {
             $query->where('min_hours', '<=', $min_hours);
         }
+        if ($price_min) {
+            $query->where('hourly_rate', '>=', $price_min);
+        }
+        if ($price_max) {
+            $query->where('hourly_rate', '<=', $price_max);
+        }
 
-        // Si on a des coordonnées, filtrer par distance
-        if ($latitude && $longitude) {
-            // Formule Haversine pour calculer la distance entre deux points sur une sphère
-            $query->selectRaw("*,
-                (6371 * acos(
-                    cos(radians(?)) *
-                    cos(radians(latitude)) *
-                    cos(radians(longitude) - radians(?)) +
-                    sin(radians(?)) *
-                    sin(radians(latitude))
-                )) AS distance", [$latitude, $longitude, $latitude])
-                ->having('distance', '<=', $distance)
-                ->orderBy('distance');
+        // Ajouter le calcul de la distance si coordonnées fournies
+        if ($sort_by === 'price') {
+            $query->orderBy('hourly_rate', $sort_direction);
+        } else {
+            if ($latitude && $longitude) {
+                $query->selectRaw("*, (6371 * acos(
+            cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
+            sin(radians(?)) * sin(radians(latitude))
+        )) AS distance", [$latitude, $longitude, $latitude])
+                    ->having('distance', '<=', $distance)
+                    ->orderBy('distance', $sort_direction);
+            }
+        }
+
+        // Appliquer le tri en fonction du choix de l'utilisateur
+        switch ($sort_by) {
+            case 'price':
+                $query->orderBy('hourly_rate', $sort_direction);
+                break;
+            case 'rating':
+                $query->orderBy('rating', $sort_direction);
+                break;
+            case 'distance':
+            default:
+                if ($latitude && $longitude) {
+                    $query->orderBy('distance', 'asc');
+                }
+                break;
         }
 
         $studios = $query->get();
 
-        // Préparer les variables pour la vue
-        $user_lat = $latitude;
-        $user_lon = $longitude;
-        $max_distance = $distance;
-
-        return view('pages.studio_list', compact('studios', 'user_lat', 'user_lon', 'max_distance', 'min_hours', 'city'));
+        // Retourner la vue avec les studios filtrés et triés
+        return view('pages.studio_list', compact(
+            'studios',
+            'latitude',
+            'longitude',
+            'distance',
+            'min_hours',
+            'city',
+            'sort_by',
+            'sort_direction',
+            'price_min',
+            'price_max',
+            'rating'
+        ));
     }
+
 
     /**
      * Obtenir les coordonnées d'une localisation (ville ou adresse) via Nominatim API
@@ -202,4 +237,6 @@ class StudioController extends Controller
         $studio->delete();
         return redirect()->route('dashboard.studios')->with('success', 'Studio deleted successfully.');
     }
+
+
 }

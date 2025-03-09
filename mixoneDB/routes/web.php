@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\StudioController;
 use App\Http\Controllers\UserSettingsController;
@@ -70,3 +71,6 @@ Route::middleware('auth')->group(function () {
 
 
 Route::post('/contact', [ContactController::class, 'sendEmail'])->name('send.email');
+
+// routes/web.php
+Route::get('/about', [AboutController::class, 'index'])->name('about.index');

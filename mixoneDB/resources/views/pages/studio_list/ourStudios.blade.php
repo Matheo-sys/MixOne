@@ -50,7 +50,7 @@
 
 
             </div>
-    </div>
+        </div>
 </section>
 
 <section class="layout-pt-md layout-pb-lg">
@@ -67,274 +67,286 @@
                         </div>
                     </div>
 
-                        <div class="sidebar__item">
-                            <label for="distanceSlider" class="text-15 fw-500 ls-2 lh-16">Périmetre</label>
-                            <div class="row x-gap-10 y-gap-30">
-                                <div class="col-12">
-                                    <div class="js-price-rangeSlider">
-                                        <div class="d-flex justify-between mb-20">
-                                            <div class="text-15 text-dark-1">
-                                                <span class="js-lower">0km</span>
-                                                -
-                                                <span class="js-upper">{{ request()->input('distance', 35) }}km</span>
-                                            </div>
+                    <div class="sidebar__item">
+                        <label for="distanceSlider" class="text-15 fw-500 ls-2 lh-16">Périmetre</label>
+                        <div class="row x-gap-10 y-gap-30">
+                            <div class="col-12">
+                                <div class="js-price-rangeSlider">
+                                    <div class="d-flex justify-between mb-20">
+                                        <div class="text-15 text-dark-1">
+                                            <span class="js-lower">0km</span>
+                                            -
+                                            <span class="js-upper">{{ request()->input('distance', 35) }}km</span>
                                         </div>
+                                    </div>
 
-                                        <div class="px-5">
-                                            <input type="range" id="distance" name="distance" min="0" max="200" value="{{ request()->input('distance', 35) }}" class="slider w-100" oninput="updateDistanceValue(this.value)">
-                                        </div>
+                                    <div class="px-5">
+                                        <input type="range" id="distance" name="distance" min="0" max="200" value="{{ request()->input('distance', 35) }}" class="slider w-100" oninput="updateDistanceValue(this.value)">
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="button-grid items-center">
+                        <div class="button-grid items-center">
 
 
-                                <div class="searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar js-calendar-el">
-                                    <div id="hoursMenu" class="hours-menu hidden">
-                                        <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
-                                            <i class="icon-minus text-12"></i>
-                                        </button>
-                                        <div class="flex-center size-20 ml-15 mr-15">
-                                            <div id="hoursValue" class="text-15">2</div>
-                                        </div>
-
+                            <div class="searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar js-calendar-el">
+                                <div id="hoursMenu" class="hours-menu hidden">
+                                    <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
+                                        <i class="icon-minus text-12"></i>
+                                    </button>
+                                    <div class="flex-center size-20 ml-15 mr-15">
+                                        <div id="hoursValue" class="text-15">2</div>
                                     </div>
+
                                 </div>
-
-
                             </div>
 
-                            <div class="button-item">
-                                <button type="submit" class="mainSearch__submit button -dark-1 h-60 px-35 col-12 bg-blue-1 text-white mt-20">
-                                    <i class="icon-search text-20 mr-10"></i>
-                                    Appliquer
-                                </button>
-                            </div>
-                    </form>
-            </div>
-            </aside>
-        </div>
 
-        <div class="col-xl-9 col-lg-8">
-            <div class="row y-gap-10 items-center justify-between">
-                <div class="col-auto">
-                    <div class="text-18"><span class="fw-500">{{ count($studios) }} studios</span> correspondent à votre recherche</div>
-                </div>
+                        </div>
 
-                <div class="col-auto">
-                    <div class="row x-gap-20 y-gap-20">
-                        <div class="col-auto">
-                            <button class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1">
-                                <i class="icon-up-down text-14 mr-10"></i>
-                                Filtre
+                        <div class="button-item">
+                            <button type="submit" class="mainSearch__submit button -dark-1 h-60 px-35 col-12 bg-blue-1 text-white mt-20">
+                                <i class="icon-search text-20 mr-10"></i>
+                                Appliquer
                             </button>
                         </div>
-
-                        <div class="col-auto d-none lg:d-block">
-                            <button data-x-click="filterPopup" class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1">
-                                <i class="icon-up-down text-14 mr-10"></i>
-                                Filtre
-                            </button>
-                        </div>
+                        </form>
                     </div>
-                </div>
-            </div>
-
-            <div class="filterPopup bg-white" data-x="filterPopup" data-x-toggle="-is-active">
-                <aside class="sidebar -mobile-filter">
-                    <div data-x-click="filterPopup" class="-icon-close">
-                        <i class="icon-close"></i>
-                    </div>
-
-                    <div class="sidebar__item -no-border">
-                        <h5 class="text-18 fw-500 mb-10">Type of Place</h5>
-                        <div class="sidebar-checkbox">
-                            <!-- Contenu des filtres conservé du premier code -->
-                            <div class="row y-gap-10 items-center justify-between">
-                                <div class="col-auto">
-                                    <div class="d-flex items-center">
-                                        <div class="form-checkbox ">
-                                            <input type="checkbox" name="name">
-                                            <div class="form-checkbox__mark">
-                                                <div class="form-checkbox__icon icon-check"></div>
-                                            </div>
-                                        </div>
-                                        <div class="text-15 ml-10">Apartments</div>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="text-15 text-light-1">92</div>
-                                </div>
-                            </div>
-                            <!-- Autres options de filtre... -->
-                        </div>
-                    </div>
-                    <!-- Autres sections de filtre... -->
                 </aside>
             </div>
 
-            <div class="mt-30">
-                <!-- Boucle sur les studios comme dans le deuxième code -->
-                @foreach($studios as $studio)
-                    <div class="border-top-light pt-20 mb-20">
+            <div class="col-xl-9 col-lg-8">
+                <div class="row y-gap-10 items-center justify-between">
+                    <div class="col-auto">
+                        <div class="text-18"><span class="fw-500">{{ count($studios) }} studios</span> correspondent à votre recherche</div>
+                    </div>
+
+                    <div class="col-auto">
                         <div class="row x-gap-20 y-gap-20">
-                            <div class="col-md-auto">
-                                <div class="cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4">
-                                    <div class="cardImage__content">
-                                        <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
-                                            <div class="swiper-wrapper">
-                                                <div class="swiper-slide">
-                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                </div>
-                                                <div class="swiper-slide">
-                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                </div>
-                                                <div class="swiper-slide">
-                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                </div>
-                                            </div>
-                                            <div class="cardImage-slider__pagination js-pagination"></div>
-                                            <div class="cardImage-slider__nav -prev">
-                                                <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
-                                                    <i class="icon-chevron-left text-10"></i>
-                                                </button>
-                                            </div>
-                                            <div class="cardImage-slider__nav -next">
-                                                <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
-                                                    <i class="icon-chevron-right text-10"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="cardImage__wishlist">
-                                        <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
-                                            <i class="icon-heart text-12"></i>
-                                        </button>
-                                    </div>
+                            <div class="col-auto">
+
+                                <div class="col-auto">
+                                    <select name="sort_by" id="price-filter" class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1"
+                                            onchange="this.form.submit()">
+                                        <option value="distance" {{ request('sort_by') == 'distance' ? 'selected' : '' }}>Distance</option>
+                                        <option value="price" data-dir="asc" {{ request('sort_by') == 'price' && request('sort_direction') == 'asc' ? 'selected' : '' }}>
+                                            Prix Croissant
+                                        </option>
+                                        <option value="price" data-dir="desc" {{ request('sort_by') == 'price' && request('sort_direction') == 'desc' ? 'selected' : '' }}>
+                                            Prix Décroissant
+                                        </option>
+                                    </select>
+
+                                    <!-- Champ caché pour stocker la direction du tri -->
+                                    <input type="hidden" name="sort_direction" id="sort_direction" value="{{ request('sort_direction', 'asc') }}">
+
                                 </div>
+
+
                             </div>
 
-                            <div class="col-md">
-                                <div class="d-flex flex-column h-full justify-between">
-                                    <div class="">
-                                        <p class="text-14 lh-14 mb-5">{{ $studio->city }}</p>
-                                        <h3 class="text-18 lh-16 fw-500">{{ $studio->name }}</h3>
+                            <div class="col-auto d-none lg:d-block">
 
-                                        <!-- Affichage de la distance si disponible -->
-                                        @if(isset($studio->distance))
-                                            <p class="text-light-1 lh-14 text-14 mt-5">
-                                                <i class="icon-location text-14 mr-5"></i>
-                                                {{ number_format($studio->distance, 1) }} km de votre position
-                                            </p>
-                                        @endif
-
-                                        <div class="row x-gap-5 items-center pt-5">
-                                            <!-- Étoiles ou autres indicateurs -->
-                                        </div>
-                                    </div>
-
-                                    <div class="row x-gap-10 y-gap-10 pt-20">
-                                        <div class="col-auto">
-                                            <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Beatmaking</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">WiFi</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">REC</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Mix/Mastering</div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
 
-                            <div class="col-md-auto text-right md:text-left">
-                                <div class="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
+                <div class="filterPopup bg-white" data-x="filterPopup" data-x-toggle="-is-active">
+                    <aside class="sidebar -mobile-filter">
+                        <div data-x-click="filterPopup" class="-icon-close">
+                            <i class="icon-close"></i>
+                        </div>
+
+                        <div class="sidebar__item -no-border">
+                            <h5 class="text-18 fw-500 mb-10">Type of Place</h5>
+                            <div class="sidebar-checkbox">
+                                <!-- Contenu des filtres conservé du premier code -->
+                                <div class="row y-gap-10 items-center justify-between">
                                     <div class="col-auto">
-                                        <div class="text-14 lh-14 fw-500">Exceptional</div>
-                                        <div class="text-14 lh-14 text-light-1">3,014 reviews</div>
+                                        <div class="d-flex items-center">
+                                            <div class="form-checkbox ">
+                                                <input type="checkbox" name="name">
+                                                <div class="form-checkbox__mark">
+                                                    <div class="form-checkbox__icon icon-check"></div>
+                                                </div>
+                                            </div>
+                                            <div class="text-15 ml-10">Apartments</div>
+                                        </div>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1">4.8</div>
+                                        <div class="text-15 text-light-1">92</div>
+                                    </div>
+                                </div>
+                                <!-- Autres options de filtre... -->
+                            </div>
+                        </div>
+                        <!-- Autres sections de filtre... -->
+                    </aside>
+                </div>
+
+                <div class="mt-30">
+                    <!-- Boucle sur les studios comme dans le deuxième code -->
+                    @foreach($studios as $studio)
+                        <div class="border-top-light pt-20 mb-20">
+                            <div class="row x-gap-20 y-gap-20">
+                                <div class="col-md-auto">
+                                    <div class="cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4">
+                                        <div class="cardImage__content">
+                                            <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
+                                                <div class="swiper-wrapper">
+                                                    <div class="swiper-slide">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                    </div>
+                                                    <div class="swiper-slide">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                    </div>
+                                                    <div class="swiper-slide">
+                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                    </div>
+                                                </div>
+                                                <div class="cardImage-slider__pagination js-pagination"></div>
+                                                <div class="cardImage-slider__nav -prev">
+                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
+                                                        <i class="icon-chevron-left text-10"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="cardImage-slider__nav -next">
+                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
+                                                        <i class="icon-chevron-right text-10"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cardImage__wishlist">
+                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
+                                                <i class="icon-heart text-12"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="text-14 text-light-1 mt-40 md:mt-20">A Partir de </div>
-                                <div class="text-22 lh-12 fw-600 mt-5">{{ $studio->hourly_rate }}€</div>
-                                <div class="text-14 text-light-1 mt-5">par heures</div>
+                                <div class="col-md">
+                                    <div class="d-flex flex-column h-full justify-between">
+                                        <div class="">
+                                            <p class="text-14 lh-14 mb-5">{{ $studio->city }}</p>
+                                            <h3 class="text-18 lh-16 fw-500">{{ $studio->name }}</h3>
 
-                                <a href="{{ route('studio.show', $studio) }}" class="button -md -dark-1 bg-blue-1 text-white mt-24">
-                                    Voir Détails <div class="icon-arrow-top-right ml-15"></div>
-                                </a>
+                                            <!-- Affichage de la distance si disponible -->
+                                            @if(isset($studio->distance))
+                                                <p class="text-light-1 lh-14 text-14 mt-5">
+                                                    <i class="icon-location text-14 mr-5"></i>
+                                                    {{ number_format($studio->distance, 1) }} km de votre position
+                                                </p>
+                                            @endif
+
+                                            <div class="row x-gap-5 items-center pt-5">
+                                                <!-- Étoiles ou autres indicateurs -->
+                                            </div>
+                                        </div>
+
+                                        <div class="row x-gap-10 y-gap-10 pt-20">
+                                            <div class="col-auto">
+                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Beatmaking</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">WiFi</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">REC</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Mix/Mastering</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-auto text-right md:text-left">
+                                    <div class="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
+                                        <div class="col-auto">
+                                            <div class="text-14 lh-14 fw-500">Exceptional</div>
+                                            <div class="text-14 lh-14 text-light-1">3,014 reviews</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1">4.8</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-14 text-light-1 mt-40 md:mt-20">A Partir de </div>
+                                    <div class="text-22 lh-12 fw-600 mt-5">{{ $studio->hourly_rate }}€</div>
+                                    <div class="text-14 text-light-1 mt-5">par heures</div>
+
+                                    <a href="{{ route('studio.show', $studio) }}" class="button -md -dark-1 bg-blue-1 text-white mt-24">
+                                        Voir Détails <div class="icon-arrow-top-right ml-15"></div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
+                    @endforeach
+                </div>
 
-            <!-- Pagination -->
-            <div class="border-top-light mt-30 pt-30">
-                <div class="row x-gap-10 y-gap-20 justify-between md:justify-center">
-                    <div class="col-auto md:order-1">
-                        <button class="button -blue-1 size-40 rounded-full border-light">
-                            <i class="icon-chevron-left text-12"></i>
-                        </button>
-                    </div>
+                <!-- Pagination -->
+                <div class="border-top-light mt-30 pt-30">
+                    <div class="row x-gap-10 y-gap-20 justify-between md:justify-center">
+                        <div class="col-auto md:order-1">
+                            <button class="button -blue-1 size-40 rounded-full border-light">
+                                <i class="icon-chevron-left text-12"></i>
+                            </button>
+                        </div>
 
-                    <div class="col-md-auto md:order-3">
-                        <div class="row x-gap-20 y-gap-20 items-center md:d-none">
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">1</div>
+                        <div class="col-md-auto md:order-3">
+                            <div class="row x-gap-20 y-gap-20 items-center md:d-none">
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full">1</div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full">3</div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full bg-light-2">4</div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full">5</div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full">...</div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full">20</div>
+                                </div>
                             </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
+
+                            <div class="row x-gap-10 y-gap-20 justify-center items-center d-none md:d-flex">
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full">1</div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="size-40 flex-center rounded-full">3</div>
+                                </div>
                             </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">3</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full bg-light-2">4</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">5</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">...</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">20</div>
+
+                            <div class="text-center mt-30 md:mt-10">
+                                <div class="text-14 text-light-1">1 – 20 de {{ count($studios) }} studios trouvés</div>
                             </div>
                         </div>
 
-                        <div class="row x-gap-10 y-gap-20 justify-center items-center d-none md:d-flex">
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">1</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">3</div>
-                            </div>
+                        <div class="col-auto md:order-2">
+                            <button class="button -blue-1 size-40 rounded-full border-light">
+                                <i class="icon-chevron-right text-12"></i>
+                            </button>
                         </div>
-
-                        <div class="text-center mt-30 md:mt-10">
-                            <div class="text-14 text-light-1">1 – 20 de {{ count($studios) }} studios trouvés</div>
-                        </div>
-                    </div>
-
-                    <div class="col-auto md:order-2">
-                        <button class="button -blue-1 size-40 rounded-full border-light">
-                            <i class="icon-chevron-right text-12"></i>
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </section>
 
@@ -605,3 +617,44 @@
         }
     });
 </script>
+
+<script>
+    document.getElementById("price-filter").addEventListener("change", function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Définir sort_by
+        urlParams.set('sort_by', this.value);
+
+        // Définir sort_direction si c'est un tri par prix
+        if (this.value === "price") {
+            urlParams.set('sort_direction', selectedOption.getAttribute('data-dir'));
+        } else {
+            urlParams.delete('sort_direction');
+        }
+
+        window.location.search = urlParams.toString();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sortOrder = urlParams.get('sort_by') || 'distance'; // Distance par défaut
+        document.getElementById("price-filter").value = sortOrder;
+    });
+</script>
+
+<script>
+    document.getElementById('price-filter').addEventListener('change', function () {
+        var selectedOption = this.options[this.selectedIndex];
+        var sortDirectionInput = document.getElementById('sort_direction');
+
+        if (selectedOption.value === 'price') {
+            sortDirectionInput.value = selectedOption.getAttribute('data-dir');
+        } else {
+            sortDirectionInput.value = 'asc'; // Distance par défaut
+        }
+
+        this.form.submit();
+    });
+</script>
+
