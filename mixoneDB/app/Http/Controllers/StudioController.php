@@ -103,7 +103,7 @@ class StudioController extends Controller
      */
     public function search(Request $request): View
     {
-        // Initialiser les variables par défaut
+        // Initialiser les variables
         $latitude = $request->input('latitude', 0);
         $longitude = $request->input('longitude', 0);
         $distance = $request->input('distance', 50);
@@ -111,9 +111,6 @@ class StudioController extends Controller
         $city = $request->input('city', '');
         $sort_by = $request->input('sort_by', 'distance'); // Par défaut : tri par distance
         $sort_direction = $request->input('sort_direction', 'asc'); // Par défaut : ascendant
-        $price_min = $request->input('price_min');
-        $price_max = $request->input('price_max');
-        $rating = $request->input('rating');
 
         // Si une ville est spécifiée, obtenir ses coordonnées
         if (!empty($city) && (!$latitude || !$longitude)) {
@@ -127,38 +124,24 @@ class StudioController extends Controller
         // Requête de base
         $query = Studio::query();
 
-        // Filtrage des studios selon les critères
+        // Appliquer les filtres de base
         if ($min_hours) {
             $query->where('min_hours', '<=', $min_hours);
         }
-        if ($price_min) {
-            $query->where('hourly_rate', '>=', $price_min);
-        }
-        if ($price_max) {
-            $query->where('hourly_rate', '<=', $price_max);
-        }
 
-        // Ajouter le calcul de la distance si coordonnées fournies
-        if ($sort_by === 'price') {
-            $query->orderBy('hourly_rate', $sort_direction);
-        } else {
-            if ($latitude && $longitude) {
-                $query->selectRaw("*, (6371 * acos(
+        // Important : toujours appliquer le filtrage par distance si on a des coordonnées
+        if ($latitude && $longitude) {
+            $query->selectRaw("*, (6371 * acos(
             cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
             sin(radians(?)) * sin(radians(latitude))
         )) AS distance", [$latitude, $longitude, $latitude])
-                    ->having('distance', '<=', $distance)
-                    ->orderBy('distance', $sort_direction);
-            }
+                ->having('distance', '<=', $distance);
         }
 
         // Appliquer le tri en fonction du choix de l'utilisateur
         switch ($sort_by) {
             case 'price':
                 $query->orderBy('hourly_rate', $sort_direction);
-                break;
-            case 'rating':
-                $query->orderBy('rating', $sort_direction);
                 break;
             case 'distance':
             default:
@@ -170,7 +153,6 @@ class StudioController extends Controller
 
         $studios = $query->get();
 
-        // Retourner la vue avec les studios filtrés et triés
         return view('pages.studio_list', compact(
             'studios',
             'latitude',
@@ -179,10 +161,7 @@ class StudioController extends Controller
             'min_hours',
             'city',
             'sort_by',
-            'sort_direction',
-            'price_min',
-            'price_max',
-            'rating'
+            'sort_direction'
         ));
     }
 

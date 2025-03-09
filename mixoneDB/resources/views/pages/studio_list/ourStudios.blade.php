@@ -633,14 +633,13 @@
             urlParams.delete('sort_direction');
         }
 
+        // Conserver les autres paramètres importants
+        // Ne pas toucher à latitude, longitude, distance, city, min_hours
+
         window.location.search = urlParams.toString();
     });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const sortOrder = urlParams.get('sort_by') || 'distance'; // Distance par défaut
-        document.getElementById("price-filter").value = sortOrder;
-    });
+
 </script>
 
 <script>
