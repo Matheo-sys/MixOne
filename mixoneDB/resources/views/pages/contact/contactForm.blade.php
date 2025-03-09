@@ -7,47 +7,40 @@
                         Envoyez-nous un message
                     </div>
 
-                    <div class="row y-gap-20 pt-20">
-                        <div class="col-12">
-
-                            <div class="form-input ">
-                                <input type="text" required>
-                                <label class="lh-1 text-16 text-light-1">Nom prénom</label>
+                    <form action="{{ route('send.email') }}" method="POST">
+                        @csrf
+                        <div class="row y-gap-20 pt-20">
+                            <div class="col-12">
+                                <div class="form-input">
+                                    <input type="text" name="name" required>
+                                    <label class="lh-1 text-16 text-light-1">Nom prénom</label>
+                                </div>
                             </div>
-
-                        </div>
-                        <div class="col-12">
-
-                            <div class="form-input ">
-                                <input type="text" required>
-                                <label class="lh-1 text-16 text-light-1">Email</label>
+                            <div class="col-12">
+                                <div class="form-input">
+                                    <input type="email" name="email" required>
+                                    <label class="lh-1 text-16 text-light-1">Email</label>
+                                </div>
                             </div>
-
-                        </div>
-                        <div class="col-12">
-
-                            <div class="form-input ">
-                                <input type="text" required>
-                                <label class="lh-1 text-16 text-light-1">Sujet</label>
+                            <div class="col-12">
+                                <div class="form-input">
+                                    <input type="text" name="subject" required>
+                                    <label class="lh-1 text-16 text-light-1">Sujet</label>
+                                </div>
                             </div>
-
-                        </div>
-                        <div class="col-12">
-
-                            <div class="form-input ">
-                                <textarea required rows="4"></textarea>
-                                <label class="lh-1 text-16 text-light-1">Votre message</label>
+                            <div class="col-12">
+                                <div class="form-input">
+                                    <textarea name="message" required rows="4"></textarea>
+                                    <label class="lh-1 text-16 text-light-1">Votre message</label>
+                                </div>
                             </div>
-
+                            <div class="col-auto">
+                                <button type="submit" class="button px-24 h-50 -dark-1 bg-blue-1 text-white">
+                                    Envoyer <div class="icon-arrow-top-right ml-15"></div>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-auto">
-
-                            <a href="#" class="button px-24 h-50 -dark-1 bg-blue-1 text-white">
-                                Envoyer <div class="icon-arrow-top-right ml-15"></div>
-                            </a>
-
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

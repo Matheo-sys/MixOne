@@ -17,7 +17,7 @@
 
             <div class="col-auto">
                 <div class="text-14 text-light-1">Besoin d'aide ?</div>
-                <div class="text-18 fw-500 mt-10">team@mixone.com</div>
+                <div class="text-18 fw-500 mt-10">mixone.contact@gmail.com</div>
             </div>
 
             <div class="col-auto">

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ContactController;
 
 Auth::routes();
 
@@ -66,3 +67,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/message', [MessageController::class, 'store']);
     Route::get('/message', [MessageController::class, 'index']);
 });
+
+
+Route::post('/contact', [ContactController::class, 'sendEmail'])->name('send.email');
