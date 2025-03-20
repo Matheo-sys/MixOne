@@ -51,7 +51,7 @@ To center the trash icon within its container, you can use CSS flexbox propertie
                                 <div class="col-12">
                                     <div class="form-input">
                                         <textarea name="description" rows="5"></textarea>
-                                        <label class="lh-1 text-16 text-light-1">Contenu</label>
+                                        <label class="lh-1 text-16 text-light-1">Contenu (Horaires, materiels ...)</label>
                                     </div>
                                     @error('description')
                                     <span class="text-danger" role="alert">

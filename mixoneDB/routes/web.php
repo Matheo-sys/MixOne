@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ReservationController;
 
 Auth::routes();
 
@@ -74,3 +75,5 @@ Route::post('/contact', [ContactController::class, 'sendEmail'])->name('send.ema
 
 // routes/web.php
 Route::get('/about', [AboutController::class, 'index'])->name('about.index');
+
+Route::post('/reservation', [ReservationController::class, 'store'])->name('reservation.store');

@@ -20,8 +20,19 @@ class StudioController extends Controller
      * @return Factory|View|Application
      */
     public function show(Studio $studio) {
+
+        $timeSlots = [
+            "08:00 - 10:00",
+            "10:00 - 12:00",
+            "14:00 - 16:00",
+            "16:00 - 18:00",
+        ];
+
+
         return view('studios.single', [
             'studio' => $studio,
+            'timeSlots' => $timeSlots,
+            compact('studio', 'timeSlots')
         ]);
     }
 
@@ -153,6 +164,7 @@ class StudioController extends Controller
 
         $studios = $query->get();
 
+
         return view('pages.studio_list', compact(
             'studios',
             'latitude',
@@ -218,4 +230,6 @@ class StudioController extends Controller
     }
 
 
-}
+
+
+    }

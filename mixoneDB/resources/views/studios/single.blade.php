@@ -6,80 +6,65 @@
         <div class="container">
             <div class="row y-gap-20 justify-between items-end">
                 <div class="col-auto">
-                    <div class="row x-gap-20  items-center">
+                    <div class="row x-gap-20 items-center">
                         <div class="col-auto">
                             <h1 class="text-30 sm:text-25 fw-600">{{ $studio->name }}</h1>
                         </div>
-
                         <div class="col-auto">
-
                             <i class="icon-star text-10 text-yellow-1"></i>
-
                             <i class="icon-star text-10 text-yellow-1"></i>
-
                             <i class="icon-star text-10 text-yellow-1"></i>
-
                             <i class="icon-star text-10 text-yellow-1"></i>
-
                             <i class="icon-star text-10 text-yellow-1"></i>
-
                         </div>
                     </div>
-
                     <div class="row x-gap-20 y-gap-20 items-center">
                         <div class="col-auto">
                             <div class="d-flex items-center text-15 text-light-1">
                                 <i class="icon-location-2 text-16 mr-5"></i>
-                                {{$studio->address}}, {{ $studio->city}}, {{ $studio->zipcode}}, {{ $studio->country}}
+                                {{ $studio->address }}, {{ $studio->city }}, {{ $studio->zipcode }}, {{ $studio->country }}
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-auto">
                     <div class="row x-gap-15 y-gap-15 items-center">
                         <div class="col-auto">
                             <div class="text-14">
                                 A partir de
-                                <span class="text-22 text-dark-1 fw-500">{{$studio->hourly_rate}}€</span>
+                                <span class="text-22 text-dark-1 fw-500">{{ $studio->hourly_rate }}€</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Galerie d'images, description, etc... -->
             <div class="galleryGrid -type-1 pt-30">
                 <div class="galleryGrid__item relative d-flex">
-                    <img src={{asset("media/img/gallery/1/1.png")}} alt="image" class="rounded-4">
-
+                    <img src="{{ asset('media/img/gallery/1/1.png') }}" alt="image" class="rounded-4">
                     <div class="absolute px-20 py-20 col-12 d-flex justify-end">
                         <button class="button -blue-1 size-40 rounded-full flex-center bg-white text-dark-1">
                             <i class="icon-heart text-16"></i>
                         </button>
                     </div>
                 </div>
-
                 <div class="galleryGrid__item">
-                    <img src={{asset("media/img/gallery/1/2.png")}} alt="image" class="rounded-4">
+                    <img src="{{ asset('media/img/gallery/1/2.png') }}" alt="image" class="rounded-4">
                 </div>
-
                 <div class="galleryGrid__item relative d-flex">
-                    <img src={{asset("media/img/gallery/1/3.png")}} alt="image" class="rounded-4">
-
+                    <img src="{{ asset('media/img/gallery/1/3.png') }}" alt="image" class="rounded-4">
                     <div class="absolute h-full col-12 flex-center">
-                        <a href="{{$studio->video_url}}" class="button -blue-1 size-40 rounded-full flex-center bg-white text-dark-1 js-gallery" data-gallery="gallery1">
+                        <a href="{{ $studio->video_url }}" class="button -blue-1 size-40 rounded-full flex-center bg-white text-dark-1 js-gallery" data-gallery="gallery1">
                             <i class="icon-play text-16"></i>
                         </a>
                     </div>
                 </div>
-
                 <div class="galleryGrid__item">
-                    <img src={{asset("media/img/gallery/1/4.png")}} alt="image" class="rounded-4">
+                    <img src="{{ asset('media/img/gallery/1/4.png') }}" alt="image" class="rounded-4">
                 </div>
-
                 <div class="galleryGrid__item relative d-flex">
-                    <img src={{asset("media/img/gallery/1/5.png")}} alt="image" class="rounded-4">
-
+                    <img src="{{ asset('media/img/gallery/1/5.png') }}" alt="image" class="rounded-4">
                 </div>
             </div>
         </div>
@@ -90,63 +75,53 @@
             <div class="row y-gap-30">
                 <div class="col-xl-8">
                     <div class="row y-gap-40">
-
                         <div id="overview" class="col-12">
                             <h3 class="text-22 fw-500 pt-40 border-top-light">Overview</h3>
                             <p class="text-dark-1 text-15 mt-20">
-                            {{$studio->description}}
+                                {{ $studio->description }}
                             </p>
                         </div>
-
                         <div class="col-12">
                             <h3 class="text-22 fw-500 pt-40 border-top-light">Most Popular Facilities</h3>
                             <div class="row y-gap-10 pt-20">
-
                                 <div class="col-md-5">
                                     <div class="d-flex x-gap-15 y-gap-15 items-center">
                                         <i class="icon-no-smoke"></i>
                                         <div class="text-15">Non-smoking rooms</div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-5">
                                     <div class="d-flex x-gap-15 y-gap-15 items-center">
                                         <i class="icon-wifi"></i>
                                         <div class="text-15">Free WiFi</div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-5">
                                     <div class="d-flex x-gap-15 y-gap-15 items-center">
                                         <i class="icon-parking"></i>
                                         <div class="text-15">Parking</div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-5">
                                     <div class="d-flex x-gap-15 y-gap-15 items-center">
                                         <i class="icon-kitchen"></i>
                                         <div class="text-15">Kitchen</div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-5">
                                     <div class="d-flex x-gap-15 y-gap-15 items-center">
                                         <i class="icon-living-room"></i>
                                         <div class="text-15">Living Area</div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-5">
                                     <div class="d-flex x-gap-15 y-gap-15 items-center">
                                         <i class="icon-shield"></i>
                                         <div class="text-15">Safety &amp; security</div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                         <div class="col-12">
                             <div class="px-24 py-20 rounded-4 bg-green-1">
                                 <div class="row x-gap-20 y-gap-20 items-center">
@@ -155,7 +130,6 @@
                                             <i class="icon-star text-yellow-1 text-30"></i>
                                         </div>
                                     </div>
-
                                     <div class="col-auto">
                                         <h4 class="text-18 lh-15 fw-500">This property is in high demand!</h4>
                                         <div class="text-15 lh-15">7 travelers have booked today.</div>
@@ -170,56 +144,42 @@
                     <div class="ml-50 lg:ml-0">
                         <div class="px-30 py-30 border-light rounded-4 shadow-4">
                             <div class="d-flex items-center justify-between">
-                                <div class="">
-                                    <span class="text-20 fw-500">{{$studio->hourly_rate}} €</span>
+                                <div>
+                                    <span class="text-20 fw-500">{{ $studio->hourly_rate }} €</span>
                                     <span class="text-14 text-light-1 ml-5">de l'heure</span>
                                 </div>
                             </div>
 
                             <div class="row y-gap-20 pt-30">
-                                <div class="col-12">
-
-                                    <div class="searchMenu-date px-20 py-10 border-light rounded-4 -right js-form-dd js-calendar js-calendar-el">
-
-                                        <div class="searchMenu-date px-30 lg:py-20 lg:px-0">
-                                            <label for="date" class="text-15 fw-500 ls-2 lh-16">Jour</label>
-                                            <input type="date" id="date" name="date" class="text-15 text-light-1 ls-2 lh-16" />
-                                        </div>
-                                    </div>
-
+                                <!-- Champ pour la date -->
+                                <div class="row y-gap-10 pt-10">
+                                    <!-- Champ de date avec un calendrier dynamique -->
+                                    <label for="date" class="text-15 text-light-1">Choisissez la date :</label>
+                                    <input type="date" id="date" name="date" class="form-control" required onchange="updateHiddenDate()" />
                                 </div>
 
+                                <!-- Champ pour le nombre d'heures -->
                                 <div class="col-12">
-
                                     <div class="searchMenu-guests px-20 py-10 border-light rounded-4 js-form-dd js-form-counters">
-
                                         <div data-x-dd-click="searchMenu-guests">
-                                            <h4 class="text-15 fw-500 ls-2 lh-16">Nombre d'heures (minimum {{$studio->min_hours}}h)</h4>
-
+                                            <h4 class="text-15 fw-500 ls-2 lh-16">Nombre d'heures (minimum {{ $studio->min_hours }}h)</h4>
                                             <div class="text-15 text-light-1 ls-2 lh-16">
-                                                <span class="js-count-adult">2</span> Heures
+                                                <span class="js-count-adult">{{ $studio->min_hours }}</span> Heures
                                             </div>
                                         </div>
-
-
                                         <div class="searchMenu-guests__field shadow-2" data-x-dd="searchMenu-guests" data-x-dd-toggle="-is-active">
                                             <div class="bg-white px-30 py-30 rounded-4">
                                                 <div class="row y-gap-10 justify-between items-center">
                                                     <div class="col-auto">
                                                         <div class="text-15 fw-500">Heures</div>
                                                     </div>
-
                                                     <div class="col-auto">
-                                                        <div class="d-flex items-center js-counter" data-value-change=".js-count-adult">
-                                                            <button class="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-down">
+                                                        <div class="d-flex items-center js-counter gap-8"> <!-- 8 = 2rem (32px) -->
+                                                            <button class="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-down" type="button">
                                                                 <i class="icon-minus text-12"></i>
                                                             </button>
 
-                                                            <div class="flex-center size-20 ml-15 mr-15">
-                                                                <div class="text-15 js-count">2</div>
-                                                            </div>
-
-                                                            <button class="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-up">
+                                                            <button class="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-up" type="button">
                                                                 <i class="icon-plus text-12"></i>
                                                             </button>
                                                         </div>
@@ -228,21 +188,99 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
 
+                                <!-- Formulaire de réservation -->
                                 <div class="col-12">
-                                    <button class="button -dark-1 px-35 h-60 col-12 bg-blue-1 text-white">
-                                        Réserver
-                                    </button>
+                                    <h4 class="text-15 fw-500 ls-2 lh-16">Créneaux horaires disponibles</h4>
+                                    <form action="{{ route('reservation.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="studio_id" value="{{ $studio->id }}">
+                                        <input type="hidden" name="date" value="" id="hidden_date">
+                                        <input type="hidden"
+                                               name="number_of_hours"
+                                               id="hidden_number_of_hours"
+                                               value="{{ $studio->min_hours }}"
+                                               required>
+
+                                        <div class="row y-gap-10">
+                                            @if (!empty($timeSlots) && is_array($timeSlots))
+                                                <label for="time_slot" class="text-15 text-light-1">Choisissez un créneau :</label>
+                                                <select name="time_slot" id="time_slot" class="form-control" required>
+                                                    @foreach ($timeSlots as $slot)
+                                                        <option value="{{ $slot }}">{{ $slot }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <p class="text-15 text-light-1 py-2">Aucun créneau disponible</p>
+                                            @endif
+                                        </div>
+
+                                        <button class="button -dark-1 px-35 h-60 col-12 bg-blue-1 text-white">
+                                            Réserver
+                                        </button>
+                                    </form>
                                 </div>
+
+                                <script>
+                                    // Code JavaScript CORRECTEMENT encapsulé
+                                    (function() {
+                                        'use strict';
+
+                                        // Configuration des heures
+                                        const decreaseButton = document.querySelector('.js-down');
+                                        const increaseButton = document.querySelector('.js-up');
+                                        const hourDisplay = document.querySelector('.js-count-adult');
+                                        const hiddenInput = document.getElementById('hidden_number_of_hours');
+                                        const minHours = {{ $studio->min_hours }};
+
+                                        let selectedHours = minHours;
+
+                                        function updateDisplay() {
+                                            hourDisplay.textContent = selectedHours;
+                                            hiddenInput.value = selectedHours;
+                                            decreaseButton.disabled = selectedHours <= minHours;
+                                        }
+
+                                        // Écouteurs d'événements
+                                        decreaseButton.addEventListener('click', () => {
+                                            if (selectedHours > minHours) {
+                                                selectedHours--;
+                                                updateDisplay();
+                                            }
+                                        });
+
+                                        increaseButton.addEventListener('click', () => {
+                                            selectedHours++;
+                                            updateDisplay();
+                                        });
+
+                                        // Initialisation
+                                        document.addEventListener('DOMContentLoaded', () => {
+                                            updateDisplay();
+                                            // Gestion de la date
+                                            const dateInput = document.getElementById('date');
+                                            if (dateInput) {
+                                                dateInput.addEventListener('change', function() {
+                                                    document.getElementById('hidden_date').value = this.value;
+                                                });
+                                                document.getElementById('hidden_date').value = dateInput.value;
+                                            }
+                                        });
+                                    })();
+                                </script>
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-    <!--
+
+
+@endsection
+
+<!--
         <div id="reviews"></div>
         <section class="pt-40">
             <div class="container">
@@ -719,6 +757,3 @@
             </div>
         </section>
     -->
-@endsection
-
-
