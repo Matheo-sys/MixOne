@@ -81,7 +81,7 @@
                                     </div>
 
                                     <div class="px-5">
-                                        <input type="range" id="distance" name="distance" min="0" max="200" value="{{ request()->input('distance', 35) }}" class="slider w-100" oninput="updateDistanceValue(this.value)">
+                                        <input type="range" id="distance" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="slider w-100" oninput="updateDistanceValue(this.value)">
                                     </div>
                                 </div>
                             </div>
@@ -349,50 +349,6 @@
         </div>
     </div>
 </section>
-
-<!-- Ajout du script pour la fonctionnalité de recherche -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('search-input');
-        const searchButton = document.getElementById('search-button');
-
-        // Fonction de recherche
-        function performSearch() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const studioCards = document.querySelectorAll('.border-top-light.pt-20.mb-20');
-
-            studioCards.forEach(card => {
-                const studioName = card.querySelector('h3').textContent.toLowerCase();
-                const studioCity = card.querySelector('p.text-14.lh-14.mb-5').textContent.toLowerCase();
-
-                if (studioName.includes(searchTerm) || studioCity.includes(searchTerm)) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            // Mise à jour du compteur de résultats
-            const visibleStudios = document.querySelectorAll('.border-top-light.pt-20.mb-20[style=""]').length;
-            document.querySelector('.text-18 .fw-500').textContent = visibleStudios + ' Studios';
-        }
-
-        // Écouteurs d'événements
-        searchButton.addEventListener('click', performSearch);
-        searchInput.addEventListener('keyup', function(event) {
-            if (event.key === 'Enter') {
-                performSearch();
-            }
-        });
-
-        // Fonction pour mettre à jour l'affichage du périmètre
-        window.updateDistanceValue = function(value) {
-            document.querySelector('.js-lower').textContent = '0km';
-            document.querySelector('.js-upper').textContent = value + 'km';
-        };
-    });
-</script>
-
 <style>
     /* Styles généraux */
     .mainSearch {
@@ -538,122 +494,214 @@
         }
     }
 </style>
-
+<!-- Ajout du script pour la fonctionnalité de recherche -->
 <script>
-    function toggleHoursMenu(event) {
-        event.stopPropagation();
-        const menu = document.getElementById('hoursMenu');
-        menu.classList.toggle('hidden');
-    }
-
-    function changeHours(amount) {
-        const hoursInput = document.getElementById('min_hours');
-        const hoursValue = document.getElementById('hoursValue');
-        let currentValue = parseInt(hoursValue.textContent);
-        if (!isNaN(currentValue)) {
-            currentValue += amount;
-            if (currentValue < 1) {
-                currentValue = 1;
-            }
-            hoursValue.textContent = currentValue;
-            hoursInput.value = currentValue;
-        }
-    }
-
-    function updateDistanceValue(value) {
-        document.querySelector('.js-upper').textContent = value + "km";
-        document.getElementById('distance').value = value;
-    }
-
-    document.addEventListener('click', function(event) {
-        const hoursInput = document.getElementById('min_hours');
-        const hoursMenu = document.getElementById('hoursMenu');
-
-        if (hoursInput && hoursMenu && !hoursInput.contains(event.target) && !hoursMenu.contains(event.target)) {
-            hoursMenu.classList.add('hidden');
-        }
-    });
-
     document.addEventListener('DOMContentLoaded', function() {
-        const geolocateBtn = document.getElementById('geolocate-btn');
+        // Cache des éléments DOM fréquemment utilisés
+        const elements = {
+            searchInput: document.getElementById('search-input'),
+            searchButton: document.getElementById('search-button'),
+            hoursMenu: document.getElementById('hoursMenu'),
+            minHours: document.getElementById('min_hours'),
+            hoursValue: document.getElementById('hoursValue'),
+            distance: document.getElementById('distance'),
+            city: document.getElementById('city'),
+            latitude: document.getElementById('latitude'),
+            longitude: document.getElementById('longitude'),
+            geolocateBtn: document.getElementById('geolocate-btn'),
+            priceFilter: document.getElementById('price-filter'),
+            sortDirection: document.getElementById('sort_direction')
+        };
 
-        if (geolocateBtn) {
-            geolocateBtn.addEventListener('click', function() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        // Success
-                        function(position) {
-                            const latitude = position.coords.latitude;
-                            const longitude = position.coords.longitude;
+        // ====== SEARCH FUNCTIONALITY ======
+        function performSearch() {
+            if (!elements.searchInput) return;
 
-                            document.getElementById('latitude').value = latitude;
-                            document.getElementById('longitude').value = longitude;
+            const searchTerm = elements.searchInput.value.toLowerCase();
+            const studioCards = document.querySelectorAll('.border-top-light.pt-20.mb-20');
+            let visibleCount = 0;
 
-                            // Fetch the address using Nominatim API
-                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    const city = data.address.city || data.address.town || data.address.village || "Unknown location";
-                                    document.getElementById('city').value = city;
-                                    document.getElementById('city').disabled = true;
+            studioCards.forEach(card => {
+                const studioName = card.querySelector('h3').textContent.toLowerCase();
+                const studioCity = card.querySelector('p.text-14.lh-14.mb-5').textContent.toLowerCase();
 
-                                    // Visual feedback
-                                    geolocateBtn.innerHTML = '<i class="icon-check text-16"></i>';
-                                    geolocateBtn.classList.add('bg-white');
-                                })
-                                .catch(error => {
-                                    alert("Impossible de récupérer l'adresse. Veuillez entrer une ville manuellement.");
-                                });
-                        },
-                        // Error
-                        function(error) {
-                            alert("Impossible d'obtenir votre position. Veuillez entrer une ville manuellement.");
-                        }
-                    );
+                const isVisible = studioName.includes(searchTerm) || studioCity.includes(searchTerm);
+                card.style.display = isVisible ? '' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            // Mise à jour du compteur de résultats de manière plus efficace
+            const counterElement = document.querySelector('.text-18 .fw-500');
+            if (counterElement) {
+                counterElement.textContent = `${visibleCount} Studios`;
+            }
+        }
+
+        // ====== HOURS FUNCTIONALITY ======
+        function toggleHoursMenu(event) {
+            if (event) event.stopPropagation();
+            if (elements.hoursMenu) elements.hoursMenu.classList.toggle('hidden');
+        }
+
+        function changeHours(amount) {
+            if (!elements.hoursValue || !elements.minHours) return;
+
+            let currentValue = parseInt(elements.hoursValue.textContent);
+            if (!isNaN(currentValue)) {
+                currentValue = Math.max(1, currentValue + amount);
+                elements.hoursValue.textContent = currentValue;
+                elements.minHours.value = currentValue;
+            }
+        }
+
+        // ====== DISTANCE FUNCTIONALITY ======
+        function updateDistanceValue(value) {
+            const lowerElement = document.querySelector('.js-lower');
+            const upperElement = document.querySelector('.js-upper');
+
+            if (lowerElement) lowerElement.textContent = '0km';
+            if (upperElement) upperElement.textContent = `${value}km`;
+            if (elements.distance) elements.distance.value = value;
+        }
+
+        // ====== GEOLOCATION FUNCTIONALITY ======
+        function handleGeolocation() {
+            if (!navigator.geolocation) {
+                alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                // Success
+                function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    if (elements.latitude) elements.latitude.value = latitude;
+                    if (elements.longitude) elements.longitude.value = longitude;
+
+                    // Ajout de paramètres de cache pour l'API Nominatim
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&zoom=18`)
+                        .then(response => {
+                            if (!response.ok) throw new Error('Erreur réseau');
+                            return response.json();
+                        })
+                        .then(data => {
+                            const city = data.address.city || data.address.town || data.address.village || "Unknown location";
+                            if (elements.city) {
+                                elements.city.value = city;
+                                elements.city.disabled = true;
+                            }
+
+                            // Visual feedback
+                            if (elements.geolocateBtn) {
+                                elements.geolocateBtn.innerHTML = '<i class="icon-check text-16"></i>';
+                                elements.geolocateBtn.classList.add('bg-white');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erreur de géolocalisation:', error);
+                            alert("Impossible de récupérer l'adresse. Veuillez entrer une ville manuellement.");
+                        });
+                },
+                // Error
+                function(error) {
+                    console.error('Erreur de géolocalisation:', error);
+                    let errorMessage = "Impossible d'obtenir votre position. Veuillez entrer une ville manuellement.";
+
+                    // Messages d'erreur plus spécifiques selon le type d'erreur
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = "Vous avez refusé la demande de géolocalisation.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = "Les informations de localisation sont indisponibles.";
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = "La demande de localisation a expiré.";
+                            break;
+                    }
+
+                    alert(errorMessage);
+                },
+                { maximumAge: 60000, timeout: 10000, enableHighAccuracy: true }
+            );
+        }
+
+        // ====== PRICE FILTER FUNCTIONALITY ======
+        function handlePriceFilterChange() {
+            if (!elements.priceFilter) return;
+
+            const selectedOption = elements.priceFilter.options[elements.priceFilter.selectedIndex];
+
+            // Éviter la duplication de code en utilisant une seule méthode
+            if (elements.sortDirection && elements.priceFilter.form) {
+                // Utiliser le formulaire existant
+                elements.sortDirection.value = selectedOption.value === 'price'
+                    ? selectedOption.getAttribute('data-dir')
+                    : 'asc';
+                elements.priceFilter.form.submit();
+            } else {
+                // Utiliser l'URL navigation
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('sort_by', elements.priceFilter.value);
+
+                if (elements.priceFilter.value === "price") {
+                    urlParams.set('sort_direction', selectedOption.getAttribute('data-dir'));
                 } else {
-                    alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+                    urlParams.delete('sort_direction');
+                }
+
+                window.location.search = urlParams.toString();
+            }
+        }
+
+        // ====== EVENT LISTENERS ======
+        // Optimisation: Utiliser la délégation d'événements quand c'est possible
+
+        // Recherche
+        if (elements.searchButton) {
+            elements.searchButton.addEventListener('click', performSearch);
+        }
+
+        if (elements.searchInput) {
+            elements.searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
                 }
             });
         }
-    });
-</script>
 
-<script>
-    document.getElementById("price-filter").addEventListener("change", function() {
-        const selectedOption = this.options[this.selectedIndex];
-        const urlParams = new URLSearchParams(window.location.search);
-
-        // Définir sort_by
-        urlParams.set('sort_by', this.value);
-
-        // Définir sort_direction si c'est un tri par prix
-        if (this.value === "price") {
-            urlParams.set('sort_direction', selectedOption.getAttribute('data-dir'));
-        } else {
-            urlParams.delete('sort_direction');
+        // Heures
+        if (elements.minHours) {
+            elements.minHours.addEventListener('click', toggleHoursMenu);
         }
 
-        // Conserver les autres paramètres importants
-        // Ne pas toucher à latitude, longitude, distance, city, min_hours
-
-        window.location.search = urlParams.toString();
-    });
-
-
-</script>
-
-<script>
-    document.getElementById('price-filter').addEventListener('change', function () {
-        var selectedOption = this.options[this.selectedIndex];
-        var sortDirectionInput = document.getElementById('sort_direction');
-
-        if (selectedOption.value === 'price') {
-            sortDirectionInput.value = selectedOption.getAttribute('data-dir');
-        } else {
-            sortDirectionInput.value = 'asc'; // Distance par défaut
+        // Géolocalisation
+        if (elements.geolocateBtn) {
+            elements.geolocateBtn.addEventListener('click', handleGeolocation);
         }
 
-        this.form.submit();
+        // Filtre de prix - éviter la duplication des écouteurs d'événements
+        if (elements.priceFilter) {
+            elements.priceFilter.addEventListener('change', handlePriceFilterChange);
+        }
+
+        // Fermer le menu des heures lors d'un clic à l'extérieur
+        document.addEventListener('click', function(event) {
+            if (elements.hoursMenu && elements.minHours &&
+                !elements.minHours.contains(event.target) &&
+                !elements.hoursMenu.contains(event.target)) {
+                elements.hoursMenu.classList.add('hidden');
+            }
+        });
+
+        // ====== EXPOSE FUNCTIONS GLOBALLY ======
+        // Nécessaire pour les appels inline HTML
+        window.toggleHoursMenu = toggleHoursMenu;
+        window.changeHours = changeHours;
+        window.updateDistanceValue = updateDistanceValue;
     });
 </script>
+
 

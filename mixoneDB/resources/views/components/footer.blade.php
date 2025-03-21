@@ -7,7 +7,7 @@
 
                     <div class="mt-35">
                         <div class="text-14 mt-30">Besoin d'aide ?</div>
-                        <a href="#" class="text-18 fw-500 text-blue-1 mt-5">team@MixOne.com</a>
+                        <a href="#" class="text-18 fw-500 text-blue-1 mt-5">mixone.contact@gmail.com</a>
                     </div>
                 </div>
 

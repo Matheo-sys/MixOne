@@ -94,88 +94,88 @@
 
 
 
-                        <script>
-                            function toggleMessageBox() {
-                                const messageBox = document.getElementById('messageBox');
-                                messageBox.classList.toggle('hidden');
-                            }
+                            <script>
+                                function toggleMessageBox() {
+                                    const messageBox = document.getElementById('messageBox');
+                                    messageBox.classList.toggle('hidden');
+                                }
 
-                            function sendMessage() {
-                                const messageInput = document.getElementById('messageInput');
-                                const receiverId = document.getElementById('receiverId').value;
-                                const messageText = messageInput.value.trim();
-                                if (messageText && receiverId) {
-                                    fetch('/message', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                        },
-                                        body: JSON.stringify({
-                                            receiver_id: receiverId,
-                                            message: messageText
+                                function sendMessage() {
+                                    const messageInput = document.getElementById('messageInput');
+                                    const receiverId = document.getElementById('receiverId').value;
+                                    const messageText = messageInput.value.trim();
+                                    if (messageText && receiverId) {
+                                        fetch('/message', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                            },
+                                            body: JSON.stringify({
+                                                receiver_id: receiverId,
+                                                message: messageText
+                                            })
                                         })
-                                    })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    loadMessages();
+                                                    messageInput.value = '';
+                                                } else {
+                                                    console.error('Error sending message:', data);
+                                                }
+                                            })
+                                            .catch(error => console.error('Error:', error));
+                                    }
+                                }
+
+                                function loadMessages() {
+                                    fetch('/message')
                                         .then(response => response.json())
-                                        .then(data => {
-                                            if (data.success) {
-                                                loadMessages();
-                                                messageInput.value = '';
-                                            } else {
-                                                console.error('Error sending message:', data);
-                                            }
+                                        .then(messages => {
+                                            const messagesContainer = document.querySelector('.messages');
+                                            messagesContainer.innerHTML = '';
+                                            messages.forEach(message => {
+                                                const messageElement = document.createElement('div');
+                                                messageElement.classList.add('message');
+
+                                                const senderElement = document.createElement('div');
+                                                senderElement.classList.add('sender');
+                                                senderElement.textContent = message.sender ? message.sender.first_name : 'Unknown';
+
+                                                const dateElement = document.createElement('div');
+                                                dateElement.classList.add('date');
+                                                dateElement.textContent = new Date(message.created_at).toLocaleString();
+
+                                                const textElement = document.createElement('div');
+                                                textElement.classList.add('text');
+                                                textElement.textContent = message.message;
+
+                                                messageElement.appendChild(senderElement);
+                                                messageElement.appendChild(dateElement);
+                                                messageElement.appendChild(textElement);
+
+                                                messagesContainer.appendChild(messageElement);
+                                            });
                                         })
                                         .catch(error => console.error('Error:', error));
                                 }
-                            }
-
-                            function loadMessages() {
-                                fetch('/message')
-                                    .then(response => response.json())
-                                    .then(messages => {
-                                        const messagesContainer = document.querySelector('.messages');
-                                        messagesContainer.innerHTML = '';
-                                        messages.forEach(message => {
-                                            const messageElement = document.createElement('div');
-                                            messageElement.classList.add('message');
-
-                                            const senderElement = document.createElement('div');
-                                            senderElement.classList.add('sender');
-                                            senderElement.textContent = message.sender ? message.sender.first_name : 'Unknown';
-
-                                            const dateElement = document.createElement('div');
-                                            dateElement.classList.add('date');
-                                            dateElement.textContent = new Date(message.created_at).toLocaleString();
-
-                                            const textElement = document.createElement('div');
-                                            textElement.classList.add('text');
-                                            textElement.textContent = message.message;
-
-                                            messageElement.appendChild(senderElement);
-                                            messageElement.appendChild(dateElement);
-                                            messageElement.appendChild(textElement);
-
-                                            messagesContainer.appendChild(messageElement);
-                                        });
-                                    })
-                                    .catch(error => console.error('Error:', error));
-                            }
-                        </script>
+                            </script>
 
 
-                    </div>
+                        </div>
 
-                    <div class="pl-15">
-                        <img src={{asset("media/img/avatars/3.png")}} alt="image" class="size-50 rounded-22 object-cover">
-                    </div>
+                        <div class="pl-15">
+                            <img src={{asset("media/img/avatars/3.png")}} alt="image" class="size-50 rounded-22 object-cover">
+                        </div>
 
-                    <div class="d-none xl:d-flex x-gap-20 items-center pl-20" data-x="header-mobile-icons" data-x-toggle="text-white">
-                        <div><button class="d-flex items-center icon-menu text-20" data-x-click="html, header, header-logo, header-mobile-icons, mobile-menu"></button></div>
+                        <div class="d-none xl:d-flex x-gap-20 items-center pl-20" data-x="header-mobile-icons" data-x-toggle="text-white">
+                            <div><button class="d-flex items-center icon-menu text-20" data-x-click="html, header, header-logo, header-mobile-icons, mobile-menu"></button></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
         <style>
             .messaging-modal {
                 position: fixed;
