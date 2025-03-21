@@ -12,6 +12,17 @@
         </div>
     @endif
 
+    @if($errors->has('address_not_found'))
+        <div class="alert-error rounded-4 py-20 px-30 bg-red-1 mb-30">
+            <div class="d-flex items-center">
+                <div class="size-40 flex-center rounded-full bg-red-2 text-red-6 mr-10">
+                    <i class="icon-close text-16"></i>
+                </div>
+                <div class="text-red-6 fw-500">{{ $errors->first('address_not_found') }}</div>
+            </div>
+        </div>
+    @endif
+
     <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
         <div class="col-auto">
             <h1 class="text-30 lh-14 fw-600">Ajouter un studio</h1>
@@ -46,7 +57,7 @@
                             <div class="row x-gap-20 y-gap-20">
                                 <div class="col-12">
                                     <div class="form-input">
-                                        <input type="text" name="name" required>
+                                        <input type="text" name="name" required value="{{ old('name') }}">
                                         <label class="lh-1 text-16 text-light-1">Nom du Studio</label>
                                     </div>
                                     @error('name')
@@ -57,7 +68,7 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-input">
-                                        <textarea name="description" rows="5"></textarea>
+                                        <textarea name="description" rows="5">{{ old('description') }}</textarea>
                                         <label class="lh-1 text-16 text-light-1">Contenu (Horaires, materiels ...)</label>
                                     </div>
                                     @error('description')
@@ -68,7 +79,7 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-input">
-                                        <input type="text" name="youtube_video">
+                                        <input type="text" name="youtube_video" value="{{ old('youtube_video') }}">
                                         <label class="lh-1 text-16 text-light-1">Youtube Video</label>
                                     </div>
                                     @error('youtube_video')
@@ -104,46 +115,31 @@
                             <div class="text-18 fw-500 mb-10">Location</div>
                             <div class="row x-gap-20 y-gap-20">
                                 <div class="col-12">
-                                    <div class="form-input">
-                                        <input type="text" name="address" required>
+                                    <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
+                                        <input type="text" name="address" required value="{{ old('address') }}">
                                         <label class="lh-1 text-16 text-light-1">Adresse</label>
                                     </div>
                                 </div>
                                 <div class="col-4">
-                                    <div class="form-input">
-                                        <input type="text" name="zipcode" required>
+                                    <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
+                                        <input type="text" name="zipcode" required value="{{ old('zipcode') }}">
                                         <label class="lh-1 text-16 text-light-1">Code postal</label>
                                     </div>
-                                    @error('zipcode')
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
+                                        <input type="text" name="city" required value="{{ old('city') }}">
+                                        <label class="lh-1 text-16 text-light-1">Ville</label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
+                                        <input type="text" name="country" required value="{{ old('country') }}">
+                                        <label class="lh-1 text-16 text-light-1">Pays</label>
+                                    </div>
                                 </div>
                                 <input type="hidden" name="latitude" id="latitude">
                                 <input type="hidden" name="longitude" id="longitude">
-                                <div class="col-4">
-                                    <div class="form-input">
-                                        <input type="text" name="city" required>
-                                        <label class="lh-1 text-16 text-light-1">Ville</label>
-                                    </div>
-                                    @error('city')
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="col-4">
-                                    <div class="form-input">
-                                        <input type="text" name="country" required>
-                                        <label class="lh-1 text-16 text-light-1">Pays</label>
-                                    </div>
-                                    @error('country')
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +150,7 @@
                             <div class="row x-gap-20 y-gap-20">
                                 <div class="col-6">
                                     <div class="form-input">
-                                        <input type="text" name="hourly_rate" required>
+                                        <input type="text" name="hourly_rate" required value="{{ old('hourly_rate') }}">
                                         <label class="lh-1 text-16 text-light-1">Tarif horaire</label>
                                     </div>
                                     @error('hourly_rate')
@@ -165,9 +161,10 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="form-input">
-                                        <input type="text" name="min_hours" required>
+                                        <input type="text" name="min_hours" required value="{{ old('min_hours') }}">
                                         <label class="lh-1 text-16 text-light-1">Heures minimum</label>
-                                    </div                                    @error('min_hours')
+                                    </div>
+                                    @error('min_hours')
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -262,32 +259,34 @@
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            if (file.type === 'image/png' || file.type === 'image/jpeg') {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.classList.add('col-auto');
-                    div.innerHTML = `
-                        <div class="d-flex ratio ratio-1:1 w-200">
-                            <img src="${e.target.result}" alt="image" class="img-ratio rounded-4">
-                            <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
-                                <div class="size-40 bg-white rounded-4" onclick="removeImage(this)">
-                                    <i class="icon-trash text-16"></i>
-                                </div>
-                            </div>
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.classList.add('col-auto');
+                div.innerHTML = `
+                <div class="d-flex ratio ratio-1:1 w-200">
+                    <img src="${e.target.result}" alt="image" class="img-ratio rounded-4">
+                    <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
+                        <div class="size-40 bg-white rounded-4" onclick="removeImage(this)">
+                            <i class="icon-trash text-16"></i>
                         </div>
-                    `;
-                    container.insertBefore(div, container.children[1]);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert('Only PNG and JPG images are allowed.');
-            }
+                    </div>
+                </div>
+            `;
+                container.insertBefore(div, container.children[1]);
+            };
+
+            reader.readAsDataURL(file);
         }
     }
 
     function removeImage(element) {
         element.closest('.col-auto').remove();
+
+        // Réinitialiser l'input file pour permettre de sélectionner à nouveau le même fichier
+        const imageUpload = document.getElementById('imageUpload');
+        imageUpload.value = '';
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -353,5 +352,29 @@
         } else {
             this.submit();
         }
+    });
+
+    // Activer l'onglet approprié en fonction de la session
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('active_tab'))
+        const tabButtons = document.querySelectorAll('.js-tabs-button');
+        const tabIndex = {{ session('active_tab') }} - 1; // Convertir en index basé sur 0
+
+        if (tabButtons[tabIndex]) {
+            // Désactiver tous les onglets
+            document.querySelectorAll('.js-tabs-button').forEach(button => {
+                button.classList.remove('is-tab-el-active');
+            });
+
+            document.querySelectorAll('.tabs__pane').forEach(pane => {
+                pane.classList.remove('is-tab-el-active');
+            });
+
+            // Activer l'onglet spécifié
+            tabButtons[tabIndex].classList.add('is-tab-el-active');
+            const targetSelector = tabButtons[tabIndex].getAttribute('data-tab-target');
+            document.querySelector(targetSelector).classList.add('is-tab-el-active');
+        }
+        @endif
     });
 </script>

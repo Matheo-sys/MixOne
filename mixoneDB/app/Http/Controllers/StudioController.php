@@ -46,17 +46,19 @@ class StudioController extends Controller
     {
         $formData = $request->validated();
 
-        // Gestion des uploads d’images
+        // Gestion des uploads d'images
         $imagePaths = [];
+        $tempImagePaths = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('uploads/studios', 'public');
                 $imagePaths[] = $path;
+                $tempImagePaths[] = asset('storage/' . $path); // URL complète pour la prévisualisation
             }
         }
         $formData['images'] = json_encode($imagePaths);
 
-        // Générer l’adresse complète
+        // Générer l'adresse complète
         $fullAddress = trim("{$formData['address']}, {$formData['city']}, {$formData['zipcode']}, {$formData['country']}");
         \Log::info('Adresse complète générée', ['fullAddress' => $fullAddress]);
 
@@ -66,18 +68,25 @@ class StudioController extends Controller
         if ($location) {
             $formData['latitude'] = $location['latitude'];
             $formData['longitude'] = $location['longitude'];
+
+            // Ajouter l'ID de l'utilisateur
+            $formData['user_id'] = Auth::id();
+
+            // Créer le studio
+            Studio::create($formData);
+
+            // Rediriger vers la page d'ajout avec un message de succès
+            return redirect()->route('studio.create')->with('success', 'Votre studio a été ajouté avec succès !');
         } else {
             \Log::error('Coordonnées introuvables pour l\'adresse', ['fullAddress' => $fullAddress]);
-            return redirect()->back()->withErrors(['address' => 'Address coordinates not found.']);
+
+            // Rediriger vers la page d'ajout avec un message d'erreur et l'indicateur pour l'onglet de localisation
+            return redirect()->route('studio.create')
+                ->withInput() // Garder les données du formulaire
+                ->with('active_tab', '2') // Indicateur pour activer l'onglet 2
+                ->with('temp_images', $tempImagePaths) // Stocker temporairement les URLs des images
+                ->withErrors(['address_not_found' => 'Adresse non trouvée. Veuillez vérifier les informations saisies.']);
         }
-
-        // Ajouter l'ID de l'utilisateur
-        $formData['user_id'] = Auth::id();
-
-        // Créer le studio
-        Studio::create($formData);
-
-        return redirect()->route('studio.create')->with('success', 'Studio created successfully!');
     }
 
 
