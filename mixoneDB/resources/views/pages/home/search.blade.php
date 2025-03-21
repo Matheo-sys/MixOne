@@ -16,14 +16,14 @@
                         <div class="tabs__pane -tab-item-1 is-tab-el-active">
                             <div class="mainSearch bg-white px-10 py-10 lg:px-20 lg:pt-5 lg:pb-20 rounded-100">
                                 <form id="searchForm" action="{{route("studio_list")}}" method="GET">
-                                    <input type="hidden" id="latitude" name="latitude" value="48.7748198">
-                                    <input type="hidden" id="longitude" name="longitude" value="2.3262945">
+                                    <input type="hidden" id="latitude" name="latitude" value="48.8588897">
+                                    <input type="hidden" id="longitude" name="longitude" value="2.320041">
 
                                     <div class="button-grid items-center">
                                         <div class="searchMenu-loc px-30 lg:py-20 lg:px-0">
                                             <label for="city" class="text-15 fw-500 ls-2 lh-16">City</label>
                                             <div class="input-wrapper">
-                                                <input type="text" id="city" name="city" placeholder="City" value="" class="js-search js-dd-focus">
+                                                <input type="text" id="city" name="city" placeholder="(Par défaut : Paris)" value="" class="js-search js-dd-focus">
                                                 <button type="button" id="geolocate-btn" class="button -blue-1 h-40 px-20 ml-10 rounded-4">
                                                     <i class="icon-location text-16"></i>
                                                 </button>

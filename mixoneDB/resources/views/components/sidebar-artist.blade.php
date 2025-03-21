@@ -31,15 +31,20 @@
         </div>
 
         <div class="sidebar__item">
-            <div class="sidebar__button ">
-                <a href="/" onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();"
-                   class="d-flex items-center text-15 lh-1 fw-500">
-                    <img src={{asset("media/img/dashboard/sidebar/log-out.svg")}} alt="image" class="mr-15">
-                    Se déconnecter
-                </a>
-            </div>
+            <a href="/"
+               onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();"
+               class="sidebar__button d-flex items-center text-15 lh-1 fw-500">
+                <img src="{{ asset('media/img/dashboard/sidebar/log-out.svg') }}" alt="image" class="mr-15">
+                Logout
+            </a>
         </div>
+
+        <!-- Formulaire de déconnexion (déjà présent, à conserver) -->
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+        </form>
+
 
     </div>
 

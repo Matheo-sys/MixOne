@@ -73,7 +73,7 @@
                             <div class="row x-gap-20 y-gap-20">
                                 <div class="col-12">
                                     <div class="form-input">
-                                        <input type="text" name="username" value="{{ old('username', auth()->user()->username) }}" required>
+                                        <input type="text" name="username" value="{{ old('username', auth()->user()->username) }}">
                                         <label class="lh-1 text-16 text-light-1">Nom d'utilisateur</label>
                                     </div>
                                 </div>

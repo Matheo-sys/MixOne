@@ -159,7 +159,7 @@
                                 </div>
 
                                 <!-- Champ pour le nombre d'heures -->
-                                <div class="col-12">
+                                <div class="col-12 mt-20 mb-20">
                                     <div class="searchMenu-guests px-20 py-10 border-light rounded-4 js-form-dd js-form-counters">
                                         <div data-x-dd-click="searchMenu-guests">
                                             <h4 class="text-15 fw-500 ls-2 lh-16">Nombre d'heures (minimum {{ $studio->min_hours }}h)</h4>
@@ -167,17 +167,19 @@
                                                 <span class="js-count-adult">{{ $studio->min_hours }}</span> Heures
                                             </div>
                                         </div>
-                                        <div class="searchMenu-guests__field shadow-2" data-x-dd="searchMenu-guests" data-x-dd-toggle="-is-active">
-                                            <div class="bg-white px-30 py-30 rounded-4">
+                                        <div class="searchMenu-guests__field " data-x-dd="searchMenu-guests" data-x-dd-toggle="-is-active">
+                                        <div class="bg-white px-30 py-30 rounded-4">
                                                 <div class="row y-gap-10 justify-between items-center">
                                                     <div class="col-auto">
                                                         <div class="text-15 fw-500">Heures</div>
                                                     </div>
-                                                    <div class="col-auto">
+                                                    <div class="col-auto" >
                                                         <div class="d-flex items-center js-counter gap-8"> <!-- 8 = 2rem (32px) -->
                                                             <button class="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-down" type="button">
                                                                 <i class="icon-minus text-12"></i>
                                                             </button>
+
+                                                            <span class="text-15 fw-500 js-count-adult ml-15 mr-15">{{ $studio->min_hours }}</span>
 
                                                             <button class="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-up" type="button">
                                                                 <i class="icon-plus text-12"></i>
@@ -192,30 +194,27 @@
 
                                 <!-- Formulaire de réservation -->
                                 <div class="col-12">
-                                    <h4 class="text-15 fw-500 ls-2 lh-16">Créneaux horaires disponibles</h4>
-                                    <form action="{{ route('reservation.store') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="studio_id" value="{{ $studio->id }}">
-                                        <input type="hidden" name="date" value="" id="hidden_date">
-                                        <input type="hidden"
-                                               name="number_of_hours"
-                                               id="hidden_number_of_hours"
-                                               value="{{ $studio->min_hours }}"
-                                               required>
+                                    <div class="mb-20">
+                                        <h4 class="text-15 fw-500 ls-2 lh-16">Créneaux horaires disponibles</h4>
+                                        <form action="{{ route('reservation.store') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="studio_id" value="{{ $studio->id }}">
+                                            <input type="hidden" name="date" value="" id="hidden_date">
+                                            <input type="hidden" name="number_of_hours" id="hidden_number_of_hours" value="{{ $studio->min_hours }}" required>
 
-                                        <div class="row y-gap-10">
-                                            @if (!empty($timeSlots) && is_array($timeSlots))
-                                                <label for="time_slot" class="text-15 text-light-1">Choisissez un créneau :</label>
-                                                <select name="time_slot" id="time_slot" class="form-control" required>
-                                                    @foreach ($timeSlots as $slot)
-                                                        <option value="{{ $slot }}">{{ $slot }}</option>
-                                                    @endforeach
-                                                </select>
-                                            @else
-                                                <p class="text-15 text-light-1 py-2">Aucun créneau disponible</p>
-                                            @endif
-                                        </div>
-
+                                            <div class="row y-gap-10">
+                                                @if (!empty($timeSlots) && is_array($timeSlots))
+                                                    <label for="time_slot" class="text-15 text-light-1">Choisissez un créneau :</label>
+                                                    <select name="time_slot" id="time_slot" class="form-control" required>
+                                                        @foreach ($timeSlots as $slot)
+                                                            <option value="{{ $slot }}">{{ $slot }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                @else
+                                                    <p class="text-15 text-light-1 py-2">Aucun créneau disponible</p>
+                                                @endif
+                                            </div>
+                                    </div>
                                         <button class="button -dark-1 px-35 h-60 col-12 bg-blue-1 text-white">
                                             Réserver
                                         </button>
@@ -237,10 +236,15 @@
                                         let selectedHours = minHours;
 
                                         function updateDisplay() {
-                                            hourDisplay.textContent = selectedHours;
+                                            // Sélectionne tous les éléments avec la classe js-count-adult
+                                            document.querySelectorAll('.js-count-adult').forEach(el => {
+                                                el.textContent = selectedHours;
+                                            });
+
                                             hiddenInput.value = selectedHours;
                                             decreaseButton.disabled = selectedHours <= minHours;
                                         }
+
 
                                         // Écouteurs d'événements
                                         decreaseButton.addEventListener('click', () => {
@@ -273,6 +277,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>

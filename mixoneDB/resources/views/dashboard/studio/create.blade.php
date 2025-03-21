@@ -1,9 +1,16 @@
-To center the trash icon within its container, you can use CSS flexbox properties. Here is the updated code with the necessary CSS adjustments:
-
-```blade
 @extends('layouts.backendDB')
 
 @section('content')
+    @if(session('success'))
+        <div class="alert-success rounded-4 py-20 px-30 bg-green-1 mb-30">
+            <div class="d-flex items-center">
+                <div class="size-40 flex-center rounded-full bg-green-2 text-green-6 mr-10">
+                    <i class="icon-check text-16"></i>
+                </div>
+                <div class="text-green-6 fw-500">{{ session('success') }}</div>
+            </div>
+        </div>
+    @endif
 
     <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
         <div class="col-auto">
@@ -113,6 +120,8 @@ To center the trash icon within its container, you can use CSS flexbox propertie
                                     </span>
                                     @enderror
                                 </div>
+                                <input type="hidden" name="latitude" id="latitude">
+                                <input type="hidden" name="longitude" id="longitude">
                                 <div class="col-4">
                                     <div class="form-input">
                                         <input type="text" name="city" required>
@@ -312,5 +321,37 @@ To center the trash icon within its container, you can use CSS flexbox propertie
         streetInput.addEventListener('input', function() {
             fetchSuggestions(streetInput, streetInput.value);
         });
+    });
+
+    document.querySelector('form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Si latitude et longitude ne sont pas déjà remplies
+        if (!document.getElementById('latitude').value || !document.getElementById('longitude').value) {
+            const address = document.querySelector('input[name="address"]').value;
+            const city = document.querySelector('input[name="city"]').value;
+            const zipcode = document.querySelector('input[name="zipcode"]').value;
+            const country = document.querySelector('input[name="country"]').value;
+
+            const fullAddress = `${address}, ${city}, ${zipcode}, ${country}`;
+
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1`);
+                const data = await response.json();
+
+                if (data && data.length > 0) {
+                    document.getElementById('latitude').value = data[0].lat;
+                    document.getElementById('longitude').value = data[0].lon;
+                    this.submit();
+                } else {
+                    alert('Adresse non trouvée. Veuillez vérifier les informations saisies.');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des coordonnées:', error);
+                alert('Erreur lors de la récupération des coordonnées. Veuillez réessayer.');
+            }
+        } else {
+            this.submit();
+        }
     });
 </script>

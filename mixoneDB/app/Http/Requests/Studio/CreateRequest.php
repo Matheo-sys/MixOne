@@ -32,6 +32,8 @@ class CreateRequest extends FormRequest
             'hourly_rate' => 'required|numeric|min:0',
             'min_hours' => 'required|integer|min:1',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ];
     }
 }

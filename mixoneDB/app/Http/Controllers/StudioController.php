@@ -19,7 +19,8 @@ class StudioController extends Controller
      *
      * @return Factory|View|Application
      */
-    public function show(Studio $studio) {
+    public function show(Studio $studio)
+    {
 
         $timeSlots = [
             "08:00 - 10:00",
@@ -76,7 +77,7 @@ class StudioController extends Controller
         // Créer le studio
         Studio::create($formData);
 
-        return redirect()->route('home')->with('success', 'Studio created successfully!');
+        return redirect()->route('studio.create')->with('success', 'Studio created successfully!');
     }
 
 
@@ -207,6 +208,7 @@ class StudioController extends Controller
             $data = $response->json();
 
             if (!empty($data)) {
+                \Log::info('Réponse Nominatim', ['data' => $data]);
                 return [
                     'latitude' => $data[0]['lat'],
                     'longitude' => $data[0]['lon'],
@@ -230,6 +232,13 @@ class StudioController extends Controller
     }
 
 
-
-
+    /**
+     * Afficher le formulaire d'ajout d'un studio
+     *
+     * @return Factory|View|Application
+     */
+    public function create()
+    {
+        return view('studios.create');
     }
+}

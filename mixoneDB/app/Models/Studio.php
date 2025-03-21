@@ -17,6 +17,8 @@ class Studio extends Model
         'city',
         'country',
         'hourly_rate',
-        'min_hours'
+        'min_hours',
+        'latitude',
+        'longitude'
     ];
 }
