@@ -192,6 +192,29 @@
                                     </div>
                                 </div>
 
+                                <!-- Affichage des erreurs -->
+                                @if ($errors->any())
+                                    <div class="alert bg-red-1 text-white p-10 rounded-4 mt-10 mb-10">
+                                        <ul class="list-disc pl-15">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
+                                @if (session('error'))
+                                    <div class="alert bg-red-1 text-white p-10 rounded-4 mt-10 mb-10">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
+
+                                @if (session('success'))
+                                    <div class="alert bg-green-1 text-white p-10 rounded-4 mt-10 mb-10">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+
                                 <!-- Formulaire de réservation -->
                                 <div class="col-12">
                                     <div class="mb-20">
@@ -226,51 +249,124 @@
                                     (function() {
                                         'use strict';
 
-                                        // Configuration des heures
-                                        const decreaseButton = document.querySelector('.js-down');
-                                        const increaseButton = document.querySelector('.js-up');
-                                        const hourDisplay = document.querySelector('.js-count-adult');
-                                        const hiddenInput = document.getElementById('hidden_number_of_hours');
-                                        const minHours = {{ $studio->min_hours }};
-
-                                        let selectedHours = minHours;
-
-                                        function updateDisplay() {
-                                            // Sélectionne tous les éléments avec la classe js-count-adult
-                                            document.querySelectorAll('.js-count-adult').forEach(el => {
-                                                el.textContent = selectedHours;
-                                            });
-
-                                            hiddenInput.value = selectedHours;
-                                            decreaseButton.disabled = selectedHours <= minHours;
-                                        }
-
-
-                                        // Écouteurs d'événements
-                                        decreaseButton.addEventListener('click', () => {
-                                            if (selectedHours > minHours) {
-                                                selectedHours--;
-                                                updateDisplay();
-                                            }
-                                        });
-
-                                        increaseButton.addEventListener('click', () => {
-                                            selectedHours++;
-                                            updateDisplay();
-                                        });
-
-                                        // Initialisation
                                         document.addEventListener('DOMContentLoaded', () => {
-                                            updateDisplay();
-                                            // Gestion de la date
+                                            // Configuration des heures
+                                            const decreaseButton = document.querySelector('.js-down');
+                                            const increaseButton = document.querySelector('.js-up');
+                                            const hourDisplay = document.querySelector('.js-count-adult');
+                                            const hiddenInput = document.getElementById('hidden_number_of_hours');
                                             const dateInput = document.getElementById('date');
+                                            const form = document.querySelector('form[action*="reservation.store"]');
+                                            const minHours = {{ $studio->min_hours }};
+
+                                            let selectedHours = minHours;
+
+                                            function updateDisplay() {
+                                                // Sélectionne tous les éléments avec la classe js-count-adult
+                                                document.querySelectorAll('.js-count-adult').forEach(el => {
+                                                    el.textContent = selectedHours;
+                                                });
+
+                                                hiddenInput.value = selectedHours;
+                                                decreaseButton.disabled = selectedHours <= minHours;
+                                            }
+
+                                            // Définir la date minimale (aujourd'hui)
+                                            if (dateInput) {
+                                                const today = new Date();
+                                                const year = today.getFullYear();
+                                                const month = String(today.getMonth() + 1).padStart(2, '0');
+                                                const day = String(today.getDate()).padStart(2, '0');
+
+                                                dateInput.setAttribute('min', `${year}-${month}-${day}`);
+
+                                                // Si aucune date n'est définie, définir aujourd'hui comme valeur par défaut
+                                                if (!dateInput.value) {
+                                                    dateInput.value = `${year}-${month}-${day}`;
+                                                    updateHiddenDate();
+                                                }
+                                            }
+
+                                            // Écouteurs d'événements
+                                            if (decreaseButton) {
+                                                decreaseButton.addEventListener('click', () => {
+                                                    if (selectedHours > minHours) {
+                                                        selectedHours--;
+                                                        updateDisplay();
+                                                    }
+                                                });
+                                            }
+
+                                            if (increaseButton) {
+                                                increaseButton.addEventListener('click', () => {
+                                                    selectedHours++;
+                                                    updateDisplay();
+                                                });
+                                            }
+
+                                            // Validation du formulaire avant envoi
+                                            if (form) {
+                                                form.addEventListener('submit', function(e) {
+                                                    const dateInput = document.getElementById('date');
+                                                    const timeSlotInput = document.getElementById('time_slot');
+                                                    let hasError = false;
+
+                                                    // Supprime les messages d'erreur précédents
+                                                    const oldErrorMessages = form.querySelectorAll('.error-message');
+                                                    oldErrorMessages.forEach(el => el.remove());
+
+                                                    // Validation de la date
+                                                    if (!dateInput.value) {
+                                                        e.preventDefault();
+                                                        hasError = true;
+                                                        showError(dateInput, 'Veuillez sélectionner une date.');
+                                                    }
+
+                                                    // Validation du créneau horaire
+                                                    if (!timeSlotInput.value) {
+                                                        e.preventDefault();
+                                                        hasError = true;
+                                                        showError(timeSlotInput, 'Veuillez sélectionner un créneau horaire.');
+                                                    }
+
+                                                    // Si des erreurs sont détectées, scroll vers la première erreur
+                                                    if (hasError) {
+                                                        const firstError = form.querySelector('.error-message');
+                                                        if (firstError) {
+                                                            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                        }
+                                                    }
+                                                });
+                                            }
+
+                                            // Fonction pour afficher un message d'erreur
+                                            function showError(element, message) {
+                                                const errorDiv = document.createElement('div');
+                                                errorDiv.className = 'error-message text-14 text-red-1 mt-5';
+                                                errorDiv.textContent = message;
+                                                element.parentNode.appendChild(errorDiv);
+                                            }
+
+                                            // Initialisation
+                                            updateDisplay();
+
+                                            // Gestion de la date
                                             if (dateInput) {
                                                 dateInput.addEventListener('change', function() {
-                                                    document.getElementById('hidden_date').value = this.value;
+                                                    updateHiddenDate();
                                                 });
                                                 document.getElementById('hidden_date').value = dateInput.value;
                                             }
                                         });
+
+                                        // Fonction pour mettre à jour la date cachée
+                                        function updateHiddenDate() {
+                                            const dateInput = document.getElementById('date');
+                                            const hiddenDate = document.getElementById('hidden_date');
+                                            if (dateInput && hiddenDate) {
+                                                hiddenDate.value = dateInput.value;
+                                            }
+                                        }
                                     })();
                                 </script>
                             </div>
