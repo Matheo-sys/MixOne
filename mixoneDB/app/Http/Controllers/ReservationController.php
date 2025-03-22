@@ -15,6 +15,7 @@ class ReservationController extends Controller
             'studio_id' => 'required|exists:studios,id',
             'date' => 'required|date|after_or_equal:today',
             'number_of_hours' => 'required|integer|min:1',
+            'total_price' => 'required|numeric'
         ], [
             'date.required' => 'Veuillez sélectionner une date pour votre réservation.',
             'date.after_or_equal' => 'La date de réservation doit être aujourd\'hui ou une date future.',
@@ -37,9 +38,11 @@ class ReservationController extends Controller
             $reservation = new Reservation();
             $reservation->user_id = auth()->id();
             $reservation->studio_id = $request->studio_id;
-            $reservation->date = $request->input('date');
-            $reservation->time_slot = $request->input('time_slot');
-            $reservation->number_of_hours = $request->input('number_of_hours');
+            $reservation->date = $validated['date']; // Utiliser les données validées
+            $reservation->time_slot = $validated['time_slot'];
+            $reservation->number_of_hours = $validated['number_of_hours'];
+            $reservation->price = $validated['total_price']; // Correction clé ici
+            $reservation->status = 'en attente';
 
             if ($reservation->save()) {
                 return redirect()->route('dashboard')->with('success', 'Réservation effectuée avec succès !');

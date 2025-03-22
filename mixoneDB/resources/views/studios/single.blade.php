@@ -144,9 +144,9 @@
                     <div class="ml-50 lg:ml-0">
                         <div class="px-30 py-30 border-light rounded-4 shadow-4">
                             <div class="d-flex items-center justify-between">
-                                <div>
-                                    <span class="text-20 fw-500">{{ $studio->hourly_rate }} €</span>
-                                    <span class="text-14 text-light-1 ml-5">de l'heure</span>
+                                <div class="text-14">
+                                    Total :
+                                    <span class="text-22 text-dark-1 fw-500" data-price>{{ $studio->hourly_rate * $studio->min_hours }}</span>
                                 </div>
                             </div>
 
@@ -217,27 +217,27 @@
 
                                 <!-- Formulaire de réservation -->
                                 <div class="col-12">
-                                    <div class="mb-20">
-                                        <h4 class="text-15 fw-500 ls-2 lh-16">Créneaux horaires disponibles</h4>
-                                        <form action="{{ route('reservation.store') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="studio_id" value="{{ $studio->id }}">
-                                            <input type="hidden" name="date" value="" id="hidden_date">
-                                            <input type="hidden" name="number_of_hours" id="hidden_number_of_hours" value="{{ $studio->min_hours }}" required>
+                                    <h4 class="text-15 fw-500 ls-2 lh-16">Créneaux horaires disponibles</h4>
+                                    <form action="{{ route('reservation.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="studio_id" value="{{ $studio->id }}">
+                                        <input type="hidden" name="date" value="" id="hidden_date">
+                                        <input type="hidden" name="number_of_hours" id="hidden_number_of_hours" value="{{ $studio->min_hours }}" required>
+                                        <input type="hidden" name="total_price" id="total_price" value="">
 
-                                            <div class="row y-gap-10">
-                                                @if (!empty($timeSlots) && is_array($timeSlots))
-                                                    <label for="time_slot" class="text-15 text-light-1">Choisissez un créneau :</label>
-                                                    <select name="time_slot" id="time_slot" class="form-control" required>
-                                                        @foreach ($timeSlots as $slot)
-                                                            <option value="{{ $slot }}">{{ $slot }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                @else
-                                                    <p class="text-15 text-light-1 py-2">Aucun créneau disponible</p>
-                                                @endif
-                                            </div>
-                                    </div>
+
+                                        <div class="row y-gap-10">
+                                            @if (!empty($timeSlots) && is_array($timeSlots))
+                                                <label for="time_slot" class="text-15 text-light-1">Choisissez un créneau :</label>
+                                                <select name="time_slot" id="time_slot" class="form-control" required>
+                                                    @foreach ($timeSlots as $slot)
+                                                        <option value="{{ $slot }}">{{ $slot }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <p class="text-15 text-light-1 py-2">Aucun créneau disponible</p>
+                                            @endif
+                                        </div>
                                         <button class="button -dark-1 px-35 h-60 col-12 bg-blue-1 text-white">
                                             Réserver
                                         </button>
@@ -245,128 +245,119 @@
                                 </div>
 
                                 <script>
-                                    // Code JavaScript CORRECTEMENT encapsulé
                                     (function() {
                                         'use strict';
 
                                         document.addEventListener('DOMContentLoaded', () => {
-                                            // Configuration des heures
-                                            const decreaseButton = document.querySelector('.js-down');
-                                            const increaseButton = document.querySelector('.js-up');
-                                            const hourDisplay = document.querySelector('.js-count-adult');
-                                            const hiddenInput = document.getElementById('hidden_number_of_hours');
+                                            // Sélection des éléments critiques
+                                            const decreaseBtn = document.querySelector('.js-down');
+                                            const increaseBtn = document.querySelector('.js-up');
+                                            const hourDisplays = document.querySelectorAll('.js-count-adult');
                                             const dateInput = document.getElementById('date');
+                                            const hiddenDateInput = document.getElementById('hidden_date');
                                             const form = document.querySelector('form[action*="reservation.store"]');
-                                            const minHours = {{ $studio->min_hours }};
+                                            const hoursInput = document.getElementById('hidden_number_of_hours'); // Ajout important
+                                            const totalPriceInput = document.getElementById('total_price');
 
-                                            let selectedHours = minHours;
+                                            const config = {
+                                                minHours: {{ $studio->min_hours }},
+                                                hourlyRate: {{ $studio->hourly_rate }}
+                                            };
 
-                                            function updateDisplay() {
-                                                // Sélectionne tous les éléments avec la classe js-count-adult
-                                                document.querySelectorAll('.js-count-adult').forEach(el => {
-                                                    el.textContent = selectedHours;
+                                            let selectedHours = config.minHours;
+
+                                            // Fonction principale de mise à jour
+                                            const updateDisplay = () => {
+                                                // Mise à jour des heures
+                                                hourDisplays.forEach(display => {
+                                                    display.textContent = selectedHours;
                                                 });
 
-                                                hiddenInput.value = selectedHours;
-                                                decreaseButton.disabled = selectedHours <= minHours;
-                                            }
+                                                // Mise à jour des champs cachés
+                                                if(hoursInput) hoursInput.value = selectedHours; // Correction clé
 
-                                            // Définir la date minimale (aujourd'hui)
-                                            if (dateInput) {
-                                                const today = new Date();
-                                                const year = today.getFullYear();
-                                                const month = String(today.getMonth() + 1).padStart(2, '0');
-                                                const day = String(today.getDate()).padStart(2, '0');
-
-                                                dateInput.setAttribute('min', `${year}-${month}-${day}`);
-
-                                                // Si aucune date n'est définie, définir aujourd'hui comme valeur par défaut
-                                                if (!dateInput.value) {
-                                                    dateInput.value = `${year}-${month}-${day}`;
-                                                    updateHiddenDate();
+                                                // Calcul et mise à jour du prix
+                                                const totalPrice = selectedHours * config.hourlyRate;
+                                                if(totalPriceInput) {
+                                                    totalPriceInput.value = totalPrice.toFixed(2);
+                                                    document.querySelector('[data-price]').textContent = totalPrice.toFixed(2) + '€';
                                                 }
-                                            }
 
-                                            // Écouteurs d'événements
-                                            if (decreaseButton) {
-                                                decreaseButton.addEventListener('click', () => {
-                                                    if (selectedHours > minHours) {
-                                                        selectedHours--;
+                                                if(decreaseBtn) decreaseBtn.disabled = selectedHours <= config.minHours;
+                                            };
+
+                                            // Gestion de la date (inchangée)
+                                            const handleDate = () => {
+                                                if(!dateInput || !hiddenDateInput) return;
+
+                                                const today = new Date().toISOString().split('T')[0];
+                                                dateInput.min = today;
+
+                                                if(!dateInput.value) {
+                                                    dateInput.value = today;
+                                                    hiddenDateInput.value = today;
+                                                }
+
+                                                dateInput.addEventListener('change', () => {
+                                                    hiddenDateInput.value = dateInput.value;
+                                                });
+                                            };
+
+                                            // Validation du formulaire (inchangée)
+                                            const validateForm = (e) => {
+                                                let hasError = false;
+                                                document.querySelectorAll('.error-message').forEach(el => el.remove());
+
+                                                if(!hiddenDateInput.value) {
+                                                    showError(dateInput, 'Veuillez sélectionner une date.');
+                                                    hasError = true;
+                                                }
+
+                                                const timeSlotInput = document.getElementById('time_slot');
+                                                if(!timeSlotInput.value) {
+                                                    showError(timeSlotInput, 'Veuillez sélectionner un créneau horaire.');
+                                                    hasError = true;
+                                                }
+
+                                                if(hasError) {
+                                                    e.preventDefault();
+                                                    document.querySelector('.error-message')?.scrollIntoView({
+                                                        behavior: 'smooth',
+                                                        block: 'center'
+                                                    });
+                                                }
+                                            };
+
+                                            // Gestion des boutons heures modifiée
+                                            const setupHourButtons = () => {
+                                                const handleButtonClick = (action) => {
+                                                    const newValue = action === 'increase' ? selectedHours + 1 : selectedHours - 1;
+                                                    if(newValue >= config.minHours && newValue <= 24) {
+                                                        selectedHours = newValue;
                                                         updateDisplay();
+                                                        // Force la mise à jour immédiate des inputs
+                                                        hoursInput.dispatchEvent(new Event('change'));
                                                     }
-                                                });
-                                            }
+                                                };
 
-                                            if (increaseButton) {
-                                                increaseButton.addEventListener('click', () => {
-                                                    selectedHours++;
-                                                    updateDisplay();
-                                                });
-                                            }
-
-                                            // Validation du formulaire avant envoi
-                                            if (form) {
-                                                form.addEventListener('submit', function(e) {
-                                                    const dateInput = document.getElementById('date');
-                                                    const timeSlotInput = document.getElementById('time_slot');
-                                                    let hasError = false;
-
-                                                    // Supprime les messages d'erreur précédents
-                                                    const oldErrorMessages = form.querySelectorAll('.error-message');
-                                                    oldErrorMessages.forEach(el => el.remove());
-
-                                                    // Validation de la date
-                                                    if (!dateInput.value) {
-                                                        e.preventDefault();
-                                                        hasError = true;
-                                                        showError(dateInput, 'Veuillez sélectionner une date.');
-                                                    }
-
-                                                    // Validation du créneau horaire
-                                                    if (!timeSlotInput.value) {
-                                                        e.preventDefault();
-                                                        hasError = true;
-                                                        showError(timeSlotInput, 'Veuillez sélectionner un créneau horaire.');
-                                                    }
-
-                                                    // Si des erreurs sont détectées, scroll vers la première erreur
-                                                    if (hasError) {
-                                                        const firstError = form.querySelector('.error-message');
-                                                        if (firstError) {
-                                                            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                                        }
-                                                    }
-                                                });
-                                            }
-
-                                            // Fonction pour afficher un message d'erreur
-                                            function showError(element, message) {
-                                                const errorDiv = document.createElement('div');
-                                                errorDiv.className = 'error-message text-14 text-red-1 mt-5';
-                                                errorDiv.textContent = message;
-                                                element.parentNode.appendChild(errorDiv);
-                                            }
+                                                if(decreaseBtn) decreaseBtn.addEventListener('click', () => handleButtonClick('decrease'));
+                                                if(increaseBtn) increaseBtn.addEventListener('click', () => handleButtonClick('increase'));
+                                            };
 
                                             // Initialisation
-                                            updateDisplay();
+                                            const init = () => {
+                                                handleDate();
+                                                setupHourButtons();
+                                                updateDisplay();
+                                                if(form) form.addEventListener('submit', validateForm);
 
-                                            // Gestion de la date
-                                            if (dateInput) {
-                                                dateInput.addEventListener('change', function() {
-                                                    updateHiddenDate();
-                                                });
-                                                document.getElementById('hidden_date').value = dateInput.value;
-                                            }
+                                                // Double vérification des valeurs initiales
+                                                if(hoursInput) hoursInput.value = config.minHours;
+                                                if(totalPriceInput) totalPriceInput.value = (config.minHours * config.hourlyRate).toFixed(2);
+                                            };
+
+                                            init();
                                         });
-
-                                        // Fonction pour mettre à jour la date cachée
-                                        function updateHiddenDate() {
-                                            const dateInput = document.getElementById('date');
-                                            const hiddenDate = document.getElementById('hidden_date');
-                                            if (dateInput && hiddenDate) {
-                                                hiddenDate.value = dateInput.value;
-                                            }
-                                        }
                                     })();
                                 </script>
                             </div>
