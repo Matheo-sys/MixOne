@@ -220,10 +220,16 @@
                                             </div>
                                         </div>
                                         <div class="cardImage__wishlist">
-                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
-                                                <i class="icon-heart text-12"></i>
+                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle" data-studio-id="{{ $studio->id }}">
+                                                @if(Auth::check() && Auth::user()->favoriteStudios->contains($studio->id))
+                                                    <i class="icon-heart text-12 text-blue-1"></i>
+                                                @else
+                                                    <i class="icon-heart text-12"></i>
+                                                @endif
                                             </button>
                                         </div>
+
+
                                     </div>
                                 </div>
 
@@ -663,4 +669,67 @@
 
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Attacher un écouteur d'événements à tous les boutons "wishlist-toggle"
+        document.querySelectorAll('.wishlist-toggle').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
 
+                const studioId = this.getAttribute('data-studio-id');
+                const heartIcon = this.querySelector('i.icon-heart');
+
+                // Envoyer une requête AJAX pour basculer le statut du favori
+                fetch('{{ route('wishlist.toggle') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        studio_id: studioId
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Mettre à jour l'icône en fonction du statut avec animation
+                            if (data.status === 'added') {
+                                heartIcon.classList.add('text-blue-1');
+
+                                // Animation facultative
+                                button.classList.add('clicked');
+                                setTimeout(() => {
+                                    button.classList.remove('clicked');
+                                }, 300);
+                            } else {
+                                heartIcon.classList.remove('text-blue-1');
+                            }
+                        } else {
+                            // En cas d'erreur (utilisateur non connecté par exemple)
+                            if (data.message) {
+                                alert(data.message);
+                                // Rediriger vers la page de connexion si nécessaire
+                                window.location.href = '{{ route('login') }}';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
+</script>
+
+<style>
+    /* Animation pour le bouton wishlist */
+    .wishlist-toggle.clicked {
+        transform: scale(1.2);
+        transition: transform 0.3s ease;
+    }
+    /* Transition douce pour l'icône */
+    .wishlist-toggle i {
+        transition: color 0.3s ease;
+    }
+</style>

@@ -58,4 +58,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function favoriteStudios()
+    {
+        return $this->belongsToMany(Studio::class, 'wishlists', 'user_id', 'studio_id');
+    }
 }

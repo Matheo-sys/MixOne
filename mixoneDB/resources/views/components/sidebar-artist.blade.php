@@ -14,7 +14,7 @@
 
         <div class="sidebar__item">
             <div class="sidebar__button ">
-                <a href={{route('dashboardWishlist')}} class="d-flex items-center text-15 lh-1 fw-500">
+                <a href={{route('wishlist.index')}} class="d-flex items-center text-15 lh-1 fw-500">
                     <img src={{asset("media/img/dashboard/sidebar/bookmark.svg")}} alt="image" class="mr-15">
                     Liste d'envie
                 </a>

@@ -21,4 +21,9 @@ class Studio extends Model
         'latitude',
         'longitude'
     ];
+
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'wishlists', 'studio_id', 'user_id');
+    }
 }

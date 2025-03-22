@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\StudioController;
 use App\Http\Controllers\UserSettingsController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -77,3 +78,9 @@ Route::post('/contact', [ContactController::class, 'sendEmail'])->name('send.ema
 Route::get('/about', [AboutController::class, 'index'])->name('about.index');
 
 Route::post('/reservation', [ReservationController::class, 'store'])->name('reservation.store');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('dashboard/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('dashboard/wishlist', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+});
