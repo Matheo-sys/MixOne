@@ -671,7 +671,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Attacher un écouteur d'événements à tous les boutons "wishlist-toggle"
         document.querySelectorAll('.wishlist-toggle').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -679,43 +678,47 @@
                 const studioId = this.getAttribute('data-studio-id');
                 const heartIcon = this.querySelector('i.icon-heart');
 
-                // Envoyer une requête AJAX pour basculer le statut du favori
+                if (!heartIcon) {
+                    console.error('Icône non trouvée dans le bouton wishlist.');
+                    return;
+                }
+
                 fetch('{{ route('wishlist.toggle') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({
-                        studio_id: studioId
-                    })
+                    body: JSON.stringify({ studio_id: studioId })
                 })
                     .then(response => response.json())
                     .then(data => {
+                        console.log('Réponse serveur :', data);
+
                         if (data.success) {
-                            // Mettre à jour l'icône en fonction du statut avec animation
+                            // Modification pour assurer que le changement visuel se produit
                             if (data.status === 'added') {
                                 heartIcon.classList.add('text-blue-1');
-
-                                // Animation facultative
-                                button.classList.add('clicked');
-                                setTimeout(() => {
-                                    button.classList.remove('clicked');
-                                }, 300);
+                                console.log('Classe ajoutée:', heartIcon.className);
                             } else {
                                 heartIcon.classList.remove('text-blue-1');
+                                console.log('Classe retirée:', heartIcon.className);
                             }
+
+                            // Animation du bouton
+                            button.classList.add('clicked');
+                            setTimeout(() => {
+                                button.classList.remove('clicked');
+                            }, 300);
                         } else {
-                            // En cas d'erreur (utilisateur non connecté par exemple)
                             if (data.message) {
                                 alert(data.message);
-                                // Rediriger vers la page de connexion si nécessaire
                                 window.location.href = '{{ route('login') }}';
                             }
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
+                        console.error('Erreur AJAX:', error);
                     });
             });
         });
@@ -723,13 +726,32 @@
 </script>
 
 <style>
-    /* Animation pour le bouton wishlist */
-    .wishlist-toggle.clicked {
-        transform: scale(1.2);
-        transition: transform 0.3s ease;
+    /* Style pour l'état non-liké : coeur avec simple contour */
+    .icon-heart {
+        color: transparent !important;
+        -webkit-text-stroke: 1px #999;
+        stroke: #999;
+        stroke-width: 1px;
+        transition: all 0.3s ease;
     }
-    /* Transition douce pour l'icône */
-    .wishlist-toggle i {
-        transition: color 0.3s ease;
+
+    /* Style pour l'état liké : coeur rempli en bleu vif */
+    .icon-heart.text-blue-1 {
+        color: #3554D1 !important;
+        -webkit-text-stroke: 1px #3554D1;
+        stroke: #3554D1;
+        filter: drop-shadow(0 0 2px rgba(53, 84, 209, 0.4));
+    }
+
+    /* Animation pour le clic */
+    .wishlist-toggle.clicked {
+        transform: scale(1.4);
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Pour améliorer le contraste avec l'arrière-plan */
+    .wishlist-toggle {
+        background-color: white !important;
     }
 </style>
+

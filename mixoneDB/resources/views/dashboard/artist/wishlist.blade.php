@@ -16,6 +16,7 @@
     <section class="layout-pt-md layout-pb-lg">
         <div class="container">
             @if($favoriteStudios->isEmpty())
+                <!-- Code pour affichage vide -->
                 <div class="row">
                     <div class="col-12 text-center">
                         <p class="text-18">Vous n'avez pas encore de studios favoris</p>
@@ -25,8 +26,8 @@
                     </div>
                 </div>
             @else
-                <!-- Navigation horizontale pour les favoris -->
                 @if(count($favoriteStudios) > 3)
+                    <!-- Navigation horizontale pour le carrousel -->
                     <div class="d-flex x-gap-15 items-center justify-center sm:justify-start pt-20 pb-30">
                         <div class="col-auto">
                             <button class="d-flex items-center text-24 arrow-left-hover js-wishlist-prev">
@@ -42,60 +43,52 @@
                             </button>
                         </div>
                     </div>
-                @endif
 
-                <!-- Swiper container -->
-                <div class="swiper-container wishlist-container">
-                    <div class="swiper-wrapper">
-                        @foreach($favoriteStudios as $studio)
-                            <div class="swiper-slide">
-                                <div class="border-light rounded-4 p-10">
-                                    <div class="cardImage ratio ratio-1:1 rounded-4 overflow-hidden">
-                                        <div class="cardImage__content">
-                                            <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
-                                                <div class="swiper-wrapper">
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                    <!-- Swiper container pour plus de 3 éléments -->
+                    <div class="swiper-container wishlist-container">
+                        <div class="swiper-wrapper">
+                            @foreach($favoriteStudios as $studio)
+                                <div class="swiper-slide">
+                                    <div class="border-light rounded-4 p-10">
+                                        <div class="cardImage ratio ratio-1:1 rounded-4 overflow-hidden">
+                                            <div class="cardImage__content">
+                                                <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
+                                                    <div class="swiper-wrapper">
+                                                        <div class="swiper-slide">
+                                                            <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="cardImage__wishlist">
-                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle" data-studio-id="{{ $studio->id }}">
-                                                <i class="icon-heart text-12 text-blue-1"></i>
-                                            </button>
-                                        </div>
-                                    </div>
 
-                                    <div class="pt-10">
-                                        <div class="d-flex justify-between">
-                                            <h3 class="text-18 lh-16 fw-500">{{ $studio->name }}</h3>
-                                            <div class="col-auto">
-                                                <button class="flex-center bg-light-2 rounded-4 size-35 trash-btn" data-studio-id="{{ $studio->id }}">
-                                                    <i class="icon-trash-2 text-16 text-light-1"></i>
-                                                </button>
+                                        <div class="pt-10 px-10">
+                                            <div class="d-flex justify-between">
+                                                <h3 class="text-18 lh-16 fw-500">{{ $studio->name }}</h3>
+                                                <div class="col-auto">
+                                                    <button class="flex-center bg-light-2 rounded-4 size-35 trash-btn" data-studio-id="{{ $studio->id }}">
+                                                        <i class="icon-trash-2 text-16 text-light-1"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <p class="text-14 lh-14 mt-5">{{ $studio->city }}</p>
-                                        <div class="text-14 text-light-1 mt-5">A partir de {{ $studio->hourly_rate }}€/heure</div>
+                                            <p class="text-14 lh-14 mt-5">{{ $studio->city }}</p>
+                                            <div class="text-14 text-light-1 mt-5">A partir de {{ $studio->hourly_rate }}€/heure</div>
 
-                                        <a href="{{ route('studio.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100">
-                                            Voir Détails
-                                        </a>
+                                            <a href="{{ route('studio.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100">
+                                                Voir Détails
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-
-                <!-- Pour affichage sans carrousel si peu d'éléments -->
-                @if(count($favoriteStudios) <= 3)
+                @else
+                    <!-- Affichage en grille pour 3 éléments ou moins -->
                     <div class="row y-gap-30">
                         @foreach($favoriteStudios as $studio)
                             <div class="col-lg-4 col-md-6 wishlist-item">
                                 <div class="border-light rounded-4 p-10">
-                                    <!-- Le même contenu que dans le carrousel -->
                                     <div class="cardImage ratio ratio-1:1 rounded-4 overflow-hidden">
                                         <div class="cardImage__content">
                                             <div class="cardImage-slider rounded-4 overflow-hidden">
@@ -181,8 +174,7 @@
                 });
             });
 
-            // Initialiser le carrousel pour les favoris (si Swiper est disponible et éléments > 3)
-            if (typeof Swiper !== 'undefined' && document.querySelectorAll('.wishlist-container .swiper-slide').length > 0) {
+            if (typeof Swiper !== 'undefined' && document.querySelectorAll('.wishlist-container .swiper-slide').length > 3) {
                 new Swiper('.wishlist-container', {
                     slidesPerView: 1,
                     spaceBetween: 30,
@@ -218,7 +210,7 @@
         }
 
         .trash-btn:hover i {
-            color: white !important;
+            color: red !important;
         }
 
         /* Style pour les carrousels */
