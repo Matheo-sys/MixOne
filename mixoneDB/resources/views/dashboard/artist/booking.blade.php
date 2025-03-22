@@ -50,51 +50,62 @@
                         <table class="table-3 -border-bottom col-12">
                             <thead class="bg-light-2">
                             <tr>
-                                <th>Titre</th>
-                                <th>Date de reservation</th>
-                                <th>Dates réservés</th>
-                                <th>Nombres heures réservés</th>
+                                <th>N°</th>
+                                <th>Studio</th>
+                                <th>Date de réservation</th>
+                                <th>Créneau Réservé</th>
+                                <th>Heures</th>
                                 <th>Total</th>
-                                <th>Payé</th>
-                                <th>Status</th>
+                                <th>Statut</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
+                            @foreach($reservations as $reservation)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $reservation->studio->name }}</td>
+                                    <td>{{ $reservation->created_at->format('d/m/Y') }}</td>
+                                    <td class="lh-16">
+                                        Début : {{ \Carbon\Carbon::parse($reservation->time_slot)->format('d/m/Y à H:i') }}<br>
+                                        Fin : {{ \Carbon\Carbon::parse($reservation->time_slot)->addHours($reservation->number_of_hours)->format('d/m/Y à H:i') }}
+                                    </td>
+                                    <td class="fw-500">{{ $reservation->number_of_hours }}h</td>
+                                    <td class="fw-500">{{ number_format($reservation->price, 2) }}€</td>
+                                    <td>
+                                        @php
+                                            $statusClasses = [
+                                                'confirmé' => 'bg-green-4 text-green-3',
+                                                'en attente' => 'bg-yellow-4 text-yellow-3',
+                                                'annulé' => 'bg-red-4 text-red-3',
+                                                'en cours' => 'bg-blue-4 text-blue-3'
+                                            ];
+                                        @endphp
+                                        <span class="rounded-100 py-4 px-10 text-center text-14 fw-500 {{ $statusClasses[$reservation->status] ?? 'bg-light-3' }}">
+                    {{ $reservation->status }}
+                </span>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown js-dropdown js-actions-1-active">
+                                            <div class="dropdown__button d-flex items-center rounded-4 text-blue-1 bg-blue-1-05 text-14 px-15 py-5"
+                                                 data-el-toggle=".js-actions-1-toggle"
+                                                 data-el-toggle-active=".js-actions-1-active">
+                                                <span class="js-dropdown-title">Actions</span>
+                                                <i class="icon icon-chevron-sm-down text-7 ml-10"></i>
+                                            </div>
 
-                            <tr>
-                                <td>Bleu studio</td>
-                                <td>04/04/2025</td>
-                                <td class="lh-16">Début : 06/04/2025 à 20:00<br> Fin : 07/04/2025 à 02:00</td>
-                                <td class="fw-500">6h</td>
-                                <td class="fw-500">180€ </td>
-                                <td class="fw-500">180€ </td>
-                                <td><span class="rounded-100 py-4 px-10 text-center text-14 fw-500 bg-yellow-4 text-yellow-3">En attente</span></td>
-
-                                <td>
-                                    <div class="dropdown js-dropdown js-actions-1-active">
-                                        <div class="dropdown__button d-flex items-center rounded-4 text-blue-1 bg-blue-1-05 text-14 px-15 py-5" data-el-toggle=".js-actions-1-toggle" data-el-toggle-active=".js-actions-1-active">
-                                            <span class="js-dropdown-title">Actions</span>
-                                            <i class="icon icon-chevron-sm-down text-7 ml-10"></i>
-                                        </div>
-
-                                        <div class="toggle-element -dropdown-2 js-click-dropdown js-actions-1-toggle">
-                                            <div class="text-14 fw-500 js-dropdown-list">
-
-                                                <div><a href="#" class="d-block js-dropdown-link">Details</a></div>
-
-                                                <div><a href="#" class="d-block js-dropdown-link">Facture</a></div>
-
-                                                <div><a href="#" class="d-block js-dropdown-link">Confirmer</a></div>
-
-                                                <div><a href="#" class="d-block js-dropdown-link">Annuler</a></div>
-
+                                            <div class="toggle-element -dropdown-2 js-click-dropdown js-actions-1-toggle">
+                                                <div class="text-14 fw-500 js-dropdown-list">
+                                                    <div><a href="" class="d-block js-dropdown-link">Détails</a></div>
+                                                    <div><a href="" class="d-block js-dropdown-link">Facture</a></div>
+                                                    <div><a href="" class="d-block js-dropdown-link">Confirmer</a></div>
+                                                    <div><a href="" class="d-block js-dropdown-link">Annuler</a></div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
