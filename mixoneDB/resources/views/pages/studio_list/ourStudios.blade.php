@@ -138,7 +138,6 @@
                                         </option>
                                     </select>
 
-                                    <!-- Champ caché pour stocker la direction du tri -->
                                     <input type="hidden" name="sort_direction" id="sort_direction" value="{{ request('sort_direction', 'asc') }}">
 
                                 </div>
@@ -162,7 +161,6 @@
                         <div class="sidebar__item -no-border">
                             <h5 class="text-18 fw-500 mb-10">Type of Place</h5>
                             <div class="sidebar-checkbox">
-                                <!-- Contenu des filtres conservé du premier code -->
                                 <div class="row y-gap-10 items-center justify-between">
                                     <div class="col-auto">
                                         <div class="d-flex items-center">
@@ -179,10 +177,8 @@
                                         <div class="text-15 text-light-1">92</div>
                                     </div>
                                 </div>
-                                <!-- Autres options de filtre... -->
                             </div>
                         </div>
-                        <!-- Autres sections de filtre... -->
                     </aside>
                 </div>
 
@@ -196,15 +192,26 @@
                                         <div class="cardImage__content">
                                             <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
                                                 <div class="swiper-wrapper">
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
-                                                    <div class="swiper-slide">
-                                                        <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                    </div>
+                                                    @php
+                                                        $hasImages = false;
+                                                        // Vérifier les 4 emplacements d'images possibles
+                                                        for ($i = 1; $i <= 4; $i++) {
+                                                            $imageField = "image{$i}";
+                                                            if (!empty($studio->$imageField)) {
+                                                                $hasImages = true;
+                                                                echo '<div class="swiper-slide">';
+                                                                echo '<img class="col-12" src="' . asset('storage/' . $studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
+                                                                echo '</div>';
+                                                            }
+                                                        }
+
+                                                        // Si aucune image n'est trouvée, afficher l'image par défaut
+                                                        if (!$hasImages) {
+                                                            echo '<div class="swiper-slide">';
+                                                            echo '<img class="col-12" src="' . asset('media/img/backgrounds/11.jpg') . '" alt="Image par défaut">';
+                                                            echo '</div>';
+                                                        }
+                                                    @endphp
                                                 </div>
                                                 <div class="cardImage-slider__pagination js-pagination"></div>
                                                 <div class="cardImage-slider__nav -prev">
@@ -500,7 +507,7 @@
         }
     }
 </style>
-<!-- Ajout du script pour la fonctionnalité de recherche -->
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-input');
@@ -720,6 +727,25 @@
                     .catch(error => {
                         console.error('Erreur AJAX:', error);
                     });
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialiser tous les sliders d'images de studio
+        const studioImageSliders = document.querySelectorAll('.js-cardImage-slider');
+
+        studioImageSliders.forEach(function(slider, index) {
+            new Swiper(slider, {
+                loop: true,
+                pagination: {
+                    el: slider.querySelector('.js-pagination'),
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: slider.querySelector('.js-next'),
+                    prevEl: slider.querySelector('.js-prev'),
+                },
             });
         });
     });

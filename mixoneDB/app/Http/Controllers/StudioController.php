@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class StudioController extends Controller
 {
@@ -249,5 +250,103 @@ class StudioController extends Controller
     public function create()
     {
         return view('studios.create');
+    }
+
+    /**
+     * Afficher le formulaire de modification d'un studio
+     *
+     * @param Studio $studio
+     * @return Factory|View|Application
+     */
+    public function edit(Studio $studio)
+    {
+        // Vérifier que l'utilisateur est bien le propriétaire du studio
+        if ($studio->user_id !== Auth::id()) {
+            return redirect()->route('dashboard.studios')->with('error', 'Vous n\'êtes pas autorisé à modifier ce studio.');
+        }
+
+        return view('dashboard.studio.edit', compact('studio'));
+    }
+
+    /**
+     * Mettre à jour un studio
+     *
+     * @param Request $request
+     * @param Studio $studio
+     * @return RedirectResponse
+     */
+    public function update(Request $request, Studio $studio): RedirectResponse
+    {
+        // Vérifier que l'utilisateur est bien le propriétaire du studio
+        if ($studio->user_id !== Auth::id()) {
+            return redirect()->route('dashboard.studios')->with('error', 'Vous n\'êtes pas autorisé à modifier ce studio.');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'zipcode' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'hourly_rate' => 'required|numeric|min:0',
+            'min_hours' => 'required|integer|min:1',
+            'description' => 'nullable|string',
+            'image1' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image2' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image3' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image4' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'remove_image1' => 'nullable|boolean',
+            'remove_image2' => 'nullable|boolean',
+            'remove_image3' => 'nullable|boolean',
+            'remove_image4' => 'nullable|boolean',
+        ]);
+
+        // Préparation des données à mettre à jour
+        $data = $request->only([
+            'name', 'address', 'zipcode', 'city', 'country',
+            'hourly_rate', 'min_hours', 'description'
+        ]);
+
+        // Générer l'adresse complète pour obtenir les coordonnées
+        $fullAddress = trim("{$data['address']}, {$data['city']}, {$data['zipcode']}, {$data['country']}");
+
+        // Récupération des coordonnées via Nominatim
+        $location = $this->getCoordinates($fullAddress);
+
+        if ($location) {
+            $data['latitude'] = $location['latitude'];
+            $data['longitude'] = $location['longitude'];
+        }
+
+        // Traitement des images
+        for ($i = 1; $i <= 4; $i++) {
+            $imageField = "image{$i}";
+            $removeField = "remove_image{$i}";
+
+            // Si on demande la suppression de l'image
+            if ($request->has($removeField) && $request->boolean($removeField)) {
+                // Supprimer l'ancien fichier si nécessaire
+                if ($studio->$imageField && Storage::disk('public')->exists($studio->$imageField)) {
+                    Storage::disk('public')->delete($studio->$imageField);
+                }
+                $data[$imageField] = null;
+            }
+            // Si une nouvelle image est téléchargée
+            elseif ($request->hasFile($imageField)) {
+                // Supprimer l'ancien fichier si nécessaire
+                if ($studio->$imageField && Storage::disk('public')->exists($studio->$imageField)) {
+                    Storage::disk('public')->delete($studio->$imageField);
+                }
+
+                // Stocker la nouvelle image
+                $data[$imageField] = $request->file($imageField)->store('uploads/studios', 'public');
+            }
+        }
+
+        // Mise à jour du studio
+        $studio->update($data);
+
+        // Modification ici : rediriger vers la page d'édition avec un message de succès
+        return redirect()->route('dashboard.studio.edit', $studio)->with('success', 'Studio modifié avec succès !');
     }
 }

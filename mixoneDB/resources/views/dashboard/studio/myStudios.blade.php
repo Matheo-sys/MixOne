@@ -25,10 +25,7 @@
                             <table class="table-4 -border-bottom col-12">
                                 <thead class="bg-light-2">
                                 <tr>
-                                    <th>
-                                        <div class="d-flex items-center">
-                                        </div>
-                                    </th>
+
                                     <th>Nom</th>
                                     <th>Lieu</th>
                                     <th>Avis</th>
@@ -39,10 +36,6 @@
                                 <tbody>
                                 @foreach($studios as $studio)
                                     <tr>
-                                        <td>
-                                            <div class="d-flex items-center">
-                                            </div>
-                                        </td>
                                         <td class="text-blue-1 fw-500">{{ $studio->name }}</td>
                                         <td>{{ $studio->city }}</td>
                                         <td>
@@ -50,28 +43,30 @@
                                         </td>
                                         <td>{{ $studio->created_at->format('d/m/Y') }}</td>
                                         <td>
-                                            <div class="row x-gap-10 y-gap-10 items-center">
-                                                <div class="col-auto">
-                                                    <form action="{{ route('studio.show', $studio->id) }}" method="GET">
-                                                        <button type="submit" class="flex-center bg-light-2 rounded-4 size-35">
-                                                            <i class="icon-eye text-16 text-light-1"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <button class="flex-center bg-light-2 rounded-4 size-35">
-                                                        <i class="icon-edit text-16 text-light-1"></i>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <!-- Bouton Vue -->
+                                                <form action="http://127.0.0.1:8000/studio/23" method="GET">
+                                                    <button type="submit" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2">
+                                                        <i class="icon-eye text-16 text-light-1"></i>
                                                     </button>
-                                                </div>
-                                                <form action="{{ route('studio.destroy', $studio->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this studio?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="flex-center bg-light-2 rounded-4 size-35">
+                                                </form>
+
+                                                <!-- Bouton Modifier -->
+                                                <a href="{{ route('dashboard.studio.edit', $studio->id) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2 ml-10">
+                                                    <i class="icon-edit text-16 text-light-1"></i>
+                                                </a>
+
+                                                <!-- Bouton Supprimer -->
+                                                <form class="ml-10" action="http://127.0.0.1:8000/studio/23" method="POST" onsubmit="return confirm('Are you sure you want to delete this studio?');">
+                                                    <input type="hidden" name="_token" value="lwYVApVabSuqY6Gulhn1E8GBcVmdqTj16Qj5Rmyj" autocomplete="off">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="submit" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2">
                                                         <i class="icon-trash-2 text-16 text-light-1"></i>
                                                     </button>
                                                 </form>
                                             </div>
                                         </td>
+
                                     </tr>
                                 @endforeach
                                 </tbody>

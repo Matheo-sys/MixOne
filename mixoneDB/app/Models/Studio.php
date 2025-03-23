@@ -10,16 +10,19 @@ class Studio extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'description',
-        'video_url',
         'address',
         'zipcode',
         'city',
         'country',
         'hourly_rate',
         'min_hours',
+        'description',
         'latitude',
-        'longitude'
+        'longitude',
+        'image1',
+        'image2',
+        'image3',
+        'image4'
     ];
 
     public function favoritedBy()

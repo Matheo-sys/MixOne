@@ -45,6 +45,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/settings', [UserSettingsController::class, 'edit'])->name('dashboard.settings');
         Route::post('/settings/update', [UserSettingsController::class, 'update'])->name('dashboard.settings.update');
         Route::post('/settings/update-password', [UserSettingsController::class, 'updatePassword'])->name('dashboard.settings.password');
+        Route::get('/dashboard/studio/{studio}/edit', [StudioController::class, 'edit'])->name('dashboard.studio.edit');
+        Route::put('/dashboard/studio/{studio}', [StudioController::class, 'update'])->name('dashboard.studio.update');
     });
 });
 

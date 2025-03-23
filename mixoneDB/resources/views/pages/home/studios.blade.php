@@ -25,17 +25,26 @@
                                         <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
                                             <div class="swiper-wrapper">
 
-                                                <div class="swiper-slide">
-                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                </div>
+                                                @php
+                                                    $hasImages = false;
+                                                    // Vérifier les 4 emplacements d'images possibles
+                                                    for ($i = 1; $i <= 4; $i++) {
+                                                        $imageField = "image{$i}";
+                                                        if (!empty($studio->$imageField)) {
+                                                            $hasImages = true;
+                                                            echo '<div class="swiper-slide">';
+                                                            echo '<img class="col-12" src="' . asset('storage/' . $studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
+                                                            echo '</div>';
+                                                        }
+                                                    }
 
-                                                <div class="swiper-slide">
-                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                </div>
-
-                                                <div class="swiper-slide">
-                                                    <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
-                                                </div>
+                                                    // Si aucune image n'est trouvée, afficher l'image par défaut
+                                                    if (!$hasImages) {
+                                                        echo '<div class="swiper-slide">';
+                                                        echo '<img class="col-12" src="' . asset('media/img/backgrounds/11.jpg') . '" alt="Image par défaut">';
+                                                        echo '</div>';
+                                                    }
+                                                @endphp
 
                                             </div>
 
