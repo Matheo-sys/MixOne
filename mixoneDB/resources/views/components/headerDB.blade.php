@@ -3,7 +3,6 @@
         <div class="-left-side">
             <a href="/" class="header-logo" data-x="header-logo" data-x-toggle="is-logo-dark">
                 <img src={{asset("media/images/logo_droit.svg")}} alt="logo icon">
-                <img src={{asset("media/images/logo_droit.svg")}} alt="logo icon">
             </a>
         </div>
 
