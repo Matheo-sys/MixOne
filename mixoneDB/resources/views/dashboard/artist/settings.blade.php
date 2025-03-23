@@ -3,17 +3,18 @@
 @section('content')
 
     <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
-        <div class="col-auto">
-            <h1 class="text-30 lh-14 fw-600">Paramètres</h1>
+        <div class="text-center">
+            <h1 class=" lh-14 fw-600">Paramètres</h1>
         </div>
         <div class="col-auto"></div>
     </div>
 
     @if(session('success'))
-        <div class="alert alert-success">
+        <div id="success-message" class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
+
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -58,6 +59,8 @@
                                 <h4 class="text-16 fw-500">Ton avatar</h4>
                                 <div class="text-14 mt-5">PNG ou JPG pas plus de 800px de hauteur et de largeur.</div>
                                 <div class="d-inline-block mt-15">
+                                    <input type="hidden" name="remove_avatar" id="removeAvatarInput" value="0">
+                                    <p id="error-message" class="text-danger" style="display:none;">L'image ne doit pas dépasser 2 Mo.</p>
                                     <input type="file" id="imageUpload" name="avatar" accept="image/png, image/jpeg" style="display: none;" onchange="previewImage(event)">
                                     <label for="imageUpload" class="button h-50 px-24 -dark-1 bg-blue-1 text-white cursor-pointer">
                                         <i class="icon-upload-file text-20 mr-10"></i>
@@ -261,27 +264,57 @@
     }
 </style>
 
+
 <script>
     function previewImage(event) {
         const file = event.target.files[0];
-        if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('avatarImage').src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            alert('Only PNG and JPG images are allowed.');
+        const errorMessage = document.getElementById('error-message');
+
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) { // 2 Mo
+                errorMessage.style.display = 'block';
+                event.target.value = ''; // Réinitialise l’input
+                return;
+            } else {
+                errorMessage.style.display = 'none'; // Cache le message si OK
+            }
+
+            if (file.type === 'image/png' || file.type === 'image/jpeg') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // Supprimer le champ caché 'remove_avatar' s'il existe
+                const removeAvatarInput = document.getElementById('removeAvatarInput');
+                if (removeAvatarInput) {
+                    removeAvatarInput.value = '0';
+                }
+            } else {
+                alert('Only PNG and JPG images are allowed.');
+                event.target.value = ''; // Réinitialise l’input
+            }
         }
     }
 
     function removeImage() {
+        // Mettre à jour la source de l'image avec l'image par défaut
         document.getElementById('avatarImage').src = '{{ asset('media/img/misc/avatar-1.png') }}';
-        // Créer un input caché pour indiquer qu'il faut supprimer l'avatar
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'remove_avatar';
-        input.value = '1';
-        document.querySelector('form').appendChild(input);
+
+        // Mettre à jour le champ caché pour indiquer que l'image doit être supprimée
+        const removeAvatarInput = document.getElementById('removeAvatarInput');
+        if (removeAvatarInput) {
+            removeAvatarInput.value = '1';
+        }
+
+        // Supprimer l'input file pour éviter les conflits
+        const fileInput = document.getElementById('imageUpload');
+        if (fileInput) {
+            fileInput.value = ''; // Réinitialiser la valeur du champ de fichier
+        }
     }
 </script>
+
+
+

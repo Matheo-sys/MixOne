@@ -165,9 +165,8 @@
                         </div>
 
                         <div class="pl-15">
-                            <img src={{asset("media/img/avatars/3.png")}} alt="image" class="size-50 rounded-22 object-cover">
+                            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('media/img/misc/avatar-1.png') }}" alt="image" class="size-50 rounded-22 object-cover">
                         </div>
-
                         <div class="d-none xl:d-flex x-gap-20 items-center pl-20" data-x="header-mobile-icons" data-x-toggle="text-white">
                             <div><button class="d-flex items-center icon-menu text-20" data-x-click="html, header, header-logo, header-mobile-icons, mobile-menu"></button></div>
                         </div>

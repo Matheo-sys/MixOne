@@ -20,6 +20,7 @@ class UserSettingsController extends Controller
     {
         $user = Auth::user();
 
+        // Validation des données générales du profil
         $validatedData = $request->validate([
             'username' => ['nullable', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
             'first_name' => 'required|string|max:255',
@@ -36,13 +37,23 @@ class UserSettingsController extends Controller
             'zipcode' => 'nullable|string|max:20',
         ]);
 
-        // Mise à jour des informations personnelles
-        $user->update($validatedData);
-
-        // Gestion de l'avatar
-        if ($request->hasFile('avatar')) {
+        // Gestion de l'utilisation de l'image par défaut
+        if ($request->has('remove_avatar') && $request->remove_avatar == 1) {
+            if ($user->avatar && $user->avatar !== 'media/img/misc/avatar-1.png') {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $user->avatar = null;
+            $user->save();
+        }
+        // Gestion de l'upload d'un nouvel avatar
+        else if ($request->hasFile('avatar')) {
+            // Validation spécifique à l'avatar avec messages personnalisés
             $request->validate([
                 'avatar' => 'image|mimes:jpeg,png|max:2048',
+            ], [
+                'avatar.image' => "Le fichier doit être une image.",
+                'avatar.mimes' => "L'image doit être au format JPEG ou PNG.",
+                'avatar.max' => "L'image ne doit pas dépasser 2 Mo.",
             ]);
 
             // Supprimer l'ancien avatar s'il existe
@@ -58,6 +69,8 @@ class UserSettingsController extends Controller
 
         return redirect()->back()->with('success', 'Profil mis à jour avec succès');
     }
+
+
 
     public function updatePassword(Request $request)
     {
