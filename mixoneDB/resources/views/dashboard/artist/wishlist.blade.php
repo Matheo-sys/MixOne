@@ -1,12 +1,15 @@
 @extends('layouts.backendDB')
 
 @section('content')
-    <section class="pt-40 pb-40 bg-light-2">
+    <section class=" bg-light-2">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="text-center">
                         <h1 class="text-30 fw-600">MES STUDIOS FAVORIS</h1>
+                    </div>
+                    <div class="text-center mt-20">
+                        <p>Retrouvez tous vos dans la liste d'envie</p>
                     </div>
                 </div>
             </div>
@@ -50,12 +53,12 @@
                             @foreach($favoriteStudios as $studio)
                                 <div class="swiper-slide">
                                     <div class="border-light rounded-4 p-10">
-                                        <div class="cardImage ratio ratio-1:1 rounded-4 overflow-hidden">
+                                        <div class="cardImage ratio ratio-23:18 rounded-4 overflow-hidden">
                                             <div class="cardImage__content">
                                                 <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
                                                     <div class="swiper-wrapper">
                                                         <div class="swiper-slide">
-                                                            <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                                            <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image" alt="Image studio">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -73,8 +76,7 @@
                                             </div>
                                             <p class="text-14 lh-14 mt-5">{{ $studio->city }}</p>
                                             <div class="text-14 text-light-1 mt-5">A partir de {{ $studio->hourly_rate }}€/heure</div>
-
-                                            <a href="{{ route('studio.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100">
+                                            <a href="{{ route('studio.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100" style="padding: 12px 24px; font-size: 16px; border-radius: 4px;">
                                                 Voir Détails
                                             </a>
                                         </div>
@@ -89,20 +91,23 @@
                         @foreach($favoriteStudios as $studio)
                             <div class="col-lg-4 col-md-6 wishlist-item">
                                 <div class="border-light rounded-4 p-10">
-                                    <div class="cardImage ratio ratio-1:1 rounded-4 overflow-hidden">
+                                    <!-- Conteneur de l'image -->
+                                    <div class="cardImage ratio ratio-23:18 rounded-4 overflow-hidden">
                                         <div class="cardImage__content">
-                                            <div class="cardImage-slider rounded-4 overflow-hidden">
-                                                <img class="col-12" src={{asset("media/img/backgrounds/11.jpg")}} alt="image">
+                                            <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
+                                                <div class="swiper-wrapper">
+                                                    <div class="swiper-slide">
+                                                        <img class="col-12" src="{{ asset('media/img/backgrounds/11.jpg') }}" alt="Image studio">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="cardImage__wishlist">
-                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle" data-studio-id="{{ $studio->id }}">
-                                                <i class="icon-heart text-12 text-blue-1"></i>
-                                            </button>
-                                        </div>
+                                        <!-- Bouton de la wishlist -->
+
                                     </div>
 
-                                    <div class="pt-10">
+                                    <!-- Conteneur du texte -->
+                                    <div class="pt-10 px-10">
                                         <div class="d-flex justify-between">
                                             <h3 class="text-18 lh-16 fw-500">{{ $studio->name }}</h3>
                                             <div class="col-auto">
@@ -114,7 +119,8 @@
                                         <p class="text-14 lh-14 mt-5">{{ $studio->city }}</p>
                                         <div class="text-14 text-light-1 mt-5">A partir de {{ $studio->hourly_rate }}€/heure</div>
 
-                                        <a href="{{ route('studio.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100">
+                                        <!-- Bouton "Voir Détails" -->
+                                        <a href="{{ route('studio.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100" style="padding: 12px 24px; font-size: 16px; border-radius: 4px;">
                                             Voir Détails
                                         </a>
                                     </div>
