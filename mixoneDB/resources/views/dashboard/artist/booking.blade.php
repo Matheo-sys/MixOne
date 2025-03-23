@@ -63,7 +63,7 @@
                             <tbody>
                             @foreach($reservations as $reservation)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $reservation->id }}</td>
                                     <td>{{ $reservation->studio->name }}</td>
                                     <td>{{ $reservation->created_at->format('d/m/Y') }}</td>
                                     <td class="lh-16">
@@ -88,18 +88,43 @@
                                     <td>
                                         <div class="dropdown js-dropdown js-actions-1-active">
                                             <div class="dropdown__button d-flex items-center rounded-4 text-blue-1 bg-blue-1-05 text-14 px-15 py-5"
-                                                 data-el-toggle=".js-actions-1-toggle"
-                                                 data-el-toggle-active=".js-actions-1-active">
+                                                 data-el-toggle=".js-actions-{{ $reservation->id }}-toggle"
+                                                 data-el-toggle-active=".js-actions-{{ $reservation->id }}-active">
                                                 <span class="js-dropdown-title">Actions</span>
                                                 <i class="icon icon-chevron-sm-down text-7 ml-10"></i>
                                             </div>
 
-                                            <div class="toggle-element -dropdown-2 js-click-dropdown js-actions-1-toggle">
+                                            <div class="toggle-element -dropdown-2 js-click-dropdown js-actions-{{ $reservation->id }}-toggle">
                                                 <div class="text-14 fw-500 js-dropdown-list">
-                                                    <div><a href="" class="d-block js-dropdown-link">Détails</a></div>
-                                                    <div><a href="" class="d-block js-dropdown-link">Facture</a></div>
-                                                    <div><a href="" class="d-block js-dropdown-link">Confirmer</a></div>
-                                                    <div><a href="" class="d-block js-dropdown-link">Annuler</a></div>
+                                                    @if($reservation->status === 'en attente')
+                                                        <form action="{{ route('reservations.confirm', $reservation->id) }}"
+                                                              method="POST"
+                                                              class="w-full">
+                                                            @csrf
+                                                            <button type="submit"
+                                                                    class="d-block w-full text-left px-15 py-5 hover:bg-blue-1-05 hover:text-blue-1">
+                                                                Confirmer
+                                                            </button>
+                                                        </form>
+                                                    @endif
+
+                                                    <a href="#"
+                                                       class="d-block px-15 py-5 hover:bg-blue-1-05 hover:text-blue-1">
+                                                        Facture
+                                                    </a>
+
+                                                    @if(in_array($reservation->status, ['en attente', 'confirmé']))
+                                                        <form action="{{ route('reservations.cancel', $reservation->id) }}"
+                                                              method="POST"
+                                                              class="w-full">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                    class="d-block w-full text-left px-15 py-5 hover:bg-red-1-05 hover:text-red-1">
+                                                                Annuler
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>

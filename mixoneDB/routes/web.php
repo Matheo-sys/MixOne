@@ -86,3 +86,12 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboard/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('dashboard/wishlist', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
+
+// web.php
+Route::post('/reservations/{reservation}/confirm', [ReservationController::class, 'confirm'])
+    ->name('reservations.confirm')
+    ->middleware('auth');
+
+Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
+    ->name('reservations.cancel')
+    ->middleware('auth');

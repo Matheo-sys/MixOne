@@ -12,9 +12,11 @@ class Reservation extends Model
     protected $fillable = [
         'user_id',
         'studio_id',
-        'number_of_hours',
+        'date',
         'time_slot',
-        'total_price'
+        'number_of_hours',
+        'price',
+        'status'
     ];
 
     // Relation avec l'utilisateur

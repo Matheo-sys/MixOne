@@ -16,7 +16,7 @@ class DashboardController extends Controller
         // Version 2 : Requête directe sécurisée
         $reservations = Reservation::where('user_id', auth()->id())
             ->with('studio')
-            ->orderBy('date', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10);
         return view($view, compact('reservations'));
     }

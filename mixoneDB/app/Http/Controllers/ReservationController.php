@@ -53,4 +53,36 @@ class ReservationController extends Controller
             return back()->withInput()->with('error', 'Erreur: ' . $e->getMessage());
         }
     }
+// Dans ReservationController.php
+
+    public function confirm(Reservation $reservation)
+    {
+        try {
+            if ($reservation->status !== 'en attente') {
+                throw new \Exception('Action non autorisée');
+            }
+
+            $reservation->update(['status' => 'confirmé']);
+            return redirect()->back()->with('success', 'Statut mis à jour avec succès !');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function cancel(Reservation $reservation)
+    {
+        try {
+            if (!in_array($reservation->status, ['en attente', 'confirmé'])) {
+                throw new \Exception('Action non autorisée');
+            }
+
+            $reservation->update(['status' => 'annulé']);
+            return redirect()->back()->with('success', 'Réservation annulée avec succès !');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
 }
