@@ -143,12 +143,16 @@
                                         $removeField = "remove_image{$i}";
                                     @endphp
                                     <div class="d-flex flex-column align-items-center me-20 mb-20 ml-3"> <!-- Ajout de `me-20` pour l'espacement horizontal -->
-                                        <div class="d-flex ratio ratio-3:2 w-200">
+                                        <div class="d-flex ratio ratio-3:2 w-200 position-relative">
                                             <img id="studioImage{{ $i }}" src="{{ $studio->$imageField ? asset('storage/' . $studio->$imageField) : asset('media/img/backgrounds/11.jpg') }}" alt="Image {{ $i }}" class="img-ratio rounded-4">
                                             <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
                                                 <div class="size-40 bg-white rounded-4 cursor-pointer" onclick="removeImage({{ $i }})">
                                                     <i class="icon-trash text-16"></i>
                                                 </div>
+                                            </div>
+                                            <!-- Ajout du texte "Par défaut" -->
+                                            <div id="defaultImageText{{ $i }}" class="default-image-text {{ $studio->$imageField ? 'd-none' : '' }}">
+                                                Par défaut
                                             </div>
                                         </div>
                                         <div class="text-14 mt-10">Image {{ $i }}</div>
@@ -243,6 +247,27 @@
     .form-input input[readonly]:not(:placeholder-shown) + label {
         transform: translateY(-20px) scale(0.8);
     }
+
+    .default-image-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        pointer-events: none; /* pour éviter que le texte interfère avec les clics */
+    }
+
+    .position-relative {
+        position: relative;
+    }
+
+    .d-none {
+        display: none;
+    }
 </style>
 
 <script>
@@ -266,6 +291,22 @@
                 }, 500);
             }, 5000);
         }
+
+        // Initialisation des textes "Par défaut"
+        for (let i = 1; i <= 4; i++) {
+            const imgElement = document.getElementById('studioImage' + i);
+            const defaultText = document.getElementById('defaultImageText' + i);
+
+            // Vérifier si l'image est celle par défaut
+            if (imgElement && defaultText) {
+                const isDefaultImage = imgElement.src.includes('backgrounds/11.jpg');
+                if (isDefaultImage) {
+                    defaultText.classList.remove('d-none');
+                } else {
+                    defaultText.classList.add('d-none');
+                }
+            }
+        }
     });
 
     function previewImage(event, imageNumber) {
@@ -282,6 +323,12 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('studioImage' + imageNumber).src = e.target.result;
+
+                    // Cacher le texte "Par défaut"
+                    const defaultText = document.getElementById('defaultImageText' + imageNumber);
+                    if (defaultText) {
+                        defaultText.classList.add('d-none');
+                    }
                 };
                 reader.readAsDataURL(file);
 
@@ -300,6 +347,12 @@
     function removeImage(imageNumber) {
         // Mettre à jour la source de l'image avec l'image par défaut
         document.getElementById('studioImage' + imageNumber).src = '{{ asset('media/img/backgrounds/11.jpg') }}';
+
+        // Afficher le texte "Par défaut"
+        const defaultText = document.getElementById('defaultImageText' + imageNumber);
+        if (defaultText) {
+            defaultText.classList.remove('d-none');
+        }
 
         // Mettre à jour le champ caché pour indiquer que l'image doit être supprimée
         const removeImageInput = document.getElementById('removeImage' + imageNumber + 'Input');
