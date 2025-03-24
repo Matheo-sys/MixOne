@@ -2,7 +2,7 @@
 
 @section('content')
     @if(session('success'))
-        <div class="alert-success rounded-4 py-20 px-30 bg-green-1 mb-30">
+        <div id="success-alert" class="alert-success rounded-4 py-20 px-30 bg-green-1 mb-30" style="transition: opacity 0.5s ease;">
             <div class="d-flex items-center">
                 <div class="size-40 flex-center rounded-full bg-green-2 text-green-6 mr-10">
                     <i class="icon-check text-16"></i>
@@ -13,7 +13,7 @@
     @endif
 
     @if($errors->has('address_not_found'))
-        <div class="alert-error rounded-4 py-20 px-30 bg-red-1 mb-30">
+        <div id="error-alert" class="alert-error rounded-4 py-20 px-30 bg-red-1 mb-30" style="transition: opacity 0.5s ease;">
             <div class="d-flex items-center">
                 <div class="size-40 flex-center rounded-full bg-red-2 text-red-6 mr-10">
                     <i class="icon-close text-16"></i>
@@ -24,8 +24,8 @@
     @endif
 
     <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
-        <div class="col-auto">
-            <h1 class="text-30 lh-14 fw-600">Ajouter un studio</h1>
+        <div class="col-auto ml-10">
+            <h1 class="text-30 lh-14 fw-600">AJOUTER UN STUDIO</h1>
             <div class="text-15 text-light-1">Lorem ipsum dolor sit amet, consectetur.</div>
         </div>
         <div class="col-auto"></div>
@@ -293,6 +293,30 @@
             document.querySelector(targetSelector).classList.add('is-tab-el-active');
         }
         @endif
+
+        // Gestion des messages flash
+        const successMessage = document.querySelector('.alert-success');
+        const errorMessage = document.querySelector('.alert-error');
+
+        // Fonction pour faire disparaître un message
+        function fadeOutMessage(element) {
+            if (element) {
+                element.style.transition = 'opacity 0.5s ease';
+                element.style.opacity = '0';
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // Disparition après 3 secondes
+        if (successMessage) {
+            setTimeout(() => fadeOutMessage(successMessage), 3000);
+        }
+
+        if (errorMessage) {
+            setTimeout(() => fadeOutMessage(errorMessage), 3000);
+        }
     });
 
     function previewImage(event, imageNumber) {

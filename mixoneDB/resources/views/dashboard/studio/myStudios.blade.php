@@ -3,8 +3,8 @@
 @section('content')
 
     <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
-        <div class="col-auto">
-            <h1 class="text-30 lh-14 fw-600">Mes studios</h1>
+        <div class="col-auto ml-10">
+            <h1 class="text-30 lh-14 fw-600">TOUS MES STUDIOS</h1>
         </div>
 
         <div class="col-auto">
