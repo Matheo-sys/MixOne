@@ -19,9 +19,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/', [HomeController::class, 'index']);
 
 // Studios - placez les routes plus spécifiques avant les routes dynamiques
-Route::get('/studio/create', function() {
-    return view('dashboard.studio.create');
-})->name('studio.create')->middleware('auth');
+Route::get('/studio/create', [StudioController::class, 'create'])->name('studio.create')->middleware('auth');
 Route::post('/studio', [StudioController::class, 'store'])->name('studio.store')->middleware('auth');
 Route::get('/studio/{studio}', [StudioController::class, 'show'])->name('studio.show');
 Route::delete('/studio/{studio}', [StudioController::class, 'destroy'])->name('studio.destroy')->middleware('auth');

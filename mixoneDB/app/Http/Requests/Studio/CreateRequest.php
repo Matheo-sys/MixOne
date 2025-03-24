@@ -31,9 +31,12 @@ class CreateRequest extends FormRequest
             'country' => 'required|string|max:255',
             'hourly_rate' => 'required|numeric|min:0',
             'min_hours' => 'required|integer|min:1',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'image1' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image2' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image3' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image4' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

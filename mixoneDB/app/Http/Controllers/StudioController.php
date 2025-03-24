@@ -47,47 +47,38 @@ class StudioController extends Controller
     {
         $formData = $request->validated();
 
-        // Gestion des uploads d'images
-        $imagePaths = [];
-        $tempImagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('uploads/studios', 'public');
-                $imagePaths[] = $path;
-                $tempImagePaths[] = asset('storage/' . $path); // URL complète pour la prévisualisation
+        // Gestion des uploads pour les 4 images
+        for ($i = 1; $i <= 4; $i++) {
+            $fieldName = "image{$i}";
+
+            if ($request->hasFile($fieldName)) {
+                $path = $request->file($fieldName)->store(
+                    'uploads/studios',
+                    'public'
+                );
+                $formData[$fieldName] = $path;
             }
         }
-        $formData['images'] = json_encode($imagePaths);
 
-        // Générer l'adresse complète
+        // Génération de l'adresse et géolocalisation
         $fullAddress = trim("{$formData['address']}, {$formData['city']}, {$formData['zipcode']}, {$formData['country']}");
-        \Log::info('Adresse complète générée', ['fullAddress' => $fullAddress]);
-
-        // Récupération des coordonnées via Nominatim
         $location = $this->getCoordinates($fullAddress);
 
         if ($location) {
             $formData['latitude'] = $location['latitude'];
             $formData['longitude'] = $location['longitude'];
-
-            // Ajouter l'ID de l'utilisateur
             $formData['user_id'] = Auth::id();
 
-            // Créer le studio
             Studio::create($formData);
 
-            // Rediriger vers la page d'ajout avec un message de succès
-            return redirect()->route('studio.create')->with('success', 'Votre studio a été ajouté avec succès !');
-        } else {
-            \Log::error('Coordonnées introuvables pour l\'adresse', ['fullAddress' => $fullAddress]);
-
-            // Rediriger vers la page d'ajout avec un message d'erreur et l'indicateur pour l'onglet de localisation
             return redirect()->route('studio.create')
-                ->withInput() // Garder les données du formulaire
-                ->with('active_tab', '2') // Indicateur pour activer l'onglet 2
-                ->with('temp_images', $tempImagePaths) // Stocker temporairement les URLs des images
-                ->withErrors(['address_not_found' => 'Adresse non trouvée. Veuillez vérifier les informations saisies.']);
+                ->with('success', 'Votre studio a été ajouté avec succès !');
         }
+
+        return redirect()->route('studio.create')
+            ->withInput()
+            ->with('active_tab', '2')
+            ->withErrors(['address_not_found' => 'Adresse non trouvée. Veuillez vérifier les informations saisies.']);
     }
 
 
@@ -103,7 +94,7 @@ class StudioController extends Controller
         // Valeurs par défaut pour le formulaire de recherche
         $user_lat = 0;
         $user_lon = 0;
-        $max_distance = 50; // Périmètre par défaut en km
+        $max_distance = 50;
         $min_hours = 1;
         $city = '';
 
@@ -131,8 +122,8 @@ class StudioController extends Controller
         $distance = $request->input('distance', 50);
         $min_hours = $request->input('min_hours', 1);
         $city = $request->input('city', '');
-        $sort_by = $request->input('sort_by', 'distance'); // Par défaut : tri par distance
-        $sort_direction = $request->input('sort_direction', 'asc'); // Par défaut : ascendant
+        $sort_by = $request->input('sort_by', 'distance');
+        $sort_direction = $request->input('sort_direction', 'asc');
 
         // Si une ville est spécifiée, obtenir ses coordonnées
         if (!empty($city) && (!$latitude || !$longitude)) {
@@ -143,15 +134,12 @@ class StudioController extends Controller
             }
         }
 
-        // Requête de base
         $query = Studio::query();
 
-        // Appliquer les filtres de base
         if ($min_hours) {
             $query->where('min_hours', '<=', $min_hours);
         }
 
-        // Important : toujours appliquer le filtrage par distance si on a des coordonnées
         if ($latitude && $longitude) {
             $query->selectRaw("*, (6371 * acos(
             cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
@@ -160,7 +148,6 @@ class StudioController extends Controller
                 ->having('distance', '<=', $distance);
         }
 
-        // Appliquer le tri en fonction du choix de l'utilisateur
         switch ($sort_by) {
             case 'price':
                 $query->orderBy('hourly_rate', $sort_direction);
@@ -249,14 +236,14 @@ class StudioController extends Controller
      */
     public function create()
     {
-        return view('studios.create');
+        return view('dashboard.studio.create');
     }
 
     /**
      * Afficher le formulaire de modification d'un studio
      *
      * @param Studio $studio
-     * @return Factory|View|Application
+     * @return Application|Factory|View
      */
     public function edit(Studio $studio)
     {
@@ -277,7 +264,6 @@ class StudioController extends Controller
      */
     public function update(Request $request, Studio $studio): RedirectResponse
     {
-        // Vérifier que l'utilisateur est bien le propriétaire du studio
         if ($studio->user_id !== Auth::id()) {
             return redirect()->route('dashboard.studios')->with('error', 'Vous n\'êtes pas autorisé à modifier ce studio.');
         }
@@ -301,16 +287,13 @@ class StudioController extends Controller
             'remove_image4' => 'nullable|boolean',
         ]);
 
-        // Préparation des données à mettre à jour
         $data = $request->only([
             'name', 'address', 'zipcode', 'city', 'country',
             'hourly_rate', 'min_hours', 'description'
         ]);
 
-        // Générer l'adresse complète pour obtenir les coordonnées
         $fullAddress = trim("{$data['address']}, {$data['city']}, {$data['zipcode']}, {$data['country']}");
 
-        // Récupération des coordonnées via Nominatim
         $location = $this->getCoordinates($fullAddress);
 
         if ($location) {
@@ -323,30 +306,23 @@ class StudioController extends Controller
             $imageField = "image{$i}";
             $removeField = "remove_image{$i}";
 
-            // Si on demande la suppression de l'image
             if ($request->has($removeField) && $request->boolean($removeField)) {
-                // Supprimer l'ancien fichier si nécessaire
                 if ($studio->$imageField && Storage::disk('public')->exists($studio->$imageField)) {
                     Storage::disk('public')->delete($studio->$imageField);
                 }
                 $data[$imageField] = null;
             }
-            // Si une nouvelle image est téléchargée
             elseif ($request->hasFile($imageField)) {
-                // Supprimer l'ancien fichier si nécessaire
                 if ($studio->$imageField && Storage::disk('public')->exists($studio->$imageField)) {
                     Storage::disk('public')->delete($studio->$imageField);
                 }
 
-                // Stocker la nouvelle image
                 $data[$imageField] = $request->file($imageField)->store('uploads/studios', 'public');
             }
         }
 
-        // Mise à jour du studio
         $studio->update($data);
-
-        // Modification ici : rediriger vers la page d'édition avec un message de succès
+        
         return redirect()->route('dashboard.studio.edit', $studio)->with('success', 'Studio modifié avec succès !');
     }
 }

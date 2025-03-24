@@ -159,6 +159,7 @@
                         </div>
                     </div>
 
+                    {{-- Section des images dans edit.blade.php --}}
                     <div class="tabs__pane -tab-item-4">
                         <div class="col-xl-12">
                             <div class="text-18 fw-500 mb-10">Photos</div>
@@ -166,13 +167,20 @@
                                 @for ($i = 1; $i <= 4; $i++)
                                     <div class="d-flex flex-column align-items-center me-20 mb-20 ml-3">
                                         <div class="d-flex ratio ratio-3:2 w-200 position-relative">
-                                            <img id="studioImage{{ $i }}" src="{{ asset('media/img/backgrounds/11.jpg') }}" alt="Image {{ $i }}" class="img-ratio rounded-4">
+                                            @php
+                                                $imageField = "image{$i}";
+                                                $imageUrl = isset($studio) && $studio->$imageField ? asset('storage/' . $studio->$imageField) : asset('media/img/backgrounds/11.jpg');
+                                            @endphp
+                                            <img id="studioImage{{ $i }}"
+                                                 src="{{ isset($studio->$imageField) && $studio->$imageField ? asset('storage/' . $studio->$imageField) : asset('media/img/backgrounds/11.jpg') }}"
+                                                 alt="Image {{ $i }}"
+                                                 class="img-ratio rounded-4">
                                             <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
                                                 <div class="size-40 bg-white rounded-4 cursor-pointer" onclick="removeImage({{ $i }})">
                                                     <i class="icon-trash text-16"></i>
                                                 </div>
                                             </div>
-                                            <div id="defaultImageText{{ $i }}" class="default-image-text">
+                                            <div id="defaultImageText{{ $i }}" class="default-image-text {{ isset($studio) && isset($studio->$imageField) && $studio->$imageField ? 'd-none' : '' }}">
                                                 Par défaut
                                             </div>
                                         </div>
