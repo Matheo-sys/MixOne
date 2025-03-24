@@ -45,11 +45,12 @@
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
                                                 <!-- Bouton Vue -->
-                                                <form action="http://127.0.0.1:8000/studio/23" method="GET">
+                                                <form action="{{ route('studio.show', $studio->id) }}" method="GET">
                                                     <button type="submit" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2">
                                                         <i class="icon-eye text-16 text-light-1"></i>
                                                     </button>
                                                 </form>
+
 
                                                 <!-- Bouton Modifier -->
                                                 <a href="{{ route('dashboard.studio.edit', $studio->id) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2 ml-10">
@@ -57,13 +58,15 @@
                                                 </a>
 
                                                 <!-- Bouton Supprimer -->
-                                                <form class="ml-10" action="http://127.0.0.1:8000/studio/23" method="POST" onsubmit="return confirm('Are you sure you want to delete this studio?');">
-                                                    <input type="hidden" name="_token" value="lwYVApVabSuqY6Gulhn1E8GBcVmdqTj16Qj5Rmyj" autocomplete="off">
-                                                    <input type="hidden" name="_method" value="DELETE">
+                                                <form class="ml-10" action="{{ route('studio.destroy', $studio->id) }}" method="POST"
+                                                      onsubmit="return confirm('Are you sure you want to delete this studio?');">
+                                                    @csrf
+                                                    @method('DELETE')
                                                     <button type="submit" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2">
                                                         <i class="icon-trash-2 text-16 text-light-1"></i>
                                                     </button>
                                                 </form>
+
                                             </div>
                                         </td>
 

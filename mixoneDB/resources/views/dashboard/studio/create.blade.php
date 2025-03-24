@@ -44,7 +44,10 @@
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-3">3. Tarifs</button>
                 </div>
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">4. Attributs</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">4. Photos</button>
+                </div>
+                <div class="col-auto">
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-5">5. Attributs</button>
                 </div>
             </div>
 
@@ -87,24 +90,6 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                </div>
-                            </div>
-                            <div class="mt-30">
-                                <div class="fw-500">Gallery</div>
-                                <div class="row x-gap-20 y-gap-20 pt-15" id="imagePreviewContainer">
-                                    <div class="col-auto">
-                                        <div class="w-200">
-                                            <div class="d-flex ratio ratio-1:1">
-                                                <input type="file" id="imageUpload" name="images[]" accept="image/png, image/jpeg" onchange="previewImages(event)" multiple style="display: none;">
-                                                <label for="imageUpload" class="flex-center flex-column text-center bg-blue-2 h-full w-1/1 absolute rounded-4 border-type-1 cursor-pointer">
-                                                    <div class="icon-upload-file text-40 text-blue-1 mb-10"></div>
-                                                    <div class="text-blue-1 fw-500">Ajouter une image</div>
-                                                </label>
-                                            </div>
-                                            <div class="text-center mt-10 text-14 text-light-1">PNG ou JPG pas plus grand que 800px de hauteur et largeur.</div>
-                                        </div>
-                                    </div>
-                                    <!-- Image previews will be added here -->
                                 </div>
                             </div>
                         </div>
@@ -175,6 +160,38 @@
                     </div>
 
                     <div class="tabs__pane -tab-item-4">
+                        <div class="col-xl-12">
+                            <div class="text-18 fw-500 mb-10">Photos</div>
+                            <div class="d-flex flex-wrap x-gap-20 y-gap-20">
+                                @for ($i = 1; $i <= 4; $i++)
+                                    <div class="d-flex flex-column align-items-center me-20 mb-20 ml-3">
+                                        <div class="d-flex ratio ratio-3:2 w-200 position-relative">
+                                            <img id="studioImage{{ $i }}" src="{{ asset('media/img/backgrounds/11.jpg') }}" alt="Image {{ $i }}" class="img-ratio rounded-4">
+                                            <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
+                                                <div class="size-40 bg-white rounded-4 cursor-pointer" onclick="removeImage({{ $i }})">
+                                                    <i class="icon-trash text-16"></i>
+                                                </div>
+                                            </div>
+                                            <div id="defaultImageText{{ $i }}" class="default-image-text">
+                                                Par défaut
+                                            </div>
+                                        </div>
+                                        <div class="text-14 mt-10">Image {{ $i }}</div>
+                                        <div class="d-inline-block mt-15">
+                                            <input type="hidden" name="remove_image{{ $i }}" id="removeImage{{ $i }}Input" value="0">
+                                            <input type="file" id="imageUpload{{ $i }}" name="image{{ $i }}" accept="image/png, image/jpeg" style="display: none;" onchange="previewImage(event, {{ $i }})">
+                                            <label for="imageUpload{{ $i }}" class="button h-50 px-24 -dark-1 bg-blue-1 text-white cursor-pointer">
+                                                <i class="icon-upload-file text-20 mr-10"></i>
+                                                Parcourir
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tabs__pane -tab-item-5">
                         <div class="col-xl-9 col-lg-11">
                             <div class="row x-gap-100 y-gap-15">
                                 <div class="col-lg-3 col-sm-6">
@@ -210,81 +227,123 @@
         height: 200px;
     }
     .size-40 {
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
     }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    .default-image-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        pointer-events: none;
+    }
+    .position-relative {
+        position: relative;
+    }
+    .d-none {
+        display: none;
+    }
 </style>
 
 <script>
-    function previewImages(event) {
-        const files = event.target.files;
-        const container = document.getElementById('imagePreviewContainer');
-
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                const div = document.createElement('div');
-                div.classList.add('col-auto');
-                div.innerHTML = `
-                <div class="d-flex ratio ratio-1:1 w-200">
-                    <img src="${e.target.result}" alt="image" class="img-ratio rounded-4">
-                    <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
-                        <div class="size-40 bg-white rounded-4" onclick="removeImage(this)">
-                            <i class="icon-trash text-16"></i>
-                        </div>
-                    </div>
-                </div>
-            `;
-                container.insertBefore(div, container.children[1]);
-            };
-
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function removeImage(element) {
-        element.closest('.col-auto').remove();
-
-        // Réinitialiser l'input file pour permettre de sélectionner à nouveau le même fichier
-        const imageUpload = document.getElementById('imageUpload');
-        imageUpload.value = '';
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-        const cityInput = document.getElementById('city');
-        const postalCodeInput = document.getElementById('postal_code');
-        const countryInput = document.getElementById('country');
-        const streetInput = document.getElementById('street');
+        // Activer l'onglet approprié en fonction de la session
+        @if(session('active_tab'))
+        const tabButtons = document.querySelectorAll('.js-tabs-button');
+        const tabIndex = {{ session('active_tab') }} - 1; // Convertir en index basé sur 0
 
-        function fetchSuggestions(input, query) {
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Handle the suggestions (e.g., show them in a dropdown)
-                    console.log(data);
-                })
-                .catch(error => console.error('Error fetching suggestions:', error));
+        if (tabButtons[tabIndex]) {
+            // Désactiver tous les onglets
+            document.querySelectorAll('.js-tabs-button').forEach(button => {
+                button.classList.remove('is-tab-el-active');
+            });
+
+            document.querySelectorAll('.tabs__pane').forEach(pane => {
+                pane.classList.remove('is-tab-el-active');
+            });
+
+            // Activer l'onglet spécifié
+            tabButtons[tabIndex].classList.add('is-tab-el-active');
+            const targetSelector = tabButtons[tabIndex].getAttribute('data-tab-target');
+            document.querySelector(targetSelector).classList.add('is-tab-el-active');
+        }
+        @endif
+    });
+
+    function previewImage(event, imageNumber) {
+        const file = event.target.files[0];
+
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) { // 2 Mo
+                alert("L'image ne doit pas dépasser 2 Mo.");
+                event.target.value = ''; // Réinitialise l'input
+                return;
+            }
+
+            if (file.type === 'image/png' || file.type === 'image/jpeg') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('studioImage' + imageNumber).src = e.target.result;
+
+                    // Cacher le texte "Par défaut"
+                    const defaultText = document.getElementById('defaultImageText' + imageNumber);
+                    if (defaultText) {
+                        defaultText.classList.add('d-none');
+                    }
+                };
+                reader.readAsDataURL(file);
+
+                // Réinitialiser le champ caché 'remove_image'
+                const removeImageInput = document.getElementById('removeImage' + imageNumber + 'Input');
+                if (removeImageInput) {
+                    removeImageInput.value = '0';
+                }
+            } else {
+                alert('Seuls les formats PNG et JPG sont autorisés.');
+                event.target.value = ''; // Réinitialise l'input
+            }
+        }
+    }
+
+    function removeImage(imageNumber) {
+        // Mettre à jour la source de l'image avec l'image par défaut
+        document.getElementById('studioImage' + imageNumber).src = '{{ asset('media/img/backgrounds/11.jpg') }}';
+
+        // Afficher le texte "Par défaut"
+        const defaultText = document.getElementById('defaultImageText' + imageNumber);
+        if (defaultText) {
+            defaultText.classList.remove('d-none');
         }
 
-        cityInput.addEventListener('input', function() {
-            fetchSuggestions(cityInput, cityInput.value);
-        });
+        // Mettre à jour le champ caché pour indiquer que l'image doit être supprimée
+        const removeImageInput = document.getElementById('removeImage' + imageNumber + 'Input');
+        if (removeImageInput) {
+            removeImageInput.value = '1';
+        }
 
-        postalCodeInput.addEventListener('input', function() {
-            fetchSuggestions(postalCodeInput, postalCodeInput.value);
-        });
-
-        countryInput.addEventListener('input', function() {
-            fetchSuggestions(countryInput, countryInput.value);
-        });
-
-        streetInput.addEventListener('input', function() {
-            fetchSuggestions(streetInput, streetInput.value);
-        });
-    });
+        // Supprimer l'input file pour éviter les conflits
+        const fileInput = document.getElementById('imageUpload' + imageNumber);
+        if (fileInput) {
+            fileInput.value = ''; // Réinitialiser la valeur du champ de fichier
+        }
+    }
 
     document.querySelector('form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -316,29 +375,5 @@
         } else {
             this.submit();
         }
-    });
-
-    // Activer l'onglet approprié en fonction de la session
-    document.addEventListener('DOMContentLoaded', function() {
-        @if(session('active_tab'))
-        const tabButtons = document.querySelectorAll('.js-tabs-button');
-        const tabIndex = {{ session('active_tab') }} - 1; // Convertir en index basé sur 0
-
-        if (tabButtons[tabIndex]) {
-            // Désactiver tous les onglets
-            document.querySelectorAll('.js-tabs-button').forEach(button => {
-                button.classList.remove('is-tab-el-active');
-            });
-
-            document.querySelectorAll('.tabs__pane').forEach(pane => {
-                pane.classList.remove('is-tab-el-active');
-            });
-
-            // Activer l'onglet spécifié
-            tabButtons[tabIndex].classList.add('is-tab-el-active');
-            const targetSelector = tabButtons[tabIndex].getAttribute('data-tab-target');
-            document.querySelector(targetSelector).classList.add('is-tab-el-active');
-        }
-        @endif
     });
 </script>
