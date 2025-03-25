@@ -24,7 +24,7 @@
                         <div class="fw-500 lh-14">En attente</div>
                         <div class="text-26 lh-16 fw-600 mt-5">
                             @php
-                                $totalEnAttente = $reservations->where('status', 'en attente')->sum('price');
+                                $totalEnAttente = $reservations->where('status', 'En attente')->sum('price');
                                 echo number_format($totalEnAttente, 2, ',', ' ') . ' €';
                             @endphp
                         </div>
@@ -45,7 +45,7 @@
                         <div class="fw-500 lh-14">Gains</div>
                         <div class="text-26 lh-16 fw-600 mt-5">
                             @php
-                                $totalGains = $reservations->whereIn('status', ['confirmé', 'completé'])->sum('price');
+                                $totalGains = $reservations->whereIn('status', ['Confirmée'])->sum('price');
                                 echo number_format($totalGains, 2, ',', ' ') . ' €';
                             @endphp
                         </div>
@@ -81,6 +81,36 @@
     </div>
 
     <div class="row y-gap-30 pt-20">
+        <!--<div class="col-xl-7 col-md-6">
+            <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+                <div class="d-flex justify-between items-center">
+                    <h2 class="text-18 lh-1 fw-500">
+                        Statistiques des Gains
+                    </h2>
+
+                    <div class="dropdown js-dropdown js-category-active">
+                        <div class="dropdown__button d-flex items-center bg-white border-light rounded-100 px-15 py-10 text-14 lh-12"
+                             data-el-toggle=".js-category-toggle"
+                             data-el-toggle-active=".js-category-active">
+                            <span class="js-dropdown-title">Cette semaine</span>
+                            <i class="icon icon-chevron-sm-down text-7 ml-10"></i>
+                        </div>
+
+                        <div class="toggle-element -dropdown js-click-dropdown js-category-toggle">
+                            <div class="text-14 y-gap-15 js-dropdown-list">
+                                <div><a href="#" class="d-block js-dropdown-link">Tous</a></div>
+                                <div><a href="#" class="d-block js-dropdown-link">Enregistrement</a></div>
+                                <div><a href="#" class="d-block js-dropdown-link">Production</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-30">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>-->
 
 
 
@@ -111,17 +141,18 @@
                         <tbody>
                         @foreach($reservations as $index => $reservation)
                             <tr>
-                                <td>#{{ $index + 1 }}</td>
+                                <td>N°{{ $reservation -> id  }}</td>
                                 <td>{{ $reservation->user->email }}</td>
-                                <td class="fw-500">${{ number_format($reservation->total_amount, 2) }}</td>
-                                <td>${{ number_format($reservation->amount_paid, 2) }}</td>
+                                <td class="fw-500">{{ number_format($reservation->price, 2) }}€</td>
+                                <td>{{ number_format($reservation->price, 2) }}€</td>
                                 <td>
                                     @php
                                         $statusClasses = [
-                                            'En attente' => 'bg-yellow-4 text-yellow-3',
-                                            'Confirmée' => 'bg-blue-1-05 text-blue-1',
-                                            'Rejetée' => 'bg-red-3 text-red-2'
-                                        ];
+                                                'Confirmée' => 'bg-green-4',
+                                                'En attente' => 'bg-yellow-4',
+                                                'Annulée' => 'bg-red-4',
+                                                'En cours' => 'bg-blue-4'
+                                            ];
                                     @endphp
                                     <div class="rounded-100 py-4 text-center col-12 text-14 fw-500 {{ $statusClasses[$reservation->status] ?? 'bg-gray-3 text-gray-2' }}">
                                         {{ ucfirst($reservation->status) }}

@@ -39,6 +39,8 @@ Route::group(['middleware' => 'auth'], function () {
     // Dashboard generic routes
     Route::group(['prefix' => 'dashboard'], function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/booking', [DashboardController::class, 'bookingArtist'])->name('dashboard.artist.booking');
+
         Route::get('/my-studios', [StudioController::class, 'myStudios'])->name('dashboard.studios');
         Route::get('/settings', [UserSettingsController::class, 'edit'])->name('dashboard.settings');
         Route::post('/settings/update', [UserSettingsController::class, 'update'])->name('dashboard.settings.update');

@@ -30,4 +30,21 @@ class Reservation extends Model
     {
         return $this->belongsTo(Studio::class);
     }
+
+    public static function getReservations() {
+        return self::from('reservations as R')
+            ->leftJoin('studios as S', 'S.id', 'R.studio_id')
+            ->where('S.user_id', auth()->id())
+            ->select('R.*')
+            ->get();
+    }
+
+
+    public static function getReservationArtist() {
+
+        return self::from('reservations as R')
+            ->where('user_id', auth()->id())
+            ->select('R.*')
+            ->get();
+    }
 }
