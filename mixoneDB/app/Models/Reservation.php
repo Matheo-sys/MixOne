@@ -36,6 +36,7 @@ class Reservation extends Model
             ->leftJoin('studios as S', 'S.id', 'R.studio_id')
             ->where('S.user_id', auth()->id())
             ->select('R.*')
+            ->orderBy('id', 'desc')
             ->get();
     }
 
@@ -45,6 +46,7 @@ class Reservation extends Model
         return self::from('reservations as R')
             ->where('user_id', auth()->id())
             ->select('R.*')
+            ->orderBy('id', 'desc')
             ->get();
     }
 }

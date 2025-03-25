@@ -220,63 +220,6 @@
                                     </div>
                                 </div>
 
-                                <style>
-                                    .searchMenu-guests {
-                                        border: 1px solid #e4e5e7;
-                                        transition: all 0.3s ease;
-                                    }
-
-                                    .searchMenu-guests:hover {
-                                        border-color: #c5c6c8;
-                                    }
-
-                                    .searchMenu-guests__field {
-                                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                                    }
-
-                                    .button.-outline-blue-1:hover {
-                                        transform: translateY(-1px);
-                                    }
-                                </style>
-
-                                <script>
-                                    document.addEventListener('DOMContentLoaded', function() {
-                                        // Gestion du compteur d'heures
-                                        const downBtn = document.querySelector('.js-down');
-                                        const upBtn = document.querySelector('.js-up');
-                                        const counter = document.querySelector('.js-count-adult');
-                                        const minHours = {{ $studio->min_hours }};
-
-                                        if (downBtn && upBtn) {
-                                            downBtn.addEventListener('click', function() {
-                                                let current = parseInt(counter.textContent);
-                                                if (current > minHours) {
-                                                    counter.textContent = current - 1;
-                                                    updateReservationDetails();
-                                                }
-                                            });
-
-                                            upBtn.addEventListener('click', function() {
-                                                let current = parseInt(counter.textContent);
-                                                counter.textContent = current + 1;
-                                                updateReservationDetails();
-                                            });
-                                        }
-
-                                        function updateReservationDetails() {
-                                            const hours = parseInt(counter.textContent);
-                                            const hourlyRate = {{ $studio->hourly_rate }};
-                                            const total = hours * hourlyRate;
-
-                                            // Mise à jour des champs cachés
-                                            document.getElementById('hidden_number_of_hours').value = hours;
-                                            document.getElementById('total_price').value = total;
-
-                                            // Mise à jour de l'affichage du prix
-                                            document.querySelector('[data-price]').textContent = total + ' €';
-                                        }
-                                    });
-                                </script>
 
                                 <!-- Section Créneaux horaires -->
                                 <div class="form-group mb-30">
@@ -324,104 +267,204 @@
                                         {{ session('success') }}
                                     </div>
                                 @endif
+                                @php
+                                    $isStudio = auth()->check() && auth()->user()->profile === 'studio'; // Vérifie si l'utilisateur est un studio
+                                @endphp
 
-                                <!-- Bouton de réservation -->
-                                <button type="submit"
-                                        class="button -dark-1 px-35 h-60 col-12 bg-blue-1 text-white hover:bg-blue-2 transition-all"
-                                        style="margin-top: 10px;">
-                                    <span class="fw-500">Réserver maintenant</span>
+                                    <!-- Bouton de réservation -->
+                                <button type="submit" id = "reserveButton"
+                                        class="button px-35 h-60 col-12 transition-all fw-500 flex items-center justify-center
+               {{ $isStudio ? 'bg-gray-800 text-gray-900 cursor-not-allowed' : 'bg-blue-1 text-white hover:bg-blue-2' }}"
+                                        style="margin-top: 10px; border-radius: 8px; opacity: {{ $isStudio ? '1' : '1' }};"
+                                        {{ $isStudio ? 'disabled' : '' }}
+                                        @if($isStudio) data-tooltip="Vous ne pouvez pas réserver connecté en tant que studio" @endif>
+                                    <span>Réserver maintenant</span>
                                     <i class="icon-arrow-right text-16 ml-10"></i>
                                 </button>
+
+                                <!-- Ajout du tooltip (message au survol) -->
+                                @if($isStudio)
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", function () {
+                                            let button = document.getElementById("reserveButton");
+
+                                            if (!button) return; // Vérifie que le bouton existe
+
+                                            let tooltip = document.createElement("div");
+                                            tooltip.textContent = "Vous ne pouvez pas réserver en tant que studio";
+                                            tooltip.style.position = "absolute";
+                                            tooltip.style.padding = "5px 10px";
+                                            tooltip.style.background = "black";
+                                            tooltip.style.color = "white";
+                                            tooltip.style.borderRadius = "5px";
+                                            tooltip.style.fontSize = "12px";
+                                            tooltip.style.whiteSpace = "nowrap";
+                                            tooltip.style.display = "none";
+                                            tooltip.style.pointerEvents = "none"; // Ne bloque pas les interactions
+
+                                            document.body.appendChild(tooltip);
+
+                                            button.addEventListener("mousemove", function (event) {
+                                                tooltip.style.display = "block";
+                                                tooltip.style.top = (event.clientY + 10) + "px";
+                                                tooltip.style.left = (event.clientX + 10) + "px";
+                                            });
+
+                                            button.addEventListener("mouseleave", function () {
+                                                tooltip.style.display = "none";
+                                            });
+                                        });
+
+                                    </script>
+                                @endif
+
                             </form>
                         </div>
                     </div>
                 </div>
 
-                <style>
-                    .form-control {
-                        border: 1px solid #E4E5E7;
-                        width: 100%;
-                        transition: all 0.3s ease;
-                    }
 
-                    .form-control:focus {
-                        border-color: #335EEE;
-                        box-shadow: 0 0 0 2px rgba(51, 94, 238, 0.1);
-                    }
-
-                    .counter-btn {
-                        width: 32px;
-                        height: 32px;
-                        border: 1px solid #E4E5E7;
-                        border-radius: 4px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: white;
-                        cursor: pointer;
-                        transition: all 0.2s ease;
-                    }
-
-                    .counter-btn:hover {
-                        background: #F5F7FA;
-                        border-color: #D1D5DB;
-                    }
-
-                    select.form-control {
-                        background-image: none;
-                        padding-right: 40px;
-                    }
-
-                    .alert {
-                        transition: all 0.3s ease;
-                    }
-                </style>
-
-                <script>
-                    // Script pour gérer le compteur d'heures
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const downBtn = document.querySelector('.js-down');
-                        const upBtn = document.querySelector('.js-up');
-                        const counter = document.querySelector('.js-count-adult');
-                        const hiddenHours = document.getElementById('hidden_number_of_hours');
-                        const minHours = {{ $studio->min_hours }};
-                        const hourlyRate = {{ $studio->hourly_rate }};
-                        const totalPrice = document.querySelector('[data-price]');
-
-                        // Gestion du compteur
-                        if (downBtn && upBtn) {
-                            downBtn.addEventListener('click', () => {
-                                let current = parseInt(counter.textContent);
-                                if (current > minHours) {
-                                    current--;
-                                    updateCounter(current);
-                                }
-                            });
-
-                            upBtn.addEventListener('click', () => {
-                                let current = parseInt(counter.textContent);
-                                current++;
-                                updateCounter(current);
-                            });
-                        }
-
-                        function updateCounter(value) {
-                            counter.textContent = value;
-                            hiddenHours.value = value;
-                            totalPrice.textContent = (value * hourlyRate) + ' €';
-                            document.getElementById('total_price').value = value * hourlyRate;
-                        }
-                    });
-
-                    function updateHiddenDate() {
-                        document.getElementById('hidden_date').value = document.getElementById('date').value;
-                    }
-                </script>
 
             </div>
         </div>
     </section>
 
+    <style>
+        .searchMenu-guests {
+            border: 1px solid #e4e5e7;
+            transition: all 0.3s ease;
+        }
+
+        .searchMenu-guests:hover {
+            border-color: #c5c6c8;
+        }
+
+        .searchMenu-guests__field {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .button.-outline-blue-1:hover {
+            transform: translateY(-1px);
+        }
+    </style>
+    <style>
+        .form-control {
+            border: 1px solid #E4E5E7;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #335EEE;
+            box-shadow: 0 0 0 2px rgba(51, 94, 238, 0.1);
+        }
+
+        .counter-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #E4E5E7;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .counter-btn:hover {
+            background: #F5F7FA;
+            border-color: #D1D5DB;
+        }
+
+        select.form-control {
+            background-image: none;
+            padding-right: 40px;
+        }
+
+        .alert {
+            transition: all 0.3s ease;
+        }
+    </style>
+
+    <script>
+        // Script pour gérer le compteur d'heures
+        document.addEventListener('DOMContentLoaded', function() {
+            const downBtn = document.querySelector('.js-down');
+            const upBtn = document.querySelector('.js-up');
+            const counter = document.querySelector('.js-count-adult');
+            const hiddenHours = document.getElementById('hidden_number_of_hours');
+            const minHours = {{ $studio->min_hours }};
+            const hourlyRate = {{ $studio->hourly_rate }};
+            const totalPrice = document.querySelector('[data-price]');
+
+            // Gestion du compteur
+            if (downBtn && upBtn) {
+                downBtn.addEventListener('click', () => {
+                    let current = parseInt(counter.textContent);
+                    if (current > minHours) {
+                        current--;
+                        updateCounter(current);
+                    }
+                });
+
+                upBtn.addEventListener('click', () => {
+                    let current = parseInt(counter.textContent);
+                    current++;
+                    updateCounter(current);
+                });
+            }
+
+            function updateCounter(value) {
+                counter.textContent = value;
+                hiddenHours.value = value;
+                totalPrice.textContent = (value * hourlyRate) + ' €';
+                document.getElementById('total_price').value = value * hourlyRate;
+            }
+        });
+
+        function updateHiddenDate() {
+            document.getElementById('hidden_date').value = document.getElementById('date').value;
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion du compteur d'heures
+            const downBtn = document.querySelector('.js-down');
+            const upBtn = document.querySelector('.js-up');
+            const counter = document.querySelector('.js-count-adult');
+            const minHours = {{ $studio->min_hours }};
+
+            if (downBtn && upBtn) {
+                downBtn.addEventListener('click', function() {
+                    let current = parseInt(counter.textContent);
+                    if (current > minHours) {
+                        counter.textContent = current - 1;
+                        updateReservationDetails();
+                    }
+                });
+
+                upBtn.addEventListener('click', function() {
+                    let current = parseInt(counter.textContent);
+                    counter.textContent = current + 1;
+                    updateReservationDetails();
+                });
+            }
+
+            function updateReservationDetails() {
+                const hours = parseInt(counter.textContent);
+                const hourlyRate = {{ $studio->hourly_rate }};
+                const total = hours * hourlyRate;
+
+                // Mise à jour des champs cachés
+                document.getElementById('hidden_number_of_hours').value = hours;
+                document.getElementById('total_price').value = total;
+
+                // Mise à jour de l'affichage du prix
+                document.querySelector('[data-price]').textContent = total + ' €';
+            }
+        });
+    </script>
     <script>
         (function() {
             'use strict';
