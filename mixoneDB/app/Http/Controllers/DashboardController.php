@@ -8,16 +8,33 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index() {
-        $view = auth()->user()->profile == 'artist' ? 'dashboard.artist.booking' : 'dashboard.studio.dashboard';
         if (!auth()->check()) {
             return redirect()->route('login');
         }
 
-        // Version 2 : Requête directe sécurisée
-        $reservations = Reservation::where('user_id', auth()->id())
-            ->with('studio')
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+        $user = auth()->user();
+
+        if ($user->profile == 'artist') {
+            $view = 'dashboard.artist.booking';
+            // Pour les artistes, récupérer les réservations où user_id correspond à l'artiste
+            $reservations = Reservation::where('user_id', $user->id)
+                ->with('studio')
+                ->orderBy('id', 'desc')
+                ->paginate(10);
+        } else {
+            $view = 'dashboard.studio.dashboard';
+            // Pour un studio, récupérer les réservations des studios qui appartiennent à l'utilisateur connecté
+            $reservations = Reservation::whereIn('studio_id', function($query) use ($user) {
+                $query->select('id')
+                    ->from('studios')
+                    ->where('user_id', $user->id);
+            })
+                ->with('studio')
+                ->orderBy('id', 'desc')
+                ->paginate(10);
+        }
+
         return view($view, compact('reservations'));
     }
+
 }

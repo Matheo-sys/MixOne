@@ -68,149 +68,99 @@
                 </div>
 
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-2">Terminé</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-2">Confirmées</button>
                 </div>
 
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-3">Traitement</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-3">En attente</button>
                 </div>
 
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-4">Confirmé</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">Annulées</button>
                 </div>
-
-                <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-5">Annulé</button>
-                </div>
-
-                <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-6">Payé</button>
-                </div>
-
-                <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-7">Non payé</button>
-                </div>
-
-                <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-8">Paiement partiel</button>
-                </div>
-
             </div>
 
             <div class="tabs__content pt-30 js-tabs-content">
-
                 <div class="tabs__pane -tab-item-1 is-tab-el-active">
                     <div class="overflow-scroll scroll-bar-1">
                         <table class="table-3 -border-bottom col-12">
                             <thead class="bg-light-2">
                             <tr>
-                                <th>Type</th>
-                                <th>Titre</th>
-                                <th>Date de Commande</th>
-                                <th>Temps d'exécution</th>
+                                <th>N°</th>
+                                <th>Client</th>
+                                <th>Date de réservation</th>
+                                <th>Créneau Réservé</th>
+                                <th>Heures</th>
                                 <th>Total</th>
-                                <th>Payé</th>
-                                <th>Rester</th>
                                 <th>Statut</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-
-                            <tr>
-                                <td>Hotel</td>
-                                <td>Studio 1</td>
-                                <td>04/04/2022</td>
-                                <td class="lh-16">Enregistrement : 05/14/2022<br>Vérifier : 05/29/2022</td>
-                                <td class="fw-500">130€</td>
-                                <td>0€</td>
-                                <td>35€</td>
-                                <td><span class="rounded-100 py-4 px-10 text-center text-14 fw-500 bg-yellow-4 text-yellow-3">En attente</span></td>
-                                <td>Actions</td>
-                            </tr>
-
-                            <tr>
-                                <td>Hotel</td>
-                                <td>Studio 2</td>
-                                <td>04/04/2022</td>
-                                <td class="lh-16">Enregistrement : 05/14/2022<br>Vérifier : 05/29/2022</td>
-                                <td class="fw-500">130€</td>
-                                <td>0€</td>
-                                <td>35€</td>
-                                <td><span class="rounded-100 py-4 px-10 text-center text-14 fw-500 bg-blue-1-05 text-blue-1">Confirmé</span></td>
-                                <td>Actions</td>
-                            </tr>
-
+                            @foreach($reservations as $reservation)
+                                <tr>
+                                    <td>{{ $reservation->id }}</td>
+                                    <td>{{ $reservation->user_id->email }}</td>
+                                    <td>{{ $reservation->created_at->format('d/m/Y') }}</td>
+                                    <td class="lh-16">
+                                        Début : {{ \Carbon\Carbon::parse($reservation->time_slot)->format('d/m/Y à H:i') }}<br>
+                                        Fin : {{ \Carbon\Carbon::parse($reservation->time_slot)->addHours($reservation->number_of_hours)->format('d/m/Y à H:i') }}
+                                    </td>
+                                    <td class="fw-500">{{ $reservation->number_of_hours }}h</td>
+                                    <td>{{ number_format($reservation->total_price, 2) }}€</td>
+                                    <td>
+                                        @php
+                                            $statusClasses = [
+                                                'confirmé' => 'bg-green-4 text-green-3',
+                                                'en attente' => 'bg-yellow-4 text-yellow-3',
+                                                'annulé' => 'bg-red-4 text-red-3'
+                                            ];
+                                        @endphp
+                                        <span class="rounded-100 py-4 px-10 text-center text-14 fw-500 {{ $statusClasses[$reservation->status] ?? 'bg-light-3' }}">
+                                            {{ $reservation->status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown js-dropdown">
+                                            <div class="dropdown__button d-flex items-center rounded-4 text-blue-1 bg-blue-1-05 text-14 px-15 py-5"
+                                                 data-el-toggle=".js-actions-{{ $reservation->id }}-toggle">
+                                                <span class="js-dropdown-title">Actions</span>
+                                                <i class="icon icon-chevron-sm-down text-7 ml-10"></i>
+                                            </div>
+                                            <div class="toggle-element -dropdown-2 js-actions-{{ $reservation->id }}-toggle">
+                                                <div class="text-14 fw-500">
+                                                    @if($reservation->status === 'en attente')
+                                                        <form action="{{ route('studio.reservations.confirm', $reservation->id) }}" method="POST">
+                                                            @csrf
+                                                            <button type="submit" class="d-block text-left px-15 py-5 hover:bg-blue-1-05 hover:text-blue-1">
+                                                                Confirmer
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                    <a href="#" class="d-block px-15 py-5 hover:bg-blue-1-05 hover:text-blue-1">
+                                                        Facture
+                                                    </a>
+                                                    @if($reservation->status !== 'annulé')
+                                                        <form action="{{ route('studio.reservations.cancel', $reservation->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="d-block text-left px-15 py-5 hover:bg-red-1-05 hover:text-red-1">
+                                                                Annuler
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
-
-            </div>
-        </div>
-
-        <div class="pt-30">
-            <div class="row justify-between">
-                <div class="col-auto">
-                    <button class="button -blue-1 size-40 rounded-full border-light">
-                        <i class="icon-chevron-left text-12"></i>
-                    </button>
-                </div>
-
-                <div class="col-auto">
-                    <div class="row x-gap-20 y-gap-20 items-center">
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">1</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">3</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full bg-light-2">4</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">5</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">...</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">20</div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="col-auto">
-                    <button class="button -blue-1 size-40 rounded-full border-light">
-                        <i class="icon-chevron-right text-12"></i>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
+
 @endsection
