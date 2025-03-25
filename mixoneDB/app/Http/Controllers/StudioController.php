@@ -111,32 +111,20 @@ class StudioController extends Controller
 
     public function bookingStudios()
     {
-        $user = auth()->user();
-        $reservations = Reservation::whereIn('studio_id', function($query) use ($user) {
-            $query->select('id')
-                ->from('studios')
-                ->where('user_id', $user->id);
-        })->with(['studio', 'user'])
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+        $reservations = Reservation::getReservations();
+
 
         return view('dashboard.studio.booking', compact('reservations'));
     }
 
     public function dashboardStudio()
     {
-        $user = auth()->user();
-        $reservations = Reservation::whereIn('studio_id', function($query) use ($user) {
-            $query->select('id')
-                ->from('studios')
-                ->where('user_id', $user->id);
-        })->with(['studio', 'user'])
-            ->orderBy('id', 'desc')
-            ->paginate(10);
-
+        $reservations = Reservation::getReservations();
 
         return view('dashboard.studio.dashboard', compact('reservations'));
     }
+
+
     /**
      * Rechercher des studios en fonction des filtres
      *

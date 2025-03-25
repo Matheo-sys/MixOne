@@ -75,10 +75,10 @@
                                     <td>
                                         @php
                                             $statusClasses = [
-                                                'confirmé' => 'bg-green-4 text-green-3',
-                                                'en attente' => 'bg-yellow-4 text-yellow-3',
-                                                'annulé' => 'bg-red-4 text-red-3',
-                                                'en cours' => 'bg-blue-4 text-blue-3'
+                                                'Confirmée' => 'bg-green-4',
+                                                'En attente' => 'bg-yellow-4',
+                                                'Annulée' => 'bg-red-4',
+                                                'En cours' => 'bg-blue-4'
                                             ];
                                         @endphp
                                         <span class="rounded-100 py-4 px-10 text-center text-14 fw-500 {{ $statusClasses[$reservation->status] ?? 'bg-light-3' }}">
@@ -96,7 +96,7 @@
 
                                             <div class="toggle-element -dropdown-2 js-click-dropdown js-actions-{{ $reservation->id }}-toggle">
                                                 <div class="text-14 fw-500 js-dropdown-list">
-                                                    @if($reservation->status === 'en attente')
+                                                    @if($reservation->status === 'En attente')
                                                         <form action="{{ route('reservations.confirm', $reservation->id) }}"
                                                               method="POST"
                                                               class="w-full">
@@ -113,7 +113,7 @@
                                                         Facture
                                                     </a>
 
-                                                    @if(in_array($reservation->status, ['en attente', 'confirmé']))
+                                                    @if(in_array($reservation->status, ['En attente']))
                                                         <form action="{{ route('reservations.cancel', $reservation->id) }}"
                                                               method="POST"
                                                               class="w-full">

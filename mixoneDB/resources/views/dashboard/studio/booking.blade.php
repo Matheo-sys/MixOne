@@ -111,9 +111,9 @@
                                     <td>
                                         @php
                                             $statusClasses = [
-                                                'confirmé' => 'bg-green-4 text-green-3',
-                                                'en attente' => 'bg-yellow-4 text-yellow-3',
-                                                'annulé' => 'bg-red-4 text-red-3'
+                                                'Confirmée' => 'bg-green-4',
+                                                'En attente' => 'bg-yellow-4',
+                                                'Annulée' => 'bg-red-4'
                                             ];
                                         @endphp
                                         <span class="rounded-100 py-4 px-10 text-center text-14 fw-500 {{ $statusClasses[$reservation->status] ?? 'bg-light-3' }}">
@@ -129,7 +129,7 @@
                                             </div>
                                             <div class="toggle-element -dropdown-2 js-actions-{{ $reservation->id }}-toggle">
                                                 <div class="text-14 fw-500">
-                                                    @if($reservation->status === 'en attente')
+                                                    @if($reservation->status === 'En Attente')
                                                         <form action="" method="POST">
                                                             @csrf
                                                             <button type="submit" class="d-block text-left px-15 py-5 hover:bg-blue-1-05 hover:text-blue-1">
@@ -140,7 +140,7 @@
                                                     <a href="#" class="d-block px-15 py-5 hover:bg-blue-1-05 hover:text-blue-1">
                                                         Facture
                                                     </a>
-                                                    @if($reservation->status !== 'annulé')
+                                                    @if($reservation->status !== 'Annulée')
                                                         <form action="" method="POST">
                                                             @csrf
                                                             @method('DELETE')

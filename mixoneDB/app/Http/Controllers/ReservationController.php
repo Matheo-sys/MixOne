@@ -38,10 +38,10 @@ class ReservationController extends Controller
             $reservation = new Reservation();
             $reservation->user_id = auth()->id();
             $reservation->studio_id = $request->studio_id;
-            $reservation->date = $validated['date']; // Utiliser les données validées
+            $reservation->date = $validated['date'];
             $reservation->time_slot = $validated['time_slot'];
             $reservation->number_of_hours = $validated['number_of_hours'];
-            $reservation->price = $validated['total_price']; // Correction clé ici
+            $reservation->price = $validated['total_price'];
             $reservation->status = 'en attente';
 
             if ($reservation->save()) {
@@ -57,11 +57,11 @@ class ReservationController extends Controller
     public function confirm(Reservation $reservation)
     {
         try {
-            if ($reservation->status !== 'en attente') {
+            if ($reservation->status !== 'En attente') {
                 throw new \Exception('Action non autorisée');
             }
 
-            $reservation->update(['status' => 'confirmé']);
+            $reservation->update(['status' => 'Confirmée']);
             return redirect()->back()->with('success', 'Statut mis à jour avec succès !');
 
         } catch (\Exception $e) {
@@ -72,11 +72,11 @@ class ReservationController extends Controller
     public function cancel(Reservation $reservation)
     {
         try {
-            if (!in_array($reservation->status, ['en attente', 'confirmé'])) {
+            if (!in_array($reservation->status, ['En attente'])) {
                 throw new \Exception('Action non autorisée');
             }
 
-            $reservation->update(['status' => 'annulé']);
+            $reservation->update(['status' => 'Annulée']);
             return redirect()->back()->with('success', 'Réservation annulée avec succès !');
 
         } catch (\Exception $e) {
