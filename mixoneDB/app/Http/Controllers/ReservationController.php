@@ -10,6 +10,13 @@ class ReservationController extends Controller
 {
     public function store(Request $request)
     {
+        $user = auth()->user();
+
+        // Vérifier si l'utilisateur est un studio
+        if ($user->profile == 'studio') {
+            return back()->withInput()->withErrors(['error' => 'Les comptes studio ne peuvent pas effectuer de réservation.']);
+        }
+
         $validated = $request->validate([
             'time_slot' => 'required|string',
             'studio_id' => 'required|exists:studios,id',
@@ -35,8 +42,9 @@ class ReservationController extends Controller
                 return back()->withInput()->withErrors(['time_slot' => 'Ce créneau horaire est déjà réservé.']);
             }
 
+            // Création de la réservation
             $reservation = new Reservation();
-            $reservation->user_id = auth()->id();
+            $reservation->user_id = $user->id;
             $reservation->studio_id = $request->studio_id;
             $reservation->date = $validated['date'];
             $reservation->time_slot = $validated['time_slot'];
