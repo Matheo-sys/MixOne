@@ -5,7 +5,7 @@
         <div class="col-auto">
 
             <h1 class="text-30 lh-14 fw-600">Dashboard</h1>
-            <div class="text-15 text-light-1">Lorem ipsum dolor sit amet, consectetur.</div>
+            <div class="text-15 text-light-1">Retrouvez le dashboard de  votre compte studio.</div>
 
         </div>
 

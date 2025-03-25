@@ -26,7 +26,7 @@
     <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
         <div class="col-auto ml-10">
             <h1 class="text-30 lh-14 fw-600">AJOUTER UN STUDIO</h1>
-            <div class="text-15 text-light-1">Lorem ipsum dolor sit amet, consectetur.</div>
+            <div class="text-15 text-light-1">Retrouvez le formulaire d'ajout de studio.</div>
         </div>
         <div class="col-auto"></div>
     </div>

@@ -2,21 +2,21 @@
 
 @section('content')
 
-    <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
-        <div class="col-auto">
-
-            <h1 class="text-30 lh-14 fw-600">Historique des réservations</h1>
-            <div class="text-15 text-light-1">Retrouvez votre historique des réservations</div>
-
-        </div>
-
-        <div class="col-auto">
-
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center">
+                    <h1 class="text-30 fw-600">Historique des réservations</h1>
+                </div>
+                <div class="text-center mt-10">
+                    <p>Retrouvez votre historique des réservations</p>
+                </div>
+            </div>
         </div>
     </div>
 
 
-    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+    <div class="py-30 px-30 rounded-4 bg-white shadow-3 mt-90">
         <div class="tabs -underline-2 js-tabs">
             <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
 
