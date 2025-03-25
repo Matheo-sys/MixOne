@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Studio\CreateRequest;
+use App\Models\Reservation;
 use App\Models\Studio;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -108,6 +109,34 @@ class StudioController extends Controller
         return view('dashboard.studio.myStudios', compact('studios'));
     }
 
+    public function bookingStudios()
+    {
+        $user = auth()->user();
+        $reservations = Reservation::whereIn('studio_id', function($query) use ($user) {
+            $query->select('id')
+                ->from('studios')
+                ->where('user_id', $user->id);
+        })->with(['studio', 'user'])
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
+        return view('dashboard.studio.booking', compact('reservations'));
+    }
+
+    public function dashboardStudio()
+    {
+        $user = auth()->user();
+        $reservations = Reservation::whereIn('studio_id', function($query) use ($user) {
+            $query->select('id')
+                ->from('studios')
+                ->where('user_id', $user->id);
+        })->with(['studio', 'user'])
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
+
+        return view('dashboard.studio.dashboard', compact('reservations'));
+    }
     /**
      * Rechercher des studios en fonction des filtres
      *
