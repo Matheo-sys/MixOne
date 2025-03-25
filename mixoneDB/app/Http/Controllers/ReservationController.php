@@ -53,7 +53,6 @@ class ReservationController extends Controller
             return back()->withInput()->with('error', 'Erreur: ' . $e->getMessage());
         }
     }
-// Dans ReservationController.php
 
     public function confirm(Reservation $reservation)
     {

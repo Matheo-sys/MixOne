@@ -100,14 +100,14 @@
                             @foreach($reservations as $reservation)
                                 <tr>
                                     <td>{{ $reservation->id }}</td>
-                                    <td>{{ $reservation->user_id->email }}</td>
+                                    <td>{{ $reservation->user->email }}</td>
                                     <td>{{ $reservation->created_at->format('d/m/Y') }}</td>
                                     <td class="lh-16">
                                         Début : {{ \Carbon\Carbon::parse($reservation->time_slot)->format('d/m/Y à H:i') }}<br>
                                         Fin : {{ \Carbon\Carbon::parse($reservation->time_slot)->addHours($reservation->number_of_hours)->format('d/m/Y à H:i') }}
                                     </td>
                                     <td class="fw-500">{{ $reservation->number_of_hours }}h</td>
-                                    <td>{{ number_format($reservation->total_price, 2) }}€</td>
+                                    <td>{{ number_format($reservation->price, 2) }}€</td>
                                     <td>
                                         @php
                                             $statusClasses = [
@@ -130,7 +130,7 @@
                                             <div class="toggle-element -dropdown-2 js-actions-{{ $reservation->id }}-toggle">
                                                 <div class="text-14 fw-500">
                                                     @if($reservation->status === 'en attente')
-                                                        <form action="{{ route('studio.reservations.confirm', $reservation->id) }}" method="POST">
+                                                        <form action="" method="POST">
                                                             @csrf
                                                             <button type="submit" class="d-block text-left px-15 py-5 hover:bg-blue-1-05 hover:text-blue-1">
                                                                 Confirmer
@@ -141,7 +141,7 @@
                                                         Facture
                                                     </a>
                                                     @if($reservation->status !== 'annulé')
-                                                        <form action="{{ route('studio.reservations.cancel', $reservation->id) }}" method="POST">
+                                                        <form action="" method="POST">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="d-block text-left px-15 py-5 hover:bg-red-1-05 hover:text-red-1">

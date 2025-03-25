@@ -3,7 +3,7 @@
         <div class="row y-gap-40 justify-between">
             <div data-anim-child="slide-up delay-1" class="col-xl-5 col-lg-6">
                 <h2 class="text-30">Que disent nos clients<br> sur nous ?</h2>
-                <p class="mt-20">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo.</p>
+                <p class="mt-20">Super expérience de réservation ! Le site est très facile à utiliser, et j'ai trouvé rapidement le studio parfait pour mes besoins. Les informations étaient claires et précises, et la réservation s'est faite en quelques clics. Je recommande vivement !</p>
 
                 <div class="row y-gap-30 pt-60 lg:pt-40">
                     <div class="col-sm-5 col-6">
@@ -37,12 +37,12 @@
                                 </div>
 
                                 <div class="col-auto">
-                                    <h5 class="text-16 fw-500">Annette Black</h5>
-                                    <div class="text-15 text-light-1 lh-15">Designer UX / UI</div>
+                                    <h5 class="text-16 fw-500">Elias Louhichi</h5>
+                                    <div class="text-15 text-light-1 lh-15">Rappeur </div>
                                 </div>
                             </div>
 
-                            <p class="text-18 fw-500 text-dark-1 mt-30 sm:mt-20">L'endroit est idéalement situé à Gumbet. Le quartier est sûr et magnifique. L'appartement était confortable et l'hôte était aimable et réactif à nos demandes.</p>
+                            <p class="text-18 fw-500 text-dark-1 mt-30 sm:mt-20">Le studio était exactement comme sur les photos, propre et bien équipé. Un excellent rapport qualité/prix. J'ai eu un petit souci avec le code d'accès, mais le service client a été super réactif et a résolu ça en un rien de temps. Je reviendrai !</p>
                         </div>
 
                         <div class="swiper-slide">
@@ -52,12 +52,12 @@
                                 </div>
 
                                 <div class="col-auto">
-                                    <h5 class="text-16 fw-500">Annette Black</h5>
-                                    <div class="text-15 text-light-1 lh-15">Designer UX / UI</div>
+                                    <h5 class="text-16 fw-500">EL KRABITO </h5>
+                                    <div class="text-15 text-light-1 lh-15">Producteur</div>
                                 </div>
                             </div>
 
-                            <p class="text-18 fw-500 text-dark-1 mt-30 sm:mt-20">L'endroit est idéalement situé à Gumbet. Le quartier est sûr et magnifique. L'appartement était confortable et l'hôte était aimable et réactif à nos demandes.</p>
+                            <p class="text-18 fw-500 text-dark-1 mt-30 sm:mt-20">Le studio était exactement comme sur les photos, propre et bien équipé. Un excellent rapport qualité/prix. J'ai eu un petit souci avec le code d'accès, mais le service client a été super réactif et a résolu ça en un rien de temps. Je reviendrai !</p>
                         </div>
 
                         <div class="swiper-slide">
@@ -67,12 +67,12 @@
                                 </div>
 
                                 <div class="col-auto">
-                                    <h5 class="text-16 fw-500">Annette Black</h5>
-                                    <div class="text-15 text-light-1 lh-15">Designer UX / UI</div>
+                                    <h5 class="text-16 fw-500">Matheo</h5>
+                                    <div class="text-15 text-light-1 lh-15">Beatmaker</div>
                                 </div>
                             </div>
 
-                            <p class="text-18 fw-500 text-dark-1 mt-30 sm:mt-20">L'endroit est idéalement situé à Gumbet. Le quartier est sûr et magnifique. L'appartement était confortable et l'hôte était aimable et réactif à nos demandes.</p>
+                            <p class="text-18 fw-500 text-dark-1 mt-30 sm:mt-20">Le studio était exactement comme sur les photos, propre et bien équipé. Un excellent rapport qualité/prix. J'ai eu un petit souci avec le code d'accès, mais le service client a été super réactif et a résolu ça en un rien de temps. Je reviendrai !</p>
                         </div>
 
                     </div>

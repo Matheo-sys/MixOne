@@ -93,3 +93,6 @@ Route::post('/reservations/{reservation}/confirm', [ReservationController::class
 Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
     ->name('reservations.cancel')
     ->middleware('auth');
+
+
+

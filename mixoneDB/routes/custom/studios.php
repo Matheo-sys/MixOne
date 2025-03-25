@@ -8,13 +8,10 @@ Route::post('/studio/store', [StudioController::class, 'store'])->name('studio.s
 
 
 Route::group(['prefix' => 'dashboard'], function () {
-    Route::get('/studio', function() {
-        return view('dashboard.studio.dashboard');
-    })->name('dashboard.studio');
+    Route::get('/studio', [StudioController::class, 'dashboardStudio']
+    )->name('dashboard.studio');
 
-    Route::get('/studio/booking', function() {
-        return view('dashboard.studio.booking');
-    })->name('dashboard.studio.booking');
+    Route::get('/studio/booking', [StudioController::class, 'bookingStudios'])->name('dashboard.studio.booking');
 
     Route::get('/studio/list', [StudioController::class, 'myStudios'])->name('dashboard.studio.myStudios');
 
