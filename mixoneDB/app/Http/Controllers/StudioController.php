@@ -322,7 +322,7 @@ class StudioController extends Controller
         }
 
         $studio->update($data);
-        
+
         return redirect()->route('dashboard.studio.edit', $studio)->with('success', 'Studio modifié avec succès !');
     }
 }
