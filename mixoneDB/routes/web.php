@@ -40,7 +40,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'dashboard'], function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/booking', [DashboardController::class, 'bookingArtist'])->name('dashboard.artist.booking');
-
         Route::get('/my-studios', [StudioController::class, 'myStudios'])->name('dashboard.studios');
         Route::get('/settings', [UserSettingsController::class, 'edit'])->name('dashboard.settings');
         Route::post('/settings/update', [UserSettingsController::class, 'update'])->name('dashboard.settings.update');
@@ -87,7 +86,6 @@ Route::middleware('auth')->group(function () {
     Route::post('dashboard/wishlist', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
 
-// web.php
 Route::post('/reservations/{reservation}/confirm', [ReservationController::class, 'confirm'])
     ->name('reservations.confirm')
     ->middleware('auth');
@@ -96,4 +94,4 @@ Route::delete('/reservations/{reservation}/cancel', [ReservationController::clas
     ->name('reservations.cancel')
     ->middleware('auth');
 
-Route::get('/bookings', [ReservationController::class, 'index'])->name('bookings.index');
+Route::get('dashboard/studio/booking/search', [ReservationController::class, 'index'])->name('bookings.index');

@@ -9,7 +9,7 @@
                         <h1 class="text-30 fw-600">MES STUDIOS FAVORIS</h1>
                     </div>
                     <div class="text-center mt-20">
-                        <p>Retrouvez tous vos studios préférés dans la liste d'envie.</p>
+                        <p>Accédez à la liste de vos studios favoris et gérez vos préférences facilement.</p>
                     </div>
                 </div>
             </div>

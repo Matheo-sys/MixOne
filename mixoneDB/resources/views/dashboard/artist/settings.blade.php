@@ -2,11 +2,11 @@
 
 @section('content')
 
-    <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
-        <div class="text-center">
-            <h1 class=" lh-14 fw-600">Paramètres</h1>
+    <div class="row y-gap-20 justify-center items-end pb-60 lg:pb-40 md:pb-32">
+        <div class="col-auto text-center">
+            <h1 class="text-40 lh-14 fw-700 mb-10">Paramètres</h1>
+            <div class="text-16 text-light-1">Personnalisez vos informations et mettez à jour votre profil en quelques clics.</div>
         </div>
-        <div class="col-auto"></div>
     </div>
 
     @if(session('success'))

@@ -3,8 +3,8 @@
         <div class="row y-gap-10 justify-between items-end">
             <div class="col-auto">
                 <div class="sectionTitle -md">
-                    <h2 class="sectionTitle__title">Recommended</h2>
-                    <p class=" sectionTitle__text mt-5 sm:mt-0">Interdum et malesuada fames ac ante ipsum</p>
+                    <h2 class="sectionTitle__title">Studios Recommandés</h2>
+                    <p class=" sectionTitle__text mt-5 sm:mt-0">Découvrez les studios recommandés pour vous en fonction de vos préférences.</p>
                 </div>
             </div>
 

@@ -5,6 +5,7 @@
     <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
         <div class="col-auto ml-10">
             <h1 class="text-30 lh-14 fw-600">TOUS MES STUDIOS</h1>
+            <div class="text-16 text-light-1">Découvrez et gérez facilement tous vos studios d'enregistrement.</div>
         </div>
 
         <div class="col-auto">

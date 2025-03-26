@@ -1,30 +1,27 @@
 <div class="dashboard__sidebar bg-white scroll-bar-1">
-
-
     <div class="sidebar -dashboard">
-
         <div class="sidebar__item">
-            <div class="sidebar__button -is-active">
+            <div class="sidebar__button {{ request()->routeIs(['dashboard', 'dashboard.bookings']) ? '-is-active' : '' }}">
                 <a href="{{route('dashboard')}}" class="d-flex items-center text-15 lh-1 fw-500 ">
-                    <img src={{asset("media/img/dashboard/sidebar/booking.svg")}} alt="image" class="mr-15">
+                    <img src="{{asset('media/img/dashboard/sidebar/booking.svg')}}" alt="image" class="mr-15">
                     Historique des réservations
                 </a>
             </div>
         </div>
 
         <div class="sidebar__item">
-            <div class="sidebar__button ">
+            <div class="sidebar__button {{ request()->routeIs('wishlist.index') ? '-is-active' : '' }}">
                 <a href="{{route('wishlist.index')}}" class="d-flex items-center text-15 lh-1 fw-500">
-                    <img src={{asset("media/img/dashboard/sidebar/bookmark.svg")}} alt="image" class="mr-15">
+                    <img src="{{asset('media/img/dashboard/sidebar/bookmark.svg')}}" alt="image" class="mr-15">
                     Liste d'envie
                 </a>
             </div>
         </div>
 
         <div class="sidebar__item">
-            <div class="sidebar__button ">
+            <div class="sidebar__button {{ request()->routeIs('dashboard.settings') ? '-is-active' : '' }}">
                 <a href="{{route('dashboard.settings')}}" class="d-flex items-center text-15 lh-1 fw-500">
-                    <img src={{asset("media/img/dashboard/sidebar/gear.svg")}} alt="image" class="mr-15">
+                    <img src="{{asset('media/img/dashboard/sidebar/gear.svg')}}" alt="image" class="mr-15">
                     Paramètres
                 </a>
             </div>
@@ -40,13 +37,8 @@
             </a>
         </div>
 
-        <!-- Formulaire de déconnexion (déjà présent, à conserver) -->
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
             @csrf
         </form>
-
-
     </div>
-
-
 </div>

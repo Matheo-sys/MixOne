@@ -9,7 +9,7 @@
                     <h1 class="text-30 fw-600">Historique des réservations</h1>
                 </div>
                 <div class="text-center mt-10">
-                    <p>Retrouvez votre historique des réservations</p>
+                    <p>Consultez l'historique complet de vos réservations passées.</p>
                 </div>
             </div>
         </div>

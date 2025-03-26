@@ -4,7 +4,7 @@
     <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
         <div class="col-auto">
             <h1 class="text-30 lh-14 fw-600">Historique des réservations</h1>
-            <div class="text-15 text-light-1">Retrouvez l'historique des toutes vos réservations.</div>
+            <div class="text-15 text-light-1">Consultez l'historique des réservations de votre studio.</div>
         </div>
 
         <div class="col-auto">
@@ -108,14 +108,14 @@
                                         <td>
                                             @php
                                                 $statusClasses = [
-                                                    'Confirmée' => 'bg-green-4',
+                                                    'Confirmée' => 'bg-blue-1-05 ',
                                                     'En attente' => 'bg-yellow-4',
-                                                    'Annulée' => 'bg-red-4'
+                                                    'Annulée' => 'text-red-1'
                                                 ];
                                             @endphp
                                             <span class="rounded-100 py-4 px-10 text-center text-14 fw-500 {{ $statusClasses[$reservation->status] ?? 'bg-light-3' }}">
-                                                    {{ $reservation->status }}
-                                                </span>
+                                                {{ $reservation->status }}
+                                            </span>
                                         </td>
                                         <td>
                                             <div class="dropdown js-dropdown">

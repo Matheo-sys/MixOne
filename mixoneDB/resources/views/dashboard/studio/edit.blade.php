@@ -5,6 +5,7 @@
     <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
         <div class="text-center">
             <h1 class="lh-14 fw-600">Modifier le Studio</h1>
+            <div class="text-16 text-light-1">Modifiez les informations de votre studio et assurez-vous qu'elles sont toujours à jour.</div>
         </div>
         <div class="col-auto"></div>
     </div>
