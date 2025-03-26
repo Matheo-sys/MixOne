@@ -75,9 +75,9 @@
                                     <td>
                                         @php
                                             $statusClasses = [
-                                                'Confirmée' => 'bg-green-4',
+                                                'Confirmée' => 'bg-blue-1-05',
                                                 'En attente' => 'bg-yellow-4',
-                                                'Annulée' => 'bg-red-4',
+                                                'Annulée' => 'text-red-1',
                                                 'En cours' => 'bg-blue-4'
                                             ];
                                         @endphp
