@@ -96,5 +96,4 @@ Route::delete('/reservations/{reservation}/cancel', [ReservationController::clas
     ->name('reservations.cancel')
     ->middleware('auth');
 
-
-
+Route::get('/bookings', [ReservationController::class, 'index'])->name('bookings.index');

@@ -84,4 +84,26 @@ class ReservationController extends Controller
         }
     }
 
+    public function index(Request $request)
+    {
+        $query = $request->input('query');
+
+        $reservations = $query
+            ? Reservation::with('user')
+                ->where(function($q) use ($query) {
+                    $q->where('id', 'LIKE', "%{$query}%")
+                        ->orWhereHas('user', function($userQuery) use ($query) {
+                            $userQuery->where('email', 'LIKE', "%{$query}%");
+                        })
+                        ->orWhere('status', 'LIKE', "%{$query}%")
+                        ->orWhere('price', 'LIKE', "%{$query}%");
+                })
+                ->get()
+            : Reservation::with('user')->get();
+
+        return view('dashboard.studio.booking', [
+            'reservations' => $reservations,
+            'query' => $query
+        ]);
+    }
 }
