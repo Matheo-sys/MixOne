@@ -68,16 +68,6 @@ $headerClass    = $whiteHeader ? 'data-add-bg="" class="header bg-white js-heade
             <div class="col-auto">
                 <div class="d-flex items-center">
 
-                    <div class="row x-gap-20 items-center xxl:d-none">
-                        <div class="col-auto">
-                            <button class="d-flex items-center text-14 {{ $whiteHeader ? 'text-dark-1' : 'text-white' }}"
-                                    data-x-click="lang">
-                                <img src={{asset("media/img/general/lang.png")}} alt="image" class="rounded-full mr-10">
-                                <span class="js-language-mainTitle">United Kingdom</span>
-                                <i class="icon-chevron-sm-down text-7 ml-15"></i>
-                            </button>
-                        </div>
-                    </div>
 
 
                     @guest

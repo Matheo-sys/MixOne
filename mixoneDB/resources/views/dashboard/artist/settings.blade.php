@@ -9,22 +9,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-        <div id="success-message" class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <div class="py-30 px-30 rounded-4 bg-white shadow-3">
         <div class="tabs -underline-2 js-tabs">
@@ -42,12 +26,12 @@
 
             <div class="tabs__content pt-30 js-tabs-content">
                 <div class="tabs__pane -tab-item-1 is-tab-el-active">
-                    <form action="{{ route('dashboard.settings.update') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('dashboard.settings.update') }}" method="POST" enctype="multipart/form-data" class="js-ajax-form">
                         @csrf
                         <div class="row y-gap-30 items-center">
                             <div class="col-auto">
                                 <div class="d-flex ratio ratio-1:1 w-200">
-                                    <img id="avatarImage" src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('media/img/misc/avatar-1.png') }}" alt="image" class="img-ratio rounded-4">
+                                    <img id="avatarImage" src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('media/img/misc/avatar-default.png') }}" alt="image" class="img-ratio rounded-4">
                                     <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
                                         <div class="size-40 bg-white rounded-4 cursor-pointer" onclick="removeImage()">
                                             <i class="icon-trash text-16"></i>
@@ -128,7 +112,7 @@
                 </div>
 
                 <div class="tabs__pane -tab-item-2">
-                    <form action="{{ route('dashboard.settings.update') }}" method="POST">
+                    <form action="{{ route('dashboard.settings.update') }}" method="POST" class="js-ajax-form">
                         @csrf
                         <div class="col-xl-9">
                             <div class="row x-gap-20 y-gap-20">
@@ -181,7 +165,7 @@
                 </div>
 
                 <div class="tabs__pane -tab-item-3">
-                    <form action="{{ route('dashboard.settings.password') }}" method="POST">
+                    <form action="{{ route('dashboard.settings.password') }}" method="POST" class="js-ajax-form" data-reset>
                         @csrf
                         <div class="col-xl-9">
                             <div class="row x-gap-20 y-gap-20">
@@ -300,7 +284,7 @@
 
     function removeImage() {
         // Mettre à jour la source de l'image avec l'image par défaut
-        document.getElementById('avatarImage').src = '{{ asset('media/img/misc/avatar-1.png') }}';
+        document.getElementById('avatarImage').src = '{{ asset('media/img/misc/avatar-default.png') }}';
 
         // Mettre à jour le champ caché pour indiquer que l'image doit être supprimée
         const removeAvatarInput = document.getElementById('removeAvatarInput');

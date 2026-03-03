@@ -6,25 +6,27 @@
                     <h1 class="text-30 fw-600">NOS STUDIOS</h1>
                 </div>
 
-                <div class="mainSearch bg-white px-10 py-10 lg:px-20 lg:pt-5 lg:pb-20 rounded-4 mt-30">
+                <div class="mainSearch bg-white mt-30">
                     <form id="searchForm" action="{{route('studio_list')}}" method="GET">
                         <input type="hidden" id="latitude" name="latitude" value="48.7748198">
                         <input type="hidden" id="longitude" name="longitude" value="2.3262945">
 
-                        <div class="button-grid items-center">
-                            <div class="searchMenu-loc pr-30 pl-20 lg:py-20 lg:px-0 js-form-dd js-liverSearch">
+                        <div class="mainSearch__grid">
+                            <div class="mainSearch__item">
                                 <label for="city" class="text-15 fw-500 ls-2 lh-16">City</label>
-                                <div class="input-wrapper">
+                                <div class="mainSearch__input">
                                     <input type="text" id="city" name="city" placeholder="City" value="" class="js-search js-dd-focus">
-                                    <button type="button" id="geolocate-btn" class="button -blue-1 h-40 px-20 ml-10 rounded-4">
+                                    <button type="button" id="geolocate-btn">
                                         <i class="icon-location text-16"></i>
                                     </button>
                                 </div>
                             </div>
 
-                            <div class="searchMenu-guests px-30 lg:py-20 lg:px-0 position-relative">
+                            <div class="mainSearch__item position-relative">
                                 <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Hours</label>
-                                <input type="text" id="min_hours" name="min_hours" placeholder="Hours" value="{{ request('min_hours', 2) }}" class="text-15 text-light-1 ls-2 lh-16" onclick="toggleHoursMenu(event)" readonly="">
+                                <div class="mainSearch__input">
+                                    <input type="text" id="min_hours" name="min_hours" placeholder="Hours" value="{{ request('min_hours', 2) }}" class="text-15 text-light-1" onclick="toggleHoursMenu(event)" readonly="">
+                                </div>
                                 <div id="hoursMenu" class="hours-menu hidden">
                                     <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
                                         <i class="icon-minus text-12"></i>
@@ -38,14 +40,14 @@
                                 </div>
                             </div>
 
-                            <div class="button-item">
-                                <button type="submit" class="mainSearch__submit button -dark-1 h-60 px-35 col-12 bg-blue-1 text-white">
+                            <div class="mainSearch__button">
+                                <button type="submit" class="button bg-blue-1 text-white">
                                     <i class="icon-search text-20 mr-10"></i>
                                     Search
                                 </button>
                             </div>
                         </div>
-
+                    </form>
                 </div>
 
 
@@ -60,7 +62,7 @@
                 <aside class="sidebar y-gap-40">
                     <div class="sidebar__item -no-border">
                         <div class="flex-center ratio ratio-15:9 js-lazy" data-bg={{asset("media/img/general/map.png")}}>
-                            <button data-x-click="mapFilter" class="button py-15 px-24 -blue-1 bg-white text-dark-1 absolute">
+                            <button id="openMapBtn" type="button" class="button py-15 px-24 -blue-1 bg-white text-dark-1 absolute">
                                 <i class="icon-destination text-22 mr-10"></i>
                                 Regarder sur la carte
                             </button>
@@ -68,6 +70,15 @@
                     </div>
 
                     <div class="sidebar__item">
+                        <form action="{{ route('studio_list') }}" method="GET" id="sidebarFilterForm">
+                            {{-- Preserve search params from top search bar --}}
+                            <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
+                            <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
+                            <input type="hidden" name="city" value="{{ request('city', '') }}">
+                            <input type="hidden" name="min_hours" value="{{ request('min_hours', '') }}">
+                            <input type="hidden" name="sort_by" value="{{ request('sort_by', 'distance') }}">
+                            <input type="hidden" name="sort_direction" value="{{ request('sort_direction', 'asc') }}">
+
                         <label for="distanceSlider" class="text-15 fw-500 ls-2 lh-16">Périmetre</label>
                         <div class="row x-gap-10 y-gap-30">
                             <div class="col-12">
@@ -106,6 +117,54 @@
                         </div>
 
                         <div class="button-item">
+                            {{-- Filtre équipements --}}
+                            <div class="sidebar__item mt-20">
+                                <h5 class="text-16 fw-500 mb-15">Équipements</h5>
+                                @php
+                                $equipListFlat = [
+                                    'micro_condenser' => '🎙️ Micro condensateur',
+                                    'micro_dynamic' => '🎙️ Micro dynamique',
+                                    'booth' => '🏠 Cabine vocale',
+                                    'daw_protools' => '💻 Pro Tools',
+                                    'daw_logic' => '💻 Logic Pro',
+                                    'daw_ableton' => '💻 Ableton Live',
+                                    'monitor_genelec' => '🔊 Monitors Genelec',
+                                    'monitor_yamaha' => '🔊 Monitors Yamaha',
+                                    'piano_grand' => '🎹 Piano à queue',
+                                    'drum_kit' => '🥁 Batterie acoustique',
+                                    'drum_electronic' => '🥁 Batterie électronique',
+                                    'synth' => '🎹 Synthétiseur',
+                                    'preamp_neve' => '🎛️ Preamp Neve',
+                                    'console_ssl' => '🎛️ Console SSL',
+                                    'interface_apollo' => '🔌 Interface Apollo',
+                                    'interface_focusrite' => '🔌 Interface Focusrite',
+                                    'wifi' => '📶 Wi-Fi',
+                                    'parking' => '🅿️ Parking',
+                                    'accessible' => '♿ Accessible PMR',
+                                ];
+                                $selectedEquipment = $selectedEquipment ?? request()->input('equipment', []);
+                                @endphp
+                                <div class="row y-gap-8" style="max-height: 250px; overflow-y: auto;">
+                                    @foreach($equipListFlat as $key => $label)
+                                        <div class="col-12">
+                                            <div class="d-flex items-center">
+                                                <div class="form-checkbox">
+                                                    <input type="checkbox"
+                                                           name="equipment[]"
+                                                           value="{{ $key }}"
+                                                           id="filter_{{ $key }}"
+                                                           {{ in_array($key, $selectedEquipment) ? 'checked' : '' }}>
+                                                    <div class="form-checkbox__mark">
+                                                        <div class="form-checkbox__icon icon-check"></div>
+                                                    </div>
+                                                </div>
+                                                <label class="text-13 ml-10 cursor-pointer" for="filter_{{ $key }}">{{ $label }}</label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
                             <button type="submit" class="mainSearch__submit button -dark-1 h-60 px-35 col-12 bg-blue-1 text-white mt-20">
                                 <i class="icon-search text-20 mr-10"></i>
                                 Appliquer
@@ -127,19 +186,35 @@
                             <div class="col-auto">
 
                                 <div class="col-auto">
-                                    <select name="sort_by" id="price-filter" class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1"
-                                            onchange="this.form.submit()">
-                                        <option value="distance" {{ request('sort_by') == 'distance' ? 'selected' : '' }}>Distance</option>
-                                        <option value="price" data-dir="asc" {{ request('sort_by') == 'price' && request('sort_direction') == 'asc' ? 'selected' : '' }}>
-                                            Prix Croissant
-                                        </option>
-                                        <option value="price" data-dir="desc" {{ request('sort_by') == 'price' && request('sort_direction') == 'desc' ? 'selected' : '' }}>
-                                            Prix Décroissant
-                                        </option>
-                                    </select>
+                                    <form action="{{ route('studio_list') }}" method="GET" id="sortForm">
+                                        {{-- Preserve all active filters --}}
+                                        <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
+                                        <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
+                                        <input type="hidden" name="city" value="{{ request('city', '') }}">
+                                        <input type="hidden" name="distance" value="{{ request('distance', 50) }}">
+                                        <input type="hidden" name="min_hours" value="{{ request('min_hours', '') }}">
+                                        @foreach(request('equipment', []) as $eq)
+                                            <input type="hidden" name="equipment[]" value="{{ $eq }}">
+                                        @endforeach
+                                        <input type="hidden" name="sort_direction" id="sort_direction_sort" value="{{ request('sort_direction', 'asc') }}">
 
-                                    <input type="hidden" name="sort_direction" id="sort_direction" value="{{ request('sort_direction', 'asc') }}">
-
+                                        <select name="sort_by" id="price-filter"
+                                                class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1"
+                                                onchange="
+                                                    const selected = this.options[this.selectedIndex];
+                                                    const dir = selected.dataset.dir || 'asc';
+                                                    document.getElementById('sort_direction_sort').value = dir;
+                                                    this.form.submit();
+                                                ">
+                                            <option value="distance" {{ request('sort_by') == 'distance' ? 'selected' : '' }}>Distance</option>
+                                            <option value="price" data-dir="asc" {{ request('sort_by') == 'price' && request('sort_direction') == 'asc' ? 'selected' : '' }}>
+                                                Prix Croissant
+                                            </option>
+                                            <option value="price" data-dir="desc" {{ request('sort_by') == 'price' && request('sort_direction') == 'desc' ? 'selected' : '' }}>
+                                                Prix Décroissant
+                                            </option>
+                                        </select>
+                                    </form>
                                 </div>
 
 
@@ -236,6 +311,15 @@
                                             </button>
                                         </div>
 
+                                        @if($studio->user)
+                                        <div class="cardImage__contact" style="position: absolute; bottom: 10px; right: 10px;">
+                                            <button type="button" class="button -blue-1 bg-white size-30 rounded-full shadow-2"
+                                                onclick="event.preventDefault(); window.startNewMessagingChat({{ $studio->user_id }}, '{{ addslashes($studio->user->first_name) }} {{ addslashes($studio->user->last_name) }}', '{{ $studio->user->avatar }}')">
+                                                <i class="icon-email-2 text-12"></i>
+                                            </button>
+                                        </div>
+                                        @endif
+
 
                                     </div>
                                 </div>
@@ -260,18 +344,78 @@
                                         </div>
 
                                         <div class="row x-gap-10 y-gap-10 pt-20">
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Beatmaking</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">WiFi</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">REC</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div class="border-light rounded-100 py-5 px-20 text-14 lh-14">Mix/Mastering</div>
-                                            </div>
+                                            @php
+                                            $equipLabels = [
+                                                'micro_condenser' => 'Micro condensateur',
+                                                'micro_dynamic' => 'Micro dynamique',
+                                                'micro_ribbon' => 'Micro à ruban',
+                                                'micro_large_diaphragm' => 'Grand diaphragme',
+                                                'micro_small_diaphragm' => 'Petit diaphragme',
+                                                'micro_usb' => 'Micro USB',
+                                                'preamp_neve' => 'Preamp Neve',
+                                                'preamp_api' => 'Preamp API',
+                                                'preamp_ssl' => 'Preamp SSL',
+                                                'interface_apollo' => 'Interface Apollo',
+                                                'interface_focusrite' => 'Interface Focusrite',
+                                                'interface_rme' => 'Interface RME',
+                                                'interface_other' => 'Interface audio',
+                                                'piano_grand' => 'Piano à queue',
+                                                'piano_upright' => 'Piano droit',
+                                                'clavier_midi' => 'Clavier MIDI',
+                                                'synth' => 'Synthétiseur',
+                                                'drum_kit' => 'Batterie acoustique',
+                                                'drum_electronic' => 'Batterie électronique',
+                                                'guitar_electric' => 'Guitare électrique',
+                                                'guitar_acoustic' => 'Guitare acoustique',
+                                                'bass' => 'Basse',
+                                                'console_ssl' => 'Console SSL',
+                                                'console_neve' => 'Console Neve',
+                                                'console_api' => 'Console API',
+                                                'daw_protools' => 'Pro Tools',
+                                                'daw_logic' => 'Logic Pro',
+                                                'daw_ableton' => 'Ableton Live',
+                                                'daw_studio_one' => 'Studio One',
+                                                'monitor_genelec' => 'Monitors Genelec',
+                                                'monitor_yamaha' => 'Monitors Yamaha',
+                                                'monitor_adam' => 'Monitors ADAM',
+                                                'monitor_focal' => 'Monitors Focal',
+                                                'subwoofer' => 'Caisson de basses',
+                                                'headphones_dj' => 'Casques écoute',
+                                                'compressor_hardware' => 'Compresseur',
+                                                'eq_hardware' => 'Égaliseur',
+                                                'reverb_hardware' => 'Reverb',
+                                                'patchbay' => 'Patchbay',
+                                                'plugin_bundle' => 'Bundle plugins',
+                                                'booth' => 'Cabine vocale',
+                                                'lounge' => 'Salon lounge',
+                                                'parking' => 'Parking',
+                                                'wifi' => 'Wi-Fi',
+                                                'air_conditioning' => 'Climatisation',
+                                                'accessible' => 'Accessible PMR',
+                                                'kitchen' => 'Cuisine',
+                                            ];
+                                            $studioEq = $studio->equipment ?? [];
+                                            $preview = array_slice($studioEq, 0, 4);
+                                            $hasMore = count($studioEq) > 4;
+                                            @endphp
+                                            @if(!empty($preview))
+                                                @foreach($preview as $eqKey)
+                                                    @if(isset($equipLabels[$eqKey]))
+                                                    <div class="col-auto">
+                                                        <div class="border-light rounded-100 py-5 px-15 text-13 lh-14">{{ $equipLabels[$eqKey] }}</div>
+                                                    </div>
+                                                    @endif
+                                                @endforeach
+                                                @if($hasMore)
+                                                <div class="col-auto">
+                                                    <div class="border-light rounded-100 py-5 px-15 text-13 lh-14 text-light-1">+{{ count($studioEq) - 4 }}</div>
+                                                </div>
+                                                @endif
+                                            @else
+                                                <div class="col-auto">
+                                                    <div class="text-13 text-light-1">Aucun équipement renseigné</div>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -362,151 +506,6 @@
         </div>
     </div>
 </section>
-<style>
-    /* Styles généraux */
-    .mainSearch {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .mainSearch:hover {
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Grid layout amélioré */
-    .button-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        align-items: end;
-    }
-
-    /* Champs de formulaire */
-    .searchMenu-loc, .searchMenu-guests, .sidebar__item {
-        position: relative;
-    }
-
-    .input-wrapper {
-        display: flex;
-        align-items: center;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 8px;
-        color: #2c3e50;
-    }
-
-    input[type="text"] {
-        width: 100%;
-        padding: 12px 15px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 15px;
-        transition: all 0.3s;
-        background-color: #f9f9f9;
-    }
-
-    input[type="text"]:focus {
-        border-color: #3554D1;
-        box-shadow: 0 0 0 3px rgba(53, 132, 228, 0.1);
-        outline: none;
-        background-color: white;
-    }
-
-    /* Bouton de géolocalisation */
-    #geolocate-btn {
-        background-color: #ffffff;
-        border: 1px solid #000000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    #geolocate-btn:hover {
-        background-color: #3554D1;
-    }
-
-    /* Menu des heures */
-    .hours-menu {
-        display: flex;
-        align-items: center;
-        position: absolute;
-        background: white;
-        padding: 15px;
-        border: 1px solid #eaeaea;
-        border-radius: 8px;
-        z-index: 1000;
-        top: calc(100% + 5px);
-        left: 0;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .button.-outline-blue-1 {
-        border: 1px solid #3554D1;
-        background: transparent;
-        color: #3554D1;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .button.-outline-blue-1:hover {
-        background-color: #f0f7ff;
-    }
-
-
-
-    /* Affichage de la valeur du slider */
-    .js-price-rangeSlider .d-flex {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    /* Bouton de recherche */
-    .mainSearch__submit {
-        width: 100%;
-        background: #3554D1;
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: background 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .mainSearch__submit:hover {
-        background: #3554D1;
-    }
-
-    /* Pour cacher des éléments */
-    .hidden {
-        display: none !important;
-    }
-
-    /* Responsive */
-    @media (max-width: 992px) {
-        .button-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 576px) {
-        .button-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .px-30 {
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-    }
-</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -751,33 +750,4 @@
     });
 </script>
 
-<style>
-    /* Style pour l'état non-liké : coeur avec simple contour */
-    .icon-heart {
-        color: transparent !important;
-        -webkit-text-stroke: 1px #999;
-        stroke: #999;
-        stroke-width: 1px;
-        transition: all 0.3s ease;
-    }
-
-    /* Style pour l'état liké : coeur rempli en bleu vif */
-    .icon-heart.text-blue-1 {
-        color: #3554D1 !important;
-        -webkit-text-stroke: 1px #3554D1;
-        stroke: #3554D1;
-        filter: drop-shadow(0 0 2px rgba(53, 84, 209, 0.4));
-    }
-
-    /* Animation pour le clic */
-    .wishlist-toggle.clicked {
-        transform: scale(1.4);
-        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    /* Pour améliorer le contraste avec l'arrière-plan */
-    .wishlist-toggle {
-        background-color: white !important;
-    }
-</style>
 

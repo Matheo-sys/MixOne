@@ -1,39 +1,32 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Actions\Contact\SendContactEmailAction;
+use App\Http\Requests\Contact\ContactRequest;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ContactMail;
 
 class ContactController extends Controller
 {
-    public function show()
+    public function __construct(
+        private SendContactEmailAction $sendContactEmailAction
+    ) {}
+
+    public function show(): View
     {
         return view('emails.contact');
     }
 
-    public function sendEmail(Request $request)
+    public function sendEmail(ContactRequest $request): RedirectResponse|JsonResponse
     {
-        // Valider les données du formulaire
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'subject' => 'required',
-            'message' => 'required',
-        ]);
+        $this->sendContactEmailAction->execute($request->toDTO());
 
-        // Données à envoyer par email
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'subject' => $request->subject,
-            'message' => $request->message,
-        ];
-
-        // Envoyer l'email à ton adresse de support
-        Mail::to('mixone.contact@gmail.com')->send(new ContactMail($data));
-
-        // Rediriger avec un message de succès
+        if ($request->ajax()) {
+            return response()->json(['status' => 'success', 'message' => 'Votre message a été envoyé avec succès !']);
+        }
         return redirect()->back()->with('success', 'Votre message a été envoyé avec succès!');
     }
 }

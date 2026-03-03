@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <form method="post" action="{{ route('studio.store') }}" enctype="multipart/form-data">
+            <form method="post" action="{{ route('studio.store') }}" enctype="multipart/form-data" class="js-studio-form">
                 @csrf
                 <div class="tabs__content pt-30 js-tabs-content">
                     <div class="tabs__pane -tab-item-1 is-tab-el-active">
@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-input">
-                                        <textarea name="description" rows="5">{{ old('description') }}</textarea>
+                                        <textarea name="description" rows="5" required>{{ old('description') }}</textarea>
                                         <label class="lh-1 text-16 text-light-1">Contenu (Horaires, materiels ...)</label>
                                     </div>
                                     @error('description')
@@ -99,27 +99,30 @@
                         <div class="col-xl-10">
                             <div class="text-18 fw-500 mb-10">Location</div>
                             <div class="row x-gap-20 y-gap-20">
-                                <div class="col-12">
+                                <div class="col-12 relative" style="position: relative;">
                                     <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
-                                        <input type="text" name="address" required value="{{ old('address') }}">
+                                        <input type="text" name="address" id="autocomplete-address" required value="{{ old('address') }}" autocomplete="off">
                                         <label class="lh-1 text-16 text-light-1">Adresse</label>
                                     </div>
+                                    <!-- Autocomplete Dropdown -->
+                                    <ul id="address-suggestions" class="absolute bg-white shadow-2 rounded-8 w-100 z-5" style="display: none; max-height: 250px; overflow-y: auto; list-style: none; padding: 0; margin: 5px 0 0 0; top: 100%; left: 0;">
+                                    </ul>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
-                                        <input type="text" name="zipcode" required value="{{ old('zipcode') }}">
+                                        <input type="text" name="zipcode" id="input-zipcode" required value="{{ old('zipcode') }}">
                                         <label class="lh-1 text-16 text-light-1">Code postal</label>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
-                                        <input type="text" name="city" required value="{{ old('city') }}">
+                                        <input type="text" name="city" id="input-city" required value="{{ old('city') }}">
                                         <label class="lh-1 text-16 text-light-1">Ville</label>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
-                                        <input type="text" name="country" required value="{{ old('country') }}">
+                                        <input type="text" name="country" id="input-country" required value="{{ old('country') ?? 'France' }}">
                                         <label class="lh-1 text-16 text-light-1">Pays</label>
                                     </div>
                                 </div>
@@ -200,13 +203,101 @@
                     </div>
 
                     <div class="tabs__pane -tab-item-5">
-                        <div class="col-xl-9 col-lg-11">
-                            <div class="row x-gap-100 y-gap-15">
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="row y-gap-15">
+                        <div class="col-xl-11">
+                            <div class="text-18 fw-500 mb-5">Équipements du Studio</div>
+                            <div class="text-14 text-light-1 mb-25">Cochez les équipements disponibles dans votre studio d'enregistrement.</div>
+
+                            @php
+                            $equipmentCategories = [
+                                '🎙️ Microphones' => [
+                                    'micro_condenser' => 'Microphone à condensateur',
+                                    'micro_dynamic' => 'Microphone dynamique',
+                                    'micro_ribbon' => 'Microphone à ruban',
+                                    'micro_large_diaphragm' => 'Grand diaphragme',
+                                    'micro_small_diaphragm' => 'Petit diaphragme',
+                                    'micro_usb' => 'Microphone USB',
+                                ],
+                                '🔊 Préamplis & Interfaces' => [
+                                    'preamp_neve' => 'Preamp Neve',
+                                    'preamp_api' => 'Preamp API',
+                                    'preamp_ssl' => 'Preamp SSL',
+                                    'interface_apollo' => 'Interface Apollo (Universal Audio)',
+                                    'interface_focusrite' => 'Interface Focusrite',
+                                    'interface_rme' => 'Interface RME',
+                                    'interface_other' => 'Autre interface audio',
+                                ],
+                                '🎹 Instruments & Claviers' => [
+                                    'piano_grand' => 'Piano à queue',
+                                    'piano_upright' => 'Piano droit',
+                                    'clavier_midi' => 'Clavier MIDI',
+                                    'synth' => 'Synthétiseur',
+                                    'drum_kit' => 'Batterie acoustique',
+                                    'drum_electronic' => 'Batterie électronique',
+                                    'guitar_electric' => 'Guitare électrique (prêt)',
+                                    'guitar_acoustic' => 'Guitare acoustique (prêt)',
+                                    'bass' => 'Basse (prêt)',
+                                ],
+                                '🎛️ Mixage & Monitoring' => [
+                                    'console_ssl' => 'Console SSL',
+                                    'console_neve' => 'Console Neve',
+                                    'console_api' => 'Console API',
+                                    'daw_protools' => 'Pro Tools',
+                                    'daw_logic' => 'Logic Pro',
+                                    'daw_ableton' => 'Ableton Live',
+                                    'daw_studio_one' => 'Studio One',
+                                    'monitor_genelec' => 'Monitors Genelec',
+                                    'monitor_yamaha' => 'Monitors Yamaha HS',
+                                    'monitor_adam' => 'Monitors ADAM Audio',
+                                    'monitor_focal' => 'Monitors Focal',
+                                    'subwoofer' => 'Caisson de basses (sub)',
+                                    'headphones_dj' => 'Casques d\'écoute',
+                                ],
+                                '🎚️ Traitement du signal' => [
+                                    'compressor_hardware' => 'Compresseur hardware',
+                                    'eq_hardware' => 'Égaliseur hardware',
+                                    'reverb_hardware' => 'Reverb hardware',
+                                    'patchbay' => 'Patchbay',
+                                    'plugin_bundle' => 'Bundle plugins (Waves, iZotope...)',
+                                ],
+                                '🏠 Infrastructures' => [
+                                    'booth' => 'Cabine vocale (booth)',
+                                    'lounge' => 'Salon d\'attente / lounge',
+                                    'parking' => 'Parking disponible',
+                                    'wifi' => 'Wi-Fi haut débit',
+                                    'air_conditioning' => 'Climatisation',
+                                    'accessible' => 'Accessible PMR',
+                                    'kitchen' => 'Cuisine / coin repas',
+                                ],
+                            ];
+                            @endphp
+
+                            <div class="row x-gap-30 y-gap-30">
+                                @foreach($equipmentCategories as $category => $items)
+                                    <div class="col-xl-4 col-lg-6 col-12">
+                                        <div class="bg-light-2 rounded-8 p-20 h-full">
+                                            <div class="text-15 fw-600 mb-15 text-dark-1">{{ $category }}</div>
+                                            <div class="row y-gap-10">
+                                                @foreach($items as $key => $label)
+                                                    <div class="col-12">
+                                                        <div class="d-flex items-center">
+                                                            <div class="form-checkbox">
+                                                                <input type="checkbox"
+                                                                       name="equipment[]"
+                                                                       value="{{ $key }}"
+                                                                       id="eq_{{ $key }}"
+                                                                       {{ in_array($key, old('equipment', [])) ? 'checked' : '' }}>
+                                                                <div class="form-checkbox__mark">
+                                                                    <div class="form-checkbox__icon icon-check"></div>
+                                                                </div>
+                                                            </div>
+                                                            <label class="text-14 ml-10 cursor-pointer" for="eq_{{ $key }}">{{ $label }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <!-- Add more service checkboxes as needed -->
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -321,35 +412,46 @@
 
     function previewImage(event, imageNumber) {
         const file = event.target.files[0];
+        const defaultSrc = '{{ asset('media/img/backgrounds/11.jpg') }}';
+
+        function resetToDefault() {
+            document.getElementById('studioImage' + imageNumber).src = defaultSrc;
+            const defaultText = document.getElementById('defaultImageText' + imageNumber);
+            if (defaultText) defaultText.classList.remove('d-none');
+            event.target.value = '';
+        }
 
         if (file) {
-            if (file.size > 2 * 1024 * 1024) { // 2 Mo
-                alert("L'image ne doit pas dépasser 2 Mo.");
-                event.target.value = ''; // Réinitialise l'input
+            if (file.size > 2 * 1024 * 1024) {
+                if (typeof showToast === 'function') showToast('error', "L'image ne doit pas dépasser 2 Mo.");
+                resetToDefault();
                 return;
             }
 
             if (file.type === 'image/png' || file.type === 'image/jpeg') {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('studioImage' + imageNumber).src = e.target.result;
-
-                    // Cacher le texte "Par défaut"
-                    const defaultText = document.getElementById('defaultImageText' + imageNumber);
-                    if (defaultText) {
-                        defaultText.classList.add('d-none');
-                    }
+                    const img = new Image();
+                    img.onload = function() {
+                        const minWidth = 400;
+                        const minHeight = 300;
+                        if (img.width < minWidth || img.height < minHeight) {
+                            if (typeof showToast === 'function') showToast('error', `L'image doit faire au minimum ${minWidth}×${minHeight} px (votre image : ${img.width}×${img.height} px).`);
+                            resetToDefault();
+                            return;
+                        }
+                        document.getElementById('studioImage' + imageNumber).src = e.target.result;
+                        const defaultText = document.getElementById('defaultImageText' + imageNumber);
+                        if (defaultText) defaultText.classList.add('d-none');
+                        const removeImageInput = document.getElementById('removeImage' + imageNumber + 'Input');
+                        if (removeImageInput) removeImageInput.value = '0';
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
-
-                // Réinitialiser le champ caché 'remove_image'
-                const removeImageInput = document.getElementById('removeImage' + imageNumber + 'Input');
-                if (removeImageInput) {
-                    removeImageInput.value = '0';
-                }
             } else {
-                alert('Seuls les formats PNG et JPG sont autorisés.');
-                event.target.value = ''; // Réinitialise l'input
+                if (typeof showToast === 'function') showToast('error', 'Seuls les formats PNG et JPG sont autorisés.');
+                resetToDefault();
             }
         }
     }
@@ -377,10 +479,10 @@
         }
     }
 
-    document.querySelector('form').addEventListener('submit', async function(e) {
+    document.querySelector('.js-studio-form').addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Si latitude et longitude ne sont pas déjà remplies
+        // If latitude and longitude are not already filled
         if (!document.getElementById('latitude').value || !document.getElementById('longitude').value) {
             const address = document.querySelector('input[name="address"]').value;
             const city = document.querySelector('input[name="city"]').value;
@@ -390,22 +492,94 @@
             const fullAddress = `${address}, ${city}, ${zipcode}, ${country}`;
 
             try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1`);
+                const response = await fetch(`/api/geocode/search?q=${encodeURIComponent(fullAddress)}`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
                     document.getElementById('latitude').value = data[0].lat;
                     document.getElementById('longitude').value = data[0].lon;
-                    this.submit();
                 } else {
-                    alert('Adresse non trouvée. Veuillez vérifier les informations saisies.');
+                    clearFormErrors(this);
+                    showValidationErrors(this, { address: ["Adresse introuvable. Veuillez utiliser l'autocomplétion pour sélectionner une adresse valide."] });
+                    if (typeof showToast === 'function') showToast('error', 'Adresse non trouvée.');
+                    return;
                 }
             } catch (error) {
                 console.error('Erreur lors de la récupération des coordonnées:', error);
-                alert('Erreur lors de la récupération des coordonnées. Veuillez réessayer.');
+                clearFormErrors(this);
+                showValidationErrors(this, { address: ["Erreur de communication avec le service d'adresses."] });
+                if (typeof showToast === 'function') showToast('error', 'Erreur serveur.');
+                return;
             }
-        } else {
-            this.submit();
+        }
+
+        // Now submit via AJAX handler
+        handleAjaxForm(this);
+    });
+
+    // Address Autocomplete Logic using api-adresse.data.gouv.fr
+    const addressInput = document.getElementById('autocomplete-address');
+    const suggestionsBox = document.getElementById('address-suggestions');
+    const cityInput = document.getElementById('input-city');
+    const zipcodeInput = document.getElementById('input-zipcode');
+    const countryInput = document.getElementById('input-country');
+    const latInput = document.getElementById('latitude');
+    const lonInput = document.getElementById('longitude');
+
+    let debounceTimeout;
+
+    addressInput.addEventListener('input', function() {
+        const query = this.value;
+        suggestionsBox.innerHTML = '';
+        suggestionsBox.style.display = 'none';
+
+        if (query.length < 3) return;
+
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.features && data.features.length > 0) {
+                        suggestionsBox.style.display = 'block';
+                        data.features.forEach(feature => {
+                            const li = document.createElement('li');
+                            li.className = 'px-20 py-15 border-bottom-light cursor-pointer hover:bg-light-2 transition';
+                            li.innerHTML = `<span class="fw-500">${feature.properties.name}</span><br><span class="text-13 text-light-1">${feature.properties.postcode} ${feature.properties.city}</span>`;
+                            
+                            li.addEventListener('click', () => {
+                                // Fill inputs
+                                addressInput.value = feature.properties.name;
+                                cityInput.value = feature.properties.city;
+                                zipcodeInput.value = feature.properties.postcode;
+                                countryInput.value = 'France'; // API is France-only
+                                latInput.value = feature.geometry.coordinates[1]; // Latitude
+                                lonInput.value = feature.geometry.coordinates[0]; // Longitude
+                                
+                                // Trigger input event to update label floating states if needed
+                                ['input', 'change'].forEach(eventType => {
+                                    cityInput.dispatchEvent(new Event(eventType));
+                                    zipcodeInput.dispatchEvent(new Event(eventType));
+                                    countryInput.dispatchEvent(new Event(eventType));
+                                });
+
+                                // Hide suggestions
+                                suggestionsBox.innerHTML = '';
+                                suggestionsBox.style.display = 'none';
+                            });
+
+                            suggestionsBox.appendChild(li);
+                        });
+                    }
+                })
+                .catch(error => console.error('Erreur API Adresse:', error));
+        }, 300); // 300ms delay to avoid spamming the API
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!addressInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+            suggestionsBox.style.display = 'none';
         }
     });
 </script>

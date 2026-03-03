@@ -102,7 +102,7 @@
                                 <td>N°{{ $reservation->id }}</td>
                                 <td>{{ $reservation->user->email }}</td>
                                 <td class="fw-500">{{ number_format($reservation->price, 2) }}€</td>
-                                <td>{{ number_format($reservation->price, 2) }}€</td>
+                                <td>{{ $reservation->status === 'Confirmée' ? number_format($reservation->price, 2).'€' : '0,00€' }}</td>
                                 <td>
                                     @php
                                         $statusClasses = [

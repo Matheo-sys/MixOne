@@ -2,116 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Actions\Reservation\CreateReservationAction;
+use App\Actions\Reservation\UpdateReservationStatusAction;
+use App\Http\Requests\Reservation\CreateReservationRequest;
 use App\Models\Reservation;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 
 class ReservationController extends Controller
 {
-    public function store(Request $request)
+    public function __construct(
+        private CreateReservationAction $createReservationAction,
+        private UpdateReservationStatusAction $updateReservationStatusAction
+    ) {}
+
+    public function store(CreateReservationRequest $request): RedirectResponse|JsonResponse
     {
-        $user = auth()->user();
-
-        // Vérifier si l'utilisateur est un studio
-        if ($user->profile == 'studio') {
-            return back()->withInput()->withErrors(['error' => 'Les comptes studio ne peuvent pas effectuer de réservation.']);
-        }
-
-        $validated = $request->validate([
-            'time_slot' => 'required|string',
-            'studio_id' => 'required|exists:studios,id',
-            'date' => 'required|date|after_or_equal:today',
-            'number_of_hours' => 'required|integer|min:1',
-            'total_price' => 'required|numeric'
-        ], [
-            'date.required' => 'Veuillez sélectionner une date pour votre réservation.',
-            'date.after_or_equal' => 'La date de réservation doit être aujourd\'hui ou une date future.',
-            'time_slot.required' => 'Veuillez sélectionner un créneau horaire.',
-            'number_of_hours.required' => 'Veuillez indiquer le nombre d\'heures.',
-            'number_of_hours.min' => 'Le nombre d\'heures minimum est de 1.'
-        ]);
-
         try {
-            // Vérifier si le créneau est déjà réservé
-            $existingReservation = Reservation::where('studio_id', $request->studio_id)
-                ->where('date', $request->date)
-                ->where('time_slot', $request->time_slot)
-                ->exists();
-
-            if ($existingReservation) {
-                return back()->withInput()->withErrors(['time_slot' => 'Ce créneau horaire est déjà réservé.']);
+            $this->createReservationAction->execute($request->toDTO());
+            if ($request->ajax()) {
+                return response()->json(['status' => 'success', 'message' => 'Réservation effectuée avec succès !', 'redirect' => route('dashboard')]);
             }
-
-            // Création de la réservation
-            $reservation = new Reservation();
-            $reservation->user_id = $user->id;
-            $reservation->studio_id = $request->studio_id;
-            $reservation->date = $validated['date'];
-            $reservation->time_slot = $validated['time_slot'];
-            $reservation->number_of_hours = $validated['number_of_hours'];
-            $reservation->price = $validated['total_price'];
-            $reservation->status = 'en attente';
-
-            if ($reservation->save()) {
-                return redirect()->route('dashboard')->with('success', 'Réservation effectuée avec succès !');
-            } else {
-                return back()->withInput()->with('error', 'Erreur lors de la réservation.');
-            }
+            return redirect()->route('dashboard')->with('success', 'Réservation effectuée avec succès !');
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Erreur: ' . $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+            }
+            return back()->withInput()->withErrors(['time_slot' => $e->getMessage()]);
         }
     }
 
-    public function confirm(Reservation $reservation)
+    public function confirm(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
     {
         try {
-            if ($reservation->status !== 'En attente') {
-                throw new \Exception('Action non autorisée');
+            $this->updateReservationStatusAction->execute($reservation, 'Confirmée');
+            if ($request->ajax()) {
+                return response()->json(['status' => 'success', 'message' => 'Réservation confirmée !', 'new_status' => 'Confirmée']);
             }
-
-            $reservation->update(['status' => 'Confirmée']);
             return redirect()->back()->with('success', 'Statut mis à jour avec succès !');
-
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+            }
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    public function cancel(Reservation $reservation)
+    public function cancel(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
     {
         try {
-            if (!in_array($reservation->status, ['En attente'])) {
-                throw new \Exception('Action non autorisée');
+            $this->updateReservationStatusAction->execute($reservation, 'Annulée');
+            if ($request->ajax()) {
+                return response()->json(['status' => 'success', 'message' => 'Réservation annulée.', 'new_status' => 'Annulée']);
             }
-
-            $reservation->update(['status' => 'Annulée']);
             return redirect()->back()->with('success', 'Réservation annulée avec succès !');
-
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+            }
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    public function index(Request $request)
-    {
-        $query = $request->input('query');
-
-        $reservations = $query
-            ? Reservation::with('user')
-                ->where(function($q) use ($query) {
-                    $q->where('id', 'LIKE', "%{$query}%")
-                        ->orWhereHas('user', function($userQuery) use ($query) {
-                            $userQuery->where('email', 'LIKE', "%{$query}%");
-                        })
-                        ->orWhere('status', 'LIKE', "%{$query}%")
-                        ->orWhere('price', 'LIKE', "%{$query}%");
-                })
-                ->get()
-            : Reservation::with('user')->get();
-
-        return view('dashboard.studio.booking', [
-            'reservations' => $reservations,
-            'query' => $query
-        ]);
-    }
 }

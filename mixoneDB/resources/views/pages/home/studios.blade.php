@@ -71,6 +71,15 @@
                                         </button>
                                     </div>
 
+                                    @if($studio->user)
+                                    <div class="cardImage__contact" style="position: absolute; bottom: 10px; right: 10px;">
+                                        <button type="button" class="button -blue-1 bg-white size-30 rounded-full shadow-2" 
+                                            onclick="event.preventDefault(); window.startNewMessagingChat({{ $studio->user_id }}, '{{ addslashes($studio->user->first_name) }} {{ addslashes($studio->user->last_name) }}', '{{ $studio->user->avatar }}')">
+                                            <i class="icon-email-2 text-12"></i>
+                                        </button>
+                                    </div>
+                                    @endif
+
 
                                 </div>
 

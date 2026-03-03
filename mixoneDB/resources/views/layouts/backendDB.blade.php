@@ -16,7 +16,19 @@
     <link rel="stylesheet" href="{{ asset('vendor/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>MixOne</title>
+
+    <style>
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -63,6 +75,10 @@
 
 <script src="{{ asset('vendor/js/vendors.js') }}"></script>
 <script src="{{ asset('vendor/js/main.js') }}"></script>
+    <div id="toast-container"></div>
+
+    @include('components.message-widget')
+    <script src="{{ asset('js/ajax-forms.js') }}"></script>
 </body>
 
 </html>

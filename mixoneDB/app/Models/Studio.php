@@ -17,6 +17,7 @@ class Studio extends Model
         'hourly_rate',
         'min_hours',
         'description',
+        'equipment',
         'latitude',
         'longitude',
         'image1',
@@ -24,6 +25,15 @@ class Studio extends Model
         'image3',
         'image4'
     ];
+
+    protected $casts = [
+        'equipment' => 'array',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function favoritedBy()
     {

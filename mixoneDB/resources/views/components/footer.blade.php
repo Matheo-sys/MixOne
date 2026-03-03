@@ -14,9 +14,9 @@
                 <div class="col-xl-2 col-lg-4 col-sm-6">
                     <h5 class="text-16 fw-500 mb-30">Entreprise</h5>
                     <div class="d-flex y-gap-10 flex-column">
-                        <a href="about">A propos</a>
-                        <a href="about">Careers</a>
-                        <a href="contact">Nous rejoindre</a>
+                        <a href="{{ route('about') }}">A propos</a>
+                        <a href="{{ route('contact') }}">Carrières</a>
+                        <a href="{{ route('contact') }}">Nous rejoindre</a>
 
 
                     </div>
@@ -25,9 +25,9 @@
                 <div class="col-xl-2 col-lg-4 col-sm-6">
                     <h5 class="text-16 fw-500 mb-30">Support</h5>
                     <div class="d-flex y-gap-10 flex-column">
-                        <a href="contact">Contact</a>
-                        <a href="terms">Mentions Legales</a>
-                        <a href="terms">Politique de Confidentialité</a>
+                        <a href="/contact">Contact</a>
+                        <a href="/terms">Mentions Legales</a>
+                        <a href="/terms">Politique de Confidentialité</a>
                     </div>
                 </div>
             </div>
@@ -45,8 +45,8 @@
 
                         <div class="col-auto">
                             <div class="d-flex x-gap-15">
-                                <a href="terms">Confidentialité</a>
-                                <a href="terms">Termes</a>
+                                <a href="/terms">Confidentialité</a>
+                                <a href="/terms">Termes</a>
                             </div>
                         </div>
                     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Studio;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\DTOs\StudioDTO;
 
 class CreateRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class CreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'address' => 'required|string|max:255',
             'zipcode' => 'required|string|max:10',
             'city' => 'required|string|max:255',
@@ -38,5 +39,10 @@ class CreateRequest extends FormRequest
             'image3' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'image4' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
+    }
+
+    public function toDTO(): StudioDTO
+    {
+        return StudioDTO::fromRequest($this);
     }
 }

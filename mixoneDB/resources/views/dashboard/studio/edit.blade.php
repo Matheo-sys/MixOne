@@ -38,10 +38,13 @@
                 <div class="col-auto">
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-3">Photos</button>
                 </div>
+                <div class="col-auto">
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">Équipements</button>
+                </div>
             </div>
 
             <div class="tabs__content pt-30 js-tabs-content">
-                <form action="{{ route('dashboard.studio.update', $studio->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('dashboard.studio.update', $studio->id) }}" method="POST" enctype="multipart/form-data" class="js-studio-form">
                     @csrf
                     @method('PUT')
 
@@ -57,7 +60,7 @@
 
                                 <div class="col-12">
                                     <div class="form-input">
-                                        <textarea name="description" rows="5">{{ old('description', $studio->description) }}</textarea>
+                                        <textarea name="description" rows="5" required>{{ old('description', $studio->description) }}</textarea>
                                         <label class="lh-1 text-16 text-light-1">Description</label>
                                     </div>
                                 </div>
@@ -84,44 +87,47 @@
                     <div class="tabs__pane -tab-item-2">
                         <div class="col-xl-9">
                             <div class="row x-gap-20 y-gap-20">
-                                <div class="col-12">
+                                <div class="col-12 relative" style="position: relative;">
                                     <div class="form-input">
-                                        <input type="text" name="address" value="{{ old('address', $studio->address) }}" required>
+                                        <input type="text" name="address" id="edit-autocomplete-address" value="{{ old('address', $studio->address) }}" required autocomplete="off">
                                         <label class="lh-1 text-16 text-light-1">Adresse</label>
                                     </div>
+                                    <!-- Autocomplete Dropdown -->
+                                    <ul id="edit-address-suggestions" class="absolute bg-white shadow-2 rounded-8 w-100 z-5" style="display: none; max-height: 250px; overflow-y: auto; list-style: none; padding: 0; margin: 5px 0 0 0; top: 100%; left: 0;">
+                                    </ul>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-input">
-                                        <input type="text" name="city" value="{{ old('city', $studio->city) }}" required>
+                                        <input type="text" name="city" id="edit-input-city" value="{{ old('city', $studio->city) }}" required>
                                         <label class="lh-1 text-16 text-light-1">Ville</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-input">
-                                        <input type="text" name="zipcode" value="{{ old('zipcode', $studio->zipcode) }}" required>
+                                        <input type="text" name="zipcode" id="edit-input-zipcode" value="{{ old('zipcode', $studio->zipcode) }}" required>
                                         <label class="lh-1 text-16 text-light-1">Code Postal</label>
                                     </div>
                                 </div>
 
                                 <div class="col-12">
                                     <div class="form-input">
-                                        <input type="text" name="country" value="{{ old('country', $studio->country) }}" required>
+                                        <input type="text" name="country" id="edit-input-country" value="{{ old('country', $studio->country) }}" required>
                                         <label class="lh-1 text-16 text-light-1">Pays</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-input">
-                                        <input type="text" name="latitude" value="{{ old('latitude', $studio->latitude) }}" readonly>
+                                        <input type="text" name="latitude" id="edit-latitude" value="{{ old('latitude', $studio->latitude) }}" readonly>
                                         <label class="lh-1 text-16 text-light-1">Latitude</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-input">
-                                        <input type="text" name="longitude" value="{{ old('longitude', $studio->longitude) }}" readonly>
+                                        <input type="text" name="longitude" id="edit-longitude" value="{{ old('longitude', $studio->longitude) }}" readonly>
                                         <label class="lh-1 text-16 text-light-1">Longitude</label>
                                     </div>
                                 </div>
@@ -171,11 +177,112 @@
                         </div>
                     </div>
 
+                    <div class="tabs__pane -tab-item-4">
+                        <div class="col-xl-11">
+                            <div class="text-18 fw-500 mb-5">Équipements du Studio</div>
+                            <div class="text-14 text-light-1 mb-25">Cochez les équipements disponibles dans votre studio d'enregistrement.</div>
+
+                            @php
+                            $currentEquipment = $studio->equipment ?? [];
+                            $equipmentCategories = [
+                                '🎤️ Microphones' => [
+                                    'micro_condenser' => 'Microphone à condensateur',
+                                    'micro_dynamic' => 'Microphone dynamique',
+                                    'micro_ribbon' => 'Microphone à ruban',
+                                    'micro_large_diaphragm' => 'Grand diaphragme',
+                                    'micro_small_diaphragm' => 'Petit diaphragme',
+                                    'micro_usb' => 'Microphone USB',
+                                ],
+                                '🔊 Préamplis & Interfaces' => [
+                                    'preamp_neve' => 'Preamp Neve',
+                                    'preamp_api' => 'Preamp API',
+                                    'preamp_ssl' => 'Preamp SSL',
+                                    'interface_apollo' => 'Interface Apollo (Universal Audio)',
+                                    'interface_focusrite' => 'Interface Focusrite',
+                                    'interface_rme' => 'Interface RME',
+                                    'interface_other' => 'Autre interface audio',
+                                ],
+                                '🎹 Instruments & Claviers' => [
+                                    'piano_grand' => 'Piano à queue',
+                                    'piano_upright' => 'Piano droit',
+                                    'clavier_midi' => 'Clavier MIDI',
+                                    'synth' => 'Synthétiseur',
+                                    'drum_kit' => 'Batterie acoustique',
+                                    'drum_electronic' => 'Batterie électronique',
+                                    'guitar_electric' => 'Guitare électrique (prêt)',
+                                    'guitar_acoustic' => 'Guitare acoustique (prêt)',
+                                    'bass' => 'Basse (prêt)',
+                                ],
+                                '🎛️ Mixage & Monitoring' => [
+                                    'console_ssl' => 'Console SSL',
+                                    'console_neve' => 'Console Neve',
+                                    'console_api' => 'Console API',
+                                    'daw_protools' => 'Pro Tools',
+                                    'daw_logic' => 'Logic Pro',
+                                    'daw_ableton' => 'Ableton Live',
+                                    'daw_studio_one' => 'Studio One',
+                                    'monitor_genelec' => 'Monitors Genelec',
+                                    'monitor_yamaha' => 'Monitors Yamaha HS',
+                                    'monitor_adam' => 'Monitors ADAM Audio',
+                                    'monitor_focal' => 'Monitors Focal',
+                                    'subwoofer' => 'Caisson de basses (sub)',
+                                    'headphones_dj' => 'Casques d\'écoute',
+                                ],
+                                '🎚️ Traitement du signal' => [
+                                    'compressor_hardware' => 'Compresseur hardware',
+                                    'eq_hardware' => 'Égaliseur hardware',
+                                    'reverb_hardware' => 'Reverb hardware',
+                                    'patchbay' => 'Patchbay',
+                                    'plugin_bundle' => 'Bundle plugins (Waves, iZotope...)',
+                                ],
+                                '🏠 Infrastructures' => [
+                                    'booth' => 'Cabine vocale (booth)',
+                                    'lounge' => 'Salon d\'attente / lounge',
+                                    'parking' => 'Parking disponible',
+                                    'wifi' => 'Wi-Fi haut débit',
+                                    'air_conditioning' => 'Climatisation',
+                                    'accessible' => 'Accessible PMR',
+                                    'kitchen' => 'Cuisine / coin repas',
+                                ],
+                            ];
+                            @endphp
+
+                            <div class="row x-gap-30 y-gap-30">
+                                @foreach($equipmentCategories as $category => $items)
+                                    <div class="col-xl-4 col-lg-6 col-12">
+                                        <div class="bg-light-2 rounded-8 p-20 h-full">
+                                            <div class="text-15 fw-600 mb-15 text-dark-1">{{ $category }}</div>
+                                            <div class="row y-gap-10">
+                                                @foreach($items as $key => $label)
+                                                    <div class="col-12">
+                                                        <div class="d-flex items-center">
+                                                            <div class="form-checkbox">
+                                                                <input type="checkbox"
+                                                                       name="equipment[]"
+                                                                       value="{{ $key }}"
+                                                                       id="eq_edit_{{ $key }}"
+                                                                       {{ in_array($key, $currentEquipment) ? 'checked' : '' }}>
+                                                                <div class="form-checkbox__mark">
+                                                                    <div class="form-checkbox__icon icon-check"></div>
+                                                                </div>
+                                                            </div>
+                                                            <label class="text-14 ml-10 cursor-pointer" for="eq_edit_{{ $key }}">{{ $label }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-inline-block pt-30">
                         <button type="submit" class="button h-50 px-24 -dark-1 bg-blue-1 text-white">
                             Sauvegarder les modifications <div class="icon-arrow-top-right ml-15"></div>
                         </button>
-                        <a href="{{ route('dashboard.studios') }}" class="button h-50 px-24 -blue-1 bg-blue-1-05 text-blue-1 mt-10">
+                        <a href="{{ route('dashboard.studio.myStudios') }}" class="button h-50 px-24 -blue-1 bg-blue-1-05 text-blue-1 mt-10">
                             Retour
                         </a>
                     </div>
@@ -185,91 +292,6 @@
     </div>
 
 @endsection
-
-<style>
-    .img-ratio {
-        width: 100%;
-        height: auto;
-    }
-    .w-200 {
-        width: 200px;
-    }
-    .h-200 {
-        height: 200px;
-    }
-    .size-40 {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .cursor-pointer {
-        cursor: pointer;
-    }
-    .alert {
-        padding: 15px;
-        margin-bottom: 20px;
-        border: 1px solid transparent;
-        border-radius: 4px;
-    }
-    .alert-success {
-        color: #3c763d;
-        background-color: #dff0d8;
-        border-color: #d6e9c6;
-    }
-    .alert-danger {
-        color: #a94442;
-        background-color: #f2dede;
-        border-color: #ebccd1;
-    }
-
-    .form-input {
-        position: relative;
-    }
-
-    .form-input input[readonly] {
-        background-color: transparent;
-        border: 1px solid var(--color-border);
-        cursor: default;
-    }
-
-    .form-input label {
-        position: absolute;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-        transition: all 0.2s ease;
-        transform-origin: top left;
-        transform: translateY(0) scale(1);
-    }
-
-    .form-input input[readonly]:focus + label,
-    .form-input input[readonly]:not(:placeholder-shown) + label {
-        transform: translateY(-20px) scale(0.8);
-    }
-
-    .default-image-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-weight: bold;
-        pointer-events: none; /* pour éviter que le texte interfère avec les clics */
-    }
-
-    .position-relative {
-        position: relative;
-    }
-
-    .d-none {
-        display: none;
-    }
-</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -312,59 +334,179 @@
 
     function previewImage(event, imageNumber) {
         const file = event.target.files[0];
+        const defaultSrc = '{{ asset('media/img/backgrounds/11.jpg') }}';
+
+        function resetToDefault() {
+            document.getElementById('studioImage' + imageNumber).src = defaultSrc;
+            const defaultText = document.getElementById('defaultImageText' + imageNumber);
+            if (defaultText) defaultText.classList.remove('d-none');
+            event.target.value = '';
+        }
 
         if (file) {
-            if (file.size > 2 * 1024 * 1024) { // 2 Mo
-                alert("L'image ne doit pas dépasser 2 Mo.");
-                event.target.value = ''; // Réinitialise l'input
+            if (file.size > 2 * 1024 * 1024) {
+                if (typeof showToast === 'function') showToast('error', "L'image ne doit pas dépasser 2 Mo.");
+                resetToDefault();
                 return;
             }
 
             if (file.type === 'image/png' || file.type === 'image/jpeg') {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('studioImage' + imageNumber).src = e.target.result;
-
-                    // Cacher le texte "Par défaut"
-                    const defaultText = document.getElementById('defaultImageText' + imageNumber);
-                    if (defaultText) {
-                        defaultText.classList.add('d-none');
-                    }
+                    const img = new Image();
+                    img.onload = function() {
+                        const minWidth = 400;
+                        const minHeight = 300;
+                        if (img.width < minWidth || img.height < minHeight) {
+                            if (typeof showToast === 'function') showToast('error', `L'image doit faire au minimum ${minWidth}×${minHeight} px (votre image : ${img.width}×${img.height} px).`);
+                            resetToDefault();
+                            return;
+                        }
+                        document.getElementById('studioImage' + imageNumber).src = e.target.result;
+                        const defaultText = document.getElementById('defaultImageText' + imageNumber);
+                        if (defaultText) defaultText.classList.add('d-none');
+                        const removeImageInput = document.getElementById('removeImage' + imageNumber + 'Input');
+                        if (removeImageInput) removeImageInput.value = '0';
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
-
-                // Réinitialiser le champ caché 'remove_image'
-                const removeImageInput = document.getElementById('removeImage' + imageNumber + 'Input');
-                if (removeImageInput) {
-                    removeImageInput.value = '0';
-                }
             } else {
-                alert('Seuls les formats PNG et JPG sont autorisés.');
-                event.target.value = ''; // Réinitialise l'input
+                if (typeof showToast === 'function') showToast('error', 'Seuls les formats PNG et JPG sont autorisés.');
+                resetToDefault();
             }
         }
     }
 
     function removeImage(imageNumber) {
-        // Mettre à jour la source de l'image avec l'image par défaut
+        // Mettre à jour la source l'image avec l'image par défaut
         document.getElementById('studioImage' + imageNumber).src = '{{ asset('media/img/backgrounds/11.jpg') }}';
-
+        
         // Afficher le texte "Par défaut"
         const defaultText = document.getElementById('defaultImageText' + imageNumber);
         if (defaultText) {
             defaultText.classList.remove('d-none');
         }
 
-        // Mettre à jour le champ caché pour indiquer que l'image doit être supprimée
+        // Mettre à jour le champ caché
         const removeImageInput = document.getElementById('removeImage' + imageNumber + 'Input');
         if (removeImageInput) {
             removeImageInput.value = '1';
         }
 
-        // Supprimer l'input file pour éviter les conflits
+        // Supprimer l'input file 
         const fileInput = document.getElementById('imageUpload' + imageNumber);
         if (fileInput) {
-            fileInput.value = ''; // Réinitialiser la valeur du champ de fichier
+            fileInput.value = ''; 
         }
     }
+
+    // Address Autocomplete Logic using api-adresse.data.gouv.fr (Edit Page)
+    document.addEventListener('DOMContentLoaded', function() {
+        const addressInputEdit = document.getElementById('edit-autocomplete-address');
+        const suggestionsBoxEdit = document.getElementById('edit-address-suggestions');
+        const cityInputEdit = document.getElementById('edit-input-city');
+        const zipcodeInputEdit = document.getElementById('edit-input-zipcode');
+        const countryInputEdit = document.getElementById('edit-input-country');
+        const latInputEdit = document.getElementById('edit-latitude');
+        const lonInputEdit = document.getElementById('edit-longitude');
+
+        let debounceTimeoutEdit;
+
+        if(addressInputEdit) {
+            addressInputEdit.addEventListener('input', function() {
+                const query = this.value;
+                suggestionsBoxEdit.innerHTML = '';
+                suggestionsBoxEdit.style.display = 'none';
+
+                if (query.length < 3) return;
+
+                clearTimeout(debounceTimeoutEdit);
+                debounceTimeoutEdit = setTimeout(() => {
+                    fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.features && data.features.length > 0) {
+                                suggestionsBoxEdit.style.display = 'block';
+                                data.features.forEach(feature => {
+                                    const li = document.createElement('li');
+                                    li.className = 'px-20 py-15 border-bottom-light cursor-pointer hover:bg-light-2 transition';
+                                    li.innerHTML = `<span class="fw-500">${feature.properties.name}</span><br><span class="text-13 text-light-1">${feature.properties.postcode} ${feature.properties.city}</span>`;
+                                    
+                                    li.addEventListener('click', () => {
+                                        // Fill inputs
+                                        addressInputEdit.value = feature.properties.name;
+                                        cityInputEdit.value = feature.properties.city;
+                                        zipcodeInputEdit.value = feature.properties.postcode;
+                                        countryInputEdit.value = 'France';
+                                        latInputEdit.value = feature.geometry.coordinates[1];
+                                        lonInputEdit.value = feature.geometry.coordinates[0];
+                                        
+                                        // Trigger input event 
+                                        ['input', 'change'].forEach(eventType => {
+                                            cityInputEdit.dispatchEvent(new Event(eventType));
+                                            zipcodeInputEdit.dispatchEvent(new Event(eventType));
+                                            countryInputEdit.dispatchEvent(new Event(eventType));
+                                            latInputEdit.dispatchEvent(new Event(eventType));
+                                            lonInputEdit.dispatchEvent(new Event(eventType));
+                                        });
+
+                                        suggestionsBoxEdit.innerHTML = '';
+                                        suggestionsBoxEdit.style.display = 'none';
+                                    });
+
+                                    suggestionsBoxEdit.appendChild(li);
+                                });
+                            }
+                        })
+                        .catch(error => console.error('Erreur API Adresse:', error));
+                }, 300);
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!addressInputEdit.contains(e.target) && !suggestionsBoxEdit.contains(e.target)) {
+                    suggestionsBoxEdit.style.display = 'none';
+                }
+            });
+        }
+    });
+
+    document.querySelector('.js-studio-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // If latitude and longitude are not already filled
+        if (!document.getElementById('edit-latitude').value || !document.getElementById('edit-longitude').value) {
+            const address = document.querySelector('input[name="address"]').value;
+            const city = document.querySelector('input[name="city"]').value;
+            const zipcode = document.querySelector('input[name="zipcode"]').value;
+            const country = document.querySelector('input[name="country"]').value;
+
+            const fullAddress = `${address}, ${city}, ${zipcode}, ${country}`;
+
+            try {
+                const response = await fetch(`/api/geocode/search?q=${encodeURIComponent(fullAddress)}`);
+                const data = await response.json();
+
+                if (data && data.length > 0) {
+                    document.getElementById('edit-latitude').value = data[0].lat;
+                    document.getElementById('edit-longitude').value = data[0].lon;
+                } else {
+                    clearFormErrors(this);
+                    showValidationErrors(this, { address: ["Adresse introuvable. Veuillez utiliser l'autocomplétion pour sélectionner une adresse valide."] });
+                    if (typeof showToast === 'function') showToast('error', 'Adresse non trouvée.');
+                    return;
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des coordonnées:', error);
+                clearFormErrors(this);
+                showValidationErrors(this, { address: ["Erreur de communication avec le service d'adresses."] });
+                if (typeof showToast === 'function') showToast('error', 'Erreur serveur.');
+                return;
+            }
+        }
+
+        // Now submit via AJAX handler
+        handleAjaxForm(this);
+    });
+
 </script>

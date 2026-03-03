@@ -1,8 +1,8 @@
-<section class="layout-pt-md layout-pb-lg">
+<section class="layout-pt-sm layout-pb-lg">
     <div data-anim-wrap class="container">
         <div class="row y-gap-20 justify-between">
 
-            <div class="row y-gap-40 justify-between pt-50">
+            <div class="row y-gap-40 justify-between">
 
                 <div data-anim-child="slide-up delay-2" class="col-lg-3 col-sm-6">
 

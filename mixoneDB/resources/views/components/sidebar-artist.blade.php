@@ -1,8 +1,8 @@
 <div class="dashboard__sidebar bg-white scroll-bar-1">
     <div class="sidebar -dashboard">
         <div class="sidebar__item">
-            <div class="sidebar__button {{ request()->routeIs(['dashboard', 'dashboard.bookings']) ? '-is-active' : '' }}">
-                <a href="{{route('dashboard')}}" class="d-flex items-center text-15 lh-1 fw-500 ">
+            <div class="sidebar__button {{ request()->routeIs(['dashboard', 'dashboard.artist.booking']) ? '-is-active' : '' }}">
+                <a href="{{route('dashboard.artist.booking')}}" class="d-flex items-center text-15 lh-1 fw-500 ">
                     <img src="{{asset('media/img/dashboard/sidebar/booking.svg')}}" alt="image" class="mr-15">
                     Historique des réservations
                 </a>

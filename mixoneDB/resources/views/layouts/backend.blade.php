@@ -16,7 +16,9 @@
     <link rel="stylesheet" href="{{ asset('vendor/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
+
     <title>MixOne</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body>
@@ -43,12 +45,28 @@
 
 
 
-<!-- JavaScript -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAz77U5XQuEME6TpftaMdX0bBelQxXRlM"></script>
-<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 
 <script src="{{ asset('vendor/js/vendors.js') }}"></script>
+{{-- Empêche le plantage global de main.js qui attend google.maps.OverlayView --}}
+<script>
+    if (typeof window.google === 'undefined') {
+        window.google = { 
+            maps: { 
+                OverlayView: class {}, 
+                Map: class {}, 
+                Marker: class {}, 
+                InfoWindow: class {},
+                LatLng: class {},
+                event: { addDomListener: () => {}, trigger: () => {}, addListener: () => {} }
+            } 
+        };
+    }
+</script>
 <script src="{{ asset('vendor/js/main.js') }}"></script>
+    <div id="toast-container" style="position:fixed;top:20px;right:20px;z-index:9999;pointer-events:none;"></div>
+    @include('components.message-widget')
+    <script src="{{ asset('js/ajax-forms.js') }}"></script>
+    @stack('scripts')
 </body>
 
 </html>

@@ -72,9 +72,8 @@
             </div>
         </nav>
 
-        <main class="py-4">
-            @yield('content')
         </main>
     </div>
+    @include('components.message-widget')
 </body>
 </html>

@@ -36,14 +36,14 @@
                 </div>
 
                 <div class="col-auto">
-                    <form action="{{ route('bookings.index') }}" method="GET" class="d-flex items-center">
+                    <form action="{{ route('dashboard.studio.booking') }}" method="GET" class="d-flex items-center">
                         <div class="w-230 single-field relative d-flex items-center mr-10">
                             <input name="query" class="pl-50 bg-white text-dark-1 h-50 rounded-8" type="search" placeholder="Rechercher..." value="{{ $query ?? '' }}">
                             <button type="submit" class="absolute d-flex items-center h-full">
                                 <i class="icon-search text-20 px-15 text-dark-1"></i>
                             </button>
                         </div>
-                        <a href="{{ route('bookings.index') }}" class="btn btn-outline-primary h-50 d-flex items-center justify-center rounded-8 px-15 hover:bg-blue-1 hover:text-white transition-all">
+                        <a href="{{ route('dashboard.studio.booking') }}" class="btn btn-outline-primary h-50 d-flex items-center justify-center rounded-8 px-15 hover:bg-blue-1 hover:text-white transition-all">
                             <i class="icon-refresh-cw text-20 text-blue-1 hover:text-white"></i>
                         </a>
                     </form>
@@ -73,6 +73,7 @@
             </div>
 
             <div class="tabs__content pt-30 js-tabs-content">
+                {{-- Tab 1 : Toutes --}}
                 <div class="tabs__pane -tab-item-1 is-tab-el-active">
                     <div class="overflow-scroll scroll-bar-1">
                         @if($reservations->isEmpty())
@@ -80,80 +81,43 @@
                                 Aucun résultat ne correspond à votre recherche.
                             </div>
                         @else
-                            <table class="table-3 -border-bottom col-12">
-                                <thead class="bg-light-2">
-                                <tr>
-                                    <th>N°</th>
-                                    <th>Client</th>
-                                    <th>Date de réservation</th>
-                                    <th>Créneau Réservé</th>
-                                    <th>Heures</th>
-                                    <th>Total</th>
-                                    <th>Statut</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($reservations as $reservation)
-                                    <tr>
-                                        <td>{{ $reservation->id }}</td>
-                                        <td>{{ $reservation->user->email }}</td>
-                                        <td>{{ $reservation->created_at->format('d/m/Y') }}</td>
-                                        <td class="lh-16">
-                                            Début : {{ \Carbon\Carbon::parse($reservation->time_slot)->format('d/m/Y à H:i') }}<br>
-                                            Fin : {{ \Carbon\Carbon::parse($reservation->time_slot)->addHours($reservation->number_of_hours)->format('d/m/Y à H:i') }}
-                                        </td>
-                                        <td class="fw-500">{{ $reservation->number_of_hours }}h</td>
-                                        <td>{{ number_format($reservation->price, 2) }}€</td>
-                                        <td>
-                                            @php
-                                                $statusClasses = [
-                                                    'Confirmée' => 'bg-blue-1-05 ',
-                                                    'En attente' => 'bg-yellow-4',
-                                                    'Annulée' => 'text-red-1'
-                                                ];
-                                            @endphp
-                                            <span class="rounded-100 py-4 px-10 text-center text-14 fw-500 {{ $statusClasses[$reservation->status] ?? 'bg-light-3' }}">
-                                                {{ $reservation->status }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div class="dropdown js-dropdown">
-                                                <div class="dropdown__button d-flex items-center rounded-4 text-blue-1 bg-blue-1-05 text-14 px-15 py-5"
-                                                     data-el-toggle=".js-actions-{{ $reservation->id }}-toggle">
-                                                    <span class="js-dropdown-title">Actions</span>
-                                                    <i class="icon icon-chevron-sm-down text-7 ml-10"></i>
-                                                </div>
-                                                <div class="toggle-element -dropdown-2 js-actions-{{ $reservation->id }}-toggle">
-                                                    <div class="text-14 fw-500">
-                                                        @if($reservation->status === 'En attente')
-                                                            <form action="{{ route('reservations.confirm', $reservation->id) }}" method="POST">
-                                                                @csrf
-                                                                <button type="submit" class="d-block text-left px-15 py-5 hover:bg-blue-1-05 hover:text-blue-1">
-                                                                    Confirmer
-                                                                </button>
-                                                            </form>
-                                                        @endif
-                                                        <a href="#" class="d-block px-15 py-5 hover:bg-blue-1-05 hover:text-blue-1">
-                                                            Facture
-                                                        </a>
-                                                        @if($reservation->status !== 'Annulée')
-                                                            <form action="{{ route('reservations.cancel', $reservation->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="d-block text-left px-15 py-5 hover:bg-red-1-05 hover:text-red-1">
-                                                                    Annuler
-                                                                </button>
-                                                            </form>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                            @include('dashboard.studio.partials.reservations-table', ['rows' => $reservations])
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Tab 2 : Confirmées --}}
+                <div class="tabs__pane -tab-item-2">
+                    <div class="overflow-scroll scroll-bar-1">
+                        @php $confirmed = $reservations->where('status', 'Confirmée'); @endphp
+                        @if($confirmed->isEmpty())
+                            <div class="text-center py-20 text-16 text-light-1">Aucune réservation confirmée.</div>
+                        @else
+                            @include('dashboard.studio.partials.reservations-table', ['rows' => $confirmed])
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Tab 3 : En attente --}}
+                <div class="tabs__pane -tab-item-3">
+                    <div class="overflow-scroll scroll-bar-1">
+                        @php $pending = $reservations->where('status', 'En attente'); @endphp
+                        @if($pending->isEmpty())
+                            <div class="text-center py-20 text-16 text-light-1">Aucune réservation en attente.</div>
+                        @else
+                            @include('dashboard.studio.partials.reservations-table', ['rows' => $pending])
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Tab 4 : Annulées --}}
+                <div class="tabs__pane -tab-item-4">
+                    <div class="overflow-scroll scroll-bar-1">
+                        @php $cancelled = $reservations->where('status', 'Annulée'); @endphp
+                        @if($cancelled->isEmpty())
+                            <div class="text-center py-20 text-16 text-light-1">Aucune réservation annulée.</div>
+                        @else
+                            @include('dashboard.studio.partials.reservations-table', ['rows' => $cancelled])
                         @endif
                     </div>
                 </div>
