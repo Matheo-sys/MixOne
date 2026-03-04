@@ -37,14 +37,20 @@
 
 .messaging-button .notification-badge {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -4px;
+    right: -4px;
     background: #D13535;
     color: white;
     font-size: 10px;
-    padding: 3px 6px;
-    border-radius: 10px;
+    font-weight: 700;
+    min-width: 20px;
+    min-height: 20px;
+    line-height: 20px;
+    text-align: center;
+    padding: 0 5px;
+    border-radius: 50px;
     border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(209,53,53,0.5);
 }
 
 .messaging-window {
@@ -156,6 +162,7 @@
     padding: 15px;
     border-top: 1px solid #eee;
     display: flex;
+    align-items: flex-end;
     gap: 10px;
     background: white;
 }
@@ -164,10 +171,14 @@
     flex: 1;
     border: 1px solid #ddd;
     border-radius: 20px;
-    padding: 8px 15px;
+    padding: 9px 15px;
     height: 40px;
+    min-height: 40px;
+    max-height: 120px;
     resize: none;
     font-size: 14px;
+    overflow-y: hidden;
+    line-height: 1.5;
 }
 
 .message-input-area textarea:focus {
@@ -178,6 +189,7 @@
 .message-input-area .send-btn {
     width: 40px;
     height: 40px;
+    min-width: 40px;
     background: #3554D1;
     color: white;
     border-radius: 50%;
@@ -186,11 +198,13 @@
     justify-content: center;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s;
+    font-size: 16px;
+    transition: transform 0.2s, background 0.2s;
 }
 
 .message-input-area .send-btn:hover {
     transform: scale(1.1);
+    background: #2541b2;
 }
 
 .new-message-search {
@@ -286,8 +300,10 @@
                 <form id="send-message-form" class="message-input-area">
                     <input type="hidden" id="receiver-id">
                     <textarea id="message-text" placeholder="Écrire un message..." required></textarea>
-                    <button type="submit" class="send-btn">
-                        <i class="icon-paper-plane"></i>
+                    <button type="submit" class="send-btn" title="Envoyer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18" height="18" style="transform: rotate(0deg); display:block;">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
                     </button>
                 </form>
             </div>
@@ -320,7 +336,10 @@
 
         let currentUserId = {{ auth()->id() ?? 'null' }};
         let messages = [];
+        let hiddenContacts = [];
+        let editingMessageId = null;
         let searchTimeout;
+        const notificationBadge = document.querySelector('.notification-badge');
 
         if (!currentUserId) {
             widget.style.display = 'none';
@@ -331,6 +350,7 @@
             chatWindow.classList.toggle('d-none');
             if (!chatWindow.classList.contains('d-none')) {
                 loadMessages();
+                markAllAsRead();
             }
         });
 
@@ -402,10 +422,84 @@
         async function loadMessages() {
             try {
                 const response = await fetch('/message');
-                messages = await response.json();
+                const data = await response.json();
+                messages = data.messages || [];
+                hiddenContacts = data.hidden_contacts || [];
                 renderConversations();
             } catch (error) {
                 console.error('Error loading messages:', error);
+            }
+        }
+
+        async function fetchUnreadCount() {
+            try {
+                if (chatWindow.classList.contains('d-none')) {
+                    const response = await fetch('/message/unread-count');
+                    const data = await response.json();
+                    if (data.count > 0) {
+                        notificationBadge.textContent = data.count;
+                        notificationBadge.classList.remove('d-none');
+                    } else {
+                        notificationBadge.classList.add('d-none');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching unread count:', error);
+            }
+        }
+
+        async function markAllAsRead() {
+            try {
+                await fetch('/message/read', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+                notificationBadge.classList.add('d-none');
+            } catch (error) {
+                console.error('Error marking as read:', error);
+            }
+        }
+
+        window.hideConversation = async function(e, contactId) {
+            e.stopPropagation();
+            try {
+                const res = await fetch(`/message/hide/${contactId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+                if (res.ok) {
+                    hiddenContacts.push(contactId);
+                    renderConversations();
+                }
+            } catch (error) {
+                console.error('Error hiding conversation', error);
+            }
+        };
+
+        function formatMessageDate(dateString) {
+            const date = new Date(dateString);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            const isToday = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+            const isYesterday = date.getDate() === yesterday.getDate() && date.getMonth() === yesterday.getMonth() && date.getFullYear() === yesterday.getFullYear();
+
+            const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            if (isToday) {
+                return `Aujourd'hui à ${time}`;
+            } else if (isYesterday) {
+                return `Hier à ${time}`;
+            } else {
+                const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+                return `Le ${date.toLocaleDateString('fr-FR', options)} à ${time}`;
             }
         }
 
@@ -423,21 +517,44 @@
                 }
             });
 
-            conversationList.innerHTML = Object.values(conversations).length === 0 
+            const visibleConvs = Object.values(conversations).filter(conv => !hiddenContacts.includes(conv.user.id));
+
+            conversationList.innerHTML = visibleConvs.length === 0 
                 ? '<div style="text-align: center; padding: 20px; color: #777;">Aucune conversation</div>'
-                : Object.values(conversations).map(conv => `
+                : visibleConvs.map(conv => `
                     <div class="conversation-item" onclick="window.startNewMessagingChat(${conv.user.id}, '${conv.user.first_name} ${conv.user.last_name}', '${conv.user.avatar}')" style="padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
                         <img src="${conv.user.avatar ? '/storage/' + conv.user.avatar : '/media/img/misc/avatar-default.png'}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px;">
                         <div style="flex: 1; overflow: hidden;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                                 <span style="font-weight: 500; color: #051036; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${conv.user.first_name} ${conv.user.last_name}</span>
-                                <span style="font-size: 10px; color: #777;">${new Date(conv.lastMessage.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                                <div style="display: flex; align-items: center;">
+                                    <span style="font-size: 10px; color: #777; margin-right: 8px;">${formatMessageDate(conv.lastMessage.created_at)}</span>
+                                    <div onclick="window.hideConversation(event, ${conv.user.id})" style="color: #bbb; cursor: pointer; padding: 2px;" onmouseover="this.style.color='#dd2727'" onmouseout="this.style.color='#bbb'">
+                                        <i class="icon-trash" style="font-size: 12px;"></i>
+                                    </div>
+                                </div>
                             </div>
                             <p style="font-size: 12px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0;">${conv.lastMessage.message}</p>
                         </div>
                     </div>
                 `).join('');
         }
+
+        window.startEditMessage = function(id) {
+            const msg = messages.find(m => m.id === id);
+            if (msg) {
+                const msgDate = new Date(msg.created_at);
+                if ((new Date() - msgDate) / 1000 / 60 > 10) {
+                    alert("Ce message a été envoyé il y a plus de 10 minutes et ne peut plus être modifié.");
+                    return;
+                }
+                editingMessageId = id;
+                messageInput.value = msg.message;
+                messageInput.focus();
+                // trigger resize
+                messageInput.dispatchEvent(new Event('input'));
+            }
+        };
 
         function renderMessages(otherUserId) {
             const filteredMessages = messages.filter(msg => 
@@ -446,13 +563,43 @@
 
             messageHistory.innerHTML = filteredMessages.map(msg => `
                 <div class="message-bubble ${msg.sender_id === currentUserId ? 'sent' : 'received'}">
-                    <div class="message-content">${msg.message}</div>
-                    <div class="message-time">${new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    <div class="message-content">${msg.message}
+                        ${msg.sender_id === currentUserId && ((new Date() - new Date(msg.created_at)) / 1000 / 60 <= 10) ? `
+                            <div onclick="window.startEditMessage(${msg.id})" style="position:absolute; right: -20px; top: 0; cursor: pointer; color: #bbb; display: ${msg.id ? 'block' : 'none'};" onmouseover="this.style.color='#3554D1'" onmouseout="this.style.color='#bbb'">
+                                <i class="icon-edit" style="font-size: 10px;"></i>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="message-time">
+                        ${msg.is_edited ? '<span style="font-style: italic; opacity: 0.7; margin-right: 4px;">(modifié)</span>' : ''}
+                        ${formatMessageDate(msg.created_at)}
+                    </div>
                 </div>
             `).join('');
             
             messageHistory.scrollTop = messageHistory.scrollHeight;
         }
+
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = '40px'; // Reset base height
+            const newHeight = Math.min(this.scrollHeight, 120);
+            this.style.height = newHeight + 'px';
+            if (this.scrollHeight > 120) {
+                this.style.overflowY = 'auto';
+            } else {
+                this.style.overflowY = 'hidden';
+            }
+        });
+
+        // Submit on Enter (unless Shift+Enter is pressed)
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                // We fake a submit event on the form
+                sendForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+        });
 
         sendForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -461,9 +608,42 @@
 
             if (!text || !receiverId) return;
 
+            // Optimistic UI
+            const nowIso = new Date().toISOString();
+            const originalMessageText = editingMessageId ? messages.find(m => m.id === editingMessageId)?.message : null;
+
+            if (editingMessageId) {
+                const msgIndex = messages.findIndex(m => m.id === editingMessageId);
+                if (msgIndex !== -1) {
+                    messages[msgIndex].message = text;
+                    messages[msgIndex].is_edited = true;
+                }
+            } else {
+                messages.push({
+                    sender_id: currentUserId,
+                    receiver_id: parseInt(receiverId),
+                    message: text,
+                    created_at: nowIso,
+                    is_read: false,
+                    is_edited: false,
+                    sender: null,
+                    receiver: null
+                });
+            }
+
+            const currentEditId = editingMessageId;
+            editingMessageId = null;
+
+            messageInput.value = '';
+            messageInput.style.height = '40px'; // Reset height visually
+            renderMessages(parseInt(receiverId));
+
             try {
-                const response = await fetch('/message', {
-                    method: 'POST',
+                const endpoint = currentEditId ? `/message/${currentEditId}` : '/message';
+                const method = currentEditId ? 'PUT' : 'POST';
+
+                const response = await fetch(endpoint, {
+                    method: method,
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -474,13 +654,22 @@
                     })
                 });
 
-                if (response.ok) {
-                    messageInput.value = '';
+                if (!response.ok) {
+                    // En cas d'erreur : on annule
+                    if (currentEditId) {
+                        const msgIndex = messages.findIndex(m => m.id === currentEditId);
+                        if (msgIndex !== -1) {
+                            messages[msgIndex].message = originalMessageText;
+                            messages[msgIndex].is_edited = false; 
+                        }
+                    }
                     await loadMessages();
                     renderMessages(parseInt(receiverId));
                 }
             } catch (error) {
                 console.error('Error sending message:', error);
+                await loadMessages();
+                renderMessages(parseInt(receiverId));
             }
         });
 
@@ -491,8 +680,13 @@
                         renderMessages(parseInt(receiverInput.value));
                     }
                 });
+            } else {
+                fetchUnreadCount();
             }
         }, 10000);
+
+        // Fetch unread count on load if closed
+        fetchUnreadCount();
     });
 })();
 </script>

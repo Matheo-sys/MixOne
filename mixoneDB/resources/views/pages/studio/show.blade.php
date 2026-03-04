@@ -78,54 +78,65 @@
                         </div>
                         <div class="col-12">
                             @php
+                            // Icons: using available theme icons (icomoon). SVG inline for audio-specific icons not in font
                             $allEquipment = [
-                                'micro_condenser' => ['label' => 'Micro condensateur', 'icon' => 'icon-microphone'],
-                                'micro_dynamic' => ['label' => 'Micro dynamique', 'icon' => 'icon-microphone'],
-                                'micro_ribbon' => ['label' => 'Micro à ruban', 'icon' => 'icon-microphone'],
-                                'micro_large_diaphragm' => ['label' => 'Grand diaphragme', 'icon' => 'icon-microphone'],
-                                'micro_small_diaphragm' => ['label' => 'Petit diaphragme', 'icon' => 'icon-microphone'],
-                                'micro_usb' => ['label' => 'Micro USB', 'icon' => 'icon-microphone'],
-                                'preamp_neve' => ['label' => 'Preamp Neve', 'icon' => 'icon-settings'],
-                                'preamp_api' => ['label' => 'Preamp API', 'icon' => 'icon-settings'],
-                                'preamp_ssl' => ['label' => 'Preamp SSL', 'icon' => 'icon-settings'],
-                                'interface_apollo' => ['label' => 'Interface Apollo (UA)', 'icon' => 'icon-settings'],
-                                'interface_focusrite' => ['label' => 'Interface Focusrite', 'icon' => 'icon-settings'],
-                                'interface_rme' => ['label' => 'Interface RME', 'icon' => 'icon-settings'],
-                                'interface_other' => ['label' => 'Interface audio', 'icon' => 'icon-settings'],
-                                'piano_grand' => ['label' => 'Piano à queue', 'icon' => 'icon-music'],
-                                'piano_upright' => ['label' => 'Piano droit', 'icon' => 'icon-music'],
-                                'clavier_midi' => ['label' => 'Clavier MIDI', 'icon' => 'icon-music'],
-                                'synth' => ['label' => 'Synthétiseur', 'icon' => 'icon-music'],
-                                'drum_kit' => ['label' => 'Batterie acoustique', 'icon' => 'icon-music'],
-                                'drum_electronic' => ['label' => 'Batterie électronique', 'icon' => 'icon-music'],
-                                'guitar_electric' => ['label' => 'Guitare électrique', 'icon' => 'icon-music'],
-                                'guitar_acoustic' => ['label' => 'Guitare acoustique', 'icon' => 'icon-music'],
-                                'bass' => ['label' => 'Basse', 'icon' => 'icon-music'],
-                                'console_ssl' => ['label' => 'Console SSL', 'icon' => 'icon-sliders'],
-                                'console_neve' => ['label' => 'Console Neve', 'icon' => 'icon-sliders'],
-                                'console_api' => ['label' => 'Console API', 'icon' => 'icon-sliders'],
-                                'daw_protools' => ['label' => 'Pro Tools', 'icon' => 'icon-laptop'],
-                                'daw_logic' => ['label' => 'Logic Pro', 'icon' => 'icon-laptop'],
-                                'daw_ableton' => ['label' => 'Ableton Live', 'icon' => 'icon-laptop'],
-                                'daw_studio_one' => ['label' => 'Studio One', 'icon' => 'icon-laptop'],
-                                'monitor_genelec' => ['label' => 'Monitors Genelec', 'icon' => 'icon-volume'],
-                                'monitor_yamaha' => ['label' => 'Monitors Yamaha HS', 'icon' => 'icon-volume'],
-                                'monitor_adam' => ['label' => 'Monitors ADAM', 'icon' => 'icon-volume'],
-                                'monitor_focal' => ['label' => 'Monitors Focal', 'icon' => 'icon-volume'],
-                                'subwoofer' => ['label' => 'Caisson de basses', 'icon' => 'icon-volume'],
-                                'headphones_dj' => ['label' => 'Casques d\'écoute', 'icon' => 'icon-headphones'],
-                                'compressor_hardware' => ['label' => 'Compresseur hardware', 'icon' => 'icon-cpu'],
-                                'eq_hardware' => ['label' => 'Égaliseur hardware', 'icon' => 'icon-cpu'],
-                                'reverb_hardware' => ['label' => 'Reverb hardware', 'icon' => 'icon-cpu'],
-                                'patchbay' => ['label' => 'Patchbay', 'icon' => 'icon-cpu'],
-                                'plugin_bundle' => ['label' => 'Bundle plugins', 'icon' => 'icon-layers'],
-                                'booth' => ['label' => 'Cabine vocale', 'icon' => 'icon-home'],
-                                'lounge' => ['label' => 'Salon lounge', 'icon' => 'icon-home'],
-                                'parking' => ['label' => 'Parking', 'icon' => 'icon-parking'],
-                                'wifi' => ['label' => 'Wi-Fi haut débit', 'icon' => 'icon-wifi'],
-                                'air_conditioning' => ['label' => 'Climatisation', 'icon' => 'icon-thermometer'],
-                                'accessible' => ['label' => 'Accessible PMR', 'icon' => 'icon-accessibility'],
-                                'kitchen' => ['label' => 'Cuisine disponible', 'icon' => 'icon-kitchen'],
+                                // Microphones
+                                'micro_condenser'       => ['label' => 'Micro condensateur',    'svg' => true],
+                                'micro_dynamic'         => ['label' => 'Micro dynamique',        'svg' => true],
+                                'micro_ribbon'          => ['label' => 'Micro à ruban',          'svg' => true],
+                                'micro_large_diaphragm' => ['label' => 'Grand diaphragme',       'svg' => true],
+                                'micro_small_diaphragm' => ['label' => 'Petit diaphragme',       'svg' => true],
+                                'micro_usb'             => ['label' => 'Micro USB',              'svg' => true],
+                                // Preamps / Interfaces
+                                'preamp_neve'           => ['label' => 'Preamp Neve',            'icon' => 'icon-speedometer'],
+                                'preamp_api'            => ['label' => 'Preamp API',             'icon' => 'icon-speedometer'],
+                                'preamp_ssl'            => ['label' => 'Preamp SSL',             'icon' => 'icon-speedometer'],
+                                'interface_apollo'      => ['label' => 'Interface Apollo (UA)',  'icon' => 'icon-plans'],
+                                'interface_focusrite'   => ['label' => 'Interface Focusrite',    'icon' => 'icon-plans'],
+                                'interface_rme'         => ['label' => 'Interface RME',          'icon' => 'icon-plans'],
+                                'interface_other'       => ['label' => 'Interface audio',        'icon' => 'icon-plans'],
+                                // Instruments
+                                'piano_grand'           => ['label' => 'Piano à queue',          'icon' => 'icon-ticket'],
+                                'piano_upright'         => ['label' => 'Piano droit',            'icon' => 'icon-ticket'],
+                                'clavier_midi'          => ['label' => 'Clavier MIDI',           'icon' => 'icon-ticket'],
+                                'synth'                 => ['label' => 'Synthétiseur',           'icon' => 'icon-ticket'],
+                                'drum_kit'              => ['label' => 'Batterie acoustique',    'icon' => 'icon-fire'],
+                                'drum_electronic'       => ['label' => 'Batterie électronique',  'icon' => 'icon-fire'],
+                                'guitar_electric'       => ['label' => 'Guitare électrique',     'icon' => 'icon-award'],
+                                'guitar_acoustic'       => ['label' => 'Guitare acoustique',     'icon' => 'icon-award'],
+                                'bass'                  => ['label' => 'Basse',                  'icon' => 'icon-award'],
+                                // Consoles
+                                'console_ssl'           => ['label' => 'Console SSL',            'svg' => 'sliders'],
+                                'console_neve'          => ['label' => 'Console Neve',           'svg' => 'sliders'],
+                                'console_api'           => ['label' => 'Console API',            'svg' => 'sliders'],
+                                // DAW
+                                'daw_protools'          => ['label' => 'Pro Tools',              'icon' => 'icon-plans'],
+                                'daw_logic'             => ['label' => 'Logic Pro',              'icon' => 'icon-plans'],
+                                'daw_ableton'           => ['label' => 'Ableton Live',           'icon' => 'icon-plans'],
+                                'daw_studio_one'        => ['label' => 'Studio One',             'icon' => 'icon-plans'],
+                                // Monitors
+                                'monitor_genelec'       => ['label' => 'Monitors Genelec',       'svg' => 'speaker'],
+                                'monitor_yamaha'        => ['label' => 'Monitors Yamaha HS',     'svg' => 'speaker'],
+                                'monitor_adam'          => ['label' => 'Monitors ADAM',          'svg' => 'speaker'],
+                                'monitor_focal'         => ['label' => 'Monitors Focal',         'svg' => 'speaker'],
+                                'subwoofer'             => ['label' => 'Caisson de basses',      'svg' => 'speaker'],
+                                // Headphones
+                                'headphones_dj'         => ['label' => "Casques d'écoute",       'svg' => 'headphones'],
+                                // Hardware FX
+                                'compressor_hardware'   => ['label' => 'Compresseur hardware',   'icon' => 'icon-transmission'],
+                                'eq_hardware'           => ['label' => 'Égaliseur hardware',     'icon' => 'icon-transmission'],
+                                'reverb_hardware'       => ['label' => 'Reverb hardware',        'icon' => 'icon-transmission'],
+                                'patchbay'              => ['label' => 'Patchbay',               'icon' => 'icon-nearby'],
+                                // Plugins
+                                'plugin_bundle'         => ['label' => 'Bundle plugins',         'icon' => 'icon-bell-ring'],
+                                // Facility
+                                'booth'                 => ['label' => 'Cabine vocale',          'icon' => 'icon-home'],
+                                'lounge'                => ['label' => 'Salon lounge',           'icon' => 'icon-living-room'],
+                                'parking'               => ['label' => 'Parking',                'icon' => 'icon-parking'],
+                                'wifi'                  => ['label' => 'Wi-Fi haut débit',       'icon' => 'icon-wifi'],
+                                'air_conditioning'      => ['label' => 'Climatisation',          'icon' => 'icon-day-night'],
+                                'accessible'            => ['label' => 'Accessible PMR',         'icon' => 'icon-pedestrian'],
+                                'kitchen'               => ['label' => 'Cuisine disponible',     'icon' => 'icon-kitchen'],
                             ];
                             $studioEquipment = $studio->equipment ?? [];
                             @endphp
@@ -135,12 +146,30 @@
                             <div class="row x-gap-0 y-gap-15 pt-20">
                                 @foreach($studioEquipment as $equipKey)
                                     @if(isset($allEquipment[$equipKey]))
+                                    @php $eq = $allEquipment[$equipKey]; @endphp
                                     <div class="col-md-6 col-lg-4">
                                         <div class="d-flex items-center x-gap-10">
                                             <div class="flex-center size-30 rounded-4 bg-blue-1-05">
-                                                <i class="{{ $allEquipment[$equipKey]['icon'] }} text-14 text-blue-1"></i>
+                                                @if(isset($eq['icon']))
+                                                    <i class="{{ $eq['icon'] }} text-14 text-blue-1"></i>
+                                                @elseif(isset($eq['svg']))
+                                                    @php $svgType = $eq['svg']; @endphp
+                                                    @if($svgType === true || $svgType === 'mic')
+                                                        {{-- Microphone SVG --}}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3554d1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                                                    @elseif($svgType === 'headphones')
+                                                        {{-- Headphones SVG --}}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3554d1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+                                                    @elseif($svgType === 'speaker')
+                                                        {{-- Speaker / Monitor SVG --}}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3554d1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><line x1="12" x2="12.01" y1="6" y2="6"/></svg>
+                                                    @elseif($svgType === 'sliders')
+                                                        {{-- Mixing Console / Sliders SVG --}}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3554d1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/></svg>
+                                                    @endif
+                                                @endif
                                             </div>
-                                            <div class="text-14 text-dark-1">{{ $allEquipment[$equipKey]['label'] }}</div>
+                                            <div class="text-14 text-dark-1">{{ $eq['label'] }}</div>
                                         </div>
                                     </div>
                                     @endif

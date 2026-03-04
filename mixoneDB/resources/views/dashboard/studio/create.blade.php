@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <form method="post" action="{{ route('studio.store') }}" enctype="multipart/form-data" class="js-studio-form">
+            <form method="post" action="{{ route('studio.store') }}" enctype="multipart/form-data" class="js-ajax-form" id="studioCreateForm">
                 @csrf
                 <div class="tabs__content pt-30 js-tabs-content">
                     <div class="tabs__pane -tab-item-1 is-tab-el-active">
@@ -179,7 +179,7 @@
                                                  alt="Image {{ $i }}"
                                                  class="img-ratio rounded-4">
                                             <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
-                                                <div class="size-40 bg-white rounded-4 cursor-pointer" onclick="removeImage({{ $i }})">
+                                                <div class="size-40 bg-white rounded-4 cursor-pointer d-flex items-center justify-center" onclick="removeImage({{ $i }})">
                                                     <i class="icon-trash text-16"></i>
                                                 </div>
                                             </div>
@@ -479,107 +479,120 @@
         }
     }
 
-    document.querySelector('.js-studio-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
+    // ─── Validation adresse + Autocomplétion (DOMContentLoaded requis) ─────────
+    document.addEventListener('DOMContentLoaded', function() {
 
-        // If latitude and longitude are not already filled
-        if (!document.getElementById('latitude').value || !document.getElementById('longitude').value) {
-            const address = document.querySelector('input[name="address"]').value;
-            const city = document.querySelector('input[name="city"]').value;
-            const zipcode = document.querySelector('input[name="zipcode"]').value;
-            const country = document.querySelector('input[name="country"]').value;
+        // --- Interception soumission : vérification coordonnées obligatoires ---
+        const studioCreateForm = document.getElementById('studioCreateForm');
+        if (studioCreateForm) {
+            studioCreateForm.addEventListener('submit', function(e) {
+                const lat = document.getElementById('latitude').value;
+                const lng = document.getElementById('longitude').value;
 
-            const fullAddress = `${address}, ${city}, ${zipcode}, ${country}`;
+                if (!lat || !lng) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
 
-            try {
-                const response = await fetch(`/api/geocode/search?q=${encodeURIComponent(fullAddress)}`);
-                const data = await response.json();
-
-                if (data && data.length > 0) {
-                    document.getElementById('latitude').value = data[0].lat;
-                    document.getElementById('longitude').value = data[0].lon;
-                } else {
-                    clearFormErrors(this);
-                    showValidationErrors(this, { address: ["Adresse introuvable. Veuillez utiliser l'autocomplétion pour sélectionner une adresse valide."] });
-                    if (typeof showToast === 'function') showToast('error', 'Adresse non trouvée.');
-                    return;
+                    if (typeof clearFormErrors === 'function') clearFormErrors(this);
+                    if (typeof showValidationErrors === 'function') {
+                        showValidationErrors(this, {
+                            address: ["Veuillez sélectionner une adresse depuis les suggestions (autocomplétion) pour valider la localisation."]
+                        });
+                    }
+                    if (typeof showToast === 'function') {
+                        showToast('error', 'Adresse invalide : sélectionnez une adresse dans la liste de suggestions.');
+                    }
+                    const addrInput = document.getElementById('autocomplete-address');
+                    if (addrInput) {
+                        addrInput.style.borderColor = '#dd2727';
+                        addrInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        addrInput.focus();
+                    }
+                    return false;
                 }
-            } catch (error) {
-                console.error('Erreur lors de la récupération des coordonnées:', error);
-                clearFormErrors(this);
-                showValidationErrors(this, { address: ["Erreur de communication avec le service d'adresses."] });
-                if (typeof showToast === 'function') showToast('error', 'Erreur serveur.');
-                return;
-            }
+            }, true); // capture = true → avant le listener global ajax-forms.js
         }
 
-        // Now submit via AJAX handler
-        handleAjaxForm(this);
-    });
+        // --- Autocomplétion adresse ---
+        const addressInput   = document.getElementById('autocomplete-address');
+        const suggestionsBox = document.getElementById('address-suggestions');
+        const cityInput      = document.getElementById('input-city');
+        const zipcodeInput   = document.getElementById('input-zipcode');
+        const countryInput   = document.getElementById('input-country');
+        const latInput       = document.getElementById('latitude');
+        const lonInput       = document.getElementById('longitude');
 
-    // Address Autocomplete Logic using api-adresse.data.gouv.fr
-    const addressInput = document.getElementById('autocomplete-address');
-    const suggestionsBox = document.getElementById('address-suggestions');
-    const cityInput = document.getElementById('input-city');
-    const zipcodeInput = document.getElementById('input-zipcode');
-    const countryInput = document.getElementById('input-country');
-    const latInput = document.getElementById('latitude');
-    const lonInput = document.getElementById('longitude');
+        if (!addressInput || !suggestionsBox) {
+            console.warn('Autocomplétion : champs adresse introuvables.');
+            return;
+        }
 
-    let debounceTimeout;
+        let debounceTimeout;
 
-    addressInput.addEventListener('input', function() {
-        const query = this.value;
-        suggestionsBox.innerHTML = '';
-        suggestionsBox.style.display = 'none';
+        // Quand l'user retape → invalide les coordonnées
+        addressInput.addEventListener('input', function() {
+            latInput.value = '';
+            lonInput.value = '';
+            addressInput.style.borderColor = '';
 
-        if (query.length < 3) return;
+            const query = this.value.trim();
+            suggestionsBox.innerHTML = '';
+            suggestionsBox.style.display = 'none';
+            if (query.length < 3) return;
 
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => {
-            fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.features && data.features.length > 0) {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => {
+                fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (!data.features || data.features.length === 0) return;
                         suggestionsBox.style.display = 'block';
                         data.features.forEach(feature => {
                             const li = document.createElement('li');
-                            li.className = 'px-20 py-15 border-bottom-light cursor-pointer hover:bg-light-2 transition';
-                            li.innerHTML = `<span class="fw-500">${feature.properties.name}</span><br><span class="text-13 text-light-1">${feature.properties.postcode} ${feature.properties.city}</span>`;
-                            
-                            li.addEventListener('click', () => {
-                                // Fill inputs
+                            li.style.cssText = 'list-style:none;padding:12px 20px;border-bottom:1px solid #eee;cursor:pointer;transition:background .15s;';
+                            li.innerHTML = `<span style="font-weight:600;color:#1a1a2e;">${feature.properties.name}</span><br><span style="font-size:12px;color:#888;">${feature.properties.postcode} ${feature.properties.city}</span>`;
+
+                            li.addEventListener('mouseenter', () => li.style.background = '#f0f4ff');
+                            li.addEventListener('mouseleave', () => li.style.background = '');
+
+                            li.addEventListener('mousedown', (ev) => {
+                                ev.preventDefault(); // empêche le blur du champ
                                 addressInput.value = feature.properties.name;
-                                cityInput.value = feature.properties.city;
+                                cityInput.value    = feature.properties.city;
                                 zipcodeInput.value = feature.properties.postcode;
-                                countryInput.value = 'France'; // API is France-only
-                                latInput.value = feature.geometry.coordinates[1]; // Latitude
-                                lonInput.value = feature.geometry.coordinates[0]; // Longitude
-                                
-                                // Trigger input event to update label floating states if needed
-                                ['input', 'change'].forEach(eventType => {
-                                    cityInput.dispatchEvent(new Event(eventType));
-                                    zipcodeInput.dispatchEvent(new Event(eventType));
-                                    countryInput.dispatchEvent(new Event(eventType));
+                                countryInput.value = 'France';
+                                latInput.value     = feature.geometry.coordinates[1];
+                                lonInput.value     = feature.geometry.coordinates[0];
+                                addressInput.style.borderColor = '#22c55e';
+
+                                // Trigger events labels flottants
+                                ['input','change'].forEach(ev2 => {
+                                    [cityInput, zipcodeInput, countryInput].forEach(inp => inp.dispatchEvent(new Event(ev2)));
                                 });
 
-                                // Hide suggestions
                                 suggestionsBox.innerHTML = '';
                                 suggestionsBox.style.display = 'none';
+
+                                // Supprime erreur inline si présente
+                                document.querySelectorAll('.ajax-error').forEach(el => {
+                                    if (el.textContent.includes('adresse') || el.textContent.includes('Adresse')) el.remove();
+                                });
                             });
 
                             suggestionsBox.appendChild(li);
                         });
-                    }
-                })
-                .catch(error => console.error('Erreur API Adresse:', error));
-        }, 300); // 300ms delay to avoid spamming the API
-    });
+                    })
+                    .catch(err => console.error('API Adresse:', err));
+            }, 300);
+        });
 
-    // Close suggestions when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!addressInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
-            suggestionsBox.style.display = 'none';
-        }
-    });
+        // Fermer au clic en dehors
+        document.addEventListener('click', function(e) {
+            if (!addressInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+
+    }); // fin DOMContentLoaded
 </script>
+

@@ -84,7 +84,11 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 // Messagerie
 Route::middleware('auth')->group(function () {
     Route::post('/message', [MessageController::class, 'store']);
+    Route::put('/message/{id}', [MessageController::class, 'update']);
     Route::get('/message', [MessageController::class, 'index']);
+    Route::post('/message/hide/{contact_id}', [MessageController::class, 'hideConversation']);
+    Route::get('/message/unread-count', [MessageController::class, 'getUnreadCount']);
+    Route::post('/message/read', [MessageController::class, 'markAsRead']);
     Route::get('/api/users/search', [MessageController::class, 'searchUsers']);
 });
 

@@ -9,29 +9,33 @@ class CreateReservationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Only non-studio users can reserve (business logic check handled in controller/action but simple check here is fine)
         return auth()->user()->profile !== 'studio';
     }
 
     public function rules(): array
     {
         return [
-            'time_slot' => 'required|string',
-            'studio_id' => 'required|exists:studios,id',
-            'date' => 'required|date|after_or_equal:today',
+            'studio_id'       => 'required|exists:studios,id',
+            'date'            => 'required|date|after_or_equal:today',
             'number_of_hours' => 'required|integer|min:1',
-            'total_price' => 'required|numeric'
+            'total_price'     => 'required|numeric|min:0',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'date.required' => 'Veuillez sélectionner une date pour votre réservation.',
-            'date.after_or_equal' => 'La date de réservation doit être aujourd\'hui ou une date future.',
-            'time_slot.required' => 'Veuillez sélectionner un créneau horaire.',
-            'number_of_hours.required' => 'Veuillez indiquer le nombre d\'heures.',
-            'number_of_hours.min' => 'Le nombre d\'heures minimum est de 1.'
+            'studio_id.required'        => 'Le studio est introuvable.',
+            'studio_id.exists'          => 'Ce studio n\'existe plus.',
+            'date.required'             => 'Veuillez sélectionner une date pour votre réservation.',
+            'date.date'                 => 'La date saisie n\'est pas valide.',
+            'date.after_or_equal'       => 'La date de réservation doit être aujourd\'hui ou une date future.',
+            'number_of_hours.required'  => 'Veuillez indiquer le nombre d\'heures.',
+            'number_of_hours.integer'   => 'Le nombre d\'heures doit être un nombre entier.',
+            'number_of_hours.min'       => 'Le nombre d\'heures minimum est de 1.',
+            'total_price.required'      => 'Le prix total n\'a pas pu être calculé.',
+            'total_price.numeric'       => 'Le prix total doit être un nombre.',
+            'total_price.min'           => 'Le prix total ne peut pas être négatif.',
         ];
     }
 

@@ -55,20 +55,6 @@
                 <div class="col-auto">
                     <div class="row y-gap-10 items-center">
                         <div class="col-auto">
-                            <div class="d-flex items-center">
-                                <button class="d-flex items-center text-14 fw-500 text-dark-1 mr-10">
-                                    <i class="icon-globe text-16 mr-10"></i>
-                                    <span class="underline">English (US)</span>
-                                </button>
-
-                                <button class="d-flex items-center text-14 fw-500 text-dark-1">
-                                    <i class="icon-usd text-16 mr-10"></i>
-                                    <span class="underline">USD</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="col-auto">
                             <div class="d-flex x-gap-20 items-center">
                                 <a href="#"><i class="icon-facebook text-14"></i></a>
                                 <a href="#"><i class="icon-twitter text-14"></i></a>

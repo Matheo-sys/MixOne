@@ -1,88 +1,153 @@
 /**
  * Global AJAX Form Handler - MixOne
- * Intercepts all forms with .js-ajax-form class
+ * Gestion complète des formulaires avec retours d'erreurs visuels en français
  */
 
-// Toast container (injected by backendDB layout)
+// ─── Toast Notification ──────────────────────────────────────────────────────
 function showToast(type, message) {
-    const container = document.getElementById('toast-container');
+    let container = document.getElementById('toast-container');
     if (!container) {
-        // Fallback for non-dashboard pages: create container on the fly
-        const fallback = document.createElement('div');
-        fallback.id = 'toast-container';
-        fallback.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;pointer-events:none;';
-        document.body.appendChild(fallback);
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;pointer-events:none;display:flex;flex-direction:column;gap:8px;';
+        document.body.appendChild(container);
     }
 
-    const c = document.getElementById('toast-container');
     const isSuccess = type === 'success';
+    const isWarning = type === 'warning';
+
+    let bg = '#dd2727'; // rouge - erreur
+    if (isSuccess) bg = '#3554d1'; // bleu - succès
+    if (isWarning) bg = '#f59e0b'; // orange - warning
+
+    const iconMap = { success: 'check', error: 'close', warning: 'notification' };
+    const icon = iconMap[type] || 'close';
+
     const toast = document.createElement('div');
     toast.style.cssText = [
-        'display:flex;align-items:center;gap:10px;',
-        'padding:14px 20px;margin-bottom:10px;border-radius:8px;',
-        'box-shadow:0 4px 20px rgba(0,0,0,.15);',
+        'display:flex;align-items:flex-start;gap:12px;',
+        `padding:14px 18px;border-radius:10px;max-width:380px;`,
+        'box-shadow:0 8px 30px rgba(0,0,0,.18);',
         'pointer-events:auto;cursor:pointer;',
-        'transition:opacity .4s,transform .4s;opacity:0;transform:translateX(20px);',
-        isSuccess
-            ? 'background:#3554d1;color:#fff;'
-            : 'background:#dd2727;color:#fff;'
+        'transition:opacity .4s,transform .4s;opacity:0;transform:translateX(30px);',
+        `background:${bg};color:#fff;`,
     ].join('');
 
     toast.innerHTML = `
-        <i class="icon-${isSuccess ? 'check' : 'close'}" style="font-size:16px;flex-shrink:0"></i>
-        <span style="font-size:14px;font-weight:500">${message}</span>
+        <i class="icon-${icon}" style="font-size:16px;flex-shrink:0;margin-top:2px;"></i>
+        <span style="font-size:14px;font-weight:500;line-height:1.4;">${message}</span>
     `;
-    c.appendChild(toast);
+    container.appendChild(toast);
 
-    // Animate in
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateX(0)';
-        });
-    });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(0)';
+    }));
 
-    // Dismiss after 4s or on click
     const dismiss = () => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateX(20px)';
+        toast.style.transform = 'translateX(30px)';
         setTimeout(() => toast.remove(), 400);
     };
     toast.addEventListener('click', dismiss);
-    setTimeout(dismiss, 4000);
+    setTimeout(dismiss, type === 'error' ? 6000 : 4000);
 }
 
+// ─── Nettoyage des erreurs ────────────────────────────────────────────────────
 function clearFormErrors(form) {
     form.querySelectorAll('.ajax-error').forEach(el => el.remove());
+    form.querySelectorAll('.ajax-error-summary').forEach(el => el.remove());
+    form.querySelectorAll('.is-error input, .is-error textarea, .is-error select').forEach(el => {
+        el.style.borderColor = '';
+    });
     form.querySelectorAll('.is-error').forEach(el => el.classList.remove('is-error'));
 }
 
+// ─── Affichage des erreurs sous les champs ───────────────────────────────────
 function showValidationErrors(form, errors) {
-    Object.keys(errors).forEach(field => {
-        const input = form.querySelector(`[name="${field}"]`);
+    const errorKeys = Object.keys(errors);
+
+    errorKeys.forEach(field => {
+        // Essaie de trouver le champ par name (y compris name="field[]" ou name="field[key]")
+        let input = form.querySelector(`[name="${field}"]`)
+            || form.querySelector(`[name="${field}[]"]`);
+
+        const msg = Array.isArray(errors[field]) ? errors[field][0] : errors[field];
+
         if (input) {
-            const wrapper = input.closest('.form-input') || input.parentElement;
-            if (wrapper) wrapper.classList.add('is-error');
-            const msg = document.createElement('div');
-            msg.className = 'text-12 text-red-1 mt-5 ajax-error';
-            msg.textContent = errors[field][0];
-            (wrapper || input.parentElement).after(msg);
+            const wrapper = input.closest('.form-input')
+                || input.closest('.form-group')
+                || input.closest('.searchMenu-guests')
+                || input.parentElement;
+
+            if (wrapper) {
+                wrapper.classList.add('is-error');
+                // Bordure rouge sur l'input
+                input.style.borderColor = '#dd2727';
+            }
+
+            // Injecte le message d'erreur après le wrapper (ou parent)
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'ajax-error';
+            errorDiv.style.cssText = 'color:#dd2727;font-size:12px;font-weight:500;margin-top:5px;display:flex;align-items:center;gap:5px;';
+            errorDiv.innerHTML = `<i class="icon-close" style="font-size:10px;background:#dd2727;color:#fff;border-radius:50%;padding:2px;flex-shrink:0;"></i> ${msg}`;
+
+            const insertAfter = wrapper || input.parentElement;
+            insertAfter.insertAdjacentElement('afterend', errorDiv);
         }
     });
+
+    // Si plusieurs erreurs, afficher un résumé en haut du formulaire
+    if (errorKeys.length > 1) {
+        const summary = document.createElement('div');
+        summary.className = 'ajax-error-summary';
+        summary.style.cssText = [
+            'background:#fff5f5;border:1px solid #ffcdd2;border-radius:8px;',
+            'padding:12px 16px;margin-bottom:20px;',
+        ].join('');
+        summary.innerHTML = `
+            <div style="display:flex;align-items:center;gap:8px;color:#dd2727;font-weight:600;margin-bottom:8px;font-size:14px;">
+                <i class="icon-close" style="font-size:12px;background:#dd2727;color:#fff;border-radius:50%;padding:3px;"></i>
+                ${errorKeys.length} erreur${errorKeys.length > 1 ? 's' : ''} à corriger
+            </div>
+            <ul style="margin:0;padding-left:20px;color:#c62828;font-size:13px;">
+                ${errorKeys.map(k => {
+            const m = Array.isArray(errors[k]) ? errors[k][0] : errors[k];
+            return `<li>${m}</li>`;
+        }).join('')}
+            </ul>
+        `;
+        // Insérer au début du formulaire
+        const firstChild = form.firstElementChild;
+        form.insertBefore(summary, firstChild);
+        // Scroller vers le résumé
+        summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (errorKeys.length === 1) {
+        // Une seule erreur : scroller vers le champ concerné
+        const firstInput = form.querySelector(`[name="${errorKeys[0]}"]`);
+        if (firstInput) {
+            firstInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstInput.focus();
+        }
+    }
 }
 
+// ─── Gestionnaire AJAX principal ──────────────────────────────────────────────
 async function handleAjaxForm(form) {
     const submitBtn = form.querySelector('[type="submit"]');
     const originalHtml = submitBtn ? submitBtn.innerHTML : '';
 
     if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle"></span> Envoi…';
+        submitBtn.innerHTML = `
+            <span style="display:inline-flex;align-items:center;gap:8px;">
+                <span style="width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:ajaxSpin .7s linear infinite;display:inline-block;"></span>
+                Envoi en cours…
+            </span>`;
     }
 
     clearFormErrors(form);
 
-    // Build FormData (handles files + fields)
     const formData = new FormData(form);
     const url = form.getAttribute('action') || window.location.pathname;
     const method = (form.getAttribute('method') || 'POST').toUpperCase();
@@ -100,44 +165,62 @@ async function handleAjaxForm(form) {
             body: method === 'GET' ? null : formData,
         });
 
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
 
         if (response.ok) {
-            showToast('success', data.message || 'Opération réussie');
+            showToast('success', data.message || 'Opération réussie !');
 
-            // Reset form if requested
             if (form.hasAttribute('data-reset')) form.reset();
 
-            // Update avatar across header if returned
             if (data.avatar_url) {
                 document.querySelectorAll('.header-avatar,[data-avatar]').forEach(img => {
                     img.src = data.avatar_url + '?t=' + Date.now();
                 });
             }
 
-            // If server tells us to redirect (e.g. reservation success)
             if (data.redirect) {
                 setTimeout(() => { window.location.href = data.redirect; }, 1200);
                 return;
             }
 
-            // If the form action involves reservation confirm/cancel, update the row
             if (data.new_status) {
                 updateReservationRow(form, data.new_status);
             }
 
         } else if (response.status === 422) {
+            // Erreurs de validation Laravel
             if (data.errors) {
                 showValidationErrors(form, data.errors);
+                const errorCount = Object.keys(data.errors).length;
+                showToast('error', data.message || `Veuillez corriger les ${errorCount} erreur${errorCount > 1 ? 's' : ''} dans le formulaire.`);
+            } else {
+                showToast('error', data.message || 'Veuillez vérifier les informations saisies.');
             }
-            showToast('error', data.message || 'Veuillez corriger les erreurs.');
+
+        } else if (response.status === 403) {
+            showToast('error', data.message || 'Vous n\'êtes pas autorisé à effectuer cette action.');
+
+        } else if (response.status === 401) {
+            showToast('error', 'Vous devez être connecté pour effectuer cette action.');
+            setTimeout(() => { window.location.href = '/login'; }, 2000);
+
+        } else if (response.status === 404) {
+            showToast('error', 'La ressource demandée est introuvable.');
+
+        } else if (response.status >= 500) {
+            showToast('error', 'Une erreur serveur est survenue. Veuillez réessayer dans quelques instants.');
+
         } else {
-            showToast('error', data.message || 'Une erreur est survenue.');
+            showToast('error', data.message || 'Une erreur inattendue est survenue.');
         }
 
     } catch (err) {
         console.error('AJAX Error:', err);
-        showToast('error', 'Erreur de connexion. Veuillez réessayer.');
+        if (!navigator.onLine) {
+            showToast('error', 'Pas de connexion Internet. Veuillez vérifier votre réseau.');
+        } else {
+            showToast('error', 'Impossible de contacter le serveur. Veuillez réessayer.');
+        }
     } finally {
         if (submitBtn) {
             submitBtn.disabled = false;
@@ -146,18 +229,14 @@ async function handleAjaxForm(form) {
     }
 }
 
-/**
- * Dynamically update a reservation row status badge after confirm/cancel
- */
+// ─── Mise à jour d'une ligne de réservation ───────────────────────────────────
 function updateReservationRow(form, newStatus) {
     const row = form.closest('tr');
     if (!row) return;
 
-    // Update the status badge
     const badge = row.querySelector('.rounded-100');
     if (badge) {
         badge.textContent = newStatus;
-        // Remove all possible status classes and apply the new one
         const colorMap = {
             'Confirmée': 'bg-blue-1-05',
             'En attente': 'bg-yellow-4',
@@ -166,24 +245,31 @@ function updateReservationRow(form, newStatus) {
         Object.values(colorMap).forEach(c => badge.classList.remove(c));
         if (colorMap[newStatus]) badge.classList.add(colorMap[newStatus]);
     }
-
-    // Remove only the submitted form from the dropdown (not the whole row)
     form.remove();
 }
 
-// Add spin keyframe once
+// ─── Style CSS de l'animation spinner ────────────────────────────────────────
 if (!document.getElementById('ajax-spin-style')) {
     const s = document.createElement('style');
     s.id = 'ajax-spin-style';
-    s.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+    s.textContent = `
+        @keyframes ajaxSpin { to { transform: rotate(360deg); } }
+        .is-error .form-input label,
+        .is-error label { color: #dd2727 !important; }
+        .ajax-error { animation: fadeInError .2s ease; }
+        .ajax-error-summary { animation: fadeInError .3s ease; }
+        @keyframes fadeInError {
+            from { opacity: 0; transform: translateY(-5px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    `;
     document.head.appendChild(s);
 }
 
-// Main listener — intercept ALL .js-ajax-form submissions
+// ─── Écouteur global : intercepte .js-ajax-form (bubble, après les validations capture) ──
 document.addEventListener('submit', function (e) {
     if (e.target.classList.contains('js-ajax-form')) {
         e.preventDefault();
-        e.stopPropagation();
         handleAjaxForm(e.target);
     }
-}, true);
+}, false); // false = bubble phase → les validators en capture sur le form s'exécutent avant
