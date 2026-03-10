@@ -4,8 +4,5 @@ nixPkgs = ["php82", "php82Extensions.pdo_mysql", "php82Extensions.mbstring", "ph
 [phases.install]
 cmds = ["composer install --no-dev --optimize-autoloader"]
 
-[phases.deploy]
-cmds = ["php artisan migrate --force", "php artisan storage:link"]
-
 [start]
-cmd = "php -S 0.0.0.0:$PORT -t public public/index.php"
+cmd = "php artisan migrate --force && php artisan storage:link && php -S 0.0.0.0:$PORT -t public public/index.php"
