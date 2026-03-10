@@ -60,7 +60,29 @@
             </div>
         </div>
 
-        <div class="sidebar__item">
+        <div class="sidebar__item mt-20 pt-20" style="border-top: 1px solid #eee;">
+            <div class="text-11 fw-500 text-light-1 uppercase mb-10 pl-15">Navigation Site</div>
+            <div class="sidebar__item">
+                <a href="{{ url('/') }}" class="sidebar__button d-flex items-center text-15 lh-1 fw-500">
+                    <i class="icon-home text-20 mr-15"></i>
+                    Accueil
+                </a>
+            </div>
+            <div class="sidebar__item">
+                <a href="{{ route('studio_list') }}" class="sidebar__button d-flex items-center text-15 lh-1 fw-500">
+                    <i class="icon-search text-20 mr-15"></i>
+                    Nos studios
+                </a>
+            </div>
+            <div class="sidebar__item">
+                <a href="{{ route('about') }}" class="sidebar__button d-flex items-center text-15 lh-1 fw-500">
+                    <i class="icon-info text-20 mr-15"></i>
+                    À propos
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar__item mt-10">
             <a href="/"
                onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();"
