@@ -23,15 +23,15 @@
         </div>
     @endif
 
-    <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
+    <div class="row y-gap-20 justify-between items-end pb-40 lg:pb-30 md:pb-24">
         <div class="col-auto ml-10">
-            <h1 class="text-30 lh-14 fw-600">AJOUTER UN STUDIO</h1>
-            <div class="text-15 text-light-1">Ajoutez un nouveau studio et mettez-le à disposition des artistes en quelques instants.</div>
+            <h1 class="text-26 sm:text-22 lh-14 fw-600">AJOUTER UN STUDIO</h1>
+            <div class="text-15 text-light-1">Mettez votre studio à disposition des artistes en quelques instants.</div>
         </div>
         <div class="col-auto"></div>
     </div>
 
-    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+    <div class="py-30 px-30 sm:px-15 rounded-4 bg-white shadow-3">
         <div class="tabs -underline-2 js-tabs">
             <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
                 <div class="col-auto">

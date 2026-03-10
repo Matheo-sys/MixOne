@@ -2,28 +2,32 @@
 
 @section('content')
 
-    <div class="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
+    <div class="row y-gap-20 justify-between items-end pb-40 lg:pb-30 md:pb-24">
         <div class="col-auto ml-10">
-            <h1 class="text-30 lh-14 fw-600">TOUS MES STUDIOS</h1>
-            <div class="text-16 text-light-1">Découvrez et gérez facilement tous vos studios d'enregistrement.</div>
+            <h1 class="text-26 sm:text-22 lh-14 fw-600">TOUS MES STUDIOS</h1>
+            <div class="text-15 text-light-1">Gérez facilement vos studios d'enregistrement.</div>
         </div>
 
-        <div class="col-auto">
-            <a href="{{ route('dashboard.studio.create') }}" class="button h-50 px-24 -dark-1 bg-blue-1 text-white">
+        <div class="col-auto mr-10 sm:mr-0 sm:w-100">
+            <a href="{{ route('dashboard.studio.create') }}" class="button h-50 px-24 -dark-1 bg-blue-1 text-white sm:w-100">
                 Ajouter Studio <div class="icon-arrow-top-right ml-15"></div>
             </a>
         </div>
     </div>
 
-    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+    <div class="py-30 px-30 sm:px-15 rounded-4 bg-white shadow-3">
         @if ($studios->isEmpty())
-            <p>Ajouter votre premier studio !</p>
+            <div class="text-center py-40">
+                <i class="icon-hotel text-60 text-light-1 mb-20"></i>
+                <p class="text-18 fw-500">Vous n'avez pas encore de studio.</p>
+                <a href="{{ route('dashboard.studio.create') }}" class="button -md -blue-1 bg-blue-1-05 text-blue-1 mt-20">Ajouter votre premier studio</a>
+            </div>
         @else
             <div class="tabs -underline-2 js-tabs">
                 <div class="tabs__content pt-30 js-tabs-content">
                     <div class="tabs__pane -tab-item-1 is-tab-el-active">
                         <div class="overflow-scroll scroll-bar-1">
-                            <table class="table-4 -border-bottom col-12">
+                            <table class="table-4 -border-bottom col-12 table-responsive-cards">
                                 <thead class="bg-light-2">
                                 <tr>
 
@@ -37,33 +41,30 @@
                                 <tbody>
                                 @foreach($studios as $studio)
                                     <tr>
-                                        <td class="text-blue-1 fw-500">{{ $studio->name }}</td>
-                                        <td>{{ $studio->city }}</td>
-                                        <td>
+                                        <td data-label="Nom" class="text-blue-1 fw-500">{{ $studio->name }}</td>
+                                        <td data-label="Lieu">{{ $studio->city }}</td>
+                                        <td data-label="Avis">
                                             <div class="rounded-4 size-35 bg-blue-1 text-white flex-center text-12 fw-600">4.8</div>
                                         </td>
-                                        <td>{{ $studio->created_at->format('d/m/Y') }}</td>
-                                        <td>
+                                        <td data-label="Date">{{ $studio->created_at->format('d/m/Y') }}</td>
+                                        <td data-label="Action">
                                             <div class="d-flex align-items-center gap-2">
                                                 <!-- Bouton Vue -->
-                                                <form action="{{ route('studio.show', $studio->id) }}" method="GET">
-                                                    <button type="submit" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2">
-                                                        <i class="icon-eye text-16 text-light-1"></i>
-                                                    </button>
-                                                </form>
-
+                                                <a href="{{ route('studio.show', $studio->id) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2" title="Voir">
+                                                    <i class="icon-eye text-16 text-light-1"></i>
+                                                </a>
 
                                                 <!-- Bouton Modifier -->
-                                                <a href="{{ route('dashboard.studio.edit', $studio->id) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2 ml-10">
+                                                <a href="{{ route('dashboard.studio.edit', $studio->id) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2 ml-10" title="Modifier">
                                                     <i class="icon-edit text-16 text-light-1"></i>
                                                 </a>
 
                                                 <!-- Bouton Supprimer -->
                                                 <form class="ml-10" action="{{ route('studio.destroy', $studio->id) }}" method="POST"
-                                                      onsubmit="return confirm('Are you sure you want to delete this studio?');">
+                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce studio ?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2">
+                                                    <button type="submit" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2" title="Supprimer">
                                                         <i class="icon-trash-2 text-16 text-light-1"></i>
                                                     </button>
                                                 </form>

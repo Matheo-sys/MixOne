@@ -1,17 +1,17 @@
 @extends('layouts.backendDB')
 
 @section('content')
-    <div class="row y-gap-20 justify-center items-end pb-60 lg:pb-40 md:pb-32">
+    <div class="row y-gap-20 justify-center items-end pb-40 lg:pb-30 md:pb-24">
         <div class="col-auto text-center">
-            <h1 class="text-40 lh-14 fw-700 mb-10">Dashboard</h1>
-            <div class="text-16 text-light-1">Suivez vos gains, votre argent en attente et l'activité récente de vos studios en un seul endroit.</div>
+            <h1 class="text-30 sm:text-26 lh-14 fw-700 mb-10">Dashboard</h1>
+            <div class="text-16 text-light-1">Suivez l'activité de vos studios en un clin d'œil.</div>
         </div>
     </div>
     <div class="row y-gap-30">
         <div class="col-xl-4 dashboard-stats-column">
             <div class="row y-gap-30">
                 <div class="col-12 mb-10">
-                    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+                    <div class="py-30 px-30 sm:px-20 rounded-4 bg-white shadow-3">
                         <div class="row y-gap-20 justify-between items-center">
                             <div class="col-auto">
                                 <div class="fw-500 lh-14">En attente</div>
@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="col-12 mb-10">
-                    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+                    <div class="py-30 px-30 sm:px-20 rounded-4 bg-white shadow-3">
                         <div class="row y-gap-20 justify-between items-center">
                             <div class="col-auto">
                                 <div class="fw-500 lh-14">Gains</div>
@@ -52,8 +52,8 @@
                     </div>
                 </div>
 
-                <div class="col-12">
-                    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+                <div class="col-12 text-center sm:text-left">
+                    <div class="py-30 px-30 sm:px-20 rounded-4 bg-white shadow-3">
                         <div class="row y-gap-20 justify-between items-center">
                             <div class="col-auto">
                                 <div class="fw-500 lh-14">Réservations</div>
@@ -73,8 +73,8 @@
         </div>
 
         <div class="col-xl-8">
-            <div class="py-30 px-30 rounded-4 bg-white shadow-3">
-                <div class="d-flex justify-between items-center mb-5">
+            <div class="py-30 px-30 sm:px-15 rounded-4 bg-white shadow-3">
+                <div class="d-flex justify-between items-center mb-15">
                     <h2 class="text-18 lh-1 fw-500">
                         Réservations Récentes
                     </h2>
@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="overflow-x-auto scroll-bar-1">
-                    <table class="table-2 col-12">
+                    <table class="table-2 col-12 table-responsive-cards">
                         <thead>
                         <tr>
                             <th>N°</th>
@@ -99,11 +99,11 @@
                         <tbody>
                         @foreach($reservations->sortByDesc('created_at')->take(6) as $index => $reservation)
                             <tr>
-                                <td>N°{{ $reservation->id }}</td>
-                                <td>{{ $reservation->user->email }}</td>
-                                <td class="fw-500">{{ number_format($reservation->price, 2) }}€</td>
-                                <td>{{ $reservation->status === 'Confirmée' ? number_format($reservation->price, 2).'€' : '0,00€' }}</td>
-                                <td>
+                                <td data-label="N°">N°{{ $reservation->id }}</td>
+                                <td data-label="Client">{{ $reservation->user->email }}</td>
+                                <td data-label="Total" class="fw-500">{{ number_format($reservation->price, 2) }}€</td>
+                                <td data-label="Payé">{{ $reservation->status === 'Confirmée' ? number_format($reservation->price, 2).'€' : '0,00€' }}</td>
+                                <td data-label="Statut">
                                     @php
                                         $statusClasses = [
                                             'Confirmée' => 'bg-blue-1-05',
@@ -112,11 +112,11 @@
                                             'En cours' => 'bg-blue-4'
                                         ];
                                     @endphp
-                                    <div class="rounded-100 py-4 text-center col-12 text-14 fw-500 {{ $statusClasses[$reservation->status] ?? 'bg-gray-3 text-gray-2' }}">
+                                    <div class="rounded-100 py-4 text-center col-12 sm:col-auto px-15 text-14 fw-500 {{ $statusClasses[$reservation->status] ?? 'bg-gray-3 text-gray-2' }}">
                                         {{ ucfirst($reservation->status) }}
                                     </div>
                                 </td>
-                                <td>{{ $reservation->created_at->format('d/m/Y') }}<br>{{ $reservation->created_at->format('H:i') }}</td>
+                                <td data-label="Date" class="text-right sm:text-left">{{ $reservation->created_at->format('d/m/Y') }} à {{ $reservation->created_at->format('H:i') }}</td>
                             </tr>
                         @endforeach
                         </tbody>

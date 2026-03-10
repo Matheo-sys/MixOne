@@ -627,17 +627,73 @@
 }
 
 /* Aspect ratio for studio cards on mobile (replaces ratio-1:1 to avoid huge squares) */
+/* Dashboard Mobile Responsiveness Utilities */
+@media (max-width: 991px) {
+  .dashboard__content {
+    padding: 20px 15px !important;
+  }
+
+  .tabs.-underline-2 .tabs__controls {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabs.-underline-2 .tabs__controls .col-auto {
+    flex: 0 0 auto;
+  }
+
+  /* Table to Card Transformation pattern */
+  .table-responsive-cards thead {
+    display: none;
+  }
+
+  .table-responsive-cards tbody,
+  .table-responsive-cards tr,
+  .table-responsive-cards td {
+    display: block;
+    width: 100%;
+  }
+
+  .table-responsive-cards tr {
+    margin-bottom: 15px;
+    border: 1px solid #eee !important;
+    border-radius: 8px;
+    padding: 15px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .table-responsive-cards td {
+    text-align: left;
+    padding: 8px 0 !important;
+    border: none !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .table-responsive-cards td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #051036;
+    margin-right: 10px;
+  }
+
+  .table-responsive-cards td:last-child {
+    justify-content: flex-start;
+    border-top: 1px solid #eee !important;
+    margin-top: 10px;
+    padding-top: 15px !important;
+  }
+}
+
 .mobile-card-image {
   aspect-ratio: 1 / 1;
 }
 
 @media (max-width: 767px) {
-  .mobile-card-image {
-    aspect-ratio: 4 / 3 !important;
-  }
-}
-
-@media (max-width: 500px) {
   .mobile-card-image {
     aspect-ratio: 4 / 3 !important;
   }
