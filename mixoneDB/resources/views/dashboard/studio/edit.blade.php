@@ -65,14 +65,14 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="number" step="0.01" name="hourly_rate" value="{{ old('hourly_rate', $studio->hourly_rate) }}" required>
                                         <label class="lh-1 text-16 text-light-1">Tarif horaire (€)</label>
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="number" name="min_hours" value="{{ old('min_hours', $studio->min_hours) }}" required>
                                         <label class="lh-1 text-16 text-light-1">Durée minimum (heures)</label>
@@ -98,34 +98,35 @@
                                 </div>
 
                                 <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="text" name="city" id="edit-input-city" value="{{ old('city', $studio->city) }}" required>
                                         <label class="lh-1 text-16 text-light-1">Ville</label>
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="text" name="zipcode" id="edit-input-zipcode" value="{{ old('zipcode', $studio->zipcode) }}" required>
                                         <label class="lh-1 text-16 text-light-1">Code Postal</label>
                                     </div>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="text" name="country" id="edit-input-country" value="{{ old('country', $studio->country) }}" required>
                                         <label class="lh-1 text-16 text-light-1">Pays</label>
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="text" name="latitude" id="edit-latitude" value="{{ old('latitude', $studio->latitude) }}" readonly>
                                         <label class="lh-1 text-16 text-light-1">Latitude</label>
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="text" name="longitude" id="edit-longitude" value="{{ old('longitude', $studio->longitude) }}" readonly>
                                         <label class="lh-1 text-16 text-light-1">Longitude</label>

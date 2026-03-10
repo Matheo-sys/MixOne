@@ -108,19 +108,19 @@
                                     <ul id="address-suggestions" class="absolute bg-white shadow-2 rounded-8 w-100 z-5" style="display: none; max-height: 250px; overflow-y: auto; list-style: none; padding: 0; margin: 5px 0 0 0; top: 100%; left: 0;">
                                     </ul>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-md-4 col-12">
                                     <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
                                         <input type="text" name="zipcode" id="input-zipcode" required value="{{ old('zipcode') }}">
                                         <label class="lh-1 text-16 text-light-1">Code postal</label>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-md-4 col-12">
                                     <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
                                         <input type="text" name="city" id="input-city" required value="{{ old('city') }}">
                                         <label class="lh-1 text-16 text-light-1">Ville</label>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-md-4 col-12">
                                     <div class="form-input @if($errors->has('address_not_found')) is-error @endif">
                                         <input type="text" name="country" id="input-country" required value="{{ old('country') ?? 'France' }}">
                                         <label class="lh-1 text-16 text-light-1">Pays</label>
@@ -136,7 +136,7 @@
                         <div class="col-xl-10">
                             <div class="text-18 fw-500 mb-10">Tarifs</div>
                             <div class="row x-gap-20 y-gap-20">
-                                <div class="col-6">
+                                <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="text" name="hourly_rate" required value="{{ old('hourly_rate') }}">
                                         <label class="lh-1 text-16 text-light-1">Tarif horaire</label>
@@ -147,10 +147,10 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="col-6">
+                                <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="text" name="min_hours" required value="{{ old('min_hours') }}">
-                                        <label class="lh-1 text-16 text-light-1">Heures minimum</label>
+                                        <label class="lh-1 text-16 text-light-1">Durée minimum (heures)</label>
                                     </div>
                                     @error('min_hours')
                                     <span class="text-danger" role="alert">
