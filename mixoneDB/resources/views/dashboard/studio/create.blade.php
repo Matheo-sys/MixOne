@@ -33,7 +33,7 @@
 
     <div class="py-30 px-30 sm:px-15 rounded-4 bg-white shadow-3">
         <div class="tabs -underline-2 js-tabs">
-            <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
+            <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 sm:x-gap-10 js-tabs-controls overflow-x-auto">
                 <div class="col-auto">
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button is-tab-el-active" data-tab-target=".-tab-item-1">1. Contenu</button>
                 </div>
@@ -53,7 +53,7 @@
 
             <form method="post" action="{{ route('studio.store') }}" enctype="multipart/form-data" class="js-ajax-form" id="studioCreateForm">
                 @csrf
-                <div class="tabs__content pt-30 js-tabs-content">
+                <div class="tabs__content pt-30 pb-40 js-tabs-content">
                     <div class="tabs__pane -tab-item-1 is-tab-el-active">
                         <div class="col-xl-10">
                             <div class="text-18 fw-500 mb-10">Studio Content</div>
@@ -168,7 +168,7 @@
                             <div class="text-18 fw-500 mb-10">Photos</div>
                             <div class="d-flex flex-wrap x-gap-20 y-gap-20">
                                 @for ($i = 1; $i <= 4; $i++)
-                                    <div class="d-flex flex-column align-items-center me-20 mb-20 ml-3">
+                                    <div class="d-flex flex-column align-items-center mb-20"> <!-- Nettoyage des marges -->
                                         <div class="d-flex ratio ratio-3:2 w-200 position-relative">
                                             @php
                                                 $imageField = "image{$i}";

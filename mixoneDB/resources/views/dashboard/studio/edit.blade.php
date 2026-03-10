@@ -28,7 +28,7 @@
 
     <div class="py-30 px-30 sm:px-15 rounded-4 bg-white shadow-3">
         <div class="tabs -underline-2 js-tabs">
-            <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
+            <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 sm:x-gap-10 js-tabs-controls overflow-x-auto">
                 <div class="col-auto">
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button is-tab-el-active" data-tab-target=".-tab-item-1">Informations Générales</button>
                 </div>
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <div class="tabs__content pt-30 js-tabs-content">
+            <div class="tabs__content pt-30 pb-40 js-tabs-content">
                 <form action="{{ route('dashboard.studio.update', $studio->id) }}" method="POST" enctype="multipart/form-data" class="js-ajax-form" id="studioEditForm">
                     @csrf
                     @method('PUT')
@@ -97,7 +97,6 @@
                                     </ul>
                                 </div>
 
-                                <div class="col-md-6">
                                 <div class="col-md-6 col-12">
                                     <div class="form-input">
                                         <input type="text" name="city" id="edit-input-city" value="{{ old('city', $studio->city) }}" required>
@@ -142,15 +141,15 @@
                         </div>
                     </div>
 
-                    <div class="tabs__pane -tab-item-3 mt-30 ml-30 mb-30">
-                        <div class="col-xl-12">
+                    <div class="tabs__pane -tab-item-3">
+                        <div class="col-xl-12 mt-30">
                             <div class="d-flex flex-wrap x-gap-20 y-gap-20"> <!-- Utilisation de flexbox pour aligner les éléments en ligne -->
                                 @for ($i = 1; $i <= 4; $i++)
                                     @php
                                         $imageField = "image{$i}";
                                         $removeField = "remove_image{$i}";
                                     @endphp
-                                    <div class="d-flex flex-column align-items-center me-20 mb-20 ml-3"> <!-- Ajout de `me-20` pour l'espacement horizontal -->
+                                    <div class="d-flex flex-column align-items-center mb-20"> <!-- Nettoyage des marges -->
                                         <div class="d-flex ratio ratio-3:2 w-200 position-relative">
                                             <img id="studioImage{{ $i }}" src="{{ $studio->$imageField ? asset('storage/' . $studio->$imageField) : asset('media/img/backgrounds/11.jpg') }}" alt="Image {{ $i }}" class="img-ratio rounded-4">
                                             <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
