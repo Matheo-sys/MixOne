@@ -17,8 +17,31 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
 
-    <title>MixOne</title>
+    <!-- SEO Meta Tags -->
+    <title>@yield('title', 'MixOne | Réservez le studio de musique idéal près de chez vous')</title>
+    <meta name="description" content="@yield('meta_description', 'MixOne est la plateforme leader pour trouver et réserver des studios d\'enregistrement, de mixage et de mastering. Trouvez le meilleur équipement au meilleur prix.')">
+    <meta name="keywords" content="studio musique, enregistrement, mixage, mastering, location studio, MixOne">
+    <meta name="author" content="MixOne">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('title', 'MixOne | Réservez le studio de musique idéal')">
+    <meta property="og:description" content="@yield('meta_description', 'Réservez votre studio de musique en quelques clics sur MixOne.')">
+    <meta property="og:image" content="{{ asset('media/img/general/og-image.png') }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="@yield('title', 'MixOne | Réservez le studio de musique idéal')">
+    <meta property="twitter:description" content="@yield('meta_description', 'Réservez votre studio de musique en quelques clics sur MixOne.')">
+    <meta property="twitter:image" content="{{ asset('media/img/general/og-image.png') }}">
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Structured Data (JSON-LD) -->
+    @yield('structured_data')
 </head>
 
 <body>

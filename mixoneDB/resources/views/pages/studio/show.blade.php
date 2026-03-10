@@ -1,5 +1,34 @@
 @extends('layouts.backend')
 
+@section('title', $studio->name . ' | Studio de Musique à ' . $studio->city . ' | MixOne')
+@section('meta_description', 'Réservez votre session au studio ' . $studio->name . ' à ' . $studio->city . '. Tarif : ' . $studio->hourly_rate . '€/h. Équipements professionnels et confort garantis.')
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "{{ $studio->name }}",
+  "description": "{{ $studio->description ?? 'Studio professionnel de musique' }}",
+  "url": "{{ url()->current() }}",
+  "telephone": "{{ $studio->phone ?? '' }}",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{ $studio->address }}",
+    "addressLocality": "{{ $studio->city }}",
+    "addressCountry": "FR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": {{ $studio->latitude }},
+    "longitude": {{ $studio->longitude }}
+  },
+  "priceRange": "{{ $studio->hourly_rate }}€/h",
+  "image": "{{ $studio->image1 ? asset('storage/' . $studio->image1) : asset('media/img/backgrounds/11.jpg') }}"
+}
+</script>
+@endsection
+
 @section('content')
 
     <section class="pt-40">
