@@ -20,7 +20,7 @@
                         <a href="{{ route('studio.show', $studio) }}" class="hotelsCard -type-1 ">
                             <div class="hotelsCard__image">
 
-                                <div class="cardImage ratio ratio-1:1">
+                                <div class="cardImage mobile-card-image ratio">
                                     <div class="cardImage__content">
                                         <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
                                             <div class="swiper-wrapper">
@@ -118,7 +118,7 @@
             </div>
 
 
-            <div class="d-flex x-gap-15 items-center justify-center sm:justify-start pt-40 sm:pt-20">
+            <div class="d-flex x-gap-15 items-center justify-center pt-40 sm:pt-20">
                 <div class="col-auto">
                     <button class="d-flex items-center text-24 arrow-left-hover js-hotels-prev">
                         <i class="icon icon-arrow-left"></i>

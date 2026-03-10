@@ -9,9 +9,11 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   background-color: #fff;
 }
+
 .booking-form-container .form-group {
   margin-bottom: 25px;
 }
+
 .booking-form-container .form-control {
   border: 1px solid #E4E5E7;
   width: 100%;
@@ -20,6 +22,7 @@
   border-radius: 4px;
   transition: all 0.3s ease-in-out;
 }
+
 .booking-form-container .form-control:focus {
   border-color: #3554D1;
   box-shadow: 0 0 0 2px rgba(53, 84, 209, 0.1);
@@ -38,6 +41,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .counter-btn:hover {
   background: #F5F7FA;
   border-color: #c9cbcf;
@@ -48,6 +52,7 @@
   padding: 15px 20px;
   border-radius: 4px;
 }
+
 .searchMenu-guests__field {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
@@ -58,14 +63,17 @@
   font-size: 12px;
   font-weight: 500;
 }
+
 .status-badge.-confirmed {
   background-color: rgba(19, 53, 5, 0.1);
   color: #133505;
 }
+
 .status-badge.-pending {
   background-color: rgba(245, 155, 11, 0.1);
   color: #F59B0B;
 }
+
 .status-badge.-cancelled {
   background-color: rgba(217, 59, 62, 0.1);
   color: #D93B3E;
@@ -78,11 +86,13 @@
   border: 1px solid transparent;
   transition: all 0.3s ease-in-out;
 }
+
 .alert.alert-success {
   background-color: #dff0d8;
   border-color: #d6e9c6;
   color: #3c763d;
 }
+
 .alert.alert-danger {
   background-color: #f2dede;
   border-color: #ebccd1;
@@ -97,6 +107,7 @@
   align-items: flex-start;
   text-align: left !important;
 }
+
 .form-input input,
 .form-input textarea {
   width: 100%;
@@ -109,14 +120,17 @@
   color: #051036;
   height: 50px;
 }
+
 .form-input input:focus,
 .form-input textarea:focus {
   border-color: #333;
   outline: none;
 }
+
 .form-input textarea {
   height: auto;
 }
+
 .form-input label {
   display: block;
   margin-bottom: 8px;
@@ -165,10 +179,12 @@
   font-size: 24px;
   position: relative;
 }
+
 .messaging-button:hover {
   transform: scale(1.05);
   background-color: rgb(73.7701612903, 101.5826612903, 213.7298387097);
 }
+
 .messaging-button .notification-badge {
   position: absolute;
   top: 0;
@@ -195,6 +211,7 @@
   overflow: hidden;
   border: 1px solid #eee;
 }
+
 .messaging-window__header {
   background: #3554D1;
   padding: 15px 20px;
@@ -202,6 +219,7 @@
   justify-content: space-between;
   align-items: center;
 }
+
 .messaging-window__body {
   flex: 1;
   display: flex;
@@ -214,6 +232,7 @@
   flex: 1;
   overflow-y: auto;
 }
+
 .conversation-list .conversation-item {
   padding: 15px 20px;
   display: flex;
@@ -222,9 +241,11 @@
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .conversation-list .conversation-item:hover {
   background: #f9f9f9;
 }
+
 .conversation-list .conversation-item.active {
   background: #f0f7ff;
 }
@@ -235,6 +256,7 @@
   flex-direction: column;
   height: 100%;
 }
+
 .active-chat__header {
   padding: 12px 20px;
   border-bottom: 1px solid #eee;
@@ -258,18 +280,21 @@
   font-size: 14px;
   position: relative;
 }
+
 .message-bubble.sent {
   align-self: flex-end;
   background: #3554D1;
   color: white;
   border-bottom-right-radius: 2px;
 }
+
 .message-bubble.received {
   align-self: flex-start;
   background: #eee;
   color: #051036;
   border-bottom-left-radius: 2px;
 }
+
 .message-bubble .message-time {
   font-size: 10px;
   opacity: 0.7;
@@ -284,6 +309,7 @@
   gap: 10px;
   background: white;
 }
+
 .message-input-area textarea {
   flex: 1;
   border: 1px solid #ddd;
@@ -293,10 +319,12 @@
   resize: none;
   font-size: 14px;
 }
+
 .message-input-area textarea:focus {
   outline: none;
   border-color: #3554D1;
 }
+
 .message-input-area .send-btn {
   width: 40px;
   height: 40px;
@@ -310,6 +338,7 @@
   cursor: pointer;
   transition: transform 0.2s;
 }
+
 .message-input-area .send-btn:hover {
   transform: scale(1.1);
 }
@@ -322,11 +351,13 @@
     height: 100vh;
     border-radius: 0;
   }
+
   .messaging-widget {
     bottom: 20px;
     right: 20px;
   }
 }
+
 .mainSearch {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -339,9 +370,11 @@
   position: relative;
   z-index: 10;
 }
+
 .mainSearch:hover {
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
 }
+
 .mainSearch__grid {
   display: grid;
   grid-template-columns: 1fr 200px 180px;
@@ -349,6 +382,7 @@
   align-items: flex-end;
   padding: 5px 15px;
 }
+
 @media (max-width: 992px) {
   .mainSearch__grid {
     grid-template-columns: 1fr 1fr;
@@ -356,17 +390,20 @@
     gap: 20px;
   }
 }
+
 @media (max-width: 576px) {
   .mainSearch__grid {
     grid-template-columns: 1fr;
   }
 }
+
 .mainSearch__item {
   display: flex;
   flex-direction: column;
   width: 100%;
   position: relative;
 }
+
 .mainSearch__item label {
   display: block;
   margin-bottom: 6px;
@@ -375,6 +412,7 @@
   font-size: 14px;
   padding-left: 2px;
 }
+
 .mainSearch__input {
   display: flex;
   align-items: center;
@@ -386,11 +424,13 @@
   padding: 0 15px;
   transition: all 0.2s ease;
 }
+
 .mainSearch__input:focus-within {
   background-color: white;
   border-color: #3554D1;
   box-shadow: 0 0 0 3px rgba(53, 84, 209, 0.1);
 }
+
 .mainSearch__input input {
   width: 100% !important;
   height: 100% !important;
@@ -401,15 +441,19 @@
   color: #051036 !important;
   box-shadow: none !important;
 }
+
 .mainSearch__input input:focus {
   outline: none !important;
 }
+
 .mainSearch__input input::-moz-placeholder {
   color: #7d8da1;
 }
+
 .mainSearch__input input::placeholder {
   color: #7d8da1;
 }
+
 .mainSearch__input #geolocate-btn {
   background: transparent;
   border: none;
@@ -422,14 +466,17 @@
   font-size: 18px;
   transition: transform 0.2s;
 }
+
 .mainSearch__input #geolocate-btn:hover {
   transform: scale(1.1);
 }
+
 .mainSearch__button {
   display: flex;
   align-items: flex-end;
   height: 100%;
 }
+
 .mainSearch__button button {
   width: 100%;
   height: 54px;
@@ -444,20 +491,24 @@
   background-color: #3554D1 !important;
   color: white !important;
 }
+
 .mainSearch__button button:hover {
   background-color: rgb(43.8669354839, 73.4294354839, 192.6330645161) !important;
   transform: translateY(-1px);
   box-shadow: 0 5px 15px rgba(53, 84, 209, 0.2);
 }
+
 .mainSearch__button button i {
   font-size: 18px;
   margin-right: 10px;
 }
+
 @media (max-width: 992px) {
   .mainSearch__button {
     grid-column: span 2;
   }
 }
+
 @media (max-width: 576px) {
   .mainSearch__button {
     grid-column: span 1;
@@ -477,6 +528,7 @@
   left: 0;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
+
 .hours-menu.hidden {
   display: none !important;
 }
@@ -484,6 +536,7 @@
 .wishlist-toggle {
   background-color: white !important;
 }
+
 .wishlist-toggle.clicked {
   transform: scale(1.4);
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -496,6 +549,7 @@
   stroke: #999;
   stroke-width: 1px;
 }
+
 .icon-heart.text-blue-1 {
   color: #3554D1 !important;
   -webkit-text-stroke: 1px #3554D1;
@@ -504,13 +558,87 @@
 }
 
 /* Form inputs styling */
-.custom-input input, .custom-input textarea {
+.custom-input input,
+.custom-input textarea {
   background-color: #f8f9fa !important;
   border: 1px solid #e9ecef !important;
   transition: all 0.3s ease !important;
 }
-.custom-input input:focus, .custom-input textarea:focus {
+
+.custom-input input:focus,
+.custom-input textarea:focus {
   background-color: #fff !important;
   border-color: var(--color-blue-1) !important;
   box-shadow: 0 0 0 4px rgba(53, 84, 209, 0.1) !important;
+}
+
+/* Correctif: Empêche le contenu de passer sous le header flottant sur mobile pour toutes les pages SAUF l'accueil */
+@media (max-width: 991px) {
+  main.is-not-home {
+    padding-top: 90px !important;
+  }
+}
+
+/* Stylish segmented button for profile selection (Artiste / Studio) */
+.profile-selection-container {
+  display: flex;
+  background-color: #f5f7fa;
+  border-radius: 12px;
+  padding: 6px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  gap: 8px;
+}
+
+.profile-btn {
+  flex: 1;
+  text-align: center;
+  padding: 14px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 16px;
+  color: #4a5568;
+  background-color: transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-btn i {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.hidden-radio {
+  display: none;
+}
+
+.hidden-radio:checked+.profile-btn {
+  background-color: white;
+  color: #3554D1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-color: #e2e8f0;
+  font-weight: 600;
+}
+
+/* Aspect ratio for studio cards on mobile (replaces ratio-1:1 to avoid huge squares) */
+.mobile-card-image {
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 767px) {
+  .mobile-card-image {
+    aspect-ratio: 4 / 3 !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .mobile-card-image {
+    aspect-ratio: 4 / 3 !important;
+  }
 }

@@ -31,7 +31,7 @@
             @else
                 @if(count($favoriteStudios) > 3)
                     <!-- Navigation horizontale pour le carrousel -->
-                    <div class="d-flex x-gap-15 items-center justify-center sm:justify-start pt-20 pb-30">
+                    <div class="d-flex x-gap-15 items-center justify-center pt-20 pb-30">
                         <div class="col-auto">
                             <button class="d-flex items-center text-24 arrow-left-hover js-wishlist-prev">
                                 <i class="icon icon-arrow-left"></i>

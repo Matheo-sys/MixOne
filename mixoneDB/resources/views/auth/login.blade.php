@@ -43,7 +43,7 @@
                                 </div>
 
                                 <div class="col-12 mt-3 d-flex justify-content-center">
-                                    <button type="submit" class="button py-20 -dark-1 bg-blue-1 text-white mx-auto d-block" style="width: 530px;">
+                                    <button type="submit" class="button py-20 -dark-1 bg-blue-1 text-white mx-auto d-block" style="width: 100%; max-width: 530px;">
                                         Se connecter<span class="icon-arrow-top-right ml-15"></span>
                                     </button>
                                 </div>

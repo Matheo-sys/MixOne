@@ -231,17 +231,78 @@
 }
 
 @media (max-width: 576px) {
-    .messaging-window {
-        bottom: 0;
-        right: 0;
-        width: 100vw;
-        height: 100vh;
-        border-radius: 0;
-    }
-
     .messaging-widget {
         bottom: 20px;
         right: 20px;
+    }
+
+    /* Masquer le bouton flottant quand la fenêtre est ouverte */
+    .messaging-widget:has(.messaging-window:not(.d-none)) .messaging-button {
+        display: none;
+    }
+
+    .messaging-window {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100% !important;
+        height: 100% !important;
+        height: 100dvh !important;
+        border-radius: 0;
+        margin: 0;
+        z-index: 10001;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .messaging-window__header {
+        height: 70px;
+        padding: 0 20px;
+        flex-shrink: 0;
+    }
+
+    .messaging-window__body {
+        height: calc(100% - 70px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .message-history {
+        padding: 20px 15px;
+    }
+
+    .message-bubble {
+        max-width: 85%;
+        font-size: 15px;
+        padding: 12px 16px;
+    }
+
+    .message-input-area {
+        padding: 15px;
+        padding-bottom: calc(15px + env(safe-area-inset-bottom, 0px));
+        background: #fff;
+        border-top: 1px solid #eee;
+    }
+
+    .message-input-area textarea {
+        font-size: 16px; /* Empêche le zoom auto sur iPhone */
+        height: 45px;
+        padding: 10px 15px;
+    }
+
+    .active-chat__header {
+        height: 60px;
+        padding: 0 15px;
+    }
+
+    #back-to-list {
+        padding-left: 0 !important;
+    }
+
+    #back-to-list i {
+        font-size: 18px !important;
     }
 }
 </style>

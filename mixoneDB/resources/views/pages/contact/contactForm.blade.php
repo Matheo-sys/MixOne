@@ -1,4 +1,4 @@
-<section class="relative layout-pt-xl layout-pb-xl mt-90 flex-center" style="min-height: 800px; background-image: url('{{ asset('media/img/backgrounds/11.jpg') }}'); background-size: cover; background-position: center; background-attachment: fixed;">
+<section class="relative layout-pt-xl layout-pb-xl flex-center" style="min-height: 800px; background-image: url('{{ asset('media/img/backgrounds/11.jpg') }}'); background-size: cover; background-position: center; background-attachment: fixed;">
     <!-- Dark gradient overlay for readability -->
     <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(15, 23, 42, 0.4) 100%);"></div>
     

@@ -35,13 +35,13 @@
     </div>
     @include('components.header', ['whiteHeader' => isset($whiteHeader) ? $whiteHeader : true])
 
-    <main>
+    <main class="{{ isset($isHome) && $isHome ? 'is-home-page' : 'is-not-home' }}">
         @yield('content')
 
         @include('components.footer')
 
         @include('components.lang-selector')
-</main>
+    </main>
 
 
 
@@ -64,7 +64,9 @@
 </script>
 <script src="{{ asset('vendor/js/main.js') }}"></script>
     <div id="toast-container" style="position:fixed;top:20px;right:20px;z-index:9999;pointer-events:none;"></div>
-    @include('components.message-widget')
+    @auth
+        @include('components.message-widget')
+    @endauth
     <script src="{{ asset('js/ajax-forms.js') }}"></script>
     @stack('scripts')
 </body>

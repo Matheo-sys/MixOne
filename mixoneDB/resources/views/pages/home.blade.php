@@ -1,3 +1,7 @@
+@php
+    $whiteHeader = false;
+    $isHome = true;
+@endphp
 @extends('layouts.backend')
 
 @section('content')

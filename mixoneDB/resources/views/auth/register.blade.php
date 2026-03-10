@@ -19,12 +19,18 @@
                                 @csrf
 
                                 <div>
-                                    <div class="col-12 d-flex gap-3 justify-content-center mt-3 mb-15">
-                                        <input type="radio" id="artist" name="profile" value="artist" class="hidden-radio">
-                                        <label for="artist" class="profile-btn">Artiste</label>
+                                    <div class="col-12 mt-3 mb-15">
+                                        <div class="profile-selection-container">
+                                            <input type="radio" id="artist" name="profile" value="artist" class="hidden-radio" checked>
+                                            <label for="artist" class="profile-btn">
+                                                <i class="icon-mic"></i> Artiste
+                                            </label>
 
-                                        <input type="radio" id="studio" name="profile" value="studio" class="hidden-radio">
-                                        <label for="studio" class="profile-btn">Studio</label>
+                                            <input type="radio" id="studio" name="profile" value="studio" class="hidden-radio">
+                                            <label for="studio" class="profile-btn">
+                                                <i class="icon-headphones"></i> Studio
+                                            </label>
+                                        </div>
                                     </div>
 
                                     <div>
@@ -104,7 +110,7 @@
 
 
                                 <div class="col-12 mt-3 d-flex justify-content-center">
-                                    <button type="submit" class="button py-20 -dark-1 bg-blue-1 text-white mx-auto d-block" style="width: 530px;">
+                                    <button type="submit" class="button py-20 -dark-1 bg-blue-1 text-white mx-auto d-block" style="width: 100%; max-width: 530px;">
                                         S'inscrire<span class="icon-arrow-top-right ml-15"></span>
                                     </button>
                                 </div>

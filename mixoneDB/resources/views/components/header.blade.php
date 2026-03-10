@@ -1,6 +1,5 @@
 @php
-$headerClass    = $whiteHeader ? 'data-add-bg="" class="header bg-white js-header"' :
-                                    'data-add-bg="bg-dark-1" class="header bg-green js-header"';
+    $headerClass = $whiteHeader ? 'data-add-bg="" class="header bg-white js-header"' : 'data-add-bg="bg-dark-1" class="header js-header"';
     $btn1Class      = $whiteHeader ? 'bg-dark-1 text-white' : 'bg-white text-dark-1';
     $btn2Class      = $whiteHeader ? '-outline-dark-1 text-back' : 'border-white text-white';
 @endphp
@@ -36,23 +35,49 @@ $headerClass    = $whiteHeader ? 'data-add-bg="" class="header bg-white js-heade
                                         </a>
                                     </li>
 
+                                    @auth
+                                    <li>
+                                        <a href="/dashboard">Tableau de Bord</a>
+                                    </li>
+                                    @endauth
+
                                     <li>
                                         <a href="/about">
                                             À propos
                                         </a>
                                     </li>
 
-                                    @auth()
-                                    <li>
-                                        <a href="/dashboard">
-                                            <span class="mr-10">Tableau de Bord</span>
-                                        </a>
-                                    </li>
-                                    @endif
-
                                     <li>
                                         <a href="/contact">Contacts</a>
                                     </li>
+
+                                    @guest
+                                        <li class="mobile-only-link border-top-light pt-10 mt-10">
+                                            <a href="/login">Inscription / Se connecter</a>
+                                        </li>
+                                        <li class="mobile-only-link">
+                                            <a href="/become-expert" class="text-blue-1 fw-600">Devenez un Studio Confirmé</a>
+                                        </li>
+                                    @endguest
+
+                                    @auth()
+                                        <li class="mobile-only-link border-top-light pt-10 mt-10">
+                                            <a href="/dashboard">
+                                                <span class="mr-10">Tableau de Bord</span>
+                                            </a>
+                                        </li>
+                                        <li class="mobile-only-link">
+                                            <a href="/"
+                                               onclick="event.preventDefault();
+                                               document.getElementById('logout-form-mobile').submit();"
+                                               class="text-red-1">
+                                                Déconnexion
+                                            </a>
+                                            <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" class="d-none">
+                                                @csrf
+                                            </form>
+                                        </li>
+                                    @endauth
                                 </ul>
                             </div>
 
@@ -71,33 +96,35 @@ $headerClass    = $whiteHeader ? 'data-add-bg="" class="header bg-white js-heade
 
 
                     @guest
-
-                    <div class="d-flex items-center ml-20 is-menu-opened-hide md:d-none">
-                        <a href="/become-expert" class="button px-30 fw-400 text-14 -white {!! $btn1Class !!} h-50">Devenez un Studio Confirmé</a>
-                        <a href="/login" class="button px-30 fw-400 text-14 -md -blue-1 {!! $btn2Class !!} -outline-white h-50 ml-20">Inscription / Se connecter</a>
-                    </div>
-
-                    <div class="d-none xl:d-flex x-gap-20 items-center pl-30 {{ $whiteHeader ? 'text-black' : 'text-white' }} data-x="header-mobile-icons" data-x-toggle="text-white">
-                        <div><a href="/login" class="d-flex items-center icon-user text-inherit text-22"></a></div>
-                        <div><button class="d-flex items-center icon-menu text-inherit text-20" data-x-click="html, header, header-logo, header-mobile-icons, mobile-menu"></button></div>
-                    </div>
+                        <div class="d-flex items-center ml-20 is-menu-opened-hide desktop-only-header">
+                            <a href="/become-expert" class="button px-30 fw-400 text-14 -white {!! $btn1Class !!} h-50">Devenez un Studio Confirmé</a>
+                            <a href="/login" class="button px-30 fw-400 text-14 -md -blue-1 {!! $btn2Class !!} -outline-white h-50 ml-20">Inscription / Se connecter</a>
+                        </div>
                     @else
-                        <div class="d-flex items-center ml-20 is-menu-opened-hide md:d-none">
-                            <a href="/"
-                               onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();"
+                        <div class="d-flex items-center ml-20 is-menu-opened-hide desktop-only-header">
+                            <a href="/" 
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
                                class="button px-30 fw-400 text-14 -md -blue-1 {!! $btn2Class !!} -outline-white h-50 ml-20">Déconnexion</a>
                         </div>
-
-                        <div class="d-none xl:d-flex x-gap-20 items-center pl-30 {{ $whiteHeader ? 'text-black' : 'text-white' }}" data-x="header-mobile-icons" data-x-toggle="text-white">
-                            <div><a href="/dashboard" class="d-flex items-center icon-user text-inherit text-22"></a></div>
-                            <div><button class="d-flex items-center icon-menu text-inherit text-20" data-x-click="html, header, header-logo, header-mobile-icons, mobile-menu"></button></div>
-                        </div>
-
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
-                    @endif
+                    @endguest
+
+                    <style>
+                        @media (max-width: 1199px) { 
+                            .mobile-nav-icons { display: flex !important; } 
+                            .desktop-only-header { display: none !important; }
+                        } 
+                        @media (min-width: 1200px) { 
+                            .mobile-nav-icons { display: none !important; } 
+                            .mobile-only-link { display: none !important; } 
+                            .desktop-only-header { display: flex !important; }
+                        }
+                    </style>
+                    <div class="mobile-nav-icons x-gap-20 items-center pl-30 {{ $whiteHeader ? 'text-black' : 'text-white' }}" data-x="header-mobile-icons" data-x-toggle="text-white">
+                        <div><button class="d-flex items-center icon-menu text-inherit text-20" data-x-click="html, header, header-logo, header-mobile-icons, mobile-menu"></button></div>
+                    </div>
                 </div>
             </div>
 

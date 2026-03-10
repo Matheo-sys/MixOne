@@ -1,4 +1,4 @@
-<section class="pt-40 pb-40 bg-light-2 mt-90">
+<section class="pt-40 pb-40 bg-light-2">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -58,7 +58,17 @@
 <section class="layout-pt-md layout-pb-lg">
     <div class="container">
         <div class="row y-gap-30">
-            <div class="col-xl-3 col-lg-4 lg:d-none">
+            <div class="col-xl-3 col-lg-4 desktop-sidebar">
+                <style>
+                    @media (max-width: 1199px) { 
+                        .desktop-sidebar { display: none !important; } 
+                        .mobile-filter-btn { display: flex !important; }
+                    }
+                    @media (min-width: 1200px) {
+                        .desktop-sidebar { display: block !important; }
+                        .mobile-filter-btn { display: none !important; }
+                    }
+                </style>
                 <aside class="sidebar y-gap-40">
                     <div class="sidebar__item -no-border">
                         <div class="flex-center ratio ratio-15:9 js-lazy" data-bg={{asset("media/img/general/map.png")}}>
@@ -220,40 +230,81 @@
 
                             </div>
 
-                            <div class="col-auto d-none lg:d-block">
-
+                            <div class="col-auto mobile-filter-btn">
+                                <button data-x-click="filterPopup" class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1">
+                                    <i class="icon-up-down text-14 mr-10"></i>
+                                    Filtrer / Carte
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="filterPopup bg-white" data-x="filterPopup" data-x-toggle="-is-active">
-                    <aside class="sidebar -mobile-filter">
+                    <aside class="sidebar -mobile-filter px-20 py-20 pb-100">
                         <div data-x-click="filterPopup" class="-icon-close">
                             <i class="icon-close"></i>
                         </div>
 
                         <div class="sidebar__item -no-border">
-                            <h5 class="text-18 fw-500 mb-10">Type of Place</h5>
-                            <div class="sidebar-checkbox">
-                                <div class="row y-gap-10 items-center justify-between">
-                                    <div class="col-auto">
-                                        <div class="d-flex items-center">
-                                            <div class="form-checkbox ">
-                                                <input type="checkbox" name="name">
-                                                <div class="form-checkbox__mark">
-                                                    <div class="form-checkbox__icon icon-check"></div>
-                                                </div>
-                                            </div>
-                                            <div class="text-15 ml-10">Apartments</div>
+                            <div class="flex-center ratio ratio-15:9 js-lazy" data-bg={{asset("media/img/general/map.png")}}>
+                                <button type="button" class="button py-15 px-24 -blue-1 bg-white text-dark-1 absolute" onclick="document.getElementById('openMapBtn').click()">
+                                    <i class="icon-destination text-22 mr-10"></i>
+                                    Regarder sur la carte
+                                </button>
+                            </div>
+                        </div>
+
+                        <form action="{{ route('studio_list') }}" method="GET">
+                            {{-- Preserve search params --}}
+                            <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
+                            <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
+                            <input type="hidden" name="city" value="{{ request('city', '') }}">
+                            <input type="hidden" name="min_hours" value="{{ request('min_hours', '') }}">
+                            <input type="hidden" name="sort_by" value="{{ request('sort_by', 'distance') }}">
+                            <input type="hidden" name="sort_direction" value="{{ request('sort_direction', 'asc') }}">
+
+                            <div class="sidebar__item">
+                                <h5 class="text-18 fw-500 mb-15">Périmètre</h5>
+                                <div class="js-price-rangeSlider">
+                                    <div class="d-flex justify-between mb-20">
+                                        <div class="text-15 text-dark-1">
+                                            <span class="js-lower">0km</span>
+                                            -
+                                            <span class="js-upper-mobile">{{ request()->input('distance', 35) }}km</span>
                                         </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <div class="text-15 text-light-1">92</div>
+                                    <div class="px-5">
+                                        <input type="range" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="slider w-100" oninput="document.querySelector('.js-upper-mobile').textContent = this.value + 'km'">
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="sidebar__item mt-30">
+                                <h5 class="text-18 fw-500 mb-15">Équipements</h5>
+                                <div class="row y-gap-8" style="max-height: 400px; overflow-y: auto;">
+                                    @foreach($equipListFlat as $key => $label)
+                                        <div class="col-12">
+                                            <div class="d-flex items-center">
+                                                <div class="form-checkbox">
+                                                    <input type="checkbox" name="equipment[]" value="{{ $key }}" id="m_filter_{{ $key }}" {{ in_array($key, $selectedEquipment) ? 'checked' : '' }}>
+                                                    <div class="form-checkbox__mark">
+                                                        <div class="form-checkbox__icon icon-check"></div>
+                                                    </div>
+                                                </div>
+                                                <label class="text-15 ml-10" for="m_filter_{{ $key }}">{{ $label }}</label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="mt-30 pb-30">
+                                <button type="submit" class="button -dark-1 h-60 px-35 col-12 bg-blue-1 text-white">
+                                    Appliquer les filtres
+                                </button>
+                            </div>
+                        </form>
                     </aside>
                 </div>
 
@@ -261,9 +312,9 @@
                     <!-- Boucle sur les studios comme dans le deuxième code -->
                     @foreach($studios as $studio)
                         <div class="border-top-light pt-20 mb-20">
-                            <div class="row x-gap-20 y-gap-20">
+                            <div class="row x-gap-20 y-gap-20 mobile-studio-card">
                                 <div class="col-md-auto">
-                                    <div class="cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4">
+                                    <div class="cardImage mobile-card-image ratio w-250 md:w-1/1 rounded-4">
                                         <div class="cardImage__content">
                                             <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
                                                 <div class="swiper-wrapper">
