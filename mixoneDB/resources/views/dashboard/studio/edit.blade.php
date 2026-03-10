@@ -30,7 +30,7 @@
         <div class="tabs -underline-2 js-tabs">
             <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 sm:x-gap-10 js-tabs-controls overflow-x-auto">
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button is-tab-el-active" data-tab-target=".-tab-item-1">Informations Générales</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button is-tab-el-active" data-tab-target=".-tab-item-1">Contenu</button>
                 </div>
                 <div class="col-auto">
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-2">Localisation</button>
@@ -39,7 +39,7 @@
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-3">Photos</button>
                 </div>
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">Équipements</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">Matériel</button>
                 </div>
             </div>
 
@@ -179,8 +179,8 @@
 
                     <div class="tabs__pane -tab-item-4">
                         <div class="col-xl-11">
-                            <div class="text-18 fw-500 mb-5">Équipements du Studio</div>
-                            <div class="text-14 text-light-1 mb-25">Cochez les équipements disponibles dans votre studio d'enregistrement.</div>
+                            <div class="text-18 fw-500 mb-5">Matériel du Studio</div>
+                            <div class="text-14 text-light-1 mb-25">Cochez le matériel disponible dans votre studio d'enregistrement.</div>
 
                             @php
                             $currentEquipment = $studio->equipment ?? [];
