@@ -2,7 +2,7 @@
     <div data-anim-wrap class="container">
         <div class="row y-gap-40 justify-between">
             <div data-anim-child="slide-up delay-1" class="col-xl-5 col-lg-6">
-                <h2 class="text-30">Que disent nos clients<br> sur nous ?</h2>
+                <h2 class="text-30">Que disent nos clients<br class="d-none md:d-block"> sur nous ?</h2>
                 <p class="mt-20">Super expérience de réservation ! Le site est très facile à utiliser, et j'ai trouvé rapidement le studio parfait pour mes besoins. Les informations étaient claires et précises, et la réservation s'est faite en quelques clics. Je recommande vivement !</p>
 
                 <div class="row y-gap-30 pt-60 lg:pt-40">

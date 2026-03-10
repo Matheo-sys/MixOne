@@ -15,13 +15,13 @@
             </div>
 
             <div class="col-auto">
-                <div class="single-field -w-410 d-flex x-gap-10 y-gap-20">
-                    <div>
-                        <input class="bg-white h-60" type="text" placeholder="Your Email">
+                <div class="single-field -w-410 d-flex flex-wrap x-gap-10 y-gap-20">
+                    <div class="col-12 col-sm-auto flex-grow-1">
+                        <input class="bg-white h-60 w-100 px-20 rounded-4" type="text" placeholder="Your Email">
                     </div>
 
-                    <div>
-                        <button class="button -md h-60 bg-blue-1 text-white">S'abonner</button>
+                    <div class="col-12 col-sm-auto">
+                        <button class="button -md h-60 w-100 bg-blue-1 text-white">S'abonner</button>
                     </div>
                 </div>
             </div>

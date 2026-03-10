@@ -90,7 +90,8 @@ $headerClass    = $whiteHeader ? 'data-add-bg="" class="header bg-white js-heade
                         </div>
 
                         <div class="d-none xl:d-flex x-gap-20 items-center pl-30 {{ $whiteHeader ? 'text-black' : 'text-white' }}" data-x="header-mobile-icons" data-x-toggle="text-white">
-                            <div><a href="#" class="d-flex items-center icon-user text-inherit text-22"></a></div>
+                            <div><a href="/dashboard" class="d-flex items-center icon-user text-inherit text-22"></a></div>
+                            <div><button class="d-flex items-center icon-menu text-inherit text-20" data-x-click="html, header, header-logo, header-mobile-icons, mobile-menu"></button></div>
                         </div>
 
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
