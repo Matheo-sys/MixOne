@@ -1,4 +1,4 @@
-<section class="pt-60">
+<section class="pt-0">
     <div class="container">
         <div class="border-bottom-light pb-40">
             <div class="row y-gap-30 justify-center text-center">

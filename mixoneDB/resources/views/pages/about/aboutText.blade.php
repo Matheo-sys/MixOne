@@ -1,4 +1,4 @@
-<section class="layout-pt-lg layout-pb-lg">
+<section class="layout-pt-lg layout-pb-md">
     
     <!-- Block 1: Intro (Text Left / Image Right) -->
     <div class="container mb-80">
