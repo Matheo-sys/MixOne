@@ -61,12 +61,8 @@
                                     @endguest
 
                                     @auth()
+
                                         <li class="mobile-only-link border-top-light pt-10 mt-10">
-                                            <a href="/dashboard">
-                                                <span class="mr-10">Tableau de Bord</span>
-                                            </a>
-                                        </li>
-                                        <li class="mobile-only-link">
                                             <a href="/"
                                                onclick="event.preventDefault();
                                                document.getElementById('logout-form-mobile').submit();"

@@ -100,14 +100,6 @@
                             <div class="text-16 fw-600">Mathéo SORIANO</div>
                             <div class="text-14 text-light-1 mt-5">Développeur, Beatmaker</div>
                         </div>
-                    </div>
-                    <div class="col-md-5 col-lg-4">
-                        <div class="d-flex flex-column items-center bg-light-2 rounded-16 px-20 py-30 transition hover-shadow-1">
-                            <div class="size-60 bg-white rounded-full flex-center text-blue-1 shadow-1 mb-15 fw-700 text-18">NH</div>
-                            <div class="text-16 fw-600">Noufel HADDAD</div>
-                            <div class="text-14 text-light-1 mt-5">Développeur, Beatmaker</div>
-                        </div>
-                    </div>
                 </div>
 
                 <p class="text-dark-1 mt-40 fw-500 text-16">
