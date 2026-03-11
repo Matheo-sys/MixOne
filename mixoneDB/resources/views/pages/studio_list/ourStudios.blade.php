@@ -1,4 +1,4 @@
-<section class="pt-40 pb-40 bg-light-2">
+<section class="mt-90 pt-40 pb-40 bg-light-2">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -49,10 +49,9 @@
                         </div>
                     </form>
                 </div>
-
-
             </div>
         </div>
+    </div>
 </section>
 
 <section class="layout-pt-md layout-pb-lg">
