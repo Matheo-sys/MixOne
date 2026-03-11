@@ -12,42 +12,33 @@
                                 <p class="mt-10">Toujours pas de compte ? <a href="{{ route('register') }}" class="text-blue-1">S'inscrire gratuitement</a></p>
                             </div>
 
-                            <form method="POST" action="{{ route('login') }}">
+                            <form method="POST" action="{{ route('login') }}" class="js-ajax-form">
                                 @csrf
-                                <div class="form-input">
-                                    <input type="email" name="email" required class="@error('email') is-invalid @enderror" value="{{ old('email') }}">
-                                    <label class="lh-1 text-14 text-light-1">Email</label>
-                                </div>
-                                @error('email')
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-
-                                <div class="col-12 mt-3">
+                                <div class="col-12">
                                     <div class="form-input">
-                                        <input type="password" name="password" required class="@error('password') is-invalid @enderror">
-                                        <label class="lh-1 text-14 text-light-1">Mot de passe</label>
-                                        @error('password')
-                                        <span class="text-danger" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
+                                        <input type="email" name="email" required value="{{ old('email') }}">
+                                        <label class="lh-1 text-14 text-light-1">Email</label>
                                     </div>
                                 </div>
 
-                                <div class="col-12 mt-3">
+                                <div class="col-12 mt-20">
+                                    <div class="form-input">
+                                        <input type="password" name="password" required>
+                                        <label class="lh-1 text-14 text-light-1">Mot de passe</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-15">
                                     @if (Route::has('password.request'))
                                         <a href="{{ route('password.request') }}" class="text-14 fw-500 text-blue-1 underline">Mot de passe oublié ?</a>
                                     @endif
                                 </div>
 
-                                <div class="col-12 mt-3 d-flex justify-content-center">
+                                <div class="col-12 mt-20 d-flex justify-content-center">
                                     <button type="submit" class="button py-20 -dark-1 bg-blue-1 text-white mx-auto d-block" style="width: 100%; max-width: 530px;">
                                         Se connecter<span class="icon-arrow-top-right ml-15"></span>
                                     </button>
                                 </div>
-
                             </form>
                         </div>
 

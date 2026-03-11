@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
         
         // Artist Dashboard
         Route::group(['prefix' => 'artist'], function() {
+            Route::get('/', [DashboardController::class, 'artistIndex'])->name('dashboard.artist.index');
             Route::get('/booking', [DashboardController::class, 'bookingArtist'])->name('dashboard.artist.booking');
             Route::get('/wishlist', [WishlistController::class, 'index'])->name('dashboard.artist.wishlist');
         });
@@ -63,6 +64,8 @@ Route::group(['middleware' => 'auth'], function () {
         
         Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
         Route::post('/wishlist', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+
+        Route::post('/wallet/recharge', [DashboardController::class, 'rechargeWallet'])->name('wallet.recharge');
     });
 });
 
@@ -99,7 +102,15 @@ Route::post('/reservations/{reservation}/confirm', [ReservationController::class
     ->name('reservations.confirm')
     ->middleware('auth');
 
+Route::post('/reservations/{reservation}/refuse', [ReservationController::class, 'refuse'])
+    ->name('reservations.refuse')
+    ->middleware('auth');
+
 Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
     ->name('reservations.cancel')
+    ->middleware('auth');
+
+Route::post('/reservations/{reservation}/complete', [ReservationController::class, 'complete'])
+    ->name('reservations.complete')
     ->middleware('auth');
 

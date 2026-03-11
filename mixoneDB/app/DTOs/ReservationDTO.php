@@ -36,7 +36,7 @@ class ReservationDTO
             'time_slot' => $this->time_slot,
             'number_of_hours' => $this->number_of_hours,
             'price' => $this->price,
-            'status' => 'en attente',
+            'status' => 'En attente',
         ];
     }
 }

@@ -19,28 +19,24 @@
     <div class="py-30 px-30 rounded-4 bg-white shadow-3 mt-90">
         <div class="tabs -underline-2 js-tabs">
             <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
-
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button is-tab-el-active" data-tab-target=".-tab-item-1">Toutes les réservation</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button is-tab-el-active" data-tab-target=".-tab-item-1">Toutes</button>
                 </div>
-
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-2">Complètes</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-2">En attente</button>
                 </div>
-
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-3">Confirmés</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-3">Confirmées</button>
                 </div>
-
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-4">En cours de traitement</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">Refusées</button>
                 </div>
-
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button " data-tab-target=".-tab-item-5">Annulés</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-5">Annulées</button>
                 </div>
-
-
+                <div class="col-auto">
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-6">Terminées</button>
+                </div>
             </div>
 
             <div class="tabs__content pt-30 js-tabs-content">
@@ -48,38 +44,18 @@
                 {{-- Tab 1 : Toutes --}}
                 <div class="tabs__pane -tab-item-1 is-tab-el-active">
                     <div class="overflow-scroll scroll-bar-1">
-                        @include('dashboard.artist.partials.reservations-table', ['rows' => $reservations])
+                        @if($reservations->isEmpty())
+                            <div class="text-center py-20 text-16 text-light-1">Aucune réservation pour le moment.</div>
+                        @else
+                            @include('dashboard.artist.partials.reservations-table', ['rows' => $reservations])
+                        @endif
                     </div>
                 </div>
 
-                {{-- Tab 2 : Complètes (Confirmées) --}}
+                {{-- Tab 2 : En attente --}}
                 <div class="tabs__pane -tab-item-2">
                     <div class="overflow-scroll scroll-bar-1">
-                        @php $complete = $reservations->whereIn('status', ['Confirmée']); @endphp
-                        @if($complete->isEmpty())
-                            <div class="text-center py-20 text-16 text-light-1">Aucune réservation complète.</div>
-                        @else
-                            @include('dashboard.artist.partials.reservations-table', ['rows' => $complete])
-                        @endif
-                    </div>
-                </div>
-
-                {{-- Tab 3 : Confirmés --}}
-                <div class="tabs__pane -tab-item-3">
-                    <div class="overflow-scroll scroll-bar-1">
-                        @php $confirmed = $reservations->where('status', 'Confirmée'); @endphp
-                        @if($confirmed->isEmpty())
-                            <div class="text-center py-20 text-16 text-light-1">Aucune réservation confirmée.</div>
-                        @else
-                            @include('dashboard.artist.partials.reservations-table', ['rows' => $confirmed])
-                        @endif
-                    </div>
-                </div>
-
-                {{-- Tab 4 : En cours de traitement (En attente) --}}
-                <div class="tabs__pane -tab-item-4">
-                    <div class="overflow-scroll scroll-bar-1">
-                        @php $pending = $reservations->where('status', 'En attente'); @endphp
+                        @php $pending = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'en attente'); @endphp
                         @if($pending->isEmpty())
                             <div class="text-center py-20 text-16 text-light-1">Aucune réservation en attente.</div>
                         @else
@@ -88,10 +64,34 @@
                     </div>
                 </div>
 
-                {{-- Tab 5 : Annulés --}}
+                {{-- Tab 3 : Confirmées --}}
+                <div class="tabs__pane -tab-item-3">
+                    <div class="overflow-scroll scroll-bar-1">
+                        @php $confirmed = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'confirmée'); @endphp
+                        @if($confirmed->isEmpty())
+                            <div class="text-center py-20 text-16 text-light-1">Aucune réservation confirmée.</div>
+                        @else
+                            @include('dashboard.artist.partials.reservations-table', ['rows' => $confirmed])
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Tab 4 : Refusées --}}
+                <div class="tabs__pane -tab-item-4">
+                    <div class="overflow-scroll scroll-bar-1">
+                        @php $refused = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'refusée'); @endphp
+                        @if($refused->isEmpty())
+                            <div class="text-center py-20 text-16 text-light-1">Aucune réservation refusée.</div>
+                        @else
+                            @include('dashboard.artist.partials.reservations-table', ['rows' => $refused])
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Tab 5 : Annulées --}}
                 <div class="tabs__pane -tab-item-5">
                     <div class="overflow-scroll scroll-bar-1">
-                        @php $cancelled = $reservations->where('status', 'Annulée'); @endphp
+                        @php $cancelled = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'annulée'); @endphp
                         @if($cancelled->isEmpty())
                             <div class="text-center py-20 text-16 text-light-1">Aucune réservation annulée.</div>
                         @else
@@ -100,72 +100,21 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
-
-        <div class="pt-30">
-            <div class="row justify-between">
-                <div class="col-auto">
-                    <button class="button -blue-1 size-40 rounded-full border-light">
-                        <i class="icon-chevron-left text-12"></i>
-                    </button>
-                </div>
-
-                <div class="col-auto">
-                    <div class="row x-gap-20 y-gap-20 items-center">
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full size-40 flex-center rounded-full bg-dark-1 text-white">1</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full bg-light-2">2</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">3</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">4</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">5</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">...</div>
-
-                        </div>
-
-                        <div class="col-auto">
-
-                            <div class="size-40 flex-center rounded-full">20</div>
-
-                        </div>
-
+                {{-- Tab 6 : Terminées --}}
+                <div class="tabs__pane -tab-item-6">
+                    <div class="overflow-scroll scroll-bar-1">
+                        @php $completed = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'terminée'); @endphp
+                        @if($completed->isEmpty())
+                            <div class="text-center py-20 text-16 text-light-1">Aucune réservation terminée.</div>
+                        @else
+                            @include('dashboard.artist.partials.reservations-table', ['rows' => $completed])
+                        @endif
                     </div>
                 </div>
 
-                <div class="col-auto">
-                    <button class="button -blue-1 size-40 rounded-full border-light">
-                        <i class="icon-chevron-right text-12"></i>
-                    </button>
-                </div>
             </div>
         </div>
+
     </div>
 
 @endsection

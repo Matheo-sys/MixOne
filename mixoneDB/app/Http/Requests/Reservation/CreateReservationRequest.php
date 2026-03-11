@@ -17,6 +17,7 @@ class CreateReservationRequest extends FormRequest
         return [
             'studio_id'       => 'required|exists:studios,id',
             'date'            => 'required|date|after_or_equal:today',
+            'time_slot'       => 'required|string',
             'number_of_hours' => 'required|integer|min:1',
             'total_price'     => 'required|numeric|min:0',
         ];

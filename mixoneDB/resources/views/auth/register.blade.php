@@ -15,101 +15,80 @@
 
                             </div>
 
-                            <form method="POST" action="{{ route('register') }}">
+                            <form method="POST" action="{{ route('register') }}" class="js-ajax-form">
                                 @csrf
 
-                                <div>
-                                    <div class="col-12 mt-3 mb-15">
-                                        <div class="profile-selection-container">
-                                            <input type="radio" id="artist" name="profile" value="artist" class="hidden-radio" checked>
-                                            <label for="artist" class="profile-btn">
-                                                <i class="icon-mic"></i> Artiste
-                                            </label>
+                                <div class="col-12 mt-10 mb-20">
+                                    <div class="profile-selection-container">
+                                        <input type="radio" id="artist" name="profile" value="artist" class="hidden-radio" checked>
+                                        <label for="artist" class="profile-btn">
+                                            <i class="icon-mic"></i> Artiste
+                                        </label>
 
-                                            <input type="radio" id="studio" name="profile" value="studio" class="hidden-radio">
-                                            <label for="studio" class="profile-btn">
-                                                <i class="icon-headphones"></i> Studio
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        @if ($errors->has('profile'))
-                                            <div class="text-danger text-center">
-                                                <strong>{{ $errors->first('profile') }}</strong>
-                                            </div>
-                                        @endif
+                                        <input type="radio" id="studio" name="profile" value="studio" class="hidden-radio">
+                                        <label for="studio" class="profile-btn">
+                                            <i class="icon-headphones"></i> Studio
+                                        </label>
                                     </div>
                                 </div>
-
-
 
                                 <div class="col-12">
                                     <div class="form-input">
                                         <input type="text" required name="first_name" value="{{ old('first_name') }}">
                                         <label class="lh-1 text-14 text-light-1">Prénom</label>
                                     </div>
-                                    @error('first_name')
-                                    <div class="text-danger mt-2"><strong>{{ $message }}</strong>
-                                    @enderror
                                 </div>
 
-                                <div class="col-12 mt-3">
+                                <div class="col-12 mt-20">
                                     <div class="form-input">
                                         <input type="text" required name="last_name" value="{{ old('last_name') }}">
                                         <label class="lh-1 text-14 text-light-1">Nom de famille</label>
                                     </div>
-                                    @error('last_name')
-                                    <div class="text-danger mt-2"><strong>{{ $message }}</strong></div>
-                                    @enderror
                                 </div>
 
-                                <div class="col-12 mt-3">
+                                <div class="col-12 mt-20">
                                     <div class="form-input">
                                         <input type="text" required name="email" value="{{ old('email') }}">
                                         <label class="lh-1 text-14 text-light-1">Email</label>
                                     </div>
-                                    @error('email')
-                                    <div class="text-danger mt-2"><strong>{{ $message }}</strong>
-                                    @enderror
                                 </div>
 
-                                <div class="col-12 mt-3">
+                                <div class="col-12 mt-20">
                                     <div class="form-input">
                                         <input type="password" required name="password">
                                         <label class="lh-1 text-14 text-light-1">Mot de passe</label>
                                     </div>
-                                    @error('password')
-                                    <div class="text-danger mt-2"><strong>{{ $message }}</strong></div>
-                                    @enderror
+                                    <div id="password-strength-container" class="mt-10 d-none">
+                                        <div class="progress h-4">
+                                            <div id="strength-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        <div id="strength-text" class="text-12 mt-5"></div>
+                                    </div>
                                 </div>
 
-                                <div class="col-12 mt-3">
+                                <div class="col-12 mt-20">
                                     <div class="form-input">
                                         <input type="password" required name="password_confirmation">
                                         <label class="lh-1 text-14 text-light-1">Confirmer mot de passe</label>
                                     </div>
                                 </div>
 
-                                <div class="d-flex align-items-center">
-                                    <div class="form-checkbox mt-5">
-                                        <input type="checkbox" name="gcu" id="gcu" required>
-                                        <div class="form-checkbox__mark">
-                                            <div class="form-checkbox__icon icon-check"></div>
+                                <div class="col-12 mt-20">
+                                    <div class="d-flex align-items-center">
+                                        <div class="form-checkbox">
+                                            <input type="checkbox" name="gcu" id="gcu" required>
+                                            <div class="form-checkbox__mark">
+                                                <div class="form-checkbox__icon icon-check"></div>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="text-15 lh-15 text-light-1 ml-10 mt-3 mb-3">
-                                        J'accepte les <a href="{{ route('terms') }}" class="text-blue-1" target="_blank">Conditions d'utilisation</a> et la <a href="{{ route('terms') }}" class="text-blue-1" target="_blank">Politique de confidentialité</a>.
+                                        <div class="text-15 lh-15 text-light-1 ml-10">
+                                            J'accepte les <a href="{{ route('terms') }}" class="text-blue-1" target="_blank">Conditions d'utilisation</a>.
+                                        </div>
                                     </div>
                                 </div>
 
-                                @error('gcu')
-                                <div class="text-danger mt-2"><strong>{{ $message }}</strong></div>
-                                @enderror
-
-
-                                <div class="col-12 mt-3 d-flex justify-content-center">
+                                <div class="col-12 mt-30 d-flex justify-content-center">
                                     <button type="submit" class="button py-20 -dark-1 bg-blue-1 text-white mx-auto d-block" style="width: 100%; max-width: 530px;">
                                         S'inscrire<span class="icon-arrow-top-right ml-15"></span>
                                     </button>

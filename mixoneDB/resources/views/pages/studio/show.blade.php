@@ -31,9 +31,9 @@
 
 @section('content')
 
-    <section class="pt-40">
+    <section class="mt-90 studio-show-header">
         <div class="container">
-            <div class="row y-gap-20 justify-between items-end">
+            <div class="row y-gap-5 md:y-gap-20 justify-between items-center">
                 <div class="col-auto">
                     <div class="row x-gap-20 items-center">
                         <div class="col-auto">
@@ -49,9 +49,9 @@
                     </div>
                     <div class="row x-gap-20 y-gap-20 items-center">
                         <div class="col-auto">
-                            <div class="d-flex items-center text-15 text-light-1">
+                            <div class="d-flex items-center text-15 sm:text-14 text-light-1">
                                 <i class="icon-location-2 text-16 mr-5"></i>
-                                {{ $studio->address }}, {{ $studio->city }}, {{ $studio->zipcode }}, {{ $studio->country }}
+                                {{ $studio->address }}, {{ $studio->city }}, {{ $studio->zipcode }}
                             </div>
                         </div>
                     </div>
@@ -59,10 +59,8 @@
                 <div class="col-auto">
                     <div class="row x-gap-15 y-gap-15 items-center">
                         <div class="col-auto">
-                            <div class="text-14">
-                                A partir de
-                                <span class="text-22 text-dark-1 fw-500">{{ $studio->hourly_rate }}€</span>
-                            </div>
+                            <div class="text-14 text-light-1">A partir de</div>
+                            <div class="text-22 sm:text-20 text-dark-1 fw-500">{{ $studio->hourly_rate }}€<span class="text-14 fw-400 text-light-1">/h</span></div>
                         </div>
                     </div>
                 </div>
@@ -171,7 +169,7 @@
                             @endphp
 
                             @if(!empty($studioEquipment))
-                            <h3 class="text-22 fw-500 pt-40 border-top-light">Équipements disponibles</h3>
+                            <h3 class="text-22 fw-500 pt-40 border-top-light">Matériel disponible</h3>
                             <div class="row x-gap-0 y-gap-15 pt-20">
                                 @foreach($studioEquipment as $equipKey)
                                     @if(isset($allEquipment[$equipKey]))
@@ -205,21 +203,6 @@
                                 @endforeach
                             </div>
                             @endif
-                        </div>
-                        <div class="col-12">
-                            <div class="px-24 py-20 rounded-4 bg-green-1">
-                                <div class="row x-gap-20 y-gap-20 items-center">
-                                    <div class="col-auto">
-                                        <div class="flex-center size-60 rounded-full bg-white">
-                                            <i class="icon-star text-yellow-1 text-30"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <h4 class="text-18 lh-15 fw-500">This property is in high demand!</h4>
-                                        <div class="text-15 lh-15">7 travelers have booked today.</div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

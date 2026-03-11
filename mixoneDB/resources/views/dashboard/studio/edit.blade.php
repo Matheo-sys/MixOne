@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="row y-gap-20 justify-between items-end pb-40 lg:pb-30 md:pb-24">
-        <div class="col-auto ml-10">
+        <div class="col-auto ml-10 text-center sm:text-center w-1/1">
             <h1 class="text-26 sm:text-22 lh-14 fw-600">MODIFIER LE STUDIO</h1>
             <div class="text-15 text-light-1">Gardez les informations de votre studio à jour.</div>
         </div>

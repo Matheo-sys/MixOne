@@ -27,21 +27,31 @@ class ReservationController extends Controller
             }
             return redirect()->route('dashboard')->with('success', 'Réservation effectuée avec succès !');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+            $message = $e->getMessage();
+            
+            // Si le solde est insuffisant, on redirige vers le dashboard artist (porte-monnaie)
+            if (str_contains($message, 'Solde insuffisant')) {
+                return redirect()->route('dashboard.artist.index')->with('error', "Solde insuffisant dans votre porte-monnaie. Veuillez le recharger avant de réserver.");
             }
-            return back()->withInput()->withErrors(['time_slot' => $e->getMessage()]);
+
+            if ($request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => $message], 422);
+            }
+            return back()->withInput()->withErrors(['time_slot' => $message]);
         }
     }
 
+    /**
+     * Studio confirme une réservation en attente.
+     */
     public function confirm(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
     {
         try {
-            $this->updateReservationStatusAction->execute($reservation, 'Confirmée');
+            $this->updateReservationStatusAction->execute($reservation, 'Confirmée', 'studio');
             if ($request->ajax()) {
-                return response()->json(['status' => 'success', 'message' => 'Réservation confirmée !', 'new_status' => 'Confirmée']);
+                return response()->json(['status' => 'success', 'message' => 'Réservation confirmée avec succès !', 'new_status' => 'Confirmée']);
             }
-            return redirect()->back()->with('success', 'Statut mis à jour avec succès !');
+            return redirect()->back()->with('success', 'Réservation confirmée !');
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
@@ -50,14 +60,37 @@ class ReservationController extends Controller
         }
     }
 
+    /**
+     * Studio refuse une réservation en attente.
+     */
+    public function refuse(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
+    {
+        try {
+            $this->updateReservationStatusAction->execute($reservation, 'Refusée', 'studio');
+            if ($request->ajax()) {
+                return response()->json(['status' => 'success', 'message' => 'Réservation refusée.', 'new_status' => 'Refusée']);
+            }
+            return redirect()->back()->with('success', 'Réservation refusée.');
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+            }
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Studio ou artiste annule une réservation.
+     */
     public function cancel(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
     {
         try {
-            $this->updateReservationStatusAction->execute($reservation, 'Annulée');
+            $role = auth()->user()->profile === 'artist' ? 'artist' : 'studio';
+            $this->updateReservationStatusAction->execute($reservation, 'Annulée', $role);
             if ($request->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Réservation annulée.', 'new_status' => 'Annulée']);
             }
-            return redirect()->back()->with('success', 'Réservation annulée avec succès !');
+            return redirect()->back()->with('success', 'Réservation annulée.');
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
@@ -66,4 +99,22 @@ class ReservationController extends Controller
         }
     }
 
+    /**
+     * Studio marque une réservation comme terminée.
+     */
+    public function complete(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
+    {
+        try {
+            $this->updateReservationStatusAction->execute($reservation, 'Terminée', 'studio');
+            if ($request->ajax()) {
+                return response()->json(['status' => 'success', 'message' => 'Réservation terminée. Les fonds ont été crédités.', 'new_status' => 'Terminée']);
+            }
+            return redirect()->back()->with('success', 'Réservation terminée. Les fonds ont été crédités.');
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+            }
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 }

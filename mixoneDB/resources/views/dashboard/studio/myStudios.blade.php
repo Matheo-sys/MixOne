@@ -44,7 +44,7 @@
                                         <td data-label="Nom" class="text-blue-1 fw-500">{{ $studio->name }}</td>
                                         <td data-label="Lieu">{{ $studio->city }}</td>
                                         <td data-label="Avis">
-                                            <div class="rounded-4 size-35 bg-blue-1 text-white flex-center text-12 fw-600">4.8</div>
+                                            <div class="rounded-4 size-35 bg-light-2 text-light-1 flex-center text-12 fw-600">N/A</div>
                                         </td>
                                         <td data-label="Date">{{ $studio->created_at->format('d/m/Y') }}</td>
                                         <td data-label="Action">
@@ -81,47 +81,6 @@
                 </div>
             </div>
 
-            <div class="pt-30">
-                <div class="row justify-between">
-                    <div class="col-auto">
-                        <button class="button -blue-1 size-40 rounded-full border-light">
-                            <i class="icon-chevron-left text-12"></i>
-                        </button>
-                    </div>
-                    <div class="col-auto">
-                        <div class="row x-gap-20 y-gap-20 items-center">
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">1</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">3</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full bg-light-2">4</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">5</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">...</div>
-                            </div>
-                            <div class="col-auto">
-                                <div class="size-40 flex-center rounded-full">20</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <div class="col-auto">
-                            <button class="flex-center bg-light-2 rounded-4 size-35">
-                                <i class="icon-trash-2 text-16 text-light-1"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         @endif
     </div>
 

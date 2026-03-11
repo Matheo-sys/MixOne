@@ -77,8 +77,11 @@
 <script src="{{ asset('vendor/js/main.js') }}"></script>
     <div id="toast-container"></div>
 
-    @include('components.message-widget')
+    @auth
+        @include('components.message-widget')
+    @endauth
     <script src="{{ asset('js/ajax-forms.js') }}"></script>
+    @stack('scripts')
 </body>
 
 </html>
