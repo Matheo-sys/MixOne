@@ -68,7 +68,7 @@ class StudioController extends Controller
      */
     public function index(): View
     {
-        $studios = Studio::all();
+        $studios = Studio::paginate(20);
         return view('pages.studio_list', [
             'studios'           => $studios,
             'latitude'          => 0,

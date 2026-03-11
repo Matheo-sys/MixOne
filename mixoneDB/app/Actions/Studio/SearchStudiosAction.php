@@ -60,7 +60,7 @@ class SearchStudiosAction
         }
 
         return [
-            'studios' => $query->get(),
+            'studios' => $query->paginate(20),
             'latitude' => $latitude,
             'longitude' => $longitude,
         ];

@@ -495,63 +495,97 @@
                 </div>
 
                 <!-- Pagination -->
+                {{-- Pagination Dynamique --}}
+                @if($studios->total() > 0)
                 <div class="border-top-light mt-30 pt-30">
                     <div class="row x-gap-10 y-gap-20 justify-between md:justify-center">
+                        {{-- Bouton Précédent --}}
                         <div class="col-auto md:order-1">
-                            <button class="button -blue-1 size-40 rounded-full border-light">
-                                <i class="icon-chevron-left text-12"></i>
-                            </button>
+                            @if($studios->onFirstPage())
+                                <button class="button -blue-1 size-40 rounded-full border-light opacity-50 cursor-not-allowed" disabled>
+                                    <i class="icon-chevron-left text-12"></i>
+                                </button>
+                            @else
+                                <a href="{{ $studios->appends(request()->input())->previousPageUrl() }}" class="button -blue-1 size-40 rounded-full border-light">
+                                    <i class="icon-chevron-left text-12"></i>
+                                </a>
+                            @endif
                         </div>
 
                         <div class="col-md-auto md:order-3">
-                            <div class="row x-gap-20 y-gap-20 items-center md:d-none">
-                                <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full">1</div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full">3</div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full bg-light-2">4</div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full">5</div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full">...</div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full">20</div>
-                                </div>
+                            {{-- Pagination Desktop --}}
+                            <div class="row x-gap-20 y-gap-20 items-center justify-center md:d-none">
+                                @php
+                                    $currentPage = $studios->currentPage();
+                                    $lastPage = $studios->lastPage();
+                                    $start = max(1, $currentPage - 1);
+                                    $end = min($lastPage, $currentPage + 1);
+                                    
+                                    // Ajustement pour toujours essayer de montrer au moins 3 pages si possible
+                                    if ($currentPage == 1) $end = min($lastPage, 3);
+                                    if ($currentPage == $lastPage) $start = max(1, $lastPage - 2);
+                                @endphp
+
+                                @if($start > 1)
+                                    <div class="col-auto">
+                                        <a href="{{ $studios->appends(request()->input())->url(1) }}" class="size-40 flex-center rounded-full">1</a>
+                                    </div>
+                                    @if($start > 2)
+                                        <div class="col-auto"><div class="size-40 flex-center rounded-full">...</div></div>
+                                    @endif
+                                @endif
+
+                                @for($i = $start; $i <= $end; $i++)
+                                    <div class="col-auto">
+                                        <a href="{{ $studios->appends(request()->input())->url($i) }}" 
+                                           class="size-40 flex-center rounded-full {{ $i == $currentPage ? 'bg-dark-1 text-white' : '' }}">
+                                            {{ $i }}
+                                        </a>
+                                    </div>
+                                @endfor
+
+                                @if($end < $lastPage)
+                                    @if($end < $lastPage - 1)
+                                        <div class="col-auto"><div class="size-40 flex-center rounded-full">...</div></div>
+                                    @endif
+                                    <div class="col-auto">
+                                        <a href="{{ $studios->appends(request()->input())->url($lastPage) }}" class="size-40 flex-center rounded-full">{{ $lastPage }}</a>
+                                    </div>
+                                @endif
                             </div>
 
+                            {{-- Pagination Mobile --}}
                             <div class="row x-gap-10 y-gap-20 justify-center items-center d-none md:d-flex">
                                 <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full">1</div>
+                                    <div class="size-40 flex-center rounded-full bg-dark-1 text-white">{{ $currentPage }}</div>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full bg-dark-1 text-white">2</div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full">3</div>
+                                    <div class="text-14 text-light-1">sur {{ $lastPage }}</div>
                                 </div>
                             </div>
 
                             <div class="text-center mt-30 md:mt-10">
-                                <div class="text-14 text-light-1">1 – 20 de {{ count($studios) }} studios trouvés</div>
+                                <div class="text-14 text-light-1">
+                                    {{ $studios->firstItem() }} – {{ $studios->lastItem() }} de {{ $studios->total() }} studios trouvés
+                                </div>
                             </div>
                         </div>
 
+                        {{-- Bouton Suivant --}}
                         <div class="col-auto md:order-2">
-                            <button class="button -blue-1 size-40 rounded-full border-light">
-                                <i class="icon-chevron-right text-12"></i>
-                            </button>
+                            @if($studios->hasMorePages())
+                                <a href="{{ $studios->appends(request()->input())->nextPageUrl() }}" class="button -blue-1 size-40 rounded-full border-light">
+                                    <i class="icon-chevron-right text-12"></i>
+                                </a>
+                            @else
+                                <button class="button -blue-1 size-40 rounded-full border-light opacity-50 cursor-not-allowed" disabled>
+                                    <i class="icon-chevron-right text-12"></i>
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>
