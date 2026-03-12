@@ -1,66 +1,70 @@
-<section class="mt-90 pt-40 pb-40 bg-light-2">
+{{-- ==========================================
+    HERO SEARCH SECTION
+   ========================================== --}}
+<section class="studioList-hero">
     <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="text-center">
-                    <h1 class="text-30 fw-600">NOS STUDIOS</h1>
-                </div>
+        <div class="studioList-hero__inner">
+            <h1 class="studioList-hero__title">Trouvez votre studio</h1>
+            <p class="studioList-hero__subtitle">Explorez notre sélection de studios professionnels</p>
 
-                <div class="mainSearch bg-white mt-30">
-                    <form id="searchForm" action="{{route('studio_list')}}" method="GET">
-                        <input type="hidden" id="latitude" name="latitude" value="48.7748198">
-                        <input type="hidden" id="longitude" name="longitude" value="2.3262945">
+            <div class="mainSearch bg-white mt-30">
+                <form id="searchForm" action="{{route('studio_list')}}" method="GET">
+                    <input type="hidden" id="latitude" name="latitude" value="48.7748198">
+                    <input type="hidden" id="longitude" name="longitude" value="2.3262945">
 
-                        <div class="mainSearch__grid">
-                            <div class="mainSearch__item">
-                                <label for="city" class="text-15 fw-500 ls-2 lh-16">City</label>
-                                <div class="mainSearch__input">
-                                    <input type="text" id="city" name="city" placeholder="City" value="" class="js-search js-dd-focus">
-                                    <button type="button" id="geolocate-btn">
-                                        <i class="icon-location text-16"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="mainSearch__item position-relative">
-                                <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Hours</label>
-                                <div class="mainSearch__input">
-                                    <input type="text" id="min_hours" name="min_hours" placeholder="Hours" value="{{ request('min_hours', 2) }}" class="text-15 text-light-1" onclick="toggleHoursMenu(event)" readonly="">
-                                </div>
-                                <div id="hoursMenu" class="hours-menu hidden">
-                                    <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
-                                        <i class="icon-minus text-12"></i>
-                                    </button>
-                                    <div class="flex-center size-20 ml-15 mr-15">
-                                        <div id="hoursValue" class="text-15">2</div>
-                                    </div>
-                                    <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(1)">
-                                        <i class="icon-plus text-12"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="mainSearch__button">
-                                <button type="submit" class="button bg-blue-1 text-white">
-                                    <i class="icon-search text-20 mr-10"></i>
-                                    Search
+                    <div class="mainSearch__grid">
+                        <div class="mainSearch__item">
+                            <label for="city" class="text-15 fw-500 ls-2 lh-16">City</label>
+                            <div class="mainSearch__input">
+                                <input type="text" id="city" name="city" placeholder="City" value="" class="js-search js-dd-focus">
+                                <button type="button" id="geolocate-btn">
+                                    <i class="icon-location text-16"></i>
                                 </button>
                             </div>
                         </div>
-                    </form>
-                </div>
+
+                        <div class="mainSearch__item position-relative">
+                            <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Hours</label>
+                            <div class="mainSearch__input">
+                                <input type="text" id="min_hours" name="min_hours" placeholder="Hours" value="{{ request('min_hours', 2) }}" class="text-15 text-light-1" onclick="toggleHoursMenu(event)" readonly="">
+                            </div>
+                            <div id="hoursMenu" class="hours-menu hidden">
+                                <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
+                                    <i class="icon-minus text-12"></i>
+                                </button>
+                                <div class="flex-center size-20 ml-15 mr-15">
+                                    <div id="hoursValue" class="text-15">2</div>
+                                </div>
+                                <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(1)">
+                                    <i class="icon-plus text-12"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mainSearch__button">
+                            <button type="submit" class="button bg-blue-1 text-white">
+                                <i class="icon-search text-20 mr-10"></i>
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </section>
 
-<section class="layout-pt-md layout-pb-lg">
+{{-- ==========================================
+    MAIN CONTENT: SIDEBAR + STUDIOS
+   ========================================== --}}
+<section class="studioList-main">
     <div class="container">
         <div class="row y-gap-30">
+            {{-- ======= SIDEBAR ======= --}}
             <div class="col-xl-3 col-lg-4 desktop-sidebar">
                 <style>
-                    @media (max-width: 1199px) { 
-                        .desktop-sidebar { display: none !important; } 
+                    @media (max-width: 1199px) {
+                        .desktop-sidebar { display: none !important; }
                         .mobile-filter-btn { display: flex !important; }
                     }
                     @media (min-width: 1200px) {
@@ -68,19 +72,20 @@
                         .mobile-filter-btn { display: none !important; }
                     }
                 </style>
-                <aside class="sidebar y-gap-40">
-                    <div class="sidebar__item -no-border">
-                        <div class="flex-center ratio ratio-15:9 js-lazy" data-bg={{asset("media/img/general/map.png")}}>
-                            <button id="openMapBtn" type="button" class="button py-15 px-24 -blue-1 bg-white text-dark-1 absolute">
-                                <i class="icon-destination text-22 mr-10"></i>
-                                Regarder sur la carte
+                <aside class="studioList-sidebar">
+                    {{-- Map Preview --}}
+                    <div class="studioList-sidebar__mapPreview">
+                        <div class="flex-center ratio ratio-15:9 js-lazy rounded-14 overflow-hidden" data-bg={{asset("media/img/general/map.png")}}>
+                            <button id="openMapBtn" type="button" class="studioList-sidebar__mapBtn">
+                                <i class="icon-destination text-18 mr-8"></i>
+                                Voir sur la carte
                             </button>
                         </div>
                     </div>
 
-                    <div class="sidebar__item">
+                    {{-- Filters --}}
+                    <div class="studioList-sidebar__filters">
                         <form action="{{ route('studio_list') }}" method="GET" id="sidebarFilterForm">
-                            {{-- Preserve search params from top search bar --}}
                             <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
                             <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
                             <input type="hidden" name="city" value="{{ request('city', '') }}">
@@ -88,47 +93,32 @@
                             <input type="hidden" name="sort_by" value="{{ request('sort_by', 'distance') }}">
                             <input type="hidden" name="sort_direction" value="{{ request('sort_direction', 'asc') }}">
 
-                        <label for="distanceSlider" class="text-15 fw-500 ls-2 lh-16">Périmetre</label>
-                        <div class="row x-gap-10 y-gap-30">
-                            <div class="col-12">
+                            {{-- Distance Slider --}}
+                            <div class="studioList-sidebar__section">
+                                <h5 class="studioList-sidebar__sectionTitle">
+                                    <i class="icon-location-2 text-14"></i>
+                                    Périmètre
+                                </h5>
                                 <div class="js-price-rangeSlider">
-                                    <div class="d-flex justify-between mb-20">
-                                        <div class="text-15 text-dark-1">
+                                    <div class="d-flex justify-between mb-15">
+                                        <div class="studioList-sidebar__rangeLabel">
                                             <span class="js-lower">0km</span>
-                                            -
+                                            <span>—</span>
                                             <span class="js-upper">{{ request()->input('distance', 35) }}km</span>
                                         </div>
                                     </div>
-
-                                    <div class="px-5">
-                                        <input type="range" id="distance" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="slider w-100" oninput="updateDistanceValue(this.value)">
+                                    <div class="studioList-sidebar__slider">
+                                        <input type="range" id="distance" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="studioList-rangeInput" oninput="updateDistanceValue(this.value); updateSliderTrack(this)">
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="button-grid items-center">
-
-
-                            <div class="searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar js-calendar-el">
-                                <div id="hoursMenu" class="hours-menu hidden">
-                                    <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
-                                        <i class="icon-minus text-12"></i>
-                                    </button>
-                                    <div class="flex-center size-20 ml-15 mr-15">
-                                        <div id="hoursValue" class="text-15">2</div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div class="button-item">
-                            {{-- Filtre équipements --}}
-                            <div class="sidebar__item mt-20">
-                                <h5 class="text-16 fw-500 mb-15">Équipements</h5>
+                            {{-- Equipment Filters --}}
+                            <div class="studioList-sidebar__section">
+                                <h5 class="studioList-sidebar__sectionTitle">
+                                    <i class="icon-star text-14"></i>
+                                    Équipements
+                                </h5>
                                 @php
                                 $equipListFlat = [
                                     'micro_condenser' => '🎙️ Micro condensateur',
@@ -153,92 +143,83 @@
                                 ];
                                 $selectedEquipment = $selectedEquipment ?? request()->input('equipment', []);
                                 @endphp
-                                <div class="row y-gap-8" style="max-height: 250px; overflow-y: auto;">
+                                <div class="studioList-sidebar__equipList">
                                     @foreach($equipListFlat as $key => $label)
-                                        <div class="col-12">
-                                            <div class="d-flex items-center">
-                                                <div class="form-checkbox">
-                                                    <input type="checkbox"
-                                                           name="equipment[]"
-                                                           value="{{ $key }}"
-                                                           id="filter_{{ $key }}"
-                                                           {{ in_array($key, $selectedEquipment) ? 'checked' : '' }}>
-                                                    <div class="form-checkbox__mark">
-                                                        <div class="form-checkbox__icon icon-check"></div>
-                                                    </div>
+                                        <label class="studioList-sidebar__equipItem" for="filter_{{ $key }}">
+                                            <div class="form-checkbox">
+                                                <input type="checkbox"
+                                                       name="equipment[]"
+                                                       value="{{ $key }}"
+                                                       id="filter_{{ $key }}"
+                                                       {{ in_array($key, $selectedEquipment) ? 'checked' : '' }}>
+                                                <div class="form-checkbox__mark">
+                                                    <div class="form-checkbox__icon icon-check"></div>
                                                 </div>
-                                                <label class="text-13 ml-10 cursor-pointer" for="filter_{{ $key }}">{{ $label }}</label>
                                             </div>
-                                        </div>
+                                            <span>{{ $label }}</span>
+                                        </label>
                                     @endforeach
                                 </div>
                             </div>
 
-                            <button type="submit" class="mainSearch__submit button -dark-1 h-60 px-35 col-12 bg-blue-1 text-white mt-20">
-                                <i class="icon-search text-20 mr-10"></i>
-                                Appliquer
+                            <button type="submit" class="studioList-sidebar__applyBtn">
+                                <i class="icon-search text-16 mr-8"></i>
+                                Appliquer les filtres
                             </button>
-                        </div>
                         </form>
                     </div>
                 </aside>
             </div>
 
+            {{-- ======= STUDIO LIST ======= --}}
             <div class="col-xl-9 col-lg-8">
-                <div class="row y-gap-10 items-center justify-between">
-                    <div class="col-auto">
-                        <div class="text-18"><span class="fw-500">{{ count($studios) }} studios</span> correspondent à votre recherche</div>
+                {{-- Toolbar --}}
+                <div class="studioList-toolbar">
+                    <div class="studioList-toolbar__count">
+                        <span class="studioList-toolbar__number">{{ count($studios) }}</span> studios correspondent à votre recherche :
                     </div>
 
-                    <div class="col-auto">
-                        <div class="row x-gap-20 y-gap-20">
-                            <div class="col-auto">
+                    <div class="studioList-toolbar__actions">
+                        <div class="col-auto">
+                            <form action="{{ route('studio_list') }}" method="GET" id="sortForm">
+                                <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
+                                <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
+                                <input type="hidden" name="city" value="{{ request('city', '') }}">
+                                <input type="hidden" name="distance" value="{{ request('distance', 50) }}">
+                                <input type="hidden" name="min_hours" value="{{ request('min_hours', '') }}">
+                                @foreach(request('equipment', []) as $eq)
+                                    <input type="hidden" name="equipment[]" value="{{ $eq }}">
+                                @endforeach
+                                <input type="hidden" name="sort_direction" id="sort_direction_sort" value="{{ request('sort_direction', 'asc') }}">
 
-                                <div class="col-auto">
-                                    <form action="{{ route('studio_list') }}" method="GET" id="sortForm">
-                                        {{-- Preserve all active filters --}}
-                                        <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
-                                        <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
-                                        <input type="hidden" name="city" value="{{ request('city', '') }}">
-                                        <input type="hidden" name="distance" value="{{ request('distance', 50) }}">
-                                        <input type="hidden" name="min_hours" value="{{ request('min_hours', '') }}">
-                                        @foreach(request('equipment', []) as $eq)
-                                            <input type="hidden" name="equipment[]" value="{{ $eq }}">
-                                        @endforeach
-                                        <input type="hidden" name="sort_direction" id="sort_direction_sort" value="{{ request('sort_direction', 'asc') }}">
+                                <select name="sort_by" id="price-filter" class="studioList-toolbar__sort"
+                                    onchange="
+                                        const selected = this.options[this.selectedIndex];
+                                        const dir = selected.dataset.dir || 'asc';
+                                        document.getElementById('sort_direction_sort').value = dir;
+                                        this.form.submit();
+                                    ">
+                                    <option value="distance" {{ request('sort_by') == 'distance' ? 'selected' : '' }}>Distance</option>
+                                    <option value="price" data-dir="asc" {{ request('sort_by') == 'price' && request('sort_direction') == 'asc' ? 'selected' : '' }}>
+                                        Prix Croissant
+                                    </option>
+                                    <option value="price" data-dir="desc" {{ request('sort_by') == 'price' && request('sort_direction') == 'desc' ? 'selected' : '' }}>
+                                        Prix Décroissant
+                                    </option>
+                                </select>
+                            </form>
+                        </div>
 
-                                        <select name="sort_by" id="price-filter"
-                                                class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1"
-                                                onchange="
-                                                    const selected = this.options[this.selectedIndex];
-                                                    const dir = selected.dataset.dir || 'asc';
-                                                    document.getElementById('sort_direction_sort').value = dir;
-                                                    this.form.submit();
-                                                ">
-                                            <option value="distance" {{ request('sort_by') == 'distance' ? 'selected' : '' }}>Distance</option>
-                                            <option value="price" data-dir="asc" {{ request('sort_by') == 'price' && request('sort_direction') == 'asc' ? 'selected' : '' }}>
-                                                Prix Croissant
-                                            </option>
-                                            <option value="price" data-dir="desc" {{ request('sort_by') == 'price' && request('sort_direction') == 'desc' ? 'selected' : '' }}>
-                                                Prix Décroissant
-                                            </option>
-                                        </select>
-                                    </form>
-                                </div>
-
-
-                            </div>
-
-                            <div class="col-auto mobile-filter-btn">
-                                <button data-x-click="filterPopup" class="button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1">
-                                    <i class="icon-up-down text-14 mr-10"></i>
-                                    Filtrer / Carte
-                                </button>
-                            </div>
+                        <div class="col-auto mobile-filter-btn">
+                            <button data-x-click="filterPopup" class="studioList-toolbar__filterBtn -black-white">
+                                <i class="icon-up-down text-14 mr-8"></i>
+                                Filtrer / Carte
+                            </button>
                         </div>
                     </div>
                 </div>
 
+                {{-- Mobile Filter Popup --}}
                 <div class="filterPopup bg-white" data-x="filterPopup" data-x-toggle="-is-active">
                     <aside class="sidebar -mobile-filter px-20 py-20 pb-100">
                         <div data-x-click="filterPopup" class="-icon-close">
@@ -255,7 +236,6 @@
                         </div>
 
                         <form action="{{ route('studio_list') }}" method="GET">
-                            {{-- Preserve search params --}}
                             <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
                             <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
                             <input type="hidden" name="city" value="{{ request('city', '') }}">
@@ -274,7 +254,7 @@
                                         </div>
                                     </div>
                                     <div class="px-5">
-                                        <input type="range" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="slider w-100" oninput="document.querySelector('.js-upper-mobile').textContent = this.value + 'km'">
+                                        <input type="range" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="studioList-rangeInput" oninput="document.querySelector('.js-upper-mobile').textContent = this.value + 'km'">
                                     </div>
                                 </div>
                             </div>
@@ -307,186 +287,174 @@
                     </aside>
                 </div>
 
-                <div class="mt-30">
-                    <!-- Boucle sur les studios comme dans le deuxième code -->
+                {{-- ======= STUDIO CARDS ======= --}}
+                <div class="studioList-grid">
                     @foreach($studios as $studio)
-                        <div class="border-top-light pt-20 mb-20">
-                            <div class="row x-gap-20 y-gap-20 mobile-studio-card">
-                                <div class="col-md-auto">
-                                    <div class="cardImage mobile-card-image ratio w-250 md:w-1/1 rounded-4">
-                                        <div class="cardImage__content">
-                                            <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
-                                                <div class="swiper-wrapper">
-                                                    @php
-                                                        $hasImages = false;
-                                                        // Vérifier les 4 emplacements d'images possibles
-                                                        for ($i = 1; $i <= 4; $i++) {
-                                                            $imageField = "image{$i}";
-                                                            if (!empty($studio->$imageField)) {
-                                                                $hasImages = true;
-                                                                echo '<div class="swiper-slide">';
-                                                                echo '<img class="col-12" src="' . asset('storage/' . $studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
-                                                                echo '</div>';
-                                                            }
-                                                        }
-
-                                                        // Si aucune image n'est trouvée, afficher l'image par défaut
-                                                        if (!$hasImages) {
+                        <div class="studioListCard">
+                            <div class="studioListCard__imageWrap">
+                                <div class="cardImage ratio studioListCard__ratio">
+                                    <div class="cardImage__content">
+                                        <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
+                                            <div class="swiper-wrapper">
+                                                @php
+                                                    $hasImages = false;
+                                                    for ($i = 1; $i <= 4; $i++) {
+                                                        $imageField = "image{$i}";
+                                                        if (!empty($studio->$imageField)) {
+                                                            $hasImages = true;
                                                             echo '<div class="swiper-slide">';
-                                                            echo '<img class="col-12" src="' . asset('media/img/backgrounds/11.jpg') . '" alt="Image par défaut">';
+                                                            echo '<img class="col-12 studioListCard__img" src="' . asset('storage/' . $studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
                                                             echo '</div>';
                                                         }
-                                                    @endphp
-                                                </div>
-                                                <div class="cardImage-slider__pagination js-pagination"></div>
-                                                <div class="cardImage-slider__nav -prev">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
-                                                        <i class="icon-chevron-left text-10"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="cardImage-slider__nav -next">
-                                                    <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
-                                                        <i class="icon-chevron-right text-10"></i>
-                                                    </button>
-                                                </div>
+                                                    }
+                                                    if (!$hasImages) {
+                                                        echo '<div class="swiper-slide">';
+                                                        echo '<img class="col-12 studioListCard__img" src="' . asset('media/img/backgrounds/11.jpg') . '" alt="Image par défaut">';
+                                                        echo '</div>';
+                                                    }
+                                                @endphp
+                                            </div>
+                                            <div class="cardImage-slider__pagination js-pagination"></div>
+                                            <div class="cardImage-slider__nav -prev">
+                                                <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-prev">
+                                                    <i class="icon-chevron-left text-10"></i>
+                                                </button>
+                                            </div>
+                                            <div class="cardImage-slider__nav -next">
+                                                <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 js-next">
+                                                    <i class="icon-chevron-right text-10"></i>
+                                                </button>
                                             </div>
                                         </div>
-                                        <div class="cardImage__wishlist">
-                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle" data-studio-id="{{ $studio->id }}">
-                                                @if(Auth::check() && Auth::user()->favoriteStudios->contains($studio->id))
-                                                    <i class="icon-heart text-12 text-blue-1"></i>
-                                                @else
-                                                    <i class="icon-heart text-12"></i>
-                                                @endif
-                                            </button>
-                                        </div>
-
-                                        @if($studio->user)
-                                        <div class="cardImage__contact" style="position: absolute; bottom: 10px; right: 10px;">
-                                            <button type="button" class="button -blue-1 bg-white size-30 rounded-full shadow-2"
-                                                onclick="event.preventDefault(); window.startNewMessagingChat({{ $studio->user_id }}, '{{ addslashes($studio->user->first_name) }} {{ addslashes($studio->user->last_name) }}', '{{ $studio->user->avatar }}')">
-                                                <i class="icon-email-2 text-12"></i>
-                                            </button>
-                                        </div>
-                                        @endif
-
-
                                     </div>
-                                </div>
-
-                                <div class="col-md">
-                                    <div class="d-flex flex-column h-full justify-between">
-                                        <div class="">
-                                            <p class="text-14 lh-14 mb-5">{{ $studio->city }}</p>
-                                            <h3 class="text-18 lh-16 fw-500">{{ $studio->name }}</h3>
-
-                                            <!-- Affichage de la distance si disponible -->
-                                            @if(isset($studio->distance))
-                                                <p class="text-light-1 lh-14 text-14 mt-5">
-                                                    <i class="icon-location text-14 mr-5"></i>
-                                                    {{ number_format($studio->distance, 1) }} km de votre position
-                                                </p>
-                                            @endif
-
-                                            <div class="row x-gap-5 items-center pt-5">
-                                                <!-- Étoiles ou autres indicateurs -->
-                                            </div>
-                                        </div>
-
-                                        <div class="row x-gap-10 y-gap-10 pt-20">
-                                            @php
-                                            $equipLabels = [
-                                                'micro_condenser' => 'Micro condensateur',
-                                                'micro_dynamic' => 'Micro dynamique',
-                                                'micro_ribbon' => 'Micro à ruban',
-                                                'micro_large_diaphragm' => 'Grand diaphragme',
-                                                'micro_small_diaphragm' => 'Petit diaphragme',
-                                                'micro_usb' => 'Micro USB',
-                                                'preamp_neve' => 'Preamp Neve',
-                                                'preamp_api' => 'Preamp API',
-                                                'preamp_ssl' => 'Preamp SSL',
-                                                'interface_apollo' => 'Interface Apollo',
-                                                'interface_focusrite' => 'Interface Focusrite',
-                                                'interface_rme' => 'Interface RME',
-                                                'interface_other' => 'Interface audio',
-                                                'piano_grand' => 'Piano à queue',
-                                                'piano_upright' => 'Piano droit',
-                                                'clavier_midi' => 'Clavier MIDI',
-                                                'synth' => 'Synthétiseur',
-                                                'drum_kit' => 'Batterie acoustique',
-                                                'drum_electronic' => 'Batterie électronique',
-                                                'guitar_electric' => 'Guitare électrique',
-                                                'guitar_acoustic' => 'Guitare acoustique',
-                                                'bass' => 'Basse',
-                                                'console_ssl' => 'Console SSL',
-                                                'console_neve' => 'Console Neve',
-                                                'console_api' => 'Console API',
-                                                'daw_protools' => 'Pro Tools',
-                                                'daw_logic' => 'Logic Pro',
-                                                'daw_ableton' => 'Ableton Live',
-                                                'daw_studio_one' => 'Studio One',
-                                                'monitor_genelec' => 'Monitors Genelec',
-                                                'monitor_yamaha' => 'Monitors Yamaha',
-                                                'monitor_adam' => 'Monitors ADAM',
-                                                'monitor_focal' => 'Monitors Focal',
-                                                'subwoofer' => 'Caisson de basses',
-                                                'headphones_dj' => 'Casques écoute',
-                                                'compressor_hardware' => 'Compresseur',
-                                                'eq_hardware' => 'Égaliseur',
-                                                'reverb_hardware' => 'Reverb',
-                                                'patchbay' => 'Patchbay',
-                                                'plugin_bundle' => 'Bundle plugins',
-                                                'booth' => 'Cabine vocale',
-                                                'lounge' => 'Salon lounge',
-                                                'parking' => 'Parking',
-                                                'wifi' => 'Wi-Fi',
-                                                'air_conditioning' => 'Climatisation',
-                                                'accessible' => 'Accessible PMR',
-                                                'kitchen' => 'Cuisine',
-                                            ];
-                                            $studioEq = $studio->equipment ?? [];
-                                            $preview = array_slice($studioEq, 0, 4);
-                                            $hasMore = count($studioEq) > 4;
-                                            @endphp
-                                            @if(!empty($preview))
-                                                @foreach($preview as $eqKey)
-                                                    @if(isset($equipLabels[$eqKey]))
-                                                    <div class="col-auto">
-                                                        <div class="border-light rounded-100 py-5 px-15 text-13 lh-14">{{ $equipLabels[$eqKey] }}</div>
-                                                    </div>
-                                                    @endif
-                                                @endforeach
-                                                @if($hasMore)
-                                                <div class="col-auto">
-                                                    <div class="border-light rounded-100 py-5 px-15 text-13 lh-14 text-light-1">+{{ count($studioEq) - 4 }}</div>
-                                                </div>
-                                                @endif
+                                    <div class="studioListCard__badges">
+                                        <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle" data-studio-id="{{ $studio->id }}">
+                                            @if(Auth::check() && Auth::user()->favoriteStudios->contains($studio->id))
+                                                <i class="icon-heart text-12 text-blue-1"></i>
                                             @else
-                                                <div class="col-auto">
-                                                    <div class="text-13 text-light-1">Aucun équipement renseigné</div>
-                                                </div>
+                                                <i class="icon-heart text-12"></i>
                                             @endif
+                                        </button>
+                                    </div>
+
+                                    @if($studio->user)
+                                    <div class="studioListCard__contact">
+                                        <button type="button" class="button -blue-1 bg-white size-30 rounded-full shadow-2"
+                                            onclick="event.preventDefault(); @if(!Auth::check()) window.location.href='{{ route('login') }}'; @else window.startNewMessagingChat({{ $studio->user_id }}, '{{ addslashes($studio->user->first_name) }} {{ addslashes($studio->user->last_name) }}', '{{ $studio->user->avatar }}'); @endif">
+                                            <i class="icon-email-2 text-12"></i>
+                                        </button>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="studioListCard__body">
+                                <div class="studioListCard__info">
+                                    <div class="studioListCard__top">
+                                        <div>
+                                            <h3 class="studioListCard__name">{{ $studio->name }}</h3>
+                                            <div class="studioListCard__location">
+                                                <i class="icon-location-2 text-12"></i>
+                                                <span>{{ $studio->city }}</span>
+                                            </div>
                                         </div>
+                                        <div class="studioListCard__ratingBadge">
+                                            <span>4.8</span>
+                                            <i class="icon-star text-9"></i>
+                                        </div>
+                                    </div>
+
+                                    @if(isset($studio->distance))
+                                        <div class="studioListCard__distance">
+                                            <i class="icon-route text-12"></i>
+                                            {{ number_format($studio->distance, 1) }} km de vous
+                                        </div>
+                                    @endif
+
+                                    {{-- Equipment Tags --}}
+                                    <div class="studioListCard__tags">
+                                        @php
+                                        $equipLabels = [
+                                            'micro_condenser' => 'Micro condensateur',
+                                            'micro_dynamic' => 'Micro dynamique',
+                                            'micro_ribbon' => 'Micro à ruban',
+                                            'micro_large_diaphragm' => 'Grand diaphragme',
+                                            'micro_small_diaphragm' => 'Petit diaphragme',
+                                            'micro_usb' => 'Micro USB',
+                                            'preamp_neve' => 'Preamp Neve',
+                                            'preamp_api' => 'Preamp API',
+                                            'preamp_ssl' => 'Preamp SSL',
+                                            'interface_apollo' => 'Interface Apollo',
+                                            'interface_focusrite' => 'Interface Focusrite',
+                                            'interface_rme' => 'Interface RME',
+                                            'interface_other' => 'Interface audio',
+                                            'piano_grand' => 'Piano à queue',
+                                            'piano_upright' => 'Piano droit',
+                                            'clavier_midi' => 'Clavier MIDI',
+                                            'synth' => 'Synthétiseur',
+                                            'drum_kit' => 'Batterie acoustique',
+                                            'drum_electronic' => 'Batterie électronique',
+                                            'guitar_electric' => 'Guitare électrique',
+                                            'guitar_acoustic' => 'Guitare acoustique',
+                                            'bass' => 'Basse',
+                                            'console_ssl' => 'Console SSL',
+                                            'console_neve' => 'Console Neve',
+                                            'console_api' => 'Console API',
+                                            'daw_protools' => 'Pro Tools',
+                                            'daw_logic' => 'Logic Pro',
+                                            'daw_ableton' => 'Ableton Live',
+                                            'daw_studio_one' => 'Studio One',
+                                            'monitor_genelec' => 'Monitors Genelec',
+                                            'monitor_yamaha' => 'Monitors Yamaha',
+                                            'monitor_adam' => 'Monitors ADAM',
+                                            'monitor_focal' => 'Monitors Focal',
+                                            'subwoofer' => 'Caisson de basses',
+                                            'headphones_dj' => 'Casques écoute',
+                                            'compressor_hardware' => 'Compresseur',
+                                            'eq_hardware' => 'Égaliseur',
+                                            'reverb_hardware' => 'Reverb',
+                                            'patchbay' => 'Patchbay',
+                                            'plugin_bundle' => 'Bundle plugins',
+                                            'booth' => 'Cabine vocale',
+                                            'lounge' => 'Salon lounge',
+                                            'parking' => 'Parking',
+                                            'wifi' => 'Wi-Fi',
+                                            'air_conditioning' => 'Climatisation',
+                                            'accessible' => 'Accessible PMR',
+                                            'kitchen' => 'Cuisine',
+                                        ];
+                                        $studioEq = $studio->equipment ?? [];
+                                        $preview = array_slice($studioEq, 0, 4);
+                                        $hasMore = count($studioEq) > 4;
+                                        @endphp
+                                        @if(!empty($preview))
+                                            @foreach($preview as $eqKey)
+                                                @if(isset($equipLabels[$eqKey]))
+                                                <span class="studioListCard__tag">{{ $equipLabels[$eqKey] }}</span>
+                                                @endif
+                                            @endforeach
+                                            @if($hasMore)
+                                            <span class="studioListCard__tag --more">+{{ count($studioEq) - 4 }}</span>
+                                            @endif
+                                        @else
+                                            <span class="studioListCard__tagEmpty">Aucun équipement renseigné</span>
+                                        @endif
                                     </div>
                                 </div>
 
-                                <div class="col-md-auto text-right md:text-left">
-                                    <div class="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
-                                        <div class="col-auto">
-                                            <div class="text-14 lh-14 fw-500">Exceptional</div>
-                                            <div class="text-14 lh-14 text-light-1">3,014 reviews</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1">4.8</div>
-                                        </div>
+                                <div class="studioListCard__priceSection">
+                                    <div class="studioListCard__reviews">
+                                        <span class="studioListCard__reviewLabel">Excellent</span>
+                                        <span class="studioListCard__reviewCount">3,014 avis</span>
                                     </div>
-
-                                    <div class="text-14 text-light-1 mt-40 md:mt-20">A Partir de </div>
-                                    <div class="text-22 lh-12 fw-600 mt-5">{{ $studio->hourly_rate }}€</div>
-                                    <div class="text-14 text-light-1 mt-5">par heures</div>
-
-                                    <a href="{{ route('studio.show', $studio) }}" class="button -md -dark-1 bg-blue-1 text-white mt-24">
-                                        Voir Détails <div class="icon-arrow-top-right ml-15"></div>
+                                    <div class="studioListCard__price">
+                                        <span class="studioListCard__priceLabel">A partir de</span>
+                                        <span class="studioListCard__priceValue">{{ $studio->hourly_rate }}€</span>
+                                        <span class="studioListCard__priceUnit">/ heure</span>
+                                    </div>
+                                    <a href="{{ route('studio.show', $studio) }}" class="studioListCard__cta">
+                                        Voir Détails
+                                        <i class="icon-arrow-top-right text-12"></i>
                                     </a>
                                 </div>
                             </div>
@@ -494,95 +462,78 @@
                     @endforeach
                 </div>
 
-                <!-- Pagination -->
-                {{-- Pagination Dynamique --}}
+                {{-- ======= PAGINATION ======= --}}
                 @if($studios->total() > 0)
-                <div class="border-top-light mt-30 pt-30">
-                    <div class="row x-gap-10 y-gap-20 justify-between md:justify-center">
-                        {{-- Bouton Précédent --}}
-                        <div class="col-auto md:order-1">
+                <div class="studioList-pagination">
+                    <div class="studioList-pagination__inner">
+                        {{-- Previous --}}
+                        <div class="studioList-pagination__nav">
                             @if($studios->onFirstPage())
-                                <button class="button -blue-1 size-40 rounded-full border-light opacity-50 cursor-not-allowed" disabled>
+                                <button class="studioList-pagination__btn --disabled" disabled>
                                     <i class="icon-chevron-left text-12"></i>
                                 </button>
                             @else
-                                <a href="{{ $studios->appends(request()->input())->previousPageUrl() }}" class="button -blue-1 size-40 rounded-full border-light">
+                                <a href="{{ $studios->appends(request()->input())->previousPageUrl() }}" class="studioList-pagination__btn">
                                     <i class="icon-chevron-left text-12"></i>
                                 </a>
                             @endif
                         </div>
 
-                        <div class="col-md-auto md:order-3">
-                            {{-- Pagination Desktop --}}
-                            <div class="row x-gap-20 y-gap-20 items-center justify-center md:d-none">
-                                @php
-                                    $currentPage = $studios->currentPage();
-                                    $lastPage = $studios->lastPage();
-                                    $start = max(1, $currentPage - 1);
-                                    $end = min($lastPage, $currentPage + 1);
-                                    
-                                    // Ajustement pour toujours essayer de montrer au moins 3 pages si possible
-                                    if ($currentPage == 1) $end = min($lastPage, 3);
-                                    if ($currentPage == $lastPage) $start = max(1, $lastPage - 2);
-                                @endphp
+                        {{-- Pages (Desktop) --}}
+                        <div class="studioList-pagination__pages d-none md:d-none lg:d-flex">
+                            @php
+                                $currentPage = $studios->currentPage();
+                                $lastPage = $studios->lastPage();
+                                $start = max(1, $currentPage - 1);
+                                $end = min($lastPage, $currentPage + 1);
+                                if ($currentPage == 1) $end = min($lastPage, 3);
+                                if ($currentPage == $lastPage) $start = max(1, $lastPage - 2);
+                            @endphp
 
-                                @if($start > 1)
-                                    <div class="col-auto">
-                                        <a href="{{ $studios->appends(request()->input())->url(1) }}" class="size-40 flex-center rounded-full">1</a>
-                                    </div>
-                                    @if($start > 2)
-                                        <div class="col-auto"><div class="size-40 flex-center rounded-full">...</div></div>
-                                    @endif
+                            @if($start > 1)
+                                <a href="{{ $studios->appends(request()->input())->url(1) }}" class="studioList-pagination__page">1</a>
+                                @if($start > 2)
+                                    <span class="studioList-pagination__dots">...</span>
                                 @endif
+                            @endif
 
-                                @for($i = $start; $i <= $end; $i++)
-                                    <div class="col-auto">
-                                        <a href="{{ $studios->appends(request()->input())->url($i) }}" 
-                                           class="size-40 flex-center rounded-full {{ $i == $currentPage ? 'bg-dark-1 text-white' : '' }}">
-                                            {{ $i }}
-                                        </a>
-                                    </div>
-                                @endfor
+                            @for($i = $start; $i <= $end; $i++)
+                                <a href="{{ $studios->appends(request()->input())->url($i) }}"
+                                   class="studioList-pagination__page {{ $i == $currentPage ? '--active' : '' }}">
+                                    {{ $i }}
+                                </a>
+                            @endfor
 
-                                @if($end < $lastPage)
-                                    @if($end < $lastPage - 1)
-                                        <div class="col-auto"><div class="size-40 flex-center rounded-full">...</div></div>
-                                    @endif
-                                    <div class="col-auto">
-                                        <a href="{{ $studios->appends(request()->input())->url($lastPage) }}" class="size-40 flex-center rounded-full">{{ $lastPage }}</a>
-                                    </div>
+                            @if($end < $lastPage)
+                                @if($end < $lastPage - 1)
+                                    <span class="studioList-pagination__dots">...</span>
                                 @endif
-                            </div>
-
-                            {{-- Pagination Mobile --}}
-                            <div class="row x-gap-10 y-gap-20 justify-center items-center d-none md:d-flex">
-                                <div class="col-auto">
-                                    <div class="size-40 flex-center rounded-full bg-dark-1 text-white">{{ $currentPage }}</div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="text-14 text-light-1">sur {{ $lastPage }}</div>
-                                </div>
-                            </div>
-
-                            <div class="text-center mt-30 md:mt-10">
-                                <div class="text-14 text-light-1">
-                                    {{ $studios->firstItem() }} – {{ $studios->lastItem() }} de {{ $studios->total() }} studios trouvés
-                                </div>
-                            </div>
+                                <a href="{{ $studios->appends(request()->input())->url($lastPage) }}" class="studioList-pagination__page">{{ $lastPage }}</a>
+                            @endif
                         </div>
 
-                        {{-- Bouton Suivant --}}
-                        <div class="col-auto md:order-2">
+                        {{-- Pages (Mobile) --}}
+                        <div class="studioList-pagination__mobile d-flex lg:d-none">
+                            <span class="studioList-pagination__page --active">{{ $currentPage }}</span>
+                            <span class="studioList-pagination__mobileText">sur {{ $lastPage }}</span>
+                        </div>
+
+                        {{-- Next --}}
+                        <div class="studioList-pagination__nav">
                             @if($studios->hasMorePages())
-                                <a href="{{ $studios->appends(request()->input())->nextPageUrl() }}" class="button -blue-1 size-40 rounded-full border-light">
+                                <a href="{{ $studios->appends(request()->input())->nextPageUrl() }}" class="studioList-pagination__btn">
                                     <i class="icon-chevron-right text-12"></i>
                                 </a>
                             @else
-                                <button class="button -blue-1 size-40 rounded-full border-light opacity-50 cursor-not-allowed" disabled>
+                                <button class="studioList-pagination__btn --disabled" disabled>
                                     <i class="icon-chevron-right text-12"></i>
                                 </button>
                             @endif
                         </div>
+                    </div>
+
+                    <div class="studioList-pagination__info">
+                        {{ $studios->firstItem() }} – {{ $studios->lastItem() }} de {{ $studios->total() }} studios trouvés
                     </div>
                 </div>
                 @endif
@@ -591,19 +542,21 @@
     </div>
 </section>
 
+{{-- ==========================================
+    SCRIPTS
+   ========================================== --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-input');
         const searchButton = document.getElementById('search-button');
 
-        // Fonction de recherche
         function performSearch() {
             const searchTerm = searchInput.value.toLowerCase();
-            const studioCards = document.querySelectorAll('.border-top-light.pt-20.mb-20');
+            const studioCards = document.querySelectorAll('.studioListCard');
 
             studioCards.forEach(card => {
-                const studioName = card.querySelector('h3').textContent.toLowerCase();
-                const studioCity = card.querySelector('p.text-14.lh-14.mb-5').textContent.toLowerCase();
+                const studioName = card.querySelector('.studioListCard__name').textContent.toLowerCase();
+                const studioCity = card.querySelector('.studioListCard__location span').textContent.toLowerCase();
 
                 if (studioName.includes(searchTerm) || studioCity.includes(searchTerm)) {
                     card.style.display = '';
@@ -611,24 +564,18 @@
                     card.style.display = 'none';
                 }
             });
-
-            // Mise à jour du compteur de résultats
-            const visibleStudios = document.querySelectorAll('.border-top-light.pt-20.mb-20[style=""]').length;
-            document.querySelector('.text-18 .fw-500').textContent = visibleStudios + ' Studios';
         }
 
-        // Écouteurs d'événements
-        searchButton.addEventListener('click', performSearch);
-        searchInput.addEventListener('keyup', function(event) {
-            if (event.key === 'Enter') {
-                performSearch();
-            }
+        if (searchButton) searchButton.addEventListener('click', performSearch);
+        if (searchInput) searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') performSearch();
         });
 
-        // Fonction pour mettre à jour l'affichage du périmètre
         window.updateDistanceValue = function(value) {
-            document.querySelector('.js-lower').textContent = '0km';
-            document.querySelector('.js-upper').textContent = value + 'km';
+            const lower = document.querySelector('.js-lower');
+            const upper = document.querySelector('.js-upper');
+            if (lower) lower.textContent = '0km';
+            if (upper) upper.textContent = value + 'km';
         };
     });
 
@@ -644,23 +591,33 @@
         let currentValue = parseInt(hoursValue.textContent);
         if (!isNaN(currentValue)) {
             currentValue += amount;
-            if (currentValue < 1) {
-                currentValue = 1;
-            }
+            if (currentValue < 1) currentValue = 1;
             hoursValue.textContent = currentValue;
             hoursInput.value = currentValue;
         }
     }
 
     function updateDistanceValue(value) {
-        document.querySelector('.js-upper').textContent = value + "km";
-        document.getElementById('distance').value = value;
+        const upper = document.querySelector('.js-upper');
+        if (upper) upper.textContent = value + "km";
+        const distInput = document.getElementById('distance');
+        if (distInput) distInput.value = value;
     }
+
+    function updateSliderTrack(input) {
+        const val = (input.value - input.min) / (input.max - input.min) * 100;
+        input.style.background = `linear-gradient(to right, #3554D1 ${val}%, #fff ${val}%)`;
+    }
+
+    // Initialize track on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const distRange = document.getElementById('distance');
+        if (distRange) updateSliderTrack(distRange);
+    });
 
     document.addEventListener('click', function(event) {
         const hoursInput = document.getElementById('min_hours');
         const hoursMenu = document.getElementById('hoursMenu');
-
         if (hoursInput && hoursMenu && !hoursInput.contains(event.target) && !hoursMenu.contains(event.target)) {
             hoursMenu.classList.add('hidden');
         }
@@ -668,28 +625,22 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const geolocateBtn = document.getElementById('geolocate-btn');
-
         if (geolocateBtn) {
             geolocateBtn.addEventListener('click', function() {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
-                        // Success
                         function(position) {
                             const latitude = position.coords.latitude;
                             const longitude = position.coords.longitude;
-
                             document.getElementById('latitude').value = latitude;
                             document.getElementById('longitude').value = longitude;
 
-                            // Fetch the address using Nominatim API
                             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`)
                                 .then(response => response.json())
                                 .then(data => {
                                     const city = data.address.city || data.address.town || data.address.village || "Unknown location";
                                     document.getElementById('city').value = city;
                                     document.getElementById('city').disabled = true;
-
-                                    // Visual feedback
                                     geolocateBtn.innerHTML = '<i class="icon-check text-16"></i>';
                                     geolocateBtn.classList.add('bg-white');
                                 })
@@ -697,7 +648,6 @@
                                     alert("Impossible de récupérer l'adresse. Veuillez entrer une ville manuellement.");
                                 });
                         },
-                        // Error
                         function(error) {
                             alert("Impossible d'obtenir votre position. Veuillez entrer une ville manuellement.");
                         }
@@ -709,54 +659,19 @@
         }
     });
 
-    document.getElementById("price-filter").addEventListener("change", function() {
-        const selectedOption = this.options[this.selectedIndex];
-        const urlParams = new URLSearchParams(window.location.search);
-
-        // Définir sort_by
-        urlParams.set('sort_by', this.value);
-
-        // Définir sort_direction si c'est un tri par prix
-        if (this.value === "price") {
-            urlParams.set('sort_direction', selectedOption.getAttribute('data-dir'));
-        } else {
-            urlParams.delete('sort_direction');
-        }
-
-        // Conserver les autres paramètres importants
-        // Ne pas toucher à latitude, longitude, distance, city, min_hours
-
-        window.location.search = urlParams.toString();
-    });
-
-    document.getElementById('price-filter').addEventListener('change', function () {
-        var selectedOption = this.options[this.selectedIndex];
-        var sortDirectionInput = document.getElementById('sort_direction');
-
-        if (selectedOption.value === 'price') {
-            sortDirectionInput.value = selectedOption.getAttribute('data-dir');
-        } else {
-            sortDirectionInput.value = 'asc'; // Distance par défaut
-        }
-
-        this.form.submit();
-    });
-
     document.addEventListener("DOMContentLoaded", function () {
         let minHoursInput = document.getElementById("min_hours");
         let hoursValue = document.getElementById("hoursValue");
-
-        // Synchronisation initiale
-        hoursValue.textContent = minHoursInput.value;
-
-        window.changeHours = function (amount) {
-            let newValue = parseInt(minHoursInput.value) + amount;
-            if (newValue < 1) newValue = 1; // Empêcher une valeur négative
-            minHoursInput.value = newValue;
-            hoursValue.textContent = newValue;
-        };
+        if (minHoursInput && hoursValue) {
+            hoursValue.textContent = minHoursInput.value;
+            window.changeHours = function (amount) {
+                let newValue = parseInt(minHoursInput.value) + amount;
+                if (newValue < 1) newValue = 1;
+                minHoursInput.value = newValue;
+                hoursValue.textContent = newValue;
+            };
+        }
     });
-
 </script>
 
 <script>
@@ -768,10 +683,12 @@
                 const studioId = this.getAttribute('data-studio-id');
                 const heartIcon = this.querySelector('i.icon-heart');
 
-                if (!heartIcon) {
-                    console.error('Icône non trouvée dans le bouton wishlist.');
+                if (!heartIcon) return;
+
+                @if(!Auth::check())
+                    window.location.href = '{{ route('login') }}';
                     return;
-                }
+                @endif
 
                 fetch('{{ route('wishlist.toggle') }}', {
                     method: 'POST',
@@ -783,28 +700,16 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log('Réponse serveur :', data);
-
                         if (data.success) {
-                            // Modification pour assurer que le changement visuel se produit
                             if (data.status === 'added') {
                                 heartIcon.classList.add('text-blue-1');
-                                console.log('Classe ajoutée:', heartIcon.className);
                             } else {
                                 heartIcon.classList.remove('text-blue-1');
-                                console.log('Classe retirée:', heartIcon.className);
                             }
-
-                            // Animation du bouton
                             button.classList.add('clicked');
                             setTimeout(() => {
                                 button.classList.remove('clicked');
                             }, 300);
-                        } else {
-                            if (data.message) {
-                                alert(data.message);
-                                window.location.href = '{{ route('login') }}';
-                            }
                         }
                     })
                     .catch(error => {
@@ -815,9 +720,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialiser tous les sliders d'images de studio
         const studioImageSliders = document.querySelectorAll('.js-cardImage-slider');
-
         studioImageSliders.forEach(function(slider, index) {
             new Swiper(slider, {
                 loop: true,
@@ -833,5 +736,3 @@
         });
     });
 </script>
-
-

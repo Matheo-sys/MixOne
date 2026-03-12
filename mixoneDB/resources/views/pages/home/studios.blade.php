@@ -4,7 +4,7 @@
             <div class="col-auto">
                 <div class="sectionTitle -md">
                     <h2 class="sectionTitle__title">Studios Recommandés</h2>
-                    <p class=" sectionTitle__text mt-5 sm:mt-0">Découvrez les studios recommandés pour vous en fonction de vos préférences.</p>
+                    <p class="sectionTitle__text mt-5 sm:mt-0">Découvrez les studios recommandés pour vous en fonction de vos préférences.</p>
                 </div>
             </div>
 
@@ -17,31 +17,29 @@
             <div class="swiper-wrapper">
                 @foreach($studios as $studio)
                     <div class="swiper-slide">
-                        <a href="{{ route('studio.show', $studio) }}" class="hotelsCard -type-1 ">
-                            <div class="hotelsCard__image">
-
-                                <div class="cardImage mobile-card-image ratio">
+                        <a href="{{ route('studio.show', $studio) }}" class="studioCard">
+                            {{-- Image Section --}}
+                            <div class="studioCard__image">
+                                <div class="cardImage ratio studioCard__ratio">
                                     <div class="cardImage__content">
                                         <div class="cardImage-slider rounded-4 overflow-hidden js-cardImage-slider">
                                             <div class="swiper-wrapper">
 
                                                 @php
                                                     $hasImages = false;
-                                                    // Vérifier les 4 emplacements d'images possibles
                                                     for ($i = 1; $i <= 4; $i++) {
                                                         $imageField = "image{$i}";
                                                         if (!empty($studio->$imageField)) {
                                                             $hasImages = true;
                                                             echo '<div class="swiper-slide">';
-                                                            echo '<img class="col-12" src="' . asset('storage/' . $studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
+                                                            echo '<img class="col-12 studioCard__img" src="' . asset('storage/' . $studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
                                                             echo '</div>';
                                                         }
                                                     }
 
-                                                    // Si aucune image n'est trouvée, afficher l'image par défaut
                                                     if (!$hasImages) {
                                                         echo '<div class="swiper-slide">';
-                                                        echo '<img class="col-12" src="' . asset('media/img/backgrounds/11.jpg') . '" alt="Image par défaut">';
+                                                        echo '<img class="col-12 studioCard__img" src="' . asset('media/img/backgrounds/11.jpg') . '" alt="Image par défaut">';
                                                         echo '</div>';
                                                     }
                                                 @endphp
@@ -62,53 +60,65 @@
                                                 </button>
                                             </div>
                                         </div>
-
                                     </div>
 
-                                    <div class="cardImage__wishlist">
-                                        <button class="button -blue-1 bg-white size-30 rounded-full shadow-2">
-                                            <i class="icon-heart text-12"></i>
-                                        </button>
+                                    {{-- Top overlay badges --}}
+                                    <div class="studioCard__badges">
+                                        <div class="studioCard__wishlist">
+                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle" data-studio-id="{{ $studio->id }}">
+                                                @if(Auth::check() && Auth::user()->favoriteStudios->contains($studio->id))
+                                                    <i class="icon-heart text-12 text-blue-1"></i>
+                                                @else
+                                                    <i class="icon-heart text-12"></i>
+                                                @endif
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {{-- Price tag overlay --}}
+                                    <div class="studioCard__priceTag">
+                                        <span>{{ $studio->hourly_rate }}€<small>/h</small></span>
                                     </div>
 
                                     @if($studio->user)
-                                    <div class="cardImage__contact" style="position: absolute; bottom: 10px; right: 10px;">
-                                        <button type="button" class="button -blue-1 bg-white size-30 rounded-full shadow-2" 
-                                            onclick="event.preventDefault(); window.startNewMessagingChat({{ $studio->user_id }}, '{{ addslashes($studio->user->first_name) }} {{ addslashes($studio->user->last_name) }}', '{{ $studio->user->avatar }}')">
+                                    <div class="studioCard__contact">
+                                        <button type="button" class="button -blue-1 bg-white size-30 rounded-full shadow-2"
+                                            onclick="event.preventDefault(); @if(!Auth::check()) window.location.href='{{ route('login') }}'; @else window.startNewMessagingChat({{ $studio->user_id }}, '{{ addslashes($studio->user->first_name) }} {{ addslashes($studio->user->last_name) }}', '{{ $studio->user->avatar }}'); @endif">
                                             <i class="icon-email-2 text-12"></i>
                                         </button>
                                     </div>
                                     @endif
-
-
                                 </div>
-
                             </div>
 
-                            <!-- Dans studios.blade.php dans la partie qui affiche les détails du studio -->
-                            <div class="hotelsCard__content mt-10">
-                                <h4 class="hotelsCard__title text-dark-1 text-18 lh-16 fw-500">
-                                    <span>{{ $studio->name }}</span>
-                                </h4>
-
-                                <p class="text-light-1 lh-14 text-14 mt-5">{{ $studio->city }}</p>
-
-                                @if(isset($studio->distance))
-                                    <p class="text-light-1 lh-14 text-14 mt-5">
-                                        <i class="icon-location text-14 mr-5"></i>
-                                        {{ number_format($studio->distance, 1) }} km de votre position
-                                    </p>
-                                @endif
-
-                                <div class="d-flex items-center mt-20">
-                                    <div class="flex-center bg-blue-1 rounded-4 size-30 text-12 fw-600 text-white">4.8</div>
-                                    <div class="text-14 text-dark-1 fw-500 ml-10">Exceptional</div>
-                                    <div class="text-14 text-light-1 ml-10">3,014 reviews</div>
+                            {{-- Content Section --}}
+                            <div class="studioCard__content">
+                                <div class="studioCard__header">
+                                    <h4 class="studioCard__title">{{ $studio->name }}</h4>
+                                    <div class="studioCard__rating">
+                                        <i class="icon-star text-10"></i>
+                                        <span>4.8</span>
+                                    </div>
                                 </div>
 
-                                <div class="mt-5">
-                                    <div class="fw-500">
-                                        A Partir de <span class="text-blue-1">{{ $studio->hourly_rate }}€</span>
+                                <div class="studioCard__location">
+                                    <i class="icon-location-2 text-12"></i>
+                                    <span>{{ $studio->city }}</span>
+                                </div>
+
+                                @if(isset($studio->distance))
+                                    <div class="studioCard__distance">
+                                        <i class="icon-route text-12"></i>
+                                        <span>{{ number_format($studio->distance, 1) }} km</span>
+                                    </div>
+                                @endif
+
+                                <div class="studioCard__footer">
+                                    <div class="studioCard__reviews">
+                                        <span class="studioCard__reviewCount">3,014 avis</span>
+                                    </div>
+                                    <div class="studioCard__cta">
+                                        Réserver <i class="icon-arrow-top-right text-10"></i>
                                     </div>
                                 </div>
                             </div>
@@ -139,3 +149,50 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.wishlist-toggle').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                @if(!Auth::check())
+                    window.location.href = '{{ route('login') }}';
+                    return;
+                @endif
+
+                const studioId = this.getAttribute('data-studio-id');
+                const heartIcon = this.querySelector('i.icon-heart');
+
+                if (!heartIcon) return;
+
+                fetch('{{ route('wishlist.toggle') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ studio_id: studioId })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (data.status === 'added') {
+                                heartIcon.classList.add('text-blue-1');
+                            } else {
+                                heartIcon.classList.remove('text-blue-1');
+                            }
+                            button.classList.add('clicked');
+                            setTimeout(() => {
+                                button.classList.remove('clicked');
+                            }, 300);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur AJAX:', error);
+                    });
+            });
+        });
+    });
+</script>
