@@ -7,12 +7,12 @@
 
                 <div class="row y-gap-30 pt-60 lg:pt-40">
                     <div class="col-sm-5 col-6">
-                        <div class="text-30 lh-15 fw-600">13M+</div>
+                        <div class="text-30 lh-15 fw-600">{{ $satisfiedClients ?? '13M+' }}</div>
                         <div class="text-light-1 lh-15">Clients satisfaits</div>
                     </div>
 
                     <div class="col-sm-5 col-6">
-                        <div class="text-30 lh-15 fw-600">4.88</div>
+                        <div class="text-30 lh-15 fw-600">{{ $globalRating ?? '4.88' }}</div>
                         <div class="text-light-1 lh-15">Note globale</div>
 
                         <div class="d-flex x-gap-5 items-center pt-10">
@@ -33,7 +33,9 @@
                         <div class="swiper-slide">
                             <div class="row items-center x-gap-30 y-gap-20">
                                 <div class="col-auto">
-                                    <img src="#" data-src={{asset("media/img/avatars/1.png")}} alt="image" class="js-lazy">
+                                    <div class="size-60 rounded-full overflow-hidden">
+                                        <img src="#" data-src={{asset("media/img/misc/avatar-default.png")}} alt="image" class="js-lazy h-full w-full object-cover" style="transform: scale(1.4);">
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">
@@ -48,7 +50,9 @@
                         <div class="swiper-slide">
                             <div class="row items-center x-gap-30 y-gap-20">
                                 <div class="col-auto">
-                                    <img src="#" data-src={{asset("media/img/avatars/1.png")}} alt="image" class="js-lazy">
+                                    <div class="size-60 rounded-full overflow-hidden">
+                                        <img src="#" data-src={{asset("media/img/misc/avatar-default.png")}} alt="image" class="js-lazy h-full w-full object-cover" style="transform: scale(1.4);">
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">
@@ -63,7 +67,9 @@
                         <div class="swiper-slide">
                             <div class="row items-center x-gap-30 y-gap-20">
                                 <div class="col-auto">
-                                    <img src="#" data-src={{asset("media/img/avatars/1.png")}} alt="image" class="js-lazy">
+                                    <div class="size-60 rounded-full overflow-hidden">
+                                        <img src="#" data-src={{asset("media/img/misc/avatar-default.png")}} alt="image" class="js-lazy h-full w-full object-cover" style="transform: scale(1.4);">
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">

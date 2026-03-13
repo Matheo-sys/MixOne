@@ -21,7 +21,9 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
+                                    <div class="size-60 rounded-full overflow-hidden">
+                                        <img class="h-full w-full object-cover" src={{asset("media/img/misc/avatar-default.png")}} alt="image" style="transform: scale(1.4);">
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">
@@ -41,7 +43,9 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
+                                    <div class="size-60 rounded-full overflow-hidden">
+                                        <img class="h-full w-full object-cover" src={{asset("media/img/misc/avatar-default.png")}} alt="image" style="transform: scale(1.4);">
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">
@@ -61,7 +65,9 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
+                                    <div class="size-60 rounded-full overflow-hidden">
+                                        <img class="h-full w-full object-cover" src={{asset("media/img/misc/avatar-default.png")}} alt="image" style="transform: scale(1.4);">
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">
@@ -81,7 +87,9 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
+                                    <div class="size-60 rounded-full overflow-hidden">
+                                        <img class="h-full w-full object-cover" src={{asset("media/img/misc/avatar-default.png")}} alt="image" style="transform: scale(1.4);">
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">
@@ -101,7 +109,9 @@
                         <div class="pt-20 mt-28 border-top-light">
                             <div class="row x-gap-20 y-gap-20 items-center">
                                 <div class="col-auto">
-                                    <img class="size-60" src={{asset("media/img/avatars/1.png")}} alt="image">
+                                    <div class="size-60 rounded-full overflow-hidden">
+                                        <img class="h-full w-full object-cover" src={{asset("media/img/misc/avatar-default.png")}} alt="image" style="transform: scale(1.4);">
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">

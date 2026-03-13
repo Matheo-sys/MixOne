@@ -99,9 +99,6 @@ class ReservationController extends Controller
         }
     }
 
-    /**
-     * Studio marque une réservation comme terminée.
-     */
     public function complete(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
     {
         try {
@@ -116,5 +113,31 @@ class ReservationController extends Controller
             }
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * Artiste note la session terminée.
+     */
+    public function rate(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        if (strtolower($reservation->status) !== 'terminée') {
+            return redirect()->back()->with('error', 'Vous ne pouvez noter que les sessions terminées.');
+        }
+
+        if ($reservation->rating) {
+            return redirect()->back()->with('error', 'Vous avez déjà noté cette session.');
+        }
+
+        $reservation->update([
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return redirect()->back()->with('success', 'Merci pour votre avis !');
     }
 }

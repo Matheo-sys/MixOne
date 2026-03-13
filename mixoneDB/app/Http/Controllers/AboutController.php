@@ -12,8 +12,16 @@ class AboutController extends Controller
     {
         $studioCount = Studio::count();
         $userCount = User::count();
-        $reservationCount = Reservation::count(); // Ajoute cette ligne
+        
+        $reservationCount = Reservation::count();
+        $ratings = Reservation::whereNotNull('rating')->get();
+        $totalRatings = $ratings->count();
+        $satisfiedRatings = $ratings->where('rating', '>=', 4)->count();
+        
+        $satisfactionPercentage = $totalRatings > 0 
+            ? round(($satisfiedRatings / $totalRatings) * 100) 
+            : 99; // Valeur par défaut si aucun avis
 
-        return view('pages.about', compact('studioCount', 'userCount', 'reservationCount'));
+        return view('pages.about', compact('studioCount', 'userCount', 'reservationCount', 'satisfactionPercentage'));
     }
 }

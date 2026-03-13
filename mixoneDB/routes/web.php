@@ -114,3 +114,7 @@ Route::post('/reservations/{reservation}/complete', [ReservationController::clas
     ->name('reservations.complete')
     ->middleware('auth');
 
+Route::post('/reservations/{reservation}/rate', [ReservationController::class, 'rate'])
+    ->name('reservations.rate')
+    ->middleware('auth');
+

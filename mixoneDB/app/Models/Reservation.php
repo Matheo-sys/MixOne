@@ -16,7 +16,9 @@ class Reservation extends Model
         'time_slot',
         'number_of_hours',
         'price',
-        'status'
+        'status',
+        'rating',
+        'comment'
     ];
 
     // Relation avec l'utilisateur
