@@ -65,9 +65,14 @@
                                     {{-- Top overlay badges --}}
                                     <div class="studioCard__badges">
                                         <div class="studioCard__wishlist">
-                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle" data-studio-id="{{ $studio->id }}">
-                                                @if(Auth::check() && Auth::user()->favoriteStudios->contains($studio->id))
-                                                    <i class="icon-heart text-12 text-blue-1"></i>
+                                            @php
+                                                $isFavorite = Auth::check() && Auth::user()->favoriteStudios->contains($studio->id);
+                                            @endphp
+                                            <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle {{ $isFavorite ? '-active' : '' }}" data-studio-id="{{ $studio->id }}">
+                                                @if($isFavorite)
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="#ff4d4d">
+                                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                    </svg>
                                                 @else
                                                     <i class="icon-heart text-12"></i>
                                                 @endif
@@ -163,9 +168,6 @@
                 @endif
 
                 const studioId = this.getAttribute('data-studio-id');
-                const heartIcon = this.querySelector('i.icon-heart');
-
-                if (!heartIcon) return;
 
                 fetch('{{ route('wishlist.toggle') }}', {
                     method: 'POST',
@@ -179,14 +181,16 @@
                     .then(data => {
                         if (data.success) {
                             if (data.status === 'added') {
-                                heartIcon.classList.add('text-blue-1');
+                                this.classList.add('-active');
+                                this.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="#ff4d4d"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
                             } else {
-                                heartIcon.classList.remove('text-blue-1');
+                                this.classList.remove('-active');
+                                this.innerHTML = `<i class="icon-heart text-12"></i>`;
                             }
-                            button.classList.add('clicked');
+                            this.classList.add('clicked');
                             setTimeout(() => {
-                                button.classList.remove('clicked');
-                            }, 300);
+                                this.classList.remove('clicked');
+                            }, 450);
                         }
                     })
                     .catch(error => {

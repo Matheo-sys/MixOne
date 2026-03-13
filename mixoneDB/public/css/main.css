@@ -1408,6 +1408,38 @@
   transform: scale(1.1);
 }
 
+.wishlist-toggle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.wishlist-toggle.-active {
+  background: #3554D1 !important;
+  border-color: #3554D1 !important;
+  box-shadow: 0 4px 15px rgba(53, 84, 209, 0.4) !important;
+}
+
+.wishlist-toggle i, 
+.wishlist-toggle svg {
+  transition: all 0.3s ease;
+}
+
+.wishlist-toggle.-active i {
+  color: #ff4d4d !important; 
+}
+
+/* Animation de "pop" quand on clique */
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1.1); }
+}
+
+.wishlist-toggle.clicked.-active {
+  animation: heartPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
 /* Card Body */
 .studioListCard__body {
   flex: 1;
