@@ -25,7 +25,7 @@
                     
                     <form class="d-inline" method="POST" action="{{ route('verification.resend') }}">
                         @csrf
-                        <button type="submit" class="button -md -blue-1 text-white mx-auto">
+                        <button type="submit" class="button -md bg-blue-1 text-white mx-auto">
                             Renvoyer l'e-mail de vérification
                         </button>
                     </form>

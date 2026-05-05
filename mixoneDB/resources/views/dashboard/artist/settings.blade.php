@@ -22,6 +22,9 @@
                 <div class="col-auto">
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-3">Changer le Mot de Passe</button>
                 </div>
+                <div class="col-auto">
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">Gestion du compte</button>
+                </div>
             </div>
 
             <div class="tabs__content pt-30 js-tabs-content">
@@ -202,6 +205,26 @@
                             </div>
                         </div>
                     </form>
+                </div>
+
+                <div class="tabs__pane -tab-item-4">
+                    <div class="col-xl-9">
+                        <div class="bg-red-3 rounded-4 px-30 py-30">
+                            <h4 class="text-18 fw-500 text-red-2">Supprimer mon compte</h4>
+                            <p class="text-15 text-red-2 mt-10">
+                                Une fois que vous aurez supprimé votre compte, il n'y aura plus de retour en arrière. Toutes vos données, studios et réservations seront définitivement supprimés.
+                            </p>
+                            
+                            <form action="{{ route('dashboard.settings.delete') }}" method="POST" class="mt-20" onsubmit="return confirm('Êtes-vous absolument sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="button h-50 px-24 bg-red-2 text-white">
+                                    <i class="icon-trash text-16 mr-10"></i>
+                                    Supprimer définitivement mon compte
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

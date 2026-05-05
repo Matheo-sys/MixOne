@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/settings', [UserSettingsController::class, 'edit'])->name('dashboard.settings');
         Route::post('/settings/update', [UserSettingsController::class, 'update'])->name('dashboard.settings.update');
         Route::post('/settings/update-password', [UserSettingsController::class, 'updatePassword'])->name('dashboard.settings.password');
+        Route::delete('/settings/delete', [UserSettingsController::class, 'destroy'])->name('dashboard.settings.delete');
         
         Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
         Route::post('/wishlist', [WishlistController::class, 'toggle'])->name('wishlist.toggle');

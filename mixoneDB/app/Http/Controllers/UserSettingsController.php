@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\UserSettings\UpdateProfileAction;
 use App\Actions\UserSettings\UpdatePasswordAction;
+use App\Actions\UserSettings\DeleteAccountAction;
 use App\Http\Requests\UserSettings\UpdateProfileRequest;
 use App\Http\Requests\UserSettings\UpdatePasswordRequest;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,8 @@ class UserSettingsController extends Controller
 {
     public function __construct(
         private readonly UpdateProfileAction $updateProfileAction,
-        private readonly UpdatePasswordAction $updatePasswordAction
+        private readonly UpdatePasswordAction $updatePasswordAction,
+        private readonly DeleteAccountAction $deleteAccountAction
     ) {}
 
     public function edit(): View
@@ -64,5 +66,15 @@ class UserSettingsController extends Controller
             }
             return back()->withErrors(['current_password' => $e->getMessage()]);
         }
+    }
+
+    public function destroy(): RedirectResponse
+    {
+        $user = Auth::user();
+        $this->deleteAccountAction->execute($user);
+
+        Auth::logout();
+
+        return redirect('/')->with('success', 'Votre compte a été supprimé avec succès.');
     }
 }
