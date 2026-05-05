@@ -105,6 +105,11 @@ class StripeWebhookController extends Controller
         if ($studioOwner && $studioOwner->email) {
             Mail::to($studioOwner->email)->send(new ReservationPaidStudioMail($reservation));
         }
+
+        // Envoyer le mail de confirmation de paiement à l'artiste
+        if ($reservation->user && $reservation->user->email) {
+            Mail::to($reservation->user->email)->send(new \App\Mail\ReservationPaidArtistMail($reservation));
+        }
     }
 
     /**

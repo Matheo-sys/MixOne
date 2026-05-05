@@ -17,15 +17,25 @@ class CreateReservationAction
      */
     public function execute(ReservationDTO $dto): Reservation
     {
-        // Vérifier la disponibilité du créneau
-        $existingReservation = Reservation::where('studio_id', $dto->studio_id)
-            ->where('date', $dto->date)
-            ->where('time_slot', $dto->time_slot)
-            ->where('status', '!=', ReservationStatus::Cancelled)
-            ->exists();
+        // Calculer l'heure de début et de fin de la nouvelle réservation
+        $newStart = \Carbon\Carbon::createFromFormat('H:i', $dto->time_slot);
+        $newEnd = (clone $newStart)->addHours($dto->number_of_hours);
 
-        if ($existingReservation) {
-            throw new Exception('Ce créneau horaire est déjà réservé.');
+        // Récupérer les réservations existantes pour ce studio et ce jour (non annulées)
+        $existingReservations = Reservation::where('studio_id', $dto->studio_id)
+            ->where('date', $dto->date)
+            ->whereIn('status', [ReservationStatus::Confirmed, ReservationStatus::Pending, ReservationStatus::Completed])
+            ->get();
+
+        foreach ($existingReservations as $res) {
+            $resStart = \Carbon\Carbon::createFromFormat('H:i', $res->time_slot);
+            $resEnd = (clone $resStart)->addHours($res->number_of_hours);
+
+            // Vérifier s'il y a un chevauchement
+            // (StartA < EndB) et (EndA > StartB)
+            if ($newStart->lt($resEnd) && $newEnd->gt($resStart)) {
+                throw new Exception("Ce créneau horaire chevauche une réservation existante ($res->time_slot pour $res->number_of_hours" . "h).");
+            }
         }
 
         return DB::transaction(function () use ($dto) {

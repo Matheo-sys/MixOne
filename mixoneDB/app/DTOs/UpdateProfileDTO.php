@@ -22,7 +22,10 @@ class UpdateProfileDTO
         public readonly ?string $country,
         public readonly ?string $zipcode,
         public readonly ?UploadedFile $avatar = null,
-        public readonly bool $remove_avatar = false
+        public readonly bool $remove_avatar = false,
+        public readonly ?string $bank_name = null,
+        public readonly ?string $iban = null,
+        public readonly ?string $bic = null
     ) {}
 
     public static function fromRequest(Request $request): self
@@ -42,7 +45,10 @@ class UpdateProfileDTO
             country: $request->validated('country'),
             zipcode: $request->validated('zipcode'),
             avatar: $request->file('avatar'),
-            remove_avatar: $request->boolean('remove_avatar')
+            remove_avatar: $request->boolean('remove_avatar'),
+            bank_name: $request->validated('bank_name'),
+            iban: $request->validated('iban'),
+            bic: $request->validated('bic')
         );
     }
 
@@ -62,6 +68,9 @@ class UpdateProfileDTO
             'state' => $this->state,
             'country' => $this->country,
             'zipcode' => $this->zipcode,
+            'bank_name' => $this->bank_name,
+            'iban' => $this->iban,
+            'bic' => $this->bic,
         ];
     }
 }

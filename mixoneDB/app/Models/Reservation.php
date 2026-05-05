@@ -27,6 +27,9 @@ class Reservation extends Model
         'pin_code',
         'disputed_at',
         'dispute_reason',
+        'dispute_description',
+        'dispute_image',
+        'admin_notes',
         'rating',
         'comment'
     ];
@@ -38,6 +41,7 @@ class Reservation extends Model
             'payment_status' => PaymentStatus::class,
             'price'          => 'decimal:2',
             'date'           => 'date',
+            'disputed_at'    => 'datetime',
         ];
     }
 

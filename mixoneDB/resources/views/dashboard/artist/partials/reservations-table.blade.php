@@ -68,12 +68,46 @@
                             <div class="fw-600 text-14 bg-light-2 px-10 py-5 rounded-4 d-inline-block">{{ $reservation->pin_code }}</div>
                         </div>
                     @endif
-                    <form action="{{ route('reservations.dispute', $reservation->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir signaler un problème ? Les fonds seront bloqués.');">
-                        @csrf
-                        <button type="submit" class="button -sm bg-red-1 text-white px-10 py-5 rounded-4 text-11 fw-500 w-1/1">
-                            Signaler un litige
-                        </button>
-                    </form>
+                    <button class="button -sm bg-red-1 text-white px-10 py-5 rounded-4 text-11 fw-500 w-1/1" data-x-click="modal-dispute-{{ $reservation->id }}">
+                        Signaler un litige
+                    </button>
+
+                    <div class="row items-center x-gap-30 y-gap-20 d-none" id="modal-dispute-{{ $reservation->id }}" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 400px; max-width: 95vw;">
+                        <div class="col-12 text-left">
+                            <h4 class="text-18 fw-600 mb-10 text-red-1">Signaler un problème</h4>
+                            <p class="text-13 text-light-1 mb-20">Expliquez précisément le problème pour que l'administration puisse trancher équitablement. Les fonds seront bloqués.</p>
+                            
+                            <form action="{{ route('reservations.dispute', $reservation->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-15">
+                                    <label class="text-14 fw-500 mb-5">Raison courte</label>
+                                    <input type="text" name="dispute_reason" class="form-control text-14" placeholder="Ex: Studio fermé, matériel cassé..." required>
+                                </div>
+
+                                <div class="mb-15">
+                                    <label class="text-14 fw-500 mb-5">Description détaillée</label>
+                                    <textarea name="dispute_description" class="form-control text-14" rows="4" placeholder="Donnez un maximum de détails..." required></textarea>
+                                </div>
+
+                                <div class="mb-20">
+                                    <label class="text-14 fw-500 mb-5">Preuve visuelle (Photo)</label>
+                                    <input type="file" name="dispute_image" class="form-control text-14" accept="image/*">
+                                    <div class="text-11 text-light-1 mt-5">Optionnel mais fortement recommandé.</div>
+                                </div>
+
+                                <div class="d-flex x-gap-10">
+                                    <button type="submit" class="button -sm bg-red-1 text-white px-20 py-10 rounded-4 text-14 fw-500">Envoyer le signalement</button>
+                                    <button type="button" class="button -sm bg-light-2 text-dark-1 px-15 py-10 rounded-4 text-14 fw-500" onclick="document.getElementById('modal-dispute-{{ $reservation->id }}').classList.add('d-none')">Annuler</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <script>
+                        document.querySelector('[data-x-click="modal-dispute-{{ $reservation->id }}"]').addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.getElementById('modal-dispute-{{ $reservation->id }}').classList.remove('d-none');
+                        });
+                    </script>
                 @elseif($s === 'terminée' && !$reservation->rating)
                     <button class="button -sm bg-blue-1 text-white px-10 py-5 rounded-4 text-12 fw-500" data-x-click="modal-rate-{{ $reservation->id }}">
                         Noter

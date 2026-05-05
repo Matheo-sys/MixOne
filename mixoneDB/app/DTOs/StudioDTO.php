@@ -16,6 +16,7 @@ class StudioDTO
         public readonly int $min_hours,
         public readonly string $description,
         public readonly array $equipment = [],
+        public readonly array $opening_hours = [],
         public readonly ?int $user_id = null,
         public readonly array $images = [],
         public readonly array $remove_images = []
@@ -33,6 +34,7 @@ class StudioDTO
             min_hours: (int) $request->validated('min_hours'),
             description: $request->validated('description'),
             equipment: $request->input('equipment', []),
+            opening_hours: $request->input('opening_hours', []),
             user_id: auth()->id(),
             images: [
                 'image1' => $request->file('image1'),
@@ -61,6 +63,7 @@ class StudioDTO
             'min_hours' => $this->min_hours,
             'description' => $this->description,
             'equipment' => $this->equipment,
+            'opening_hours' => $this->opening_hours,
             'user_id' => $this->user_id,
         ];
     }

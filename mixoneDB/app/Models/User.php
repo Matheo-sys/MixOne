@@ -33,6 +33,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'country',
         'zipcode',
         'banned_at',
+        'bank_name',
+        'iban',
+        'bic',
+        'profile',
+        'is_admin',
     ];
 
     /**
@@ -56,6 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'banned_at' => 'datetime',
+            'is_admin' => 'boolean',
         ];
     }
 

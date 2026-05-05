@@ -6,7 +6,7 @@ Bonjour **{{ $reservation->user->first_name ?? 'Artiste' }}**,
 Votre session au studio **{{ $reservation->studio->name }}** a été officiellement confirmée par le propriétaire !
 
 ### Détails de votre session :
-* **Date :** {{ \Carbon\Carbon::parse($reservation->time_slot)->format('d/m/Y') }}
+* **Date :** {{ \Carbon\Carbon::parse($reservation->date)->format('d/m/Y') }}
 * **Créneau :** {{ \Carbon\Carbon::parse($reservation->time_slot)->format('H:i') }} - {{ \Carbon\Carbon::parse($reservation->time_slot)->addHours($reservation->number_of_hours)->format('H:i') }}
 * **Adresse :** {{ $reservation->studio->address }}, {{ $reservation->studio->city }}
 

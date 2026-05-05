@@ -30,16 +30,19 @@
         <div class="tabs -underline-2 js-tabs">
             <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 sm:x-gap-10 js-tabs-controls overflow-x-auto">
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button is-tab-el-active" data-tab-target=".-tab-item-1">Contenu</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button is-tab-el-active" data-tab-target=".-tab-item-1">1. Présentation</button>
                 </div>
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-2">Localisation</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-2">2. Localisation</button>
                 </div>
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-3">Photos</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-6">3. Horaires</button>
                 </div>
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">Matériel</button>
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-3">4. Photos</button>
+                </div>
+                <div class="col-auto">
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">5. Équipements</button>
                 </div>
             </div>
 
@@ -61,7 +64,7 @@
                                 <div class="col-12">
                                     <div class="form-input">
                                         <textarea name="description" rows="5" required>{{ old('description', $studio->description) }}</textarea>
-                                        <label class="lh-1 text-16 text-light-1">Description</label>
+                                        <label class="lh-1 text-16 text-light-1">Description détaillée & Services</label>
                                     </div>
                                 </div>
 
@@ -141,6 +144,73 @@
                         </div>
                     </div>
 
+                    <div class="tabs__pane -tab-item-6">
+                        <div class="col-xl-10">
+                            <div class="text-18 fw-500 mb-10">Horaires d'ouverture</div>
+                            <div class="text-14 text-light-1 mb-20">Définissez vos horaires pour chaque jour. L'artiste ne pourra réserver que dans ces créneaux.</div>
+                            
+                            <div class="row y-gap-20">
+                                @php
+                                    $days = [
+                                        'monday' => 'Lundi',
+                                        'tuesday' => 'Mardi',
+                                        'wednesday' => 'Mercredi',
+                                        'thursday' => 'Jeudi',
+                                        'friday' => 'Vendredi',
+                                        'saturday' => 'Samedi',
+                                        'sunday' => 'Dimanche'
+                                    ];
+                                    $openingHours = $studio->opening_hours ?? [];
+                                @endphp
+
+                                @foreach($days as $key => $label)
+                                @php
+                                    $isOpen = isset($openingHours[$key]['is_open']) && $openingHours[$key]['is_open'];
+                                    $startTime = $openingHours[$key]['start'] ?? '08:00';
+                                    $endTime = $openingHours[$key]['end'] ?? '22:00';
+                                @endphp
+                                <div class="col-12">
+                                    <div class="row x-gap-20 y-gap-10 items-center">
+                                        <div class="col-md-2 col-4">
+                                            <div class="text-16 fw-500">{{ $label }}</div>
+                                        </div>
+                                        <div class="col-md-3 col-8">
+                                            <div class="d-flex items-center">
+                                                <label class="mx-switch-container">
+                                                    <input type="checkbox" name="opening_hours[{{ $key }}][is_open]" value="1" {{ $isOpen ? 'checked' : '' }} id="switch-edit-{{ $key }}">
+                                                    <span class="mx-switch-slider"></span>
+                                                </label>
+                                                <label class="text-14 ml-10" for="switch-edit-{{ $key }}">Ouvert</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7 col-12 d-flex items-center x-gap-15" id="hours-range-edit-{{ $key }}">
+                                            <div class="d-flex items-center flex-grow-1">
+                                                <div class="flex-center size-32 rounded-4 bg-blue-1 mr-10 shrink-0">
+                                                    <i class="icon-clock text-12 text-white"></i>
+                                                </div>
+                                                <div class="form-input flex-grow-1">
+                                                    <input type="time" name="opening_hours[{{ $key }}][start]" value="{{ $startTime }}">
+                                                    <label class="lh-1 text-12 text-light-1">Début</label>
+                                                </div>
+                                            </div>
+                                            <div class="text-14 text-light-1">à</div>
+                                            <div class="d-flex items-center flex-grow-1">
+                                                <div class="flex-center size-32 rounded-4 bg-blue-1 mr-10 shrink-0">
+                                                    <i class="icon-clock text-12 text-white"></i>
+                                                </div>
+                                                <div class="form-input flex-grow-1">
+                                                    <input type="time" name="opening_hours[{{ $key }}][end]" value="{{ $endTime }}">
+                                                    <label class="lh-1 text-12 text-light-1">Fin</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="tabs__pane -tab-item-3">
                         <div class="col-xl-12 mt-30">
                             <div class="d-flex flex-wrap x-gap-20 y-gap-20"> <!-- Utilisation de flexbox pour aligner les éléments en ligne -->
@@ -179,7 +249,7 @@
 
                     <div class="tabs__pane -tab-item-4">
                         <div class="col-xl-11">
-                            <div class="text-18 fw-500 mb-5">Matériel du Studio</div>
+                            <div class="text-18 fw-500 mb-5">Équipements & Fiche Technique</div>
                             <div class="text-14 text-light-1 mb-25">Cochez le matériel disponible dans votre studio d'enregistrement.</div>
 
                             @php
@@ -293,6 +363,90 @@
 
 @endsection
 
+<style>
+    .d-none {
+        display: none;
+    }
+
+    /* Switch Styling - Custom MixOne Design */
+    .mx-switch-container {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+        min-width: 48px;
+    }
+    .mx-switch-container input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .mx-switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+    .mx-switch-slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        top: 3px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    input:checked + .mx-switch-slider {
+        background-color: #3554d1;
+    }
+    input:checked + .mx-switch-slider:before {
+        transform: translateX(24px);
+    }
+    .img-ratio {
+        width: 100%;
+        height: auto;
+    }
+    .w-200 {
+        width: 200px;
+    }
+    .h-200 {
+        height: 200px;
+    }
+    .size-40 {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+    .default-image-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        pointer-events: none;
+    }
+    .position-relative {
+        position: relative;
+    }
+</style>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Afficher le message de succès avec une animation et le faire disparaître après 5 secondes
@@ -314,6 +468,22 @@
                 }, 500);
             }, 5000);
         }
+
+        // Toggle hours range based on switch
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        days.forEach(day => {
+            const switchEl = document.getElementById(`switch-edit-${day}`);
+            const rangeEl = document.getElementById(`hours-range-edit-${day}`);
+            
+            if (switchEl && rangeEl) {
+                const toggle = () => {
+                    rangeEl.style.opacity = switchEl.checked ? '1' : '0.3';
+                    rangeEl.style.pointerEvents = switchEl.checked ? 'auto' : 'none';
+                };
+                switchEl.addEventListener('change', toggle);
+                toggle(); // Initial state
+            }
+        });
 
         // Initialisation des textes "Par défaut"
         for (let i = 1; i <= 4; i++) {
@@ -447,6 +617,19 @@
                 }
             }, true); // capture : s'exécute avant le listener bubble de ajax-forms.js
         }
+
+        // Script pour masquer/afficher les horaires selon l'état du switch
+        document.querySelectorAll('.mx-switch-container input').forEach(input => {
+            input.addEventListener('change', function() {
+                const dayId = this.id.replace('switch-edit-', '');
+                const rangeDiv = document.getElementById('hours-range-edit-' + dayId);
+                if (this.checked) {
+                    rangeDiv.classList.remove('d-none');
+                } else {
+                    rangeDiv.classList.add('d-none');
+                }
+            });
+        });
 
         // ─── Autocomplétion ───
         if (!addressInput || !suggestionsBox) return;

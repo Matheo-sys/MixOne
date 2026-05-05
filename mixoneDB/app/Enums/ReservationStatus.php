@@ -20,7 +20,7 @@ enum ReservationStatus: string
     {
         return match ($this) {
             self::Pending   => [self::Confirmed, self::Refused, self::Cancelled],
-            self::Confirmed => [self::Cancelled, self::Completed],
+            self::Confirmed => [self::Cancelled, self::Completed, self::Disputed],
             default         => [],
         };
     }

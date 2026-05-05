@@ -35,9 +35,54 @@ class StudioController extends Controller
     public function show(Studio $studio): View
     {
         $studio->load(['user', 'reviews.user']);
-        $timeSlots = ["08:00", "10:00", "14:00", "16:00"];
+        
+        // Par défaut, on regarde pour aujourd'hui
+        $dayOfWeek = strtolower(now()->format('l'));
+        $openingHours = $studio->opening_hours[$dayOfWeek] ?? null;
+        
+        $timeSlots = [];
+        if ($openingHours && ($openingHours['is_open'] ?? false)) {
+            $start = $openingHours['start'] ?? '08:00';
+            $end = $openingHours['end'] ?? '22:00';
+            
+            $startTime = \Carbon\Carbon::createFromFormat('H:i', $start);
+            $endTime = \Carbon\Carbon::createFromFormat('H:i', $end);
+            
+            while ($startTime->lt($endTime)) {
+                $timeSlots[] = $startTime->format('H:i');
+                $startTime->addHour();
+            }
+        }
 
         return view('pages.studio.show', compact('studio', 'timeSlots'));
+    }
+
+    /**
+     * API pour récupérer les créneaux disponibles selon la date
+     */
+    public function getAvailableTimeSlots(Studio $studio, Request $request): JsonResponse
+    {
+        $date = $request->get('date');
+        if (!$date) return response()->json([]);
+
+        $dayOfWeek = strtolower(\Carbon\Carbon::parse($date)->format('l'));
+        $openingHours = $studio->opening_hours[$dayOfWeek] ?? null;
+
+        $timeSlots = [];
+        if ($openingHours && ($openingHours['is_open'] ?? false)) {
+            $start = $openingHours['start'] ?? '09:00';
+            $end = $openingHours['end'] ?? '20:00';
+
+            $startTime = \Carbon\Carbon::createFromFormat('H:i', $start);
+            $endTime = \Carbon\Carbon::createFromFormat('H:i', $end);
+
+            while ($startTime->lt($endTime)) {
+                $timeSlots[] = $startTime->format('H:i');
+                $startTime->addHour();
+            }
+        }
+
+        return response()->json($timeSlots);
     }
 
     /**

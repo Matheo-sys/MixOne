@@ -30,6 +30,7 @@ class CreateRequest extends FormRequest
             'image2'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'image3'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'image4'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'opening_hours' => 'nullable|array',
         ];
     }
 

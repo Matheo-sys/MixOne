@@ -14,7 +14,8 @@ class StudioSearchDTO
         public readonly string $city = '',
         public readonly string $sort_by = 'distance',
         public readonly string $sort_direction = 'asc',
-        public readonly array $equipment = []
+        public readonly array $equipment = [],
+        public readonly ?string $date = null
     ) {}
 
     public static function fromRequest(Request $request): self
@@ -27,7 +28,8 @@ class StudioSearchDTO
             city: $request->input('city', '') ?? '',
             sort_by: $request->input('sort_by', 'distance'),
             sort_direction: $request->input('sort_direction', 'asc'),
-            equipment: $request->input('equipment', [])
+            equipment: $request->input('equipment', []),
+            date: $request->input('date')
         );
     }
 }

@@ -31,6 +31,7 @@ class UpdateRequest extends FormRequest
             'remove_image2' => 'nullable|boolean',
             'remove_image3' => 'nullable|boolean',
             'remove_image4' => 'nullable|boolean',
+            'opening_hours' => 'nullable|array',
         ];
     }
 

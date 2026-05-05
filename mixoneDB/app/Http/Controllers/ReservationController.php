@@ -191,15 +191,29 @@ class ReservationController extends Controller
             return redirect()->back()->with('error', 'Vous ne pouvez signaler un litige que sur une réservation confirmée.');
         }
 
+        $request->validate([
+            'dispute_reason' => 'required|string|max:255',
+            'dispute_description' => 'required|string|max:2000',
+            'dispute_image' => 'nullable|image|max:5120',
+        ]);
+
         try {
+            $imagePath = null;
+            if ($request->hasFile('dispute_image')) {
+                $imagePath = $request->file('dispute_image')->store('dispute_proofs', 'public');
+            }
+
             $reservation->update([
                 'disputed_at' => now(),
-                'dispute_reason' => $request->input('reason', 'Signalé par l\'utilisateur.'),
+                'dispute_reason' => $request->input('dispute_reason'),
+                'dispute_description' => $request->input('dispute_description'),
+                'dispute_image' => $imagePath,
+                'status' => \App\Enums\ReservationStatus::Disputed,
             ]);
 
-            return redirect()->back()->with('success', 'Le litige a bien été signalé. Les fonds sont gelés jusqu\'à résolution.');
+            return redirect()->back()->with('success', 'Le litige a bien été signalé. Les fonds sont gelés jusqu\'à résolution par l\'administration.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erreur lors du signalement.');
+            return redirect()->back()->with('error', 'Erreur lors du signalement : ' . $e->getMessage());
         }
     }
 

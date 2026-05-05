@@ -26,24 +26,19 @@
             <tbody>
                 @forelse($disputes as $dispute)
                 <tr>
-                    <td>{{ $dispute->disputed_at ? $dispute->disputed_at->format('d/m/Y H:i') : 'N/A' }}</td>
+                    <td class="text-14">{{ $dispute->disputed_at ? $dispute->disputed_at->format('d/m/Y H:i') : 'N/A' }}</td>
                     <td class="fw-500">#{{ $dispute->id }}</td>
-                    <td>{{ $dispute->user->first_name }} {{ $dispute->user->last_name }}</td>
-                    <td>{{ $dispute->studio->title }}</td>
-                    <td class="text-light-1">{{ $dispute->dispute_reason }}</td>
+                    <td class="text-15">
+                        {{ $dispute->user->first_name ?? 'Inconnu' }} {{ $dispute->user->last_name ?? '' }}
+                    </td>
+                    <td class="text-blue-1 fw-500">
+                        {{ $dispute->studio->name ?? 'Studio supprimé' }}
+                    </td>
+                    <td class="text-light-1 text-14" style="max-width: 250px;">{{ $dispute->dispute_reason }}</td>
                     <td>
-                        <div class="d-flex x-gap-10">
-                            <form action="{{ route('admin.disputes.resolve', $dispute) }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="action" value="complete">
-                                <button type="submit" class="button -sm -blue-1 text-white">Terminer (Payer Studio)</button>
-                            </form>
-                            <form action="{{ route('admin.disputes.resolve', $dispute) }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="action" value="cancel">
-                                <button type="submit" class="button -sm -red-1 text-white">Annuler (Rembourser)</button>
-                            </form>
-                        </div>
+                        <a href="{{ route('admin.disputes.show', $dispute) }}" class="button -sm bg-blue-1 text-white px-20 py-5 rounded-4 text-12">
+                            <i class="icon-eye mr-5"></i> Gérer le litige
+                        </a>
                     </td>
                 </tr>
                 @empty

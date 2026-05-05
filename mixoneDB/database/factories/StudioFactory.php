@@ -27,10 +27,19 @@ class StudioFactory extends Factory
             'country' => 'France',
             'hourly_rate' => $this->faker->numberBetween(30, 150),
             'min_hours' => $this->faker->numberBetween(1, 4),
-            'latitude' => $this->faker->latitude(43, 49),
-            'longitude' => $this->faker->longitude(-1, 7),
+            'latitude' => $this->faker->latitude(48.5, 49.0),
+            'longitude' => $this->faker->longitude(2.0, 2.6),
             'equipment' => ['Microphone', 'Moniteurs', 'Casque', 'Interface Audio'],
-            'is_verified' => $this->faker->boolean(20),
+            'is_verified' => $this->faker->boolean(50),
+            'opening_hours' => [
+                'monday'    => ['is_open' => true,  'start' => '09:00', 'end' => '20:00'],
+                'tuesday'   => ['is_open' => true,  'start' => '09:00', 'end' => '20:00'],
+                'wednesday' => ['is_open' => true,  'start' => '09:00', 'end' => '20:00'],
+                'thursday'  => ['is_open' => true,  'start' => '09:00', 'end' => '20:00'],
+                'friday'    => ['is_open' => true,  'start' => '09:00', 'end' => '20:00'],
+                'saturday'  => ['is_open' => true,  'start' => '10:00', 'end' => '18:00'],
+                'sunday'    => ['is_open' => false, 'start' => '09:00', 'end' => '20:00'],
+            ],
         ];
     }
 }

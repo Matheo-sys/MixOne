@@ -80,6 +80,12 @@ class PaymentController extends Controller
                     'payment_status'    => PaymentStatus::Paid,
                     'stripe_payment_id' => $session->payment_intent,
                 ]);
+
+                // Prévenir le studio par mail
+                $studioOwner = $reservation->studio->user;
+                if ($studioOwner && $studioOwner->email) {
+                    \Illuminate\Support\Facades\Mail::to($studioOwner->email)->send(new \App\Mail\NewReservationStudioMail($reservation));
+                }
             }
 
             return view('pages.payment.success', [

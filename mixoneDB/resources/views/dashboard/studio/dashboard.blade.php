@@ -48,8 +48,11 @@
                             <input class="pl-15 bg-white text-dark-1 h-40 rounded-8 w-1/1 border-light" type="number" name="amount" placeholder="Montant (€)" required min="10" max="{{ $wallet->balance ?? 0 }}" step="0.01">
                         </div>
                         <div class="single-field relative d-flex items-center">
-                            <input class="pl-15 bg-white text-dark-1 h-40 rounded-8 w-1/1 border-light" type="text" name="iban" placeholder="Votre IBAN" required minlength="15">
+                            <input class="pl-15 bg-white text-dark-1 h-40 rounded-8 w-1/1 border-light" type="text" name="iban" placeholder="Votre IBAN" required minlength="15" value="{{ old('iban', auth()->user()->iban) }}">
                         </div>
+                        @if(!auth()->user()->iban)
+                            <div class="text-11 text-red-1">⚠️ Aucun IBAN enregistré. <a href="{{ route('dashboard.settings') }}" class="underline">Configurez-le ici</a>.</div>
+                        @endif
                         <button type="submit" class="button -md -blue-1 bg-blue-1-05 text-blue-1 w-1/1 mt-5" {{ ($wallet->balance ?? 0) < 10 ? 'disabled' : '' }}>Demander un virement</button>
                     </form>
                 </div>

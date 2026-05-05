@@ -43,6 +43,14 @@ class SearchStudiosAction
             }
         }
 
+        if ($dto->date) {
+            $dayOfWeek = strtolower(\Carbon\Carbon::parse($dto->date)->format('l'));
+            $query->where(function($q) use ($dayOfWeek) {
+                $q->whereJsonContains("opening_hours->{$dayOfWeek}->is_open", "1")
+                  ->orWhereJsonContains("opening_hours->{$dayOfWeek}->is_open", true);
+            });
+        }
+
         if ($latitude && $longitude) {
             $query->select('studios.*')
                 ->selectRaw("(6371 * acos(

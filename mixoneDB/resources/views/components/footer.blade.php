@@ -25,9 +25,10 @@
                 <div class="col-xl-2 col-lg-4 col-sm-6">
                     <h5 class="text-16 fw-500 mb-30">Support</h5>
                     <div class="d-flex y-gap-10 flex-column">
-                        <a href="/contact">Contact</a>
-                        <a href="/terms">Mentions Legales</a>
-                        <a href="/terms">Politique de Confidentialité</a>
+                        <a href="{{ route('contact') }}">Contact</a>
+                        <a href="{{ route('legal') }}">Mentions Légales</a>
+                        <a href="{{ route('privacy') }}">Politique de Confidentialité</a>
+                        <a href="{{ route('terms') }}">Conditions d'Utilisation</a>
                     </div>
                 </div>
             </div>
@@ -39,14 +40,14 @@
                     <div class="row x-gap-30 y-gap-10">
                         <div class="col-auto">
                             <div class="d-flex items-center">
-                                © 2025 MixOne LLC All rights reserved.
+                                © {{ date('Y') }} MixOne. Tous droits réservés.
                             </div>
                         </div>
 
                         <div class="col-auto">
                             <div class="d-flex x-gap-15">
-                                <a href="/terms">Confidentialité</a>
-                                <a href="/terms">Termes</a>
+                                <a href="{{ route('privacy') }}">Confidentialité</a>
+                                <a href="{{ route('terms') }}">Termes</a>
                             </div>
                         </div>
                     </div>

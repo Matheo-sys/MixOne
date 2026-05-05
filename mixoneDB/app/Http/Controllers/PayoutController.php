@@ -9,17 +9,20 @@ class PayoutController extends Controller
 {
     public function requestPayout(Request $request)
     {
-        $request->validate([
-            'amount' => 'required|numeric|min:10',
-            'iban' => 'required|string|min:15',
-        ]);
-
         $user = Auth::user();
         $wallet = $user->wallet;
 
         if (!$wallet) {
             return redirect()->back()->with('error', 'Vous n\'avez pas de portefeuille actif.');
         }
+
+        $request->validate([
+            'amount' => 'required|numeric|min:10|max:' . ($wallet->balance ?? 0),
+            'iban' => ['required', 'string', 'regex:/^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$/i'],
+        ], [
+            'iban.regex' => 'Le format de l\'IBAN est invalide (ex: FR76...).',
+            'amount.max' => 'Vous ne pouvez pas retirer plus que votre solde actuel (' . ($wallet->balance ?? 0) . '€).',
+        ]);
 
         try {
             $wallet->requestPayout($request->amount, $request->iban);

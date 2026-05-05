@@ -32,6 +32,9 @@ class UpdateProfileRequest extends FormRequest
             'zipcode'       => 'nullable|string|max:20',
             'avatar'        => 'nullable|image|mimes:jpeg,png|max:2048',
             'remove_avatar' => 'nullable|boolean',
+            'bank_name'     => 'nullable|string|max:255',
+            'iban'          => 'nullable|string|max:50',
+            'bic'           => 'nullable|string|max:20',
         ];
     }
 

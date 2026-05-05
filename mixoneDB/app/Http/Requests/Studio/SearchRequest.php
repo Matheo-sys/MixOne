@@ -24,6 +24,7 @@ class SearchRequest extends FormRequest
             'sort_direction' => 'nullable|string|in:asc,desc',
             'equipment' => 'nullable|array',
             'equipment.*' => 'nullable|string',
+            'date' => 'nullable|date',
         ];
     }
 

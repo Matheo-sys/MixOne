@@ -17,11 +17,13 @@
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button is-tab-el-active" data-tab-target=".-tab-item-1">Informations Personnelles</button>
                 </div>
                 <div class="col-auto">
-                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-2">Moyens de Paiement</button>
-                </div>
-                <div class="col-auto">
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-3">Changer le Mot de Passe</button>
                 </div>
+                @if(auth()->user()->profile === 'studio')
+                <div class="col-auto">
+                    <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-banking">Informations Bancaires</button>
+                </div>
+                @endif
                 <div class="col-auto">
                     <button class="tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button" data-tab-target=".-tab-item-4">Gestion du compte</button>
                 </div>
@@ -114,58 +116,7 @@
                     </form>
                 </div>
 
-                <div class="tabs__pane -tab-item-2">
-                    <form action="{{ route('dashboard.settings.update') }}" method="POST" class="js-ajax-form">
-                        @csrf
-                        <div class="col-xl-9">
-                            <div class="row x-gap-20 y-gap-20">
-                                <div class="col-12">
-                                    <div class="form-input">
-                                        <input type="text" name="address_line1" value="{{ old('address_line1', auth()->user()->address_line1) }}">
-                                        <label class="lh-1 text-16 text-light-1">Adresse (ligne 1)</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-input">
-                                        <input type="text" name="address_line2" value="{{ old('address_line2', auth()->user()->address_line2) }}">
-                                        <label class="lh-1 text-16 text-light-1">Adresse (ligne 2)</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-input">
-                                        <input type="text" name="city" value="{{ old('city', auth()->user()->city) }}">
-                                        <label class="lh-1 text-16 text-light-1">Ville</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-input">
-                                        <input type="text" name="state" value="{{ old('state', auth()->user()->state) }}">
-                                        <label class="lh-1 text-16 text-light-1">État/Région</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-input">
-                                        <input type="text" name="country" value="{{ old('country', auth()->user()->country) }}">
-                                        <label class="lh-1 text-16 text-light-1">Pays</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-input">
-                                        <input type="text" name="zipcode" value="{{ old('zipcode', auth()->user()->zipcode) }}">
-                                        <label class="lh-1 text-16 text-light-1">Code Postal</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="d-inline-block">
-                                        <button type="submit" class="button h-50 px-24 -dark-1 bg-blue-1 text-white">
-                                            Sauvegarder <div class="icon-arrow-top-right ml-15"></div>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+
 
                 <div class="tabs__pane -tab-item-3">
                     <form action="{{ route('dashboard.settings.password') }}" method="POST" class="js-ajax-form" data-reset>
@@ -206,6 +157,51 @@
                         </div>
                     </form>
                 </div>
+
+                @if(auth()->user()->profile === 'studio')
+                <div class="tabs__pane -tab-item-banking">
+                    <form action="{{ route('dashboard.settings.update') }}" method="POST" class="js-ajax-form">
+                        @csrf
+                        <div class="col-xl-9">
+                            <div class="bg-blue-1-05 rounded-4 px-30 py-30 mb-30">
+                                <h4 class="text-18 fw-500 text-blue-1">Vos coordonnées bancaires</h4>
+                                <p class="text-15 text-light-1 mt-10">
+                                    Ces informations sont nécessaires pour vous reverser vos revenus de réservations. 
+                                    Elles sont stockées de manière sécurisée.
+                                </p>
+                            </div>
+
+                            <div class="row x-gap-20 y-gap-20">
+                                <div class="col-12">
+                                    <div class="form-input">
+                                        <input type="text" name="bank_name" value="{{ old('bank_name', auth()->user()->bank_name) }}">
+                                        <label class="lh-1 text-16 text-light-1">Nom de la banque</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-input">
+                                        <input type="text" name="iban" value="{{ old('iban', auth()->user()->iban) }}" placeholder="FR76 ...">
+                                        <label class="lh-1 text-16 text-light-1">IBAN</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-input">
+                                        <input type="text" name="bic" value="{{ old('bic', auth()->user()->bic) }}" placeholder="AAAA BB CC ...">
+                                        <label class="lh-1 text-16 text-light-1">BIC / SWIFT</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-inline-block">
+                                        <button type="submit" class="button h-50 px-24 -dark-1 bg-blue-1 text-white">
+                                            Sauvegarder les infos bancaires <div class="icon-arrow-top-right ml-15"></div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                @endif
 
                 <div class="tabs__pane -tab-item-4">
                     <div class="col-xl-9">

@@ -277,9 +277,11 @@
                                 <input type="hidden" name="total_price" id="total_price" value="">
 
                                 <!-- Section Date -->
-                                <div class="form-group mb-25">
-                                    <label for="date" class="d-block text-15 fw-500 mb-10 text-dark-1 ml-10">
-                                        <i class="icon-calendar text-16 mr-5"></i> Date de réservation
+                                    <label for="date" class="d-flex items-center text-15 fw-500 mb-10 text-dark-1">
+                                        <div class="flex-center size-32 rounded-4 bg-blue-1 mr-10">
+                                            <i class="icon-calendar text-14 text-white"></i>
+                                        </div>
+                                        Date de réservation
                                     </label>
                                     <div class="relative">
                                         <input type="date" id="date" name="date"
@@ -287,18 +289,19 @@
                                                required
                                                onchange="updateHiddenDate()"
                                                min="{{ date('Y-m-d') }}">
-                                        <i class="icon-arrow-down text-14 absolute right-20 top-15 text-light-1"></i>
                                     </div>
-                                </div>
 
                                 <!-- Section Nombre d'heures -->
-                                <div class="col-12 mt-20 mb-20">
                                     <div class="searchMenu-guests px-20 py-15 border-light rounded-4 js-form-dd js-form-counters bg-white shadow-sm hover:shadow-md transition-shadow">
                                         <div data-x-dd-click="searchMenu-guests" class="cursor-pointer">
-                                            <h4 class="text-15 fw-500 ls-2 lh-16 text-dark-1">
-                                                <i class="icon-clock text-16 mr-5 text-blue-1"></i>
-                                                Nombre d'heures (minimum {{ $studio->min_hours }}h)
-                                            </h4>
+                                            <div class="d-flex items-center mb-5">
+                                                <div class="flex-center size-32 rounded-4 bg-blue-1 mr-10">
+                                                    <i class="icon-clock text-14 text-white"></i>
+                                                </div>
+                                                <h4 class="text-15 fw-500 ls-2 lh-16 text-dark-1">
+                                                    Nombre d'heures (minimum {{ $studio->min_hours }}h)
+                                                </h4>
+                                            </div>
                                             <div class="text-15 text-dark-1 ls-2 lh-16 flex items-center mt-5">
                                                 <span class="js-count-adult fw-600">{{ $studio->min_hours }}</span>
                                                 <span class="ml-5">Heures</span> <!-- Petit espace de 5px -->
@@ -340,8 +343,11 @@
 
                                 <!-- Section Créneaux horaires -->
                                 <div class="form-group mb-30">
-                                    <label class="d-block text-15 fw-500 mb-10 text-dark-1">
-                                        <i class="icon-time text-16 mr-5"></i> Créneau horaire :
+                                    <label class="d-flex items-center text-15 fw-500 mb-10 text-dark-1">
+                                        <div class="flex-center size-32 rounded-4 bg-blue-1 mr-10">
+                                            <i class="icon-time text-14 text-white"></i>
+                                        </div>
+                                        Créneau horaire :
                                     </label>
                                     <div class="relative">
                                         <select name="time_slot" id="time_slot"
@@ -641,6 +647,42 @@
                 init();
             });
         })();
+
+        // AJAX pour mettre à jour les créneaux horaires
+        document.getElementById('date').addEventListener('change', function() {
+            const date = this.value;
+            const studioId = {{ $studio->id }};
+            const timeSlotSelect = document.getElementById('time_slot');
+
+            if (!date) return;
+
+            // Afficher un message de chargement
+            timeSlotSelect.innerHTML = '<option disabled selected>Chargement...</option>';
+
+            fetch(`/api/studios/${studioId}/time-slots?date=${date}`)
+                .then(response => response.json())
+                .then(slots => {
+                    timeSlotSelect.innerHTML = '';
+                    if (slots.length > 0) {
+                        slots.forEach(slot => {
+                            const option = document.createElement('option');
+                            option.value = slot;
+                            option.textContent = slot;
+                            timeSlotSelect.appendChild(option);
+                        });
+                    } else {
+                        const option = document.createElement('option');
+                        option.disabled = true;
+                        option.selected = true;
+                        option.textContent = 'Aucun créneau disponible (Fermé)';
+                        timeSlotSelect.appendChild(option);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des créneaux:', error);
+                    timeSlotSelect.innerHTML = '<option disabled selected>Erreur de chargement</option>';
+                });
+        });
     </script>
 @endsection
 

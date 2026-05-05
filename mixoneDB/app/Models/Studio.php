@@ -21,6 +21,7 @@ class Studio extends Model
         'min_hours',
         'description',
         'equipment',
+        'opening_hours',
         'latitude',
         'longitude',
         'image1',
@@ -32,6 +33,7 @@ class Studio extends Model
 
     protected $casts = [
         'equipment' => 'array',
+        'opening_hours' => 'array',
         'is_verified' => 'boolean',
     ];
 
