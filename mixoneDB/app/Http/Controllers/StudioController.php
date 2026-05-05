@@ -74,15 +74,19 @@ class StudioController extends Controller
      */
     public function index(): View
     {
-        $studios = Studio::with('user')
+        $baseQuery = Studio::with('user')
             ->withCount('completedReservations')
             ->withAvg('completedReservations', 'rating')
-            ->where('is_verified', true)
-            ->paginate(20);
+            ->where('is_verified', true);
+
+        $studios = (clone $baseQuery)->paginate(20);
+        $mapStudios = (clone $baseQuery)->get();
+
         $favoriteIds = auth()->check() ? auth()->user()->favoriteStudios()->pluck('studios.id')->toArray() : [];
 
         return view('pages.studio_list', [
             'studios'           => $studios,
+            'map_studios'       => $mapStudios,
             'favoriteIds'       => $favoriteIds,
             'latitude'          => 0,
             'longitude'         => 0,

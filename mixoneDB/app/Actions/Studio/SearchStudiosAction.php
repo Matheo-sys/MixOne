@@ -44,10 +44,11 @@ class SearchStudiosAction
         }
 
         if ($latitude && $longitude) {
-            $query->selectRaw("*, (6371 * acos(
-                cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
-                sin(radians(?)) * sin(radians(latitude))
-            )) AS distance", [$latitude, $longitude, $latitude])
+            $query->select('studios.*')
+                ->selectRaw("(6371 * acos(
+                    cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
+                    sin(radians(?)) * sin(radians(latitude))
+                )) AS distance", [$latitude, $longitude, $latitude])
                 ->having('distance', '<=', $dto->distance);
         }
 
@@ -63,8 +64,11 @@ class SearchStudiosAction
                 break;
         }
 
+        $mapStudios = (clone $query)->get();
+
         return [
             'studios' => $query->paginate(20),
+            'map_studios' => $mapStudios,
             'latitude' => $latitude,
             'longitude' => $longitude,
         ];

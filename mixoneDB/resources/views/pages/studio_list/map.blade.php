@@ -4,7 +4,8 @@
 
 @php
 $studioBaseUrl = url('/studio');
-$studioMapData = $studios->map(function($s) use ($studioBaseUrl) {
+$studiosForMap = isset($map_studios) ? $map_studios : $studios;
+$studioMapData = $studiosForMap->map(function($s) use ($studioBaseUrl) {
     return [
         'id'        => $s->id,
         'name'      => $s->name,
@@ -77,7 +78,7 @@ $studioMapData = $studios->map(function($s) use ($studioBaseUrl) {
                         font-weight: 600;
                         padding: 3px 10px;
                         border-radius: 20px;
-                    ">{{ count($studios) }}</span>
+                    ">{{ count($studiosForMap) }}</span>
             </div>
             <button id="closeMapBtn" type="button"
                     style="

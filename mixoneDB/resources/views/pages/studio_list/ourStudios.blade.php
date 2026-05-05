@@ -176,7 +176,7 @@
                 {{-- Toolbar --}}
                 <div class="studioList-toolbar">
                     <div class="studioList-toolbar__count">
-                        <span class="studioList-toolbar__number">{{ count($studios) }}</span> studios correspondent à votre recherche :
+                        <span class="studioList-toolbar__number">{{ $studios->total() }}</span> studios correspondent à votre recherche :
                     </div>
 
                     <div class="studioList-toolbar__actions">
