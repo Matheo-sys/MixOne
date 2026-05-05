@@ -4,6 +4,7 @@ namespace App\Actions\Reservation;
 
 use App\DTOs\ReservationDTO;
 use App\Enums\ReservationStatus;
+use App\Enums\PaymentStatus;
 use App\Models\Reservation;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,7 @@ class CreateReservationAction
                 'number_of_hours'  => $dto->number_of_hours,
                 'price'            => $dto->price,
                 'status'           => ReservationStatus::Pending,
-                'payment_status'   => 'pending',
+                'payment_status'   => PaymentStatus::Pending,
                 'pin_code'         => str_pad((string)random_int(0, 9999), 4, '0', STR_PAD_LEFT),
             ]);
         });

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReservationStatus;
+use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,9 +34,10 @@ class Reservation extends Model
     protected function casts(): array
     {
         return [
-            'status' => ReservationStatus::class,
-            'price'  => 'decimal:2',
-            'date'   => 'date',
+            'status'         => ReservationStatus::class,
+            'payment_status' => PaymentStatus::class,
+            'price'          => 'decimal:2',
+            'date'           => 'date',
         ];
     }
 

@@ -151,7 +151,7 @@
                                     @endphp
                                     <div class="d-flex flex-column align-items-center mb-20"> <!-- Nettoyage des marges -->
                                         <div class="d-flex ratio ratio-3:2 w-200 position-relative">
-                                            <img id="studioImage{{ $i }}" src="{{ $studio->$imageField ? asset('storage/' . $studio->$imageField) : asset('media/img/backgrounds/11.jpg') }}" alt="Image {{ $i }}" class="img-ratio rounded-4">
+                                            <img id="studioImage{{ $i }}" src="{{ $studio->$imageField ? \Illuminate\Support\Facades\Storage::url($studio->$imageField) : asset('media/img/backgrounds/11.jpg') }}" alt="Image {{ $i }}" class="img-ratio rounded-4">
                                             <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
                                                 <div class="size-40 bg-white rounded-4 cursor-pointer d-flex items-center justify-center" onclick="removeImage({{ $i }})">
                                                     <i class="icon-trash text-16"></i>

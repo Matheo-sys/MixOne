@@ -3,6 +3,7 @@
 namespace App\Actions\Reservation;
 
 use App\Enums\ReservationStatus;
+use App\Enums\PaymentStatus;
 use App\Models\Reservation;
 use App\Services\StripeService;
 use Exception;
@@ -50,7 +51,7 @@ class UpdateReservationStatusAction
             }
 
             // Si la réservation est terminée, on débloque les fonds
-            if ($newStatus === ReservationStatus::Completed && $reservation->payment_status === 'paid') {
+            if ($newStatus === ReservationStatus::Completed && $reservation->payment_status === PaymentStatus::Paid) {
                 $this->confirmStudioEarnings($reservation);
             }
 
@@ -80,9 +81,9 @@ class UpdateReservationStatusAction
     private function processRefund(Reservation $reservation, ReservationStatus $reason): void
     {
         // Ne rembourser que si le paiement a été effectué
-        if ($reservation->payment_status !== 'paid' || !$reservation->stripe_payment_id) {
+        if ($reservation->payment_status !== PaymentStatus::Paid || !$reservation->stripe_payment_id) {
             // Si le paiement n'a pas encore été fait, on met juste le statut à cancelled
-            $reservation->update(['payment_status' => 'cancelled']);
+            $reservation->update(['payment_status' => PaymentStatus::Cancelled]);
             return;
         }
 
@@ -100,7 +101,7 @@ class UpdateReservationStatusAction
         try {
             $this->stripeService->refund($reservation->stripe_payment_id);
 
-            $reservation->update(['payment_status' => 'refunded']);
+            $reservation->update(['payment_status' => PaymentStatus::Refunded]);
 
             Log::info('Remboursement Stripe effectué', [
                 'reservation_id' => $reservation->id,

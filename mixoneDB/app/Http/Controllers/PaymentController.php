@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ReservationStatus;
+use App\Enums\PaymentStatus;
 use App\Models\Reservation;
 use App\Services\StripeService;
 use Illuminate\Contracts\View\View;
@@ -27,7 +28,7 @@ class PaymentController extends Controller
         }
 
         // Vérifier que la réservation est bien en attente de paiement
-        if ($reservation->payment_status !== 'pending') {
+        if ($reservation->payment_status !== PaymentStatus::Pending) {
             return redirect()->route('dashboard')
                 ->with('error', 'Cette réservation a déjà été payée ou annulée.');
         }
@@ -74,9 +75,9 @@ class PaymentController extends Controller
             $reservation = Reservation::where('stripe_session_id', $sessionId)->firstOrFail();
 
             // Marquer comme payé si le paiement est complet
-            if ($session->payment_status === 'paid' && $reservation->payment_status === 'pending') {
+            if ($session->payment_status === 'paid' && $reservation->payment_status === PaymentStatus::Pending) {
                 $reservation->update([
-                    'payment_status'    => 'paid',
+                    'payment_status'    => PaymentStatus::Paid,
                     'stripe_payment_id' => $session->payment_intent,
                 ]);
             }

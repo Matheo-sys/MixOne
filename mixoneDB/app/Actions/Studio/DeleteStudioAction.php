@@ -13,7 +13,7 @@ class DeleteStudioAction
         for ($i = 1; $i <= 4; $i++) {
             $field = "image{$i}";
             if ($studio->$field) {
-                Storage::disk('public')->delete($studio->$field);
+                Storage::delete($studio->$field);
             }
         }
 

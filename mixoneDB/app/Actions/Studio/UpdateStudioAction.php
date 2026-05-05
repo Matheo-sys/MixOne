@@ -29,7 +29,7 @@ class UpdateStudioAction
         foreach ($dto->remove_images as $field => $shouldRemove) {
             if ($shouldRemove) {
                 if ($studio->$field) {
-                    Storage::disk('public')->delete($studio->$field);
+                    Storage::delete($studio->$field);
                 }
                 $data[$field] = null;
             }
@@ -39,9 +39,9 @@ class UpdateStudioAction
             if ($file) {
                 // Delete old image if exists
                 if ($studio->$field) {
-                    Storage::disk('public')->delete($studio->$field);
+                    Storage::delete($studio->$field);
                 }
-                $data[$field] = $file->store('uploads/studios', 'public');
+                $data[$field] = $file->store('uploads/studios');
             }
         }
 

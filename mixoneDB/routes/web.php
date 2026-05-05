@@ -13,6 +13,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\Artist\DashboardController as ArtistDashboardController;
+use App\Http\Controllers\Studio\DashboardController as StudioDashboardController;
+use App\Http\Controllers\WalletController;
 
 Auth::routes(['verify' => true]);
 
@@ -42,16 +45,16 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         
         // Artist Dashboard
         Route::group(['prefix' => 'artist'], function() {
-            Route::get('/', [DashboardController::class, 'artistIndex'])->name('dashboard.artist.index');
-            Route::get('/booking', [DashboardController::class, 'bookingArtist'])->name('dashboard.artist.booking');
+            Route::get('/', [ArtistDashboardController::class, 'index'])->name('dashboard.artist.index');
+            Route::get('/booking', [ArtistDashboardController::class, 'booking'])->name('dashboard.artist.booking');
             Route::get('/wishlist', [WishlistController::class, 'index'])->name('dashboard.artist.wishlist');
         });
 
         // Studio Dashboard
         Route::group(['prefix' => 'studio'], function() {
-            Route::get('/', [DashboardController::class, 'studioIndex'])->name('dashboard.studio');
-            Route::get('/my-studios', [DashboardController::class, 'studioList'])->name('dashboard.studio.myStudios');
-            Route::get('/booking', [DashboardController::class, 'studioBooking'])->name('dashboard.studio.booking');
+            Route::get('/', [StudioDashboardController::class, 'index'])->name('dashboard.studio');
+            Route::get('/my-studios', [StudioDashboardController::class, 'studioList'])->name('dashboard.studio.myStudios');
+            Route::get('/booking', [StudioDashboardController::class, 'booking'])->name('dashboard.studio.booking');
             Route::get('/create', [StudioController::class, 'create'])->name('dashboard.studio.create');
             Route::post('/create', [StudioController::class, 'store'])->name('studio.store')->middleware('throttle:3,60');
             Route::get('/{studio}/edit', [StudioController::class, 'edit'])->name('dashboard.studio.edit');
@@ -158,6 +161,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
     Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
 });
+
+// Wallet test (dev only)
+Route::post('/wallet/recharge', [WalletController::class, 'recharge'])->name('wallet.recharge')->middleware('auth');
 
 // Webhook Stripe (pas de CSRF, pas d'auth — Stripe envoie directement)
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');

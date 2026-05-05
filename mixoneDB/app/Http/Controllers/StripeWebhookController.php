@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ReservationStatus;
+use App\Enums\PaymentStatus;
 use App\Mail\ReservationPaidStudioMail;
 use App\Models\Reservation;
 use App\Services\StripeService;
@@ -76,7 +77,7 @@ class StripeWebhookController extends Controller
 
         // Mettre à jour le statut de paiement
         $reservation->update([
-            'payment_status'    => 'paid',
+            'payment_status'    => PaymentStatus::Paid,
             'stripe_session_id' => $session->id,
             'stripe_payment_id' => $session->payment_intent,
         ]);
@@ -115,7 +116,7 @@ class StripeWebhookController extends Controller
         $reservation = Reservation::where('stripe_payment_id', $paymentIntent->id)->first();
 
         if ($reservation) {
-            $reservation->update(['payment_status' => 'failed']);
+            $reservation->update(['payment_status' => PaymentStatus::Failed]);
 
             Log::warning('Paiement échoué', [
                 'reservation_id' => $reservation->id,
@@ -132,7 +133,7 @@ class StripeWebhookController extends Controller
         $reservation = Reservation::where('stripe_payment_id', $charge->payment_intent)->first();
 
         if ($reservation) {
-            $reservation->update(['payment_status' => 'refunded']);
+            $reservation->update(['payment_status' => PaymentStatus::Refunded]);
 
             Log::info('Remboursement confirmé', [
                 'reservation_id' => $reservation->id,

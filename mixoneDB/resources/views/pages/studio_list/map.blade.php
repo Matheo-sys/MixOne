@@ -13,7 +13,7 @@ $studioMapData = $studios->map(function($s) use ($studioBaseUrl) {
         'price'     => (float) $s->hourly_rate,
         'lat'       => (float) $s->latitude,
         'lng'       => (float) $s->longitude,
-        'image'     => $s->image1 ? asset('storage/' . $s->image1) : asset('media/img/backgrounds/11.jpg'),
+        'image'     => $s->image1 ? \Illuminate\Support\Facades\Storage::url($s->image1) : asset('media/img/backgrounds/11.jpg'),
         'url'       => $studioBaseUrl . '/' . $s->id,
         'equipment' => $s->equipment ?? [],
     ];

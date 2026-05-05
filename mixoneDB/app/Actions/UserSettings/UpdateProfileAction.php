@@ -15,16 +15,16 @@ class UpdateProfileAction
         // Handle Avatar removal
         if ($dto->remove_avatar) {
             if ($user->avatar && $user->avatar !== 'media/img/misc/avatar-1.png') {
-                Storage::disk('public')->delete($user->avatar);
+                Storage::delete($user->avatar);
             }
             $user->avatar = null;
         }
         // Handle Avatar upload
         elseif ($dto->avatar) {
             if ($user->avatar && $user->avatar !== 'media/img/misc/avatar-1.png') {
-                Storage::disk('public')->delete($user->avatar);
+                Storage::delete($user->avatar);
             }
-            $user->avatar = $dto->avatar->store('avatars', 'public');
+            $user->avatar = $dto->avatar->store('avatars');
         }
 
         return $user->fill($data)->save();

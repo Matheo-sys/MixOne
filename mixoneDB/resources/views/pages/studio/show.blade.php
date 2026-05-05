@@ -24,7 +24,7 @@
     "longitude": {{ $studio->longitude }}
   },
   "priceRange": "{{ $studio->hourly_rate }}€/h",
-  "image": "{{ $studio->image1 ? asset('storage/' . $studio->image1) : asset('media/img/backgrounds/11.jpg') }}"
+  "image": "{{ $studio->image1 ? \Illuminate\Support\Facades\Storage::url($studio->image1) : asset('media/img/backgrounds/11.jpg') }}"
 }
 </script>
 @endsection
@@ -75,24 +75,24 @@
             <!-- Galerie d'images, description, etc... -->
             <div class="galleryGrid -type-1 pt-30">
                 <div class="galleryGrid__item relative d-flex">
-                    <img src="{{ $studio->image1 ? asset('storage/' . $studio->image1) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
+                    <img src="{{ $studio->image1 ? \Illuminate\Support\Facades\Storage::url($studio->image1) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
                     <div class="absolute px-20 py-20 col-12 d-flex justify-end">
                     </div>
                 </div>
                 <div class="galleryGrid__item">
-                    <img src="{{ $studio->image2 ? asset('storage/' . $studio->image2) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
+                    <img src="{{ $studio->image2 ? \Illuminate\Support\Facades\Storage::url($studio->image2) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
                 </div>
                 <div class="galleryGrid__item relative d-flex">
-                    <img src="{{ $studio->image3 ? asset('storage/' . $studio->image3) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
+                    <img src="{{ $studio->image3 ? \Illuminate\Support\Facades\Storage::url($studio->image3) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
                     <div class="absolute h-full col-12 flex-center">
                     </div>
                 </div>
                 <div class="galleryGrid__item">
-                    <img src="{{ $studio->image4 ? asset('storage/' . $studio->image4) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
+                    <img src="{{ $studio->image4 ? \Illuminate\Support\Facades\Storage::url($studio->image4) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
                 </div>
                 <div class="galleryGrid__item relative d-flex">
                     <!-- Cette dernière image pourrait être une réutilisation de la première image ou une image fixe -->
-                    <img src="{{ $studio->image3 ? asset('storage/' . $studio->image3) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
+                    <img src="{{ $studio->image3 ? \Illuminate\Support\Facades\Storage::url($studio->image3) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
                 </div>
             </div>
         </div>

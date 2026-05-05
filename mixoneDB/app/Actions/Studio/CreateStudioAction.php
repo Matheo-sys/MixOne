@@ -19,7 +19,7 @@ class CreateStudioAction
         // Handle image uploads
         foreach ($dto->images as $field => $file) {
             if ($file) {
-                $data[$field] = $file->store('uploads/studios', 'public');
+                $data[$field] = $file->store('uploads/studios');
             }
         }
 

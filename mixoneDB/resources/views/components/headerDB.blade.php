@@ -66,7 +66,7 @@
 
                         <div class="pl-15">
                             <div class="size-50 rounded-22 overflow-hidden">
-                                <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('media/img/misc/avatar-default.png') }}" alt="image" class="size-50 object-cover" style="transform: scale(1.3);">
+                                <img src="{{ auth()->user()->avatar ? \Illuminate\Support\Facades\Storage::url(auth()->user()->avatar) : asset('media/img/misc/avatar-default.png') }}" alt="image" class="size-50 object-cover" style="transform: scale(1.3);">
                             </div>
                         </div>
                     </div>

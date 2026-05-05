@@ -35,15 +35,17 @@
                     $currentStatus = $reservation->status;
                     $statusValue = $currentStatus instanceof \App\Enums\ReservationStatus ? $currentStatus->value : (string)$currentStatus;
                     $lowStatus = strtolower($statusValue);
-                    $paymentStatus = $reservation->payment_status ?? 'pending';
+                    $paymentStatus = $reservation->payment_status;
                 @endphp
                 <span class="rounded-100 py-4 px-10 text-center text-13 fw-500 {{ $statusClasses[$lowStatus] ?? 'bg-light-3' }}">
                     {{ ucfirst($lowStatus) }}
                 </span>
-                @if($paymentStatus === 'paid')
+                @if($paymentStatus === \App\Enums\PaymentStatus::Paid)
                     <span class="rounded-100 py-4 px-10 text-center text-11 fw-500 bg-green-1 text-green-2 mt-5 d-inline-block">💳 Payé</span>
-                @elseif($paymentStatus === 'refunded')
+                @elseif($paymentStatus === \App\Enums\PaymentStatus::Refunded)
                     <span class="rounded-100 py-4 px-10 text-center text-11 fw-500 bg-blue-1-05 text-blue-1 mt-5 d-inline-block">💳 Remboursé</span>
+                @elseif($paymentStatus === \App\Enums\PaymentStatus::Cancelled)
+                    <span class="rounded-100 py-4 px-10 text-center text-11 fw-500 bg-red-3 text-red-2 mt-5 d-inline-block">💳 Annulé</span>
                 @endif
             </td>
             <td data-label="Action">

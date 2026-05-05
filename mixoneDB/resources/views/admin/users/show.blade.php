@@ -17,7 +17,7 @@
     <div class="col-xl-4 col-lg-5">
         <div class="py-30 px-30 rounded-4 bg-white shadow-3">
             <div class="d-flex flex-column items-center text-center">
-                <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('media/images/avatar-default.png') }}" alt="avatar" class="size-120 rounded-full object-cover mb-20">
+                <img src="{{ $user->avatar ? \Illuminate\Support\Facades\Storage::url($user->avatar) : asset('media/images/avatar-default.png') }}" alt="avatar" class="size-120 rounded-full object-cover mb-20">
                 <h2 class="text-22 fw-500">{{ $user->first_name }} {{ $user->last_name }}</h2>
                 <div class="text-15 text-light-1 mb-20">{{ $user->email }}</div>
 
