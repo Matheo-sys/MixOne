@@ -20,7 +20,7 @@ class HomeController extends Controller
 
         return view('pages.home', [
             'whiteHeader'       => false,
-            'studios'           => Studio::latest()->limit(20)->get(),
+            'studios'           => Studio::where('is_verified', true)->latest()->limit(20)->get(),
             'satisfiedClients'  => $satisfiedClients,
             'globalRating'      => $globalRating,
         ]);

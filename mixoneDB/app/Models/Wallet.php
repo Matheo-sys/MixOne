@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Wallet extends Model
 {
@@ -25,60 +27,73 @@ class Wallet extends Model
 
     public function deposit($amount, $description = null)
     {
-        $this->balance += $amount;
-        $this->save();
+        return DB::transaction(function () use ($amount, $description) {
+            $this->lockForUpdate();
+            $this->balance += $amount;
+            $this->save();
 
-        $this->transactions()->create([
-            'type' => 'deposit',
-            'amount' => $amount,
-            'description' => $description,
-        ]);
+            $this->transactions()->create([
+                'type' => 'deposit',
+                'amount' => $amount,
+                'description' => $description,
+            ]);
+        });
     }
 
     public function hold($amount, $referenceId = null, $description = null)
     {
-        if (!$this->hasSufficientBalance($amount)) {
-            throw new \Exception("Solde insuffisant.");
-        }
+        return DB::transaction(function () use ($amount, $referenceId, $description) {
+            $this->lockForUpdate();
 
-        $this->balance -= $amount;
-        $this->pending_balance += $amount;
-        $this->save();
+            if (!$this->hasSufficientBalance($amount)) {
+                throw new \Exception("Solde insuffisant.");
+            }
 
-        $this->transactions()->create([
-            'type' => 'payment',
-            'status' => 'pending',
-            'amount' => -$amount,
-            'reference_id' => $referenceId,
-            'description' => $description,
-        ]);
+            $this->balance -= $amount;
+            $this->pending_balance += $amount;
+            $this->save();
+
+            $this->transactions()->create([
+                'type' => 'payment',
+                'status' => 'pending',
+                'amount' => -$amount,
+                'reference_id' => $referenceId,
+                'description' => $description,
+            ]);
+        });
     }
 
     public function refund($amount, $referenceId = null, $description = null)
     {
-        $this->pending_balance -= $amount;
-        $this->balance += $amount;
-        $this->save();
+        return DB::transaction(function () use ($amount, $referenceId, $description) {
+            $this->lockForUpdate();
+            $this->pending_balance -= $amount;
+            $this->balance += $amount;
+            $this->save();
 
-        $this->transactions()->create([
-            'type' => 'refund',
-            'amount' => $amount,
-            'reference_id' => $referenceId,
-            'description' => $description,
-        ]);
+            $this->transactions()->create([
+                'type' => 'refund',
+                'amount' => $amount,
+                'reference_id' => $referenceId,
+                'description' => $description,
+            ]);
+        });
     }
 
     public function earned($amount, $referenceId = null, $description = null)
     {
-        $this->balance += $amount;
-        $this->save();
+        return DB::transaction(function () use ($amount, $referenceId, $description) {
+            $this->lockForUpdate();
+            $this->balance += $amount;
+            $this->save();
 
-        $this->transactions()->create([
-            'type' => 'earned',
-            'amount' => $amount,
-            'reference_id' => $referenceId,
-            'description' => $description,
-        ]);
+            $this->transactions()->create([
+                'type' => 'earned',
+                'amount' => $amount,
+                'reference_id' => $referenceId,
+                'description' => $description,
+            ]);
+        });
     }
 
     /**
@@ -87,77 +102,94 @@ class Wallet extends Model
 
     public function creditPending($amount, $referenceId = null, $description = null)
     {
-        $this->pending_balance += $amount;
-        $this->save();
+        return DB::transaction(function () use ($amount, $referenceId, $description) {
+            $this->lockForUpdate();
+            $this->pending_balance += $amount;
+            $this->save();
 
-        $this->transactions()->create([
-            'type' => 'deposit',
-            'status' => 'pending',
-            'amount' => $amount,
-            'reference_id' => $referenceId,
-            'description' => $description,
-        ]);
+            $this->transactions()->create([
+                'type' => 'deposit',
+                'status' => 'pending',
+                'amount' => $amount,
+                'reference_id' => $referenceId,
+                'description' => $description,
+            ]);
+        });
     }
 
     public function confirmPending($amount, $referenceId = null, $description = null)
     {
-        if ($this->pending_balance < $amount) {
-            // Dans un cas réel, on vérifie, mais ici on s'assure juste que ça ne casse pas.
-            // On le laisse passer pour éviter des blocages si les montants ont été manipulés manuellement.
-        }
+        return DB::transaction(function () use ($amount, $referenceId, $description) {
+            $this->lockForUpdate();
 
-        $this->pending_balance = max(0, $this->pending_balance - $amount);
-        $this->balance += $amount;
-        $this->save();
+            if ($this->pending_balance < $amount) {
+                Log::warning('confirmPending : montant demandé supérieur au pending_balance', [
+                    'wallet_id' => $this->id,
+                    'requested' => $amount,
+                    'pending' => $this->pending_balance,
+                ]);
+            }
 
-        $this->transactions()->create([
-            'type' => 'earned',
-            'status' => 'completed',
-            'amount' => $amount,
-            'reference_id' => $referenceId,
-            'description' => $description ?: 'Gains débloqués',
-        ]);
+            $this->pending_balance = max(0, $this->pending_balance - $amount);
+            $this->balance += $amount;
+            $this->save();
+
+            $this->transactions()->create([
+                'type' => 'earned',
+                'status' => 'completed',
+                'amount' => $amount,
+                'reference_id' => $referenceId,
+                'description' => $description ?: 'Gains débloqués',
+            ]);
+        });
     }
 
     public function cancelPending($amount, $referenceId = null, $description = null)
     {
-        $this->pending_balance = max(0, $this->pending_balance - $amount);
-        $this->save();
+        return DB::transaction(function () use ($amount, $referenceId, $description) {
+            $this->lockForUpdate();
+            $this->pending_balance = max(0, $this->pending_balance - $amount);
+            $this->save();
 
-        $this->transactions()->create([
-            'type' => 'refund',
-            'status' => 'completed',
-            'amount' => -$amount,
-            'reference_id' => $referenceId,
-            'description' => $description ?: 'Gains annulés',
-        ]);
+            $this->transactions()->create([
+                'type' => 'refund',
+                'status' => 'completed',
+                'amount' => -$amount,
+                'reference_id' => $referenceId,
+                'description' => $description ?: 'Gains annulés',
+            ]);
+        });
     }
 
     public function requestPayout($amount, $iban, $notes = null)
     {
-        if (!$this->hasSufficientBalance($amount)) {
-            throw new \Exception("Solde disponible insuffisant pour ce retrait.");
-        }
+        return DB::transaction(function () use ($amount, $iban, $notes) {
+            $this->lockForUpdate();
 
-        $this->balance -= $amount;
-        $this->save();
+            if (!$this->hasSufficientBalance($amount)) {
+                throw new \Exception("Solde disponible insuffisant pour ce retrait.");
+            }
 
-        $payoutRequest = PayoutRequest::create([
-            'user_id' => $this->user_id,
-            'amount' => $amount,
-            'iban' => $iban,
-            'status' => 'pending',
-            'notes' => $notes,
-        ]);
+            $this->balance -= $amount;
+            $this->save();
 
-        $this->transactions()->create([
-            'type' => 'payout',
-            'status' => 'pending',
-            'amount' => -$amount,
-            'reference_id' => $payoutRequest->id,
-            'description' => 'Demande de virement bancaire',
-        ]);
+            $payoutRequest = PayoutRequest::create([
+                'user_id' => $this->user_id,
+                'amount' => $amount,
+                'iban' => $iban,
+                'status' => 'pending',
+                'notes' => $notes,
+            ]);
 
-        return $payoutRequest;
+            $this->transactions()->create([
+                'type' => 'payout',
+                'status' => 'pending',
+                'amount' => -$amount,
+                'reference_id' => $payoutRequest->id,
+                'description' => 'Demande de virement bancaire',
+            ]);
+
+            return $payoutRequest;
+        });
     }
 }

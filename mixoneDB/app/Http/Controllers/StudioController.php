@@ -163,7 +163,7 @@ class StudioController extends Controller
         Gate::authorize('delete', $studio);
 
         $this->deleteStudioAction->execute($studio);
-        return redirect()->route('dashboard.studio.myStudios')->with('success', 'Studio deleted successfully.');
+        return redirect()->route('dashboard.studio.myStudios')->with('success', 'Studio supprimé avec succès.');
     }
 
     public function create(): View

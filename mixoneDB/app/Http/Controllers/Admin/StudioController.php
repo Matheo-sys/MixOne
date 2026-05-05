@@ -4,23 +4,25 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Studio;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class StudioController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $studios = Studio::with('user')->orderBy('created_at', 'desc')->paginate(20);
         return view('admin.studios.index', compact('studios'));
     }
 
-    public function destroy(Studio $studio)
+    public function destroy(Studio $studio): RedirectResponse
     {
         $studio->delete();
         return redirect()->route('admin.studios.index')->with('success', 'Studio supprimé avec succès.');
     }
 
-    public function toggleVerify(Studio $studio)
+    public function toggleVerify(Studio $studio): RedirectResponse
     {
         $studio->is_verified = !$studio->is_verified;
         $studio->save();

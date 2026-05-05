@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ReservationStatus;
+use App\Mail\ReservationPaidStudioMail;
 use App\Models\Reservation;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class StripeWebhookController extends Controller
 {
@@ -100,7 +102,7 @@ class StripeWebhookController extends Controller
         ]);
 
         if ($studioOwner && $studioOwner->email) {
-            \Illuminate\Support\Facades\Mail::to($studioOwner->email)->send(new \App\Mail\ReservationPaidStudioMail($reservation));
+            Mail::to($studioOwner->email)->send(new ReservationPaidStudioMail($reservation));
         }
     }
 

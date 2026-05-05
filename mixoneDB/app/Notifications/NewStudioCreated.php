@@ -7,16 +7,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewStudioCreated extends Notification
+class NewStudioCreated extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    protected $studio;
+    protected \App\Models\Studio $studio;
 
-    public function __construct($studio)
+    public function __construct(\App\Models\Studio $studio)
     {
         $this->studio = $studio;
     }

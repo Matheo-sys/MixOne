@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\Contracts\View\View
     {
         // Statistiques globales
         $totalUsers = User::count();

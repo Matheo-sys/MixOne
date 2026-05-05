@@ -22,7 +22,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Studios - placez les routes plus spécifiques avant les routes dynamiques
 Route::get('/studio/{studio}', [StudioController::class, 'show'])->name('studio.show');
 Route::delete('/studio/{studio}', [StudioController::class, 'destroy'])->name('studio.destroy')->middleware('auth');
-Route::post('/studios/{studio}/toggle-verify', [\App\Http\Controllers\Admin\StudioController::class, 'toggleVerify'])->name('studios.toggle-verify')->middleware('auth');
 
 // Liste des studios
 Route::get('/studios', [StudioController::class, 'index'])->name('studios.index');
