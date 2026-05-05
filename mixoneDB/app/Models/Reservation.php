@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\ReservationStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reservation extends Model
 {
@@ -17,38 +20,53 @@ class Reservation extends Model
         'number_of_hours',
         'price',
         'status',
+        'payment_status',
+        'stripe_session_id',
+        'stripe_payment_id',
+        'pin_code',
+        'disputed_at',
+        'dispute_reason',
         'rating',
         'comment'
     ];
 
-    // Relation avec l'utilisateur
-    public function user()
+    protected function casts(): array
+    {
+        return [
+            'status' => ReservationStatus::class,
+            'price'  => 'decimal:2',
+            'date'   => 'date',
+        ];
+    }
+
+    // ─── Relations ──────────────────────────────────────────────
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relation avec le studio
-    public function studio()
+    public function studio(): BelongsTo
     {
         return $this->belongsTo(Studio::class);
     }
 
-    public static function getReservations() {
-        return self::from('reservations as R')
-            ->leftJoin('studios as S', 'S.id', 'R.studio_id')
-            ->where('S.user_id', auth()->id())
-            ->select('R.*')
-            ->orderBy('id', 'desc')
-            ->get();
+    // ─── Scopes (remplacent les méthodes statiques) ─────────────
+
+    /**
+     * Réservations de l'artiste (par user_id).
+     */
+    public function scopeForArtist(Builder $query, int $userId): Builder
+    {
+        return $query->where('user_id', $userId)->orderBy('id', 'desc');
     }
 
-
-    public static function getReservationArtist() {
-
-        return self::from('reservations as R')
-            ->where('user_id', auth()->id())
-            ->select('R.*')
-            ->orderBy('id', 'desc')
-            ->get();
+    /**
+     * Réservations des studios appartenant à un propriétaire donné.
+     */
+    public function scopeForStudioOwner(Builder $query, int $ownerId): Builder
+    {
+        return $query->whereHas('studio', fn (Builder $q) => $q->where('user_id', $ownerId))
+                     ->orderBy('id', 'desc');
     }
 }

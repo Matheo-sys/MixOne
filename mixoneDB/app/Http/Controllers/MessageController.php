@@ -6,6 +6,7 @@ use App\Actions\Messaging\SendMessageAction;
 use App\Http\Requests\Messaging\SendMessageRequest;
 use App\Models\Message;
 use App\Models\HiddenConversation;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -13,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 class MessageController extends Controller
 {
     public function __construct(
-        private SendMessageAction $sendMessageAction
+        private readonly SendMessageAction $sendMessageAction
     ) {}
 
     public function store(SendMessageRequest $request): JsonResponse
@@ -31,13 +32,11 @@ class MessageController extends Controller
         return response()->json(['success' => 'Message sent successfully.']);
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, Message $message): JsonResponse
     {
         $request->validate([
             'message' => 'required|string|min:1|max:2000',
         ]);
-
-        $message = Message::findOrFail($id);
 
         if ($message->sender_id !== Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
@@ -59,7 +58,7 @@ class MessageController extends Controller
     {
         $messages = Message::where('sender_id', Auth::id())
             ->orWhere('receiver_id', Auth::id())
-            ->with(['sender', 'receiver'])
+            ->with(['sender:id,first_name,last_name,avatar', 'receiver:id,first_name,last_name,avatar'])
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -74,11 +73,20 @@ class MessageController extends Controller
 
     public function searchUsers(Request $request): JsonResponse
     {
+        $request->validate([
+            'q' => 'nullable|string|max:100',
+        ]);
+
         $query = $request->get('q');
-        $users = \App\Models\User::where('id', '!=', Auth::id())
+
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        $users = User::where('id', '!=', Auth::id())
             ->where(function($q) use ($query) {
-                $q->where('first_name', 'like', "%$query%")
-                  ->orWhere('last_name', 'like', "%$query%");
+                $q->where('first_name', 'like', "%{$query}%")
+                  ->orWhere('last_name', 'like', "%{$query}%");
             })
             ->limit(10)
             ->get(['id', 'first_name', 'last_name', 'avatar']);
@@ -86,8 +94,13 @@ class MessageController extends Controller
         return response()->json($users);
     }
 
-    public function hideConversation(Request $request, $contactId): JsonResponse
+    public function hideConversation(int $contactId): JsonResponse
     {
+        // Valider que le contact existe
+        if (!User::where('id', $contactId)->exists()) {
+            return response()->json(['error' => 'Contact introuvable.'], 404);
+        }
+
         HiddenConversation::firstOrCreate([
             'user_id' => Auth::id(),
             'contact_id' => $contactId
@@ -107,19 +120,20 @@ class MessageController extends Controller
 
     public function markAsRead(Request $request): JsonResponse
     {
+        $request->validate([
+            'sender_id' => 'nullable|integer|exists:users,id',
+        ]);
+
         $senderId = $request->input('sender_id');
 
+        $query = Message::where('receiver_id', Auth::id())
+            ->where('is_read', false);
+
         if ($senderId) {
-            Message::where('receiver_id', Auth::id())
-                ->where('sender_id', $senderId)
-                ->where('is_read', false)
-                ->update(['is_read' => true]);
-        } else {
-            // Option to mark all as read if needed
-            Message::where('receiver_id', Auth::id())
-                ->where('is_read', false)
-                ->update(['is_read' => true]);
+            $query->where('sender_id', $senderId);
         }
+
+        $query->update(['is_read' => true]);
 
         return response()->json(['success' => true]);
     }

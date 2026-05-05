@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 class WishlistController extends Controller
 {
     public function __construct(
-        private ToggleWishlistAction $toggleWishlistAction
+        private readonly ToggleWishlistAction $toggleWishlistAction
     ) {}
 
     public function index(): View

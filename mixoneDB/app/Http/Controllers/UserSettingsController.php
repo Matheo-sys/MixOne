@@ -14,8 +14,8 @@ use Illuminate\Http\JsonResponse;
 class UserSettingsController extends Controller
 {
     public function __construct(
-        private UpdateProfileAction $updateProfileAction,
-        private UpdatePasswordAction $updatePasswordAction
+        private readonly UpdateProfileAction $updateProfileAction,
+        private readonly UpdatePasswordAction $updatePasswordAction
     ) {}
 
     public function edit(): View

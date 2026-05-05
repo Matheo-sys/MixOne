@@ -26,7 +26,11 @@ class SearchStudiosAction
             }
         }
 
-        $query = Studio::query();
+        $query = Studio::query()
+            ->with('user')
+            ->withCount('completedReservations')
+            ->withAvg('completedReservations', 'rating')
+            ->where('is_verified', true);
 
         if ($dto->min_hours !== null) {
             $query->where('min_hours', '<=', $dto->min_hours);

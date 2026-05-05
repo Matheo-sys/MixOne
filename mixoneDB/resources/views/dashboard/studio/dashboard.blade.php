@@ -42,9 +42,15 @@
                     </div>
                 </div>
                 <div class="mt-20">
-                    <form action="{{ route('wallet.recharge') }}" method="POST">
+                    <form action="{{ route('wallet.payout') }}" method="POST" class="d-flex flex-column y-gap-10">
                         @csrf
-                        <button type="submit" class="button -md -blue-1 bg-blue-1-05 text-blue-1 w-1/1">Récupérer mes gains</button>
+                        <div class="single-field relative d-flex items-center">
+                            <input class="pl-15 bg-white text-dark-1 h-40 rounded-8 w-1/1 border-light" type="number" name="amount" placeholder="Montant (€)" required min="10" max="{{ $wallet->balance ?? 0 }}" step="0.01">
+                        </div>
+                        <div class="single-field relative d-flex items-center">
+                            <input class="pl-15 bg-white text-dark-1 h-40 rounded-8 w-1/1 border-light" type="text" name="iban" placeholder="Votre IBAN" required minlength="15">
+                        </div>
+                        <button type="submit" class="button -md -blue-1 bg-blue-1-05 text-blue-1 w-1/1 mt-5" {{ ($wallet->balance ?? 0) < 10 ? 'disabled' : '' }}>Demander un virement</button>
                     </form>
                 </div>
             </div>
@@ -112,15 +118,16 @@
                                             'refusée' => 'bg-red-3 text-red-2',
                                             'terminée' => 'bg-blue-1-05 text-blue-1',
                                         ];
-                                        $lowStatus = strtolower($reservation->status);
+                                        $statusVal = $reservation->status instanceof \App\Enums\ReservationStatus ? $reservation->status->value : (string)$reservation->status;
+                                        $lowStatus = strtolower($statusVal);
                                     @endphp
                                     <div class="rounded-100 py-4 text-center col-12 sm:col-auto px-15 text-13 fw-500 {{ $statusClasses[$lowStatus] ?? 'bg-gray-3 text-gray-2' }}">
-                                        {{ ucfirst($reservation->status) }}
+                                        {{ ucfirst($lowStatus) }}
                                     </div>
                                 </td>
                                 <td data-label="Date" class="text-right sm:text-left">{{ $reservation->created_at->format('d/m/Y') }} à {{ $reservation->created_at->format('H:i') }}</td>
                                 <td data-label="Action">
-                                    @php $s = \Illuminate\Support\Str::lower($reservation->status); @endphp
+                                    @php $s = $lowStatus; @endphp
                                     @if($s === 'en attente')
                                         {{-- En attente → Le studio peut Confirmer ou Refuser via des boutons --}}
                                         <div class="d-flex x-gap-10 y-gap-5 flex-wrap">

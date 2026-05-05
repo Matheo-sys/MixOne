@@ -34,6 +34,7 @@
                                     <th>Nom</th>
                                     <th>Lieu</th>
                                     <th>Avis</th>
+                                    <th>Statut</th>
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -45,6 +46,13 @@
                                         <td data-label="Lieu">{{ $studio->city }}</td>
                                         <td data-label="Avis">
                                             <div class="rounded-4 size-35 bg-light-2 text-light-1 flex-center text-12 fw-600">N/A</div>
+                                        </td>
+                                        <td data-label="Statut">
+                                            @if($studio->is_verified)
+                                                <span class="badge bg-green-1-05 text-green-1">Publié</span>
+                                            @else
+                                                <span class="badge bg-blue-1-05 text-blue-1">En attente</span>
+                                            @endif
                                         </td>
                                         <td data-label="Date">{{ $studio->created_at->format('d/m/Y') }}</td>
                                         <td data-label="Action">

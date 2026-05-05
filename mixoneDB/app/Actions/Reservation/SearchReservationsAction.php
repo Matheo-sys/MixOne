@@ -10,23 +10,19 @@ class SearchReservationsAction
 {
     public function execute(?string $query = null): Collection
     {
-        $baseQuery = Reservation::from('reservations as R')
-            ->leftJoin('studios as S', 'S.id', 'R.studio_id')
-            ->where('S.user_id', Auth::id())
-            ->with(['user', 'studio'])
-            ->select('R.*')
-            ->orderBy('R.id', 'desc');
+        $baseQuery = Reservation::forStudioOwner(Auth::id())
+            ->with(['user', 'studio']);
 
         if ($query) {
             $baseQuery->where(function ($q) use ($query) {
-                $q->where('R.id', 'LIKE', "%{$query}%")
+                $q->where('reservations.id', 'LIKE', "%{$query}%")
                     ->orWhereHas('user', function ($userQuery) use ($query) {
                         $userQuery->where('email', 'LIKE', "%{$query}%")
                             ->orWhere('first_name', 'LIKE', "%{$query}%")
                             ->orWhere('last_name', 'LIKE', "%{$query}%");
                     })
-                    ->orWhere('R.status', 'LIKE', "%{$query}%")
-                    ->orWhere('R.price', 'LIKE', "%{$query}%");
+                    ->orWhere('reservations.status', 'LIKE', "%{$query}%")
+                    ->orWhere('reservations.price', 'LIKE', "%{$query}%");
             });
         }
 

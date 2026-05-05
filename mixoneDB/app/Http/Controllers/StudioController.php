@@ -9,24 +9,24 @@ use App\Actions\Studio\UpdateStudioAction;
 use App\Http\Requests\Studio\CreateRequest;
 use App\Http\Requests\Studio\SearchRequest;
 use App\Http\Requests\Studio\UpdateRequest;
-use App\Models\Reservation;
 use App\Models\Studio;
-use Illuminate\Contracts\View\Factory;
+use App\Models\User;
+use App\Notifications\NewStudioCreated;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 
 class StudioController extends Controller
 {
     public function __construct(
-        private CreateStudioAction $createStudioAction,
-        private UpdateStudioAction $updateStudioAction,
-        private DeleteStudioAction $deleteStudioAction,
-        private SearchStudiosAction $searchStudiosAction
+        private readonly CreateStudioAction $createStudioAction,
+        private readonly UpdateStudioAction $updateStudioAction,
+        private readonly DeleteStudioAction $deleteStudioAction,
+        private readonly SearchStudiosAction $searchStudiosAction
     ) {}
 
     /**
@@ -34,6 +34,7 @@ class StudioController extends Controller
      */
     public function show(Studio $studio): View
     {
+        $studio->load(['user', 'reviews.user']);
         $timeSlots = ["08:00", "10:00", "14:00", "16:00"];
 
         return view('pages.studio.show', compact('studio', 'timeSlots'));
@@ -46,6 +47,11 @@ class StudioController extends Controller
     {
         try {
             $studio = $this->createStudioAction->execute($request->toDTO());
+            $studio->load('user');
+
+            // Notify Admins
+            $admins = User::where('is_admin', true)->get();
+            Notification::send($admins, new NewStudioCreated($studio));
 
             if ($request->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Votre studio a été ajouté avec succès !', 'redirect' => route('dashboard.studio.myStudios')]);
@@ -68,9 +74,16 @@ class StudioController extends Controller
      */
     public function index(): View
     {
-        $studios = Studio::paginate(20);
+        $studios = Studio::with('user')
+            ->withCount('completedReservations')
+            ->withAvg('completedReservations', 'rating')
+            ->where('is_verified', true)
+            ->paginate(20);
+        $favoriteIds = auth()->check() ? auth()->user()->favoriteStudios()->pluck('studios.id')->toArray() : [];
+
         return view('pages.studio_list', [
             'studios'           => $studios,
+            'favoriteIds'       => $favoriteIds,
             'latitude'          => 0,
             'longitude'         => 0,
             'distance'          => 50,
@@ -90,7 +103,10 @@ class StudioController extends Controller
         $result = $this->searchStudiosAction->execute($request->toDTO());
         $dto = $request->toDTO();
 
+        $favoriteIds = auth()->check() ? auth()->user()->favoriteStudios()->pluck('studios.id')->toArray() : [];
+
         return view('pages.studio_list', array_merge($result, [
+            'favoriteIds'       => $favoriteIds,
             'distance'          => $dto->distance,
             'min_hours'         => $dto->min_hours,
             'city'              => $dto->city,
@@ -103,12 +119,14 @@ class StudioController extends Controller
     /**
      * Proxy de recherche géo (Nom -> Coords)
      */
-    public function searchGeocode(Request $request)
+    public function searchGeocode(Request $request): JsonResponse
     {
+        $request->validate(['q' => 'required|string|max:255']);
+
         $q = $request->get('q');
-        if (!$q) return response()->json([]);
 
         $response = Http::withHeaders(['User-Agent' => 'MixOne/1.0'])
+            ->timeout(5)
             ->get("https://nominatim.openstreetmap.org/search", [
                 'q' => $q,
                 'format' => 'json',
@@ -121,16 +139,18 @@ class StudioController extends Controller
     /**
      * Proxy de recherche inverse (Coords -> Nom)
      */
-    public function reverseGeocode(Request $request)
+    public function reverseGeocode(Request $request): JsonResponse
     {
-        $lat = $request->get('lat');
-        $lon = $request->get('lon');
-        if (!$lat || !$lon) return response()->json([]);
+        $request->validate([
+            'lat' => 'required|numeric',
+            'lon' => 'required|numeric',
+        ]);
 
         $response = Http::withHeaders(['User-Agent' => 'MixOne/1.0'])
+            ->timeout(5)
             ->get("https://nominatim.openstreetmap.org/reverse", [
-                'lat' => $lat,
-                'lon' => $lon,
+                'lat' => $request->get('lat'),
+                'lon' => $request->get('lon'),
                 'format' => 'json',
                 'addressdetails' => 1,
             ]);
@@ -140,9 +160,7 @@ class StudioController extends Controller
 
     public function destroy(Studio $studio): RedirectResponse
     {
-        if ($studio->user_id !== Auth::id()) {
-            return redirect()->route('dashboard.studio.myStudios')->with('error', 'Action non autorisée.');
-        }
+        Gate::authorize('delete', $studio);
 
         $this->deleteStudioAction->execute($studio);
         return redirect()->route('dashboard.studio.myStudios')->with('success', 'Studio deleted successfully.');
@@ -155,21 +173,14 @@ class StudioController extends Controller
 
     public function edit(Studio $studio): View|RedirectResponse
     {
-        if ($studio->user_id !== Auth::id()) {
-            return redirect()->route('dashboard.studio.myStudios')->with('error', 'Vous n\'êtes pas autorisé à modifier ce studio.');
-        }
+        Gate::authorize('update', $studio);
 
         return view('dashboard.studio.edit', compact('studio'));
     }
 
     public function update(UpdateRequest $request, Studio $studio): RedirectResponse|JsonResponse
     {
-        if ($studio->user_id !== Auth::id()) {
-            if ($request->ajax()) {
-                return response()->json(['status' => 'error', 'message' => 'Action non autorisée.'], 403);
-            }
-            return redirect()->route('dashboard.studio.myStudios')->with('error', 'Vous n\'êtes pas autorisé à modifier ce studio.');
-        }
+        Gate::authorize('update', $studio);
 
         try {
             $this->updateStudioAction->execute($studio, $request->toDTO());

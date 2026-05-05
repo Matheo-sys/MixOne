@@ -7,18 +7,18 @@ use Illuminate\Http\Request;
 class StudioDTO
 {
     public function __construct(
-        public string $name,
-        public string $address,
-        public string $zipcode,
-        public string $city,
-        public string $country,
-        public float $hourly_rate,
-        public int $min_hours,
-        public string $description,
-        public array $equipment = [],
-        public ?int $user_id = null,
-        public array $images = [],
-        public array $remove_images = []
+        public readonly string $name,
+        public readonly string $address,
+        public readonly string $zipcode,
+        public readonly string $city,
+        public readonly string $country,
+        public readonly float $hourly_rate,
+        public readonly int $min_hours,
+        public readonly string $description,
+        public readonly array $equipment = [],
+        public readonly ?int $user_id = null,
+        public readonly array $images = [],
+        public readonly array $remove_images = []
     ) {}
 
     public static function fromRequest(Request $request): self

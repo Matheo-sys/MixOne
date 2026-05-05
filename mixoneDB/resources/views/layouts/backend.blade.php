@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/css/vendors.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/main-compiled.css') }}">
 
 
     <!-- SEO Meta Tags -->

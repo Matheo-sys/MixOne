@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 class ReservationDTO
 {
     public function __construct(
-        public int $studio_id,
-        public string $date,
-        public string $time_slot,
-        public int $number_of_hours,
-        public float $price,
-        public ?int $user_id = null
+        public readonly int $studio_id,
+        public readonly string $date,
+        public readonly string $time_slot,
+        public readonly int $number_of_hours,
+        public readonly float $price,
+        public readonly ?int $user_id = null
     ) {}
 
     public static function fromRequest(Request $request): self

@@ -329,7 +329,7 @@
                                     </div>
                                     <div class="studioListCard__badges">
                                         @php
-                                            $isFavorite = Auth::check() && Auth::user()->favoriteStudios->contains($studio->id);
+                                            $isFavorite = isset($favoriteIds) && in_array($studio->id, $favoriteIds);
                                         @endphp
                                         <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle {{ $isFavorite ? '-active' : '' }}" data-studio-id="{{ $studio->id }}">
                                             @if($isFavorite)

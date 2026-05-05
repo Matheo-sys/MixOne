@@ -3,25 +3,26 @@
 namespace App\DTOs;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 class UpdateProfileDTO
 {
     public function __construct(
-        public ?string $username,
-        public string $first_name,
-        public string $last_name,
-        public string $email,
-        public ?string $phone,
-        public ?string $birth_date,
-        public ?string $about,
-        public ?string $address_line1,
-        public ?string $address_line2,
-        public ?string $city,
-        public ?string $state,
-        public ?string $country,
-        public ?string $zipcode,
-        public $avatar = null,
-        public bool $remove_avatar = false
+        public readonly ?string $username,
+        public readonly string $first_name,
+        public readonly string $last_name,
+        public readonly string $email,
+        public readonly ?string $phone,
+        public readonly ?string $birth_date,
+        public readonly ?string $about,
+        public readonly ?string $address_line1,
+        public readonly ?string $address_line2,
+        public readonly ?string $city,
+        public readonly ?string $state,
+        public readonly ?string $country,
+        public readonly ?string $zipcode,
+        public readonly ?UploadedFile $avatar = null,
+        public readonly bool $remove_avatar = false
     ) {}
 
     public static function fromRequest(Request $request): self

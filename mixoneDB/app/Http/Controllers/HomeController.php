@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reservation;
 use App\Models\Studio;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $reservationStats = \App\Models\Reservation::whereNotNull('rating')
+        $reservationStats = Reservation::whereNotNull('rating')
             ->selectRaw('COUNT(*) as total_ratings, AVG(rating) as avg_rating')
             ->first();
 
-        $totalReservations = \App\Models\Reservation::count();
+        $totalReservations = Reservation::count();
         $satisfiedClients = $totalReservations;
         $globalRating = $reservationStats->avg_rating ? round($reservationStats->avg_rating, 2) : 4.88;
 
         return view('pages.home', [
             'whiteHeader'       => false,
-            'studios'           => Studio::all(),
+            'studios'           => Studio::latest()->limit(20)->get(),
             'satisfiedClients'  => $satisfiedClients,
-            'globalRating'      => $globalRating
+            'globalRating'      => $globalRating,
         ]);
     }
 }

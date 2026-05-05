@@ -13,6 +13,23 @@
                 </div>
             </div>
         </div>
+
+        <div class="row mt-30">
+            <div class="col-12">
+                <div class="px-20 py-20 rounded-4 bg-blue-1-05 border-light">
+                    <div class="d-flex items-center">
+                        <i class="icon-info text-24 text-blue-1 mr-15"></i>
+                        <div>
+                            <h4 class="text-16 fw-500 text-blue-1">Comment fonctionne le code PIN ?</h4>
+                            <p class="text-14 text-dark-1 mt-5">
+                                Après votre paiement, le studio doit vérifier et accepter votre demande (statut <b>"Confirmée"</b>).
+                                Une fois confirmée, un <b>Code PIN à 4 chiffres</b> apparaîtra. Vous devez obligatoirement donner ce code en main propre au propriétaire du studio le jour de la session pour prouver votre présence et débloquer son paiement.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -55,7 +72,7 @@
                 {{-- Tab 2 : En attente --}}
                 <div class="tabs__pane -tab-item-2">
                     <div class="overflow-scroll scroll-bar-1">
-                        @php $pending = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'en attente'); @endphp
+                        @php $pending = $reservations->filter(fn($r) => $r->status === \App\Enums\ReservationStatus::Pending); @endphp
                         @if($pending->isEmpty())
                             <div class="text-center py-20 text-16 text-light-1">Aucune réservation en attente.</div>
                         @else
@@ -67,7 +84,7 @@
                 {{-- Tab 3 : Confirmées --}}
                 <div class="tabs__pane -tab-item-3">
                     <div class="overflow-scroll scroll-bar-1">
-                        @php $confirmed = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'confirmée'); @endphp
+                        @php $confirmed = $reservations->filter(fn($r) => $r->status === \App\Enums\ReservationStatus::Confirmed); @endphp
                         @if($confirmed->isEmpty())
                             <div class="text-center py-20 text-16 text-light-1">Aucune réservation confirmée.</div>
                         @else
@@ -79,7 +96,7 @@
                 {{-- Tab 4 : Refusées --}}
                 <div class="tabs__pane -tab-item-4">
                     <div class="overflow-scroll scroll-bar-1">
-                        @php $refused = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'refusée'); @endphp
+                        @php $refused = $reservations->filter(fn($r) => $r->status === \App\Enums\ReservationStatus::Refused); @endphp
                         @if($refused->isEmpty())
                             <div class="text-center py-20 text-16 text-light-1">Aucune réservation refusée.</div>
                         @else
@@ -91,7 +108,7 @@
                 {{-- Tab 5 : Annulées --}}
                 <div class="tabs__pane -tab-item-5">
                     <div class="overflow-scroll scroll-bar-1">
-                        @php $cancelled = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'annulée'); @endphp
+                        @php $cancelled = $reservations->filter(fn($r) => $r->status === \App\Enums\ReservationStatus::Cancelled); @endphp
                         @if($cancelled->isEmpty())
                             <div class="text-center py-20 text-16 text-light-1">Aucune réservation annulée.</div>
                         @else
@@ -103,7 +120,7 @@
                 {{-- Tab 6 : Terminées --}}
                 <div class="tabs__pane -tab-item-6">
                     <div class="overflow-scroll scroll-bar-1">
-                        @php $completed = $reservations->filter(fn($r) => \Illuminate\Support\Str::lower($r->status) === 'terminée'); @endphp
+                        @php $completed = $reservations->filter(fn($r) => $r->status === \App\Enums\ReservationStatus::Completed); @endphp
                         @if($completed->isEmpty())
                             <div class="text-center py-20 text-16 text-light-1">Aucune réservation terminée.</div>
                         @else

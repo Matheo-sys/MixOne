@@ -5,24 +5,41 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class ContactMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data;
+    public function __construct(
+        public readonly array $data
+    ) {}
 
-    public function __construct($data)
+    public function envelope(): Envelope
     {
-        $this->data = $data;
+        return new Envelope(
+            from: new Address(config('mail.from.address'), config('mail.from.name')),
+            replyTo: [new Address($this->data['email'], $this->data['name'])],
+            subject: 'Nouveau message de contact : ' . $this->data['subject'],
+        );
     }
 
-    public function build()
+    public function content(): Content
     {
-        return $this->from($this->data['email'], $this->data['name']) // Définis l'expéditeur dynamiquement
-        ->subject('Nouveau message de contact : ' . $this->data['subject'])
-            ->view('emails.contact')
-            ->with(['data' => $this->data]);
+        return new Content(
+            view: 'emails.contact',
+            with: ['data' => $this->data],
+        );
+    }
+
+    /**
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
     }
 }

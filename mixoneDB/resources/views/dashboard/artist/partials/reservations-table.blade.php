@@ -31,20 +31,45 @@
                         'refusée' => 'bg-red-3 text-red-2',
                         'terminée' => 'bg-blue-1-05 text-blue-1',
                     ];
-                    $lowStatus = strtolower($reservation->status);
+                    $currentStatus = $reservation->status;
+                    $statusValue = $currentStatus instanceof \App\Enums\ReservationStatus ? $currentStatus->value : (string)$currentStatus;
+                    $lowStatus = strtolower($statusValue);
+                    $paymentStatus = $reservation->payment_status ?? 'pending';
                 @endphp
                 <span class="rounded-100 py-4 px-10 text-center text-12 fw-500 {{ $statusClasses[$lowStatus] ?? 'bg-light-3' }}">
-                    {{ ucfirst($reservation->status) }}
+                    {{ ucfirst($lowStatus) }}
                 </span>
+                @if($paymentStatus === 'paid')
+                    <span class="rounded-100 py-4 px-10 text-center text-11 fw-500 bg-green-1 text-green-2 mt-5 d-inline-block">💳 Payé</span>
+                @elseif($paymentStatus === 'pending' && $lowStatus === 'en attente')
+                    <a href="{{ route('payment.checkout', $reservation->id) }}" class="rounded-100 py-4 px-10 text-center text-11 fw-500 bg-yellow-4 text-dark-1 mt-5 d-inline-block">
+                        💳 Payer
+                    </a>
+                @elseif($paymentStatus === 'refunded')
+                    <span class="rounded-100 py-4 px-10 text-center text-11 fw-500 bg-blue-1-05 text-blue-1 mt-5 d-inline-block">💳 Remboursé</span>
+                @endif
             </td>
             <td data-label="Action">
-                @php $s = strtolower($reservation->status); @endphp
+                @php $s = $lowStatus; @endphp
                 @if($s === 'en attente')
                     <form action="{{ route('reservations.cancel', $reservation->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="button -sm bg-light-2 text-red-1 px-10 py-5 rounded-4 text-12 fw-500">
                             Annuler
+                        </button>
+                    </form>
+                @elseif($s === 'confirmée')
+                    @if($reservation->pin_code)
+                        <div class="mb-5">
+                            <span class="text-11 text-light-1">Code PIN Studio :</span>
+                            <div class="fw-600 text-14 bg-light-2 px-10 py-5 rounded-4 d-inline-block">{{ $reservation->pin_code }}</div>
+                        </div>
+                    @endif
+                    <form action="{{ route('reservations.dispute', $reservation->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir signaler un problème ? Les fonds seront bloqués.');">
+                        @csrf
+                        <button type="submit" class="button -sm bg-red-1 text-white px-10 py-5 rounded-4 text-11 fw-500 w-1/1">
+                            Signaler un litige
                         </button>
                     </form>
                 @elseif($s === 'terminée' && !$reservation->rating)

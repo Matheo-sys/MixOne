@@ -21,12 +21,6 @@
                     <img src="{{ asset('media/img/dashboard/icons/1.svg') }}" alt="icon">
                 </div>
             </div>
-            <div class="mt-20">
-                <form action="{{ route('wallet.recharge') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="button -md -blue-1 bg-blue-1-05 text-blue-1 w-1/1">Recharger le compte (test 100€)</button>
-                </form>
-            </div>
         </div>
     </div>
 
@@ -103,14 +97,16 @@
                             <td>
                                 @php
                                     $statusClasses = [
-                                        'Confirmée' => 'bg-green-1 text-green-2',
-                                        'En attente' => 'bg-yellow-4 text-dark-1',
-                                        'Annulée' => 'bg-red-3 text-red-2',
-                                        'Terminée' => 'bg-blue-1-05 text-blue-1'
+                                        'confirmée' => 'bg-green-1 text-green-2',
+                                        'en attente' => 'bg-yellow-4 text-dark-1',
+                                        'annulée' => 'bg-red-3 text-red-2',
+                                        'terminée' => 'bg-blue-1-05 text-blue-1'
                                     ];
+                                    $statusText = $res->status instanceof \App\Enums\ReservationStatus ? $res->status->value : (string)$res->status;
+                                    $lowStatus = strtolower($statusText);
                                 @endphp
-                                <span class="rounded-100 py-4 px-10 text-center text-13 fw-500 {{ $statusClasses[$res->status] ?? 'bg-light-2' }}">
-                                    {{ ucfirst($res->status) }}
+                                <span class="rounded-100 py-4 px-10 text-center text-13 fw-500 {{ $statusClasses[$lowStatus] ?? 'bg-light-2' }}">
+                                    {{ ucfirst($lowStatus) }}
                                 </span>
                             </td>
                         </tr>

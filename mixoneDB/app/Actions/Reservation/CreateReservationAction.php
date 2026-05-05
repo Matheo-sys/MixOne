@@ -3,20 +3,24 @@
 namespace App\Actions\Reservation;
 
 use App\DTOs\ReservationDTO;
+use App\Enums\ReservationStatus;
 use App\Models\Reservation;
 use Exception;
-
 use Illuminate\Support\Facades\DB;
 
 class CreateReservationAction
 {
+    /**
+     * Crée une réservation en statut "En attente" avec paiement pending.
+     * L'artiste sera ensuite redirigé vers Stripe Checkout.
+     */
     public function execute(ReservationDTO $dto): Reservation
     {
-        // Double check availability — ignore cancelled reservations
+        // Vérifier la disponibilité du créneau
         $existingReservation = Reservation::where('studio_id', $dto->studio_id)
             ->where('date', $dto->date)
             ->where('time_slot', $dto->time_slot)
-            ->whereNotIn('status', ['Annulée'])
+            ->where('status', '!=', ReservationStatus::Cancelled)
             ->exists();
 
         if ($existingReservation) {
@@ -24,25 +28,17 @@ class CreateReservationAction
         }
 
         return DB::transaction(function () use ($dto) {
-            $user = auth()->user();
-            $wallet = $user->wallet;
-
-            if (!$wallet) {
-                // Si l'utilisateur n'a pas de portefeuille, on lui en crée un vide.
-                // Dans le cas réel, ça sera fait à l'inscription.
-                $wallet = $user->wallet()->create();
-            }
-
-            if (!$wallet->hasSufficientBalance($dto->price)) {
-                throw new Exception("Solde insuffisant dans votre portefeuille. Veuillez le recharger.");
-            }
-
-            $reservation = Reservation::create($dto->toArray());
-
-            // Bloquer les fonds pour cette réservation
-            $wallet->hold($dto->price, $reservation->id, 'Réservation du studio N°' . $dto->studio_id);
-
-            return $reservation;
+            return Reservation::create([
+                'studio_id'        => $dto->studio_id,
+                'user_id'          => $dto->user_id,
+                'date'             => $dto->date,
+                'time_slot'        => $dto->time_slot,
+                'number_of_hours'  => $dto->number_of_hours,
+                'price'            => $dto->price,
+                'status'           => ReservationStatus::Pending,
+                'payment_status'   => 'pending',
+                'pin_code'         => str_pad((string)random_int(0, 9999), 4, '0', STR_PAD_LEFT),
+            ]);
         });
     }
 }

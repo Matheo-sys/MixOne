@@ -39,13 +39,19 @@
                         <div class="col-auto">
                             <h1 class="text-30 sm:text-25 fw-600">{{ $studio->name }}</h1>
                         </div>
-                        <div class="col-auto">
-                            <i class="icon-star text-10 text-yellow-1"></i>
-                            <i class="icon-star text-10 text-yellow-1"></i>
-                            <i class="icon-star text-10 text-yellow-1"></i>
-                            <i class="icon-star text-10 text-yellow-1"></i>
-                            <i class="icon-star text-10 text-yellow-1"></i>
-                        </div>
+                        @if($studio->reviews_count > 0)
+                            <div class="col-auto">
+                                <div class="d-flex items-center">
+                                    <i class="icon-star text-10 text-yellow-1 mr-5"></i>
+                                    <span class="text-14 fw-500">{{ $studio->average_rating }}</span>
+                                    <span class="text-14 text-light-1 ml-5">({{ $studio->reviews_count }})</span>
+                                </div>
+                            </div>
+                        @else
+                            <div class="col-auto">
+                                <div class="text-14 text-light-1">Nouveau studio</div>
+                            </div>
+                        @endif
                     </div>
                     <div class="row x-gap-20 y-gap-20 items-center">
                         <div class="col-auto">
@@ -203,6 +209,48 @@
                                 @endforeach
                             </div>
                             @endif
+                            
+                            {{-- Section Avis Clients --}}
+                            @if($studio->reviews_count > 0)
+                                <div class="mt-40 pt-40 border-top-light">
+                                    <div class="row y-gap-20 justify-between items-end">
+                                        <div class="col-auto">
+                                            <h3 class="text-22 fw-500">Avis clients</h3>
+                                            <div class="d-flex items-center mt-5">
+                                                <div class="icon-star text-10 text-yellow-1 mr-5"></div>
+                                                <div class="text-15 fw-500">{{ $studio->average_rating }} / 5</div>
+                                                <div class="text-14 text-light-1 ml-5">({{ $studio->reviews_count }} avis)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row y-gap-30 pt-30">
+                                        @foreach($studio->reviews as $review)
+                                            <div class="col-12">
+                                                <div class="row x-gap-20 y-gap-20 items-center">
+                                                    <div class="col-auto">
+                                                        <div class="size-60 rounded-full bg-blue-1 flex-center text-white text-18 fw-500">
+                                                            {{ substr($review->user->first_name ?? $review->user->name ?? 'A', 0, 1) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="text-15 fw-500 lh-15">{{ $review->user->first_name ?? $review->user->name ?? 'Utilisateur' }}</div>
+                                                        <div class="text-14 text-light-1 lh-15">{{ \Carbon\Carbon::parse($review->updated_at)->locale('fr')->isoFormat('MMMM YYYY') }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex x-gap-2 mt-15">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        <div class="icon-star text-10 {{ $i <= $review->rating ? 'text-yellow-1' : 'text-light-3' }}"></div>
+                                                    @endfor
+                                                </div>
+                                                @if($review->comment)
+                                                    <p class="text-15 text-dark-1 mt-10">{{ $review->comment }}</p>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
