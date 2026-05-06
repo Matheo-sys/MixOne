@@ -13,7 +13,7 @@ class StudioController extends Controller
     /**
      * Liste des studios.
      */
-    public function index(): View
+    public function liste(): View
     {
         $studios = Studio::with('proprietaire')->orderBy('created_at', 'desc')->paginate(20);
         return view('admin.studios.index', compact('studios'));

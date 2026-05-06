@@ -8,15 +8,15 @@
             <p class="studioList-hero__subtitle">Explorez notre sélection de studios professionnels</p>
 
             <div class="mainSearch bg-white mt-30">
-                <form id="searchForm" action="{{route('studio_list')}}" method="GET">
+                <form id="searchForm" action="{{route('studios.index')}}" method="GET">
                     <input type="hidden" id="latitude" name="latitude" value="48.7748198">
                     <input type="hidden" id="longitude" name="longitude" value="2.3262945">
 
                     <div class="mainSearch__grid">
                         <div class="mainSearch__item">
-                            <label for="city" class="text-15 fw-500 ls-2 lh-16">City</label>
+                            <label for="city" class="text-15 fw-500 ls-2 lh-16">Ville</label>
                             <div class="mainSearch__input">
-                                <input type="text" id="city" name="city" placeholder="City" value="" class="js-search js-dd-focus">
+                                <input type="text" id="city" name="city" placeholder="Ville" value="" class="js-search js-dd-focus">
                                 <button type="button" id="geolocate-btn">
                                     <i class="icon-location text-16"></i>
                                 </button>
@@ -24,9 +24,9 @@
                         </div>
 
                         <div class="mainSearch__item position-relative">
-                            <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Hours</label>
+                            <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Heures</label>
                             <div class="mainSearch__input">
-                                <input type="text" id="min_hours" name="min_hours" placeholder="Hours" value="{{ request('min_hours', 2) }}" class="text-15 text-light-1" onclick="toggleHoursMenu(event)" readonly="">
+                                <input type="text" id="min_hours" name="min_hours" placeholder="Heures" value="{{ request('min_hours', 2) }}" class="text-15 text-light-1" onclick="toggleHoursMenu(event)" readonly="">
                             </div>
                             <div id="hoursMenu" class="hours-menu hidden">
                                 <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
@@ -44,7 +44,7 @@
                         <div class="mainSearch__button">
                             <button type="submit" class="button bg-blue-1 text-white">
                                 <i class="icon-search text-20 mr-10"></i>
-                                Search
+                                Rechercher
                             </button>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
 
                     {{-- Filters --}}
                     <div class="studioList-sidebar__filters">
-                        <form action="{{ route('studio_list') }}" method="GET" id="sidebarFilterForm">
+                        <form action="{{ route('studios.index') }}" method="GET" id="sidebarFilterForm">
                             <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
                             <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
                             <input type="hidden" name="city" value="{{ request('city', '') }}">
@@ -181,7 +181,7 @@
 
                     <div class="studioList-toolbar__actions">
                         <div class="col-auto">
-                            <form action="{{ route('studio_list') }}" method="GET" id="sortForm">
+                            <form action="{{ route('studios.index') }}" method="GET" id="sortForm">
                                 <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
                                 <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
                                 <input type="hidden" name="city" value="{{ request('city', '') }}">
@@ -235,7 +235,7 @@
                             </div>
                         </div>
 
-                        <form action="{{ route('studio_list') }}" method="GET">
+                        <form action="{{ route('studios.index') }}" method="GET">
                             <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
                             <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
                             <input type="hidden" name="city" value="{{ request('city', '') }}">
@@ -457,7 +457,7 @@
                                         <span class="studioListCard__priceValue">{{ $studio->hourly_rate }}€</span>
                                         <span class="studioListCard__priceUnit">/ heure</span>
                                     </div>
-                                    <a href="{{ route('studio.show', $studio) }}" class="studioListCard__cta">
+                                    <a href="{{ route('studios.show', $studio) }}" class="studioListCard__cta">
                                         Voir Détails
                                         <i class="icon-arrow-top-right text-12"></i>
                                     </a>

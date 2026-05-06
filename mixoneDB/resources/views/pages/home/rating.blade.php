@@ -7,12 +7,12 @@
 
                 <div class="row y-gap-30 pt-60 lg:pt-40">
                     <div class="col-sm-5 col-6">
-                        <div class="text-30 lh-15 fw-600">{{ $satisfiedClients ?? '13M+' }}</div>
+                        <div class="text-30 lh-15 fw-600">{{ $clientsSatisfaits ?? '13M+' }}</div>
                         <div class="text-light-1 lh-15">Clients satisfaits</div>
                     </div>
 
                     <div class="col-sm-5 col-6">
-                        <div class="text-30 lh-15 fw-600">{{ $globalRating ?? '4.88' }}</div>
+                        <div class="text-30 lh-15 fw-600">{{ $noteGlobale ?? '4.88' }}</div>
                         <div class="text-light-1 lh-15">Note globale</div>
 
                         <div class="d-flex x-gap-5 items-center pt-10">

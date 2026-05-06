@@ -46,7 +46,7 @@
                             </a>
                         </div>
                         <div class="col-auto">
-                            <a href="{{ route('studio.show', $reservation->studio) }}" class="button -md -outline-blue-1 text-blue-1">
+                            <a href="{{ route('studios.show', $reservation->studio) }}" class="button -md -outline-blue-1 text-blue-1">
                                 Retour au studio
                             </a>
                         </div>

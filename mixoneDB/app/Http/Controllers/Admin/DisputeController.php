@@ -12,7 +12,7 @@ class DisputeController extends Controller
     /**
      * Liste des litiges en cours.
      */
-    public function index()
+    public function liste()
     {
         $disputes = Reservation::where('status', ReservationStatus::Disputed)
             ->with(['client', 'studio'])

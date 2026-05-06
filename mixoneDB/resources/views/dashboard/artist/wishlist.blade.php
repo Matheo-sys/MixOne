@@ -23,7 +23,7 @@
                 <div class="row">
                     <div class="col-12 text-center">
                         <p class="text-18">Vous n'avez pas encore de studios favoris</p>
-                        <a href="{{ route('studio_list') }}" class="button -md -dark-1 bg-blue-1 text-white mt-24">
+                        <a href="{{ route('studios.index') }}" class="button -md -dark-1 bg-blue-1 text-white mt-24">
                             Découvrir les studios <div class="icon-arrow-top-right ml-15"></div>
                         </a>
                     </div>
@@ -108,7 +108,7 @@
                                             </div>
                                             <p class="text-14 lh-14 mt-5">{{ $studio->city }}</p>
                                             <div class="text-14 text-light-1 mt-5">A partir de {{ $studio->hourly_rate }}€/heure</div>
-                                            <a href="{{ route('studio.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100" style="padding: 12px 24px; font-size: 16px; border-radius: 4px;">
+                                            <a href="{{ route('studios.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100" style="padding: 12px 24px; font-size: 16px; border-radius: 4px;">
                                                 Voir Détails
                                             </a>
                                         </div>
@@ -182,7 +182,7 @@
                                         <div class="text-14 text-light-1 mt-5">A partir de {{ $studio->hourly_rate }}€/heure</div>
 
                                         <!-- Bouton "Voir Détails" -->
-                                        <a href="{{ route('studio.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100" style="padding: 12px 24px; font-size: 16px; border-radius: 4px;">
+                                        <a href="{{ route('studios.show', $studio) }}" class="button -sm -dark-1 bg-blue-1 text-white mt-10 w-100" style="padding: 12px 24px; font-size: 16px; border-radius: 4px;">
                                             Voir Détails
                                         </a>
                                     </div>

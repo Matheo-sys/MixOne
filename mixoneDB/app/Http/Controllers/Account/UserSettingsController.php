@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
+
+use App\Http\Controllers\Controller;
 
 use App\Actions\UserSettings\UpdateProfileAction;
 use App\Actions\UserSettings\UpdatePasswordAction;

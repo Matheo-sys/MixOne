@@ -13,7 +13,7 @@ class AdminDashboardController extends Controller
     /**
      * Affiche les statistiques globales pour l'administration.
      */
-    public function index(): \Illuminate\Contracts\View\View
+    public function afficher(): \Illuminate\Contracts\View\View
     {
         // Statistiques globales
         $totalUtilisateurs = User::count();

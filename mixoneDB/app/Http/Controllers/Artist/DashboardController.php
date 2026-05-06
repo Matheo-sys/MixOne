@@ -15,7 +15,7 @@ class DashboardController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function afficher(): View
     {
         $utilisateur = Auth::user();
         $portefeuille = $utilisateur->portefeuille;

@@ -17,7 +17,7 @@
             <div class="swiper-wrapper">
                 @foreach($studios as $studio)
                     <div class="swiper-slide">
-                        <a href="{{ route('studio.show', $studio) }}" class="studioCard">
+                        <a href="{{ route('studios.show', $studio) }}" class="studioCard">
                             {{-- Image Section --}}
                             <div class="studioCard__image">
                                 <div class="cardImage ratio studioCard__ratio">

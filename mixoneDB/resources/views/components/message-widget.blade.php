@@ -447,7 +447,7 @@
 
             searchTimeout = setTimeout(async () => {
                 try {
-                    const response = await fetch(`/dashboard/api/users/search?q=${encodeURIComponent(query)}`);
+                    const response = await fetch(`/tableau-de-bord/api/utilisateurs/rechercher?q=${encodeURIComponent(query)}`);
                     const users = await response.json();
                     renderSearchResults(users);
                 } catch (error) {
@@ -482,7 +482,7 @@
 
         async function loadMessages() {
             try {
-                const response = await fetch('/dashboard/message');
+                const response = await fetch('/tableau-de-bord/message');
                 const data = await response.json();
                 messages = data.messages || [];
                 hiddenContacts = data.hidden_contacts || [];
@@ -495,7 +495,7 @@
         async function fetchUnreadCount() {
             try {
                 if (chatWindow.classList.contains('d-none')) {
-                    const response = await fetch('/dashboard/message/unread-count');
+                    const response = await fetch('/tableau-de-bord/message/nombre-non-lus');
                     const data = await response.json();
                     if (data.count > 0) {
                         notificationBadge.textContent = data.count;
@@ -511,7 +511,7 @@
 
         async function markAllAsRead() {
             try {
-                await fetch('/dashboard/message/read', {
+                await fetch('/tableau-de-bord/message/lire', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -527,7 +527,7 @@
         window.hideConversation = async function(e, contactId) {
             e.stopPropagation();
             try {
-                const res = await fetch(`/dashboard/message/hide/${contactId}`, {
+                const res = await fetch(`/tableau-de-bord/message/masquer/${contactId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -700,7 +700,7 @@
             renderMessages(parseInt(receiverId));
 
             try {
-                const endpoint = currentEditId ? `/dashboard/message/${currentEditId}` : '/dashboard/message';
+                const endpoint = currentEditId ? `/tableau-de-bord/message/${currentEditId}` : '/tableau-de-bord/message';
                 const method = currentEditId ? 'PUT' : 'POST';
 
                 const response = await fetch(endpoint, {

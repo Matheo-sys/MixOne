@@ -659,7 +659,7 @@
             // Afficher un message de chargement
             timeSlotSelect.innerHTML = '<option disabled selected>Chargement...</option>';
 
-            fetch(`/api/studios/${studioId}/time-slots?date=${date}`)
+            fetch(`/studios/${studioId}/creneaux?date=${date}`)
                 .then(response => response.json())
                 .then(slots => {
                     timeSlotSelect.innerHTML = '';

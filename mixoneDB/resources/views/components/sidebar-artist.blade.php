@@ -49,7 +49,7 @@
 
             <div class="sidebar__item">
                 <div class="sidebar__button">
-                    <a href="{{ route('studio_list') }}" class="d-flex items-center text-15 lh-1 fw-500">
+                    <a href="{{ route('studios.index') }}" class="d-flex items-center text-15 lh-1 fw-500">
                         <i class="icon-search text-20 mr-15"></i>
                         Nos studios
                     </a>

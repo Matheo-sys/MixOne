@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
+
+use App\Http\Controllers\Controller;
 
 use App\Actions\Messaging\SendMessageAction;
 use App\Http\Requests\Messaging\SendMessageRequest;
@@ -75,7 +77,7 @@ class MessageController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function afficher(): JsonResponse
     {
         $messages = Message::where('sender_id', Auth::id())
             ->orWhere('receiver_id', Auth::id())

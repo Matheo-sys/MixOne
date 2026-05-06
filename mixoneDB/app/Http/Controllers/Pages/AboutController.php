@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pages;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\Reservation;
 use App\Models\Studio;
@@ -14,7 +16,7 @@ class AboutController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function afficher(): View
     {
         $nombreStudios = Studio::count();
         $nombreUtilisateurs = User::count();

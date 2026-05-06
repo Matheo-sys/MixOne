@@ -3,7 +3,7 @@
      ============================================================ --}}
 
 @php
-$studioBaseUrl = url('/studio');
+$studioBaseUrl = url('/studios');
 $studiosForMap = isset($map_studios) ? $map_studios : $studios;
 $studioMapData = $studiosForMap->map(function($s) use ($studioBaseUrl) {
     return [

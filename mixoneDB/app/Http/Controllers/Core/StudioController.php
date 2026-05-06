@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
+
+use App\Http\Controllers\Controller;
 
 use App\Actions\Studio\CreateStudioAction;
 use App\Actions\Studio\DeleteStudioAction;
@@ -135,7 +137,7 @@ class StudioController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function liste(): View
     {
         $requeteBase = Studio::with('proprietaire')
             ->withCount('reservationsTerminees')

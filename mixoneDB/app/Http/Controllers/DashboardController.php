@@ -10,7 +10,7 @@ class DashboardController extends Controller
     /**
      * Redirige les utilisateurs vers leur tableau de bord spécifique selon leur profil.
      */
-    public function index(): RedirectResponse
+    public function rediger(): RedirectResponse
     {
         if (Auth::user()->profile === 'artist') {
             return redirect()->route('dashboard.artist.index');

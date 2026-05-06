@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pages;
+
+use App\Http\Controllers\Controller;
 
 use App\Actions\Contact\SendContactEmailAction;
 use App\Http\Requests\Contact\ContactRequest;

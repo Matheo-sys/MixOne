@@ -9,7 +9,7 @@
         </div>
 
         <div class="col-auto mr-10 sm:mr-0 sm:w-100">
-            <a href="{{ route('dashboard.studio.create') }}" class="button h-50 px-24 -dark-1 bg-blue-1 text-white sm:w-100">
+            <a href="{{ route('studio.create') }}" class="button h-50 px-24 -dark-1 bg-blue-1 text-white sm:w-100">
                 Ajouter Studio <div class="icon-arrow-top-right ml-15"></div>
             </a>
         </div>
@@ -20,7 +20,7 @@
             <div class="text-center py-40">
                 <i class="icon-hotel text-60 text-light-1 mb-20"></i>
                 <p class="text-18 fw-500">Vous n'avez pas encore de studio.</p>
-                <a href="{{ route('dashboard.studio.create') }}" class="button -md -blue-1 bg-blue-1-05 text-blue-1 mt-20">Ajouter votre premier studio</a>
+                <a href="{{ route('studio.create') }}" class="button -md -blue-1 bg-blue-1-05 text-blue-1 mt-20">Ajouter votre premier studio</a>
             </div>
         @else
             <div class="tabs -underline-2 js-tabs">
@@ -58,7 +58,7 @@
                                         <td data-label="Action">
                                             <div class="d-flex align-items-center gap-2">
                                                 <!-- Bouton Vue -->
-                                                <a href="{{ route('studio.show', $studio->id) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2" title="Voir">
+                                                <a href="{{ route('studios.show', $studio->id) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2" title="Voir">
                                                     <i class="icon-eye text-16 text-light-1"></i>
                                                 </a>
 
@@ -68,7 +68,7 @@
                                                 </a>
 
                                                 <!-- Bouton Supprimer -->
-                                                <form class="ml-10" action="{{ route('studio.destroy', $studio->id) }}" method="POST"
+                                                <form class="ml-10" action="{{ route('dashboard.studio.destroy', $studio->id) }}" method="POST"
                                                       onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce studio ?');">
                                                     @csrf
                                                     @method('DELETE')

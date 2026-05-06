@@ -207,6 +207,9 @@ async function handleAjaxForm(form) {
         } else if (response.status === 404) {
             showToast('error', 'La ressource demandée est introuvable.');
 
+        } else if (response.status === 429) {
+            showToast('error', 'Trop de tentatives. Veuillez patienter un instant avant de réessayer.');
+
         } else if (response.status >= 500) {
             showToast('error', 'Une erreur serveur est survenue. Veuillez réessayer dans quelques instants.');
 

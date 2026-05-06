@@ -11,7 +11,7 @@ class ReservationController extends Controller
     /**
      * Liste toutes les réservations.
      */
-    public function index()
+    public function liste()
     {
         $reservations = Reservation::with(['client', 'studio'])->orderBy('created_at', 'desc')->paginate(20);
         return view('admin.reservations.index', compact('reservations'));

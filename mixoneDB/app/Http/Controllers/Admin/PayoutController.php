@@ -11,7 +11,7 @@ class PayoutController extends Controller
     /**
      * Liste des demandes de virement.
      */
-    public function index()
+    public function liste()
     {
         $virements = PayoutRequest::with('utilisateur')
             ->orderBy('created_at', 'desc')

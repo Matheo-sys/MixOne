@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Financial;
+
+use App\Http\Controllers\Controller;
 
 use App\Enums\ReservationStatus;
 use App\Enums\PaymentStatus;

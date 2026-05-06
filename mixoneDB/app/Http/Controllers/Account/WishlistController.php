@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
+
+use App\Http\Controllers\Controller;
 
 use App\Actions\Wishlist\ToggleWishlistAction;
 use App\Http\Requests\Wishlist\ToggleWishlistRequest;
@@ -19,7 +21,7 @@ class WishlistController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function afficher(): View
     {
         $studiosFavoris = Auth::user()->studiosFavoris;
         return view('dashboard.artist.wishlist', ['studiosFavoris' => $studiosFavoris]);

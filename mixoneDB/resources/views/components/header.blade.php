@@ -30,19 +30,19 @@
 
 
                                     <li>
-                                        <a href="/studio_list">
+                                        <a href="/studios">
                                             <span class="mr-10">Nos studios</span>
                                         </a>
                                     </li>
 
                                     @auth
                                     <li>
-                                        <a href="/dashboard">Tableau de Bord</a>
+                                        <a href="/tableau-de-bord">Tableau de Bord</a>
                                     </li>
                                     @endauth
 
                                     <li>
-                                        <a href="/about">
+                                        <a href="/a-propos">
                                             À propos
                                         </a>
                                     </li>
@@ -56,7 +56,7 @@
                                             <a href="/login">Inscription / Se connecter</a>
                                         </li>
                                         <li class="mobile-only-link">
-                                            <a href="/become-expert" class="text-blue-1 fw-600">Devenez un Studio Confirmé</a>
+                                            <a href="/devenir-expert" class="text-blue-1 fw-600">Devenez un Studio Confirmé</a>
                                         </li>
                                     @endguest
 
@@ -93,7 +93,7 @@
 
                     @guest
                         <div class="d-flex items-center ml-20 is-menu-opened-hide desktop-only-header">
-                            <a href="/become-expert" class="button px-30 fw-400 text-14 -white {!! $btn1Class !!} h-50">Devenez un Studio Confirmé</a>
+                            <a href="/devenir-expert" class="button px-30 fw-400 text-14 -white {!! $btn1Class !!} h-50">Devenez un Studio Confirmé</a>
                             <a href="/login" class="button px-30 fw-400 text-14 -md -blue-1 {!! $btn2Class !!} -outline-white h-50 ml-20">Inscription / Se connecter</a>
                         </div>
                     @else

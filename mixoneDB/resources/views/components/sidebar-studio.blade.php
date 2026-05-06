@@ -4,7 +4,7 @@
             <a href="{{route('dashboard.studio')}}"
                class="sidebar__button d-flex items-center text-15 lh-1 fw-500 {{ request()->routeIs('dashboard.studio') ? '-is-active' : '' }}">
                 <img src="{{asset('media/img/dashboard/sidebar/compass.svg')}}" alt="image" class="mr-15">
-                Dashboard
+                Tableau de bord
             </a>
         </div>
 
@@ -39,7 +39,7 @@
                             </li>
 
                             <li>
-                                <a href="{{route('dashboard.studio.create')}}"
+                                <a href="{{route('studio.create')}}"
                                    class="text-15 {{ request()->routeIs('dashboard.studio.create') ? 'text-blue-500 font-bold' : '' }}">
                                     Ajouter un studio
                                 </a>
@@ -70,7 +70,7 @@
                     </a>
                 </div>
                 <div class="sidebar__item">
-                    <a href="{{ route('studio_list') }}" class="sidebar__button d-flex items-center text-15 lh-1 fw-500">
+                    <a href="{{ route('studios.index') }}" class="sidebar__button d-flex items-center text-15 lh-1 fw-500">
                         <i class="icon-search text-20 mr-15"></i>
                         Nos studios
                     </a>

@@ -16,7 +16,7 @@ class SendContactEmailAction
      */
     public function executer(ContactDTO $dto): void
     {
-        Mail::to('mixone.contact@gmail.com')->send(new ContactMail($dto->enTableau()));
+        Mail::to('mixone.contact@gmail.com')->queue(new ContactMail($dto->enTableau()));
     }
 }
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pages;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\Reservation;
 use App\Models\Studio;
@@ -13,7 +15,7 @@ class HomeController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function afficher(): View
     {
         $statsReservations = Reservation::whereNotNull('rating')
             ->selectRaw('COUNT(*) as total_ratings, AVG(rating) as avg_rating')

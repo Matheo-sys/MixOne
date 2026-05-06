@@ -14,7 +14,7 @@
                     </button>
 
                     <div class="single-field relative d-flex items-center md:d-none ml-30">
-                        <input class="pl-50 border-light text-dark-1 h-50 rounded-8" type="email" placeholder="Search">
+                        <input class="pl-50 border-light text-dark-1 h-50 rounded-8" type="email" placeholder="Rechercher">
                         <button class="absolute d-flex items-center h-full">
                             <i class="icon-search text-20 px-15 text-dark-1"></i>
                         </button>
@@ -40,13 +40,13 @@
                                     </li>
 
                                     <li>
-                                        <a href="/studio_list">
+                                        <a href="/studios">
                                             <span class="mr-10">Nos studios</span>
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a href="/about">
+                                        <a href="/a-propos">
                                             <span class="mr-10">À propos</span>
                                         </a>
                                     </li>

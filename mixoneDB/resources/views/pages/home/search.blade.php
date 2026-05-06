@@ -15,13 +15,13 @@
                     <div class="tabs__content mt-30 md:mt-20 js-tabs-content">
                         <div class="tabs__pane -tab-item-1 is-tab-el-active">
                             <div class="mainSearch bg-white">
-                                <form id="searchForm" action="{{route("studio_list")}}" method="GET">
+                                <form id="searchForm" action="{{route("studios.index")}}" method="GET">
                                     <input type="hidden" id="latitude" name="latitude" value="48.8588897">
                                     <input type="hidden" id="longitude" name="longitude" value="2.320041">
 
                                     <div class="mainSearch__grid">
                                         <div class="mainSearch__item">
-                                            <label for="city" class="text-15 fw-500 ls-2 lh-16">City</label>
+                                            <label for="city" class="text-15 fw-500 ls-2 lh-16">Ville</label>
                                             <div class="mainSearch__input">
                                                 <input type="text" id="city" name="city" placeholder="(Par défaut : Paris)" value="" class="js-search js-dd-focus">
                                                 <button type="button" id="geolocate-btn">
@@ -31,9 +31,9 @@
                                         </div>
 
                                         <div class="mainSearch__item position-relative">
-                                            <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Hours</label>
+                                            <label for="min_hours" class="text-15 fw-500 ls-2 lh-16">Heures</label>
                                             <div class="mainSearch__input">
-                                                <input type="text" id="min_hours" name="min_hours" placeholder="Hours" value="2" class="text-15 text-light-1" onclick="toggleHoursMenu(event)" readonly="">
+                                                <input type="text" id="min_hours" name="min_hours" placeholder="Heures" value="2" class="text-15 text-light-1" onclick="toggleHoursMenu(event)" readonly="">
                                             </div>
                                             <div id="hoursMenu" class="hours-menu hidden">
                                                 <button type="button" class="button -outline-blue-1 text-blue-1 size-38 rounded-4" onclick="changeHours(-1)">
@@ -51,7 +51,7 @@
                                         <div class="mainSearch__button">
                                             <button type="submit" class="button bg-blue-1 text-white">
                                                 <i class="icon-search text-20 mr-10"></i>
-                                                Search
+                                                Rechercher
                                             </button>
                                         </div>
                                     </div>
@@ -118,7 +118,7 @@
                             document.getElementById('longitude').value = longitude;
 
                             // Fetch the address using our backend proxy
-                            fetch(`/api/geocode/reverse?lat=${latitude}&lon=${longitude}`)
+                            fetch(`/studios/geocoder-inverse?lat=${latitude}&lon=${longitude}`)
                                 .then(response => response.json())
                                 .then(data => {
                                     const city = data.address.city || data.address.town || data.address.village || "Unknown location";
