@@ -4,13 +4,12 @@ namespace App\Mail;
 
 use App\Models\Reservation;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class MailReservationConfirmeeArtiste extends Mailable implements ShouldQueue
+class NewReservationStudioMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -33,7 +32,7 @@ class MailReservationConfirmeeArtiste extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Réservation Confirmée & Code PIN',
+            subject: 'Nouvelle réservation payée ! 🎉 - ' . $this->reservation->studio->name,
         );
     }
 
@@ -43,18 +42,8 @@ class MailReservationConfirmeeArtiste extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.reservation.confirmed_artist',
+            markdown: 'emails.reservation.new_studio',
         );
-    }
-
-    /**
-     * Définit les pièces jointes du message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
     }
 }
 

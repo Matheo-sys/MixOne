@@ -6,7 +6,7 @@ use App\DTOs\ContactDTO;
 use App\Mail\ContactMail;
 use Illuminate\Support\Facades\Mail;
 
-class SendContactMailAction
+class SendContactEmailAction
 {
     /**
      * Exécute l'action d'envoi d'e-mail de contact.

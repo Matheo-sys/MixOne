@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\ReservationStatus;
 use App\Enums\PaymentStatus;
-use App\Mail\MailReservationPayeeStudio;
-use App\Mail\MailReservationPayeeArtiste;
+use App\Mail\ReservationPaidStudioMail;
+use App\Mail\ReservationPaidArtistMail;
 use App\Models\Reservation;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
@@ -108,12 +108,12 @@ class StripeWebhookController extends Controller
         ]);
 
         if ($proprietaireStudio && $proprietaireStudio->email) {
-            Mail::to($proprietaireStudio->email)->send(new MailReservationPayeeStudio($reservation));
+            Mail::to($proprietaireStudio->email)->send(new ReservationPaidStudioMail($reservation));
         }
 
         // Envoyer le mail de confirmation de paiement à l'artiste
         if ($reservation->client && $reservation->client->email) {
-            Mail::to($reservation->client->email)->send(new MailReservationPayeeArtiste($reservation));
+            Mail::to($reservation->client->email)->send(new ReservationPaidArtistMail($reservation));
         }
 
     }

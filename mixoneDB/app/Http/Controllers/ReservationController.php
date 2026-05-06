@@ -7,7 +7,7 @@ use App\Actions\Reservation\UpdateReservationStatusAction;
 use App\Enums\ReservationStatus;
 use App\Http\Requests\Reservation\CreateReservationRequest;
 use App\Models\Reservation;
-use App\Mail\MailReservationConfirmeeArtiste;
+use App\Mail\ReservationConfirmedArtistMail;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -96,7 +96,7 @@ class ReservationController extends Controller
             
             // Envoyer l'email avec le code PIN à l'artiste
             if ($reservation->client && $reservation->client->email) {
-                Mail::to($reservation->client->email)->send(new MailReservationConfirmeeArtiste($reservation));
+                Mail::to($reservation->client->email)->send(new ReservationConfirmedArtistMail($reservation));
             }
 
             if ($requete->ajax()) {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Contact\SendContactMailAction;
+use App\Actions\Contact\SendContactEmailAction;
 use App\Http\Requests\Contact\ContactRequest;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -11,10 +11,10 @@ use Illuminate\Http\JsonResponse;
 class ContactController extends Controller
 {
     /**
-     * @param SendContactMailAction $actionEnvoiContactMail
+     * @param SendContactEmailAction $actionEnvoiContactMail
      */
     public function __construct(
-        private SendContactMailAction $actionEnvoiContactMail
+        private SendContactEmailAction $actionEnvoiContactMail
     ) {}
 
     /**
