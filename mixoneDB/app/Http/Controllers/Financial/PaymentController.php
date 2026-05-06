@@ -12,7 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Mail\MailNouvelleReservationStudio;
+use App\Mail\NewReservationStudioMail;
 
 class PaymentController extends Controller
 {
@@ -96,7 +96,7 @@ class PaymentController extends Controller
                 // Prévenir le studio par mail
                 $proprietaireStudio = $reservation->studio->proprietaire;
                 if ($proprietaireStudio && $proprietaireStudio->email) {
-                    \Illuminate\Support\Facades\Mail::to($proprietaireStudio->email)->send(new MailNouvelleReservationStudio($reservation));
+                    \Illuminate\Support\Facades\Mail::to($proprietaireStudio->email)->queue(new NewReservationStudioMail($reservation));
                 }
 
             }

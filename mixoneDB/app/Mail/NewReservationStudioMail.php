@@ -9,7 +9,9 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewReservationStudioMail extends Mailable
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class NewReservationStudioMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -46,4 +48,3 @@ class NewReservationStudioMail extends Mailable
         );
     }
 }
-
