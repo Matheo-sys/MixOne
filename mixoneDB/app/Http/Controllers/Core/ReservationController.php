@@ -98,7 +98,7 @@ class ReservationController extends Controller
             
             // Envoyer l'email avec le code PIN à l'artiste
             if ($reservation->client && $reservation->client->email) {
-                Mail::to($reservation->client->email)->send(new ReservationConfirmedArtistMail($reservation));
+                Mail::to($reservation->client->email)->queue(new ReservationConfirmedArtistMail($reservation));
             }
 
             if ($requete->ajax()) {

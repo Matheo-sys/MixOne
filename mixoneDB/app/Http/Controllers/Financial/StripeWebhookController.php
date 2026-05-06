@@ -110,12 +110,12 @@ class StripeWebhookController extends Controller
         ]);
 
         if ($proprietaireStudio && $proprietaireStudio->email) {
-            Mail::to($proprietaireStudio->email)->send(new ReservationPaidStudioMail($reservation));
+            Mail::to($proprietaireStudio->email)->queue(new ReservationPaidStudioMail($reservation));
         }
 
         // Envoyer le mail de confirmation de paiement à l'artiste
         if ($reservation->client && $reservation->client->email) {
-            Mail::to($reservation->client->email)->send(new ReservationPaidArtistMail($reservation));
+            Mail::to($reservation->client->email)->queue(new ReservationPaidArtistMail($reservation));
         }
 
     }
