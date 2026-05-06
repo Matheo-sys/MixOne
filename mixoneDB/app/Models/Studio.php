@@ -37,48 +37,72 @@ class Studio extends Model
         'is_verified' => 'boolean',
     ];
 
-    public function user()
+    /**
+     * Relation avec le propriétaire du studio.
+     */
+    public function proprietaire()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function favoritedBy()
+    /**
+     * Liste des utilisateurs ayant mis ce studio en favoris.
+     */
+    public function favorisePar()
     {
         return $this->belongsToMany(User::class, 'wishlists', 'studio_id', 'user_id');
     }
 
+    /**
+     * Liste de toutes les réservations du studio.
+     */
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
     }
 
-    public function completedReservations()
+    /**
+     * Liste des réservations terminées avec avis.
+     */
+    public function reservationsTerminees()
     {
         return $this->hasMany(Reservation::class)
             ->whereNotNull('rating')
             ->where('status', \App\Enums\ReservationStatus::Completed);
     }
 
-    public function reviews()
+    /**
+     * Alias pour les réservations terminées (avis).
+     */
+    public function avis()
     {
-        return $this->completedReservations();
+        return $this->reservationsTerminees();
     }
 
-    public function getAverageRatingAttribute()
+    /**
+     * Calcul de la note moyenne du studio.
+     * Accesseur : $studio->note_moyenne
+     */
+    public function getNoteMoyenneAttribute()
     {
-        // Use eager loaded average if available
+        // Utilise la moyenne chargée via eager loading si disponible
         if (isset($this->attributes['completed_reservations_avg_rating'])) {
             return round((float) $this->attributes['completed_reservations_avg_rating'], 1);
         }
-        return round($this->reviews()->avg('rating') ?: 0, 1);
+        return round($this->avis()->avg('rating') ?: 0, 1);
     }
 
-    public function getReviewsCountAttribute()
+    /**
+     * Nombre total d'avis.
+     * Accesseur : $studio->nombre_avis
+     */
+    public function getNombreAvisAttribute()
     {
-        // Use eager loaded count if available
+        // Utilise le compte chargé via eager loading si disponible
         if (isset($this->attributes['completed_reservations_count'])) {
             return (int) $this->attributes['completed_reservations_count'];
         }
-        return $this->reviews()->count();
+        return $this->avis()->count();
     }
 }
+

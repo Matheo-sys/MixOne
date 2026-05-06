@@ -13,33 +13,49 @@ use Illuminate\Http\JsonResponse;
 
 class MessageController extends Controller
 {
+    /**
+     * @param SendMessageAction $actionEnvoyerMessage
+     */
     public function __construct(
-        private readonly SendMessageAction $sendMessageAction
+        private readonly SendMessageAction $actionEnvoyerMessage
     ) {}
 
-    public function store(SendMessageRequest $request): JsonResponse
+    /**
+     * Enregistrer et envoyer un message.
+     *
+     * @param SendMessageRequest $requete
+     * @return JsonResponse
+     */
+    public function enregistrer(SendMessageRequest $requete): JsonResponse
     {
-        $dto = $request->toDTO();
-        $this->sendMessageAction->execute($dto);
+        $dto = $requete->versDTO();
+        $this->actionEnvoyerMessage->executer($dto);
 
-        // Unhide conversation if a new message is sent
+        // Réafficher la conversation si un nouveau message est envoyé
         HiddenConversation::where(function($query) use ($dto) {
-            $query->where('user_id', Auth::id())->where('contact_id', $dto->receiverId);
+            $query->where('user_id', Auth::id())->where('contact_id', $dto->id_destinataire);
         })->orWhere(function($query) use ($dto) {
-            $query->where('user_id', $dto->receiverId)->where('contact_id', Auth::id());
+            $query->where('user_id', $dto->id_destinataire)->where('contact_id', Auth::id());
         })->delete();
 
-        return response()->json(['success' => 'Message sent successfully.']);
+        return response()->json(['success' => 'Message envoyé avec succès.']);
     }
 
-    public function update(Request $request, Message $message): JsonResponse
+    /**
+     * Mettre à jour un message existant.
+     *
+     * @param Request $requete
+     * @param Message $message
+     * @return JsonResponse
+     */
+    public function mettreAJour(Request $requete, Message $message): JsonResponse
     {
-        $request->validate([
+        $requete->validate([
             'message' => 'required|string|min:1|max:2000',
         ]);
 
         if ($message->sender_id !== Auth::id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            return response()->json(['error' => 'Non autorisé'], 403);
         }
 
         if ($message->created_at->diffInMinutes(now()) > 10) {
@@ -47,94 +63,124 @@ class MessageController extends Controller
         }
 
         $message->update([
-            'message' => $request->input('message'),
+            'message' => $requete->input('message'),
             'is_edited' => true
         ]);
 
-        return response()->json(['success' => 'Message updated successfully.']);
+        return response()->json(['success' => 'Message mis à jour avec succès.']);
     }
 
+    /**
+     * Lister les messages de l'utilisateur.
+     *
+     * @return JsonResponse
+     */
     public function index(): JsonResponse
     {
         $messages = Message::where('sender_id', Auth::id())
             ->orWhere('receiver_id', Auth::id())
-            ->with(['sender:id,first_name,last_name,avatar', 'receiver:id,first_name,last_name,avatar'])
+            ->with(['expediteur:id,first_name,last_name,avatar', 'destinataire:id,first_name,last_name,avatar'])
             ->orderBy('created_at', 'asc')
             ->get();
 
-        $hiddenContacts = HiddenConversation::where('user_id', Auth::id())
+
+        $contactsMasques = HiddenConversation::where('user_id', Auth::id())
             ->pluck('contact_id');
 
         return response()->json([
             'messages' => $messages,
-            'hidden_contacts' => $hiddenContacts
+            'hidden_contacts' => $contactsMasques
         ]);
     }
 
-    public function searchUsers(Request $request): JsonResponse
+    /**
+     * Rechercher des utilisateurs pour la messagerie.
+     *
+     * @param Request $requete
+     * @return JsonResponse
+     */
+    public function rechercherUtilisateurs(Request $requete): JsonResponse
     {
-        $request->validate([
+        $requete->validate([
             'q' => 'nullable|string|max:100',
         ]);
 
-        $query = $request->get('q');
+        $recherche = $requete->get('q');
 
-        if (!$query) {
+        if (!$recherche) {
             return response()->json([]);
         }
 
-        $users = User::where('id', '!=', Auth::id())
-            ->where(function($q) use ($query) {
-                $q->where('first_name', 'like', "%{$query}%")
-                  ->orWhere('last_name', 'like', "%{$query}%");
+        $utilisateurs = User::where('id', '!=', Auth::id())
+            ->where(function($q) use ($recherche) {
+                $q->where('first_name', 'like', "%{$recherche}%")
+                  ->orWhere('last_name', 'like', "%{$recherche}%");
             })
             ->limit(10)
             ->get(['id', 'first_name', 'last_name', 'avatar']);
 
-        return response()->json($users);
+        return response()->json($utilisateurs);
     }
 
-    public function hideConversation(int $contactId): JsonResponse
+    /**
+     * Masquer une conversation.
+     *
+     * @param int $idContact
+     * @return JsonResponse
+     */
+    public function masquerConversation(int $idContact): JsonResponse
     {
         // Valider que le contact existe
-        if (!User::where('id', $contactId)->exists()) {
+        if (!User::where('id', $idContact)->exists()) {
             return response()->json(['error' => 'Contact introuvable.'], 404);
         }
 
         HiddenConversation::firstOrCreate([
             'user_id' => Auth::id(),
-            'contact_id' => $contactId
+            'contact_id' => $idContact
         ]);
 
         return response()->json(['success' => true]);
     }
 
-    public function getUnreadCount(): JsonResponse
+    /**
+     * Récupérer le nombre de messages non lus.
+     *
+     * @return JsonResponse
+     */
+    public function recupererNombreMessagesNonLus(): JsonResponse
     {
-        $count = Message::where('receiver_id', Auth::id())
+        $nombre = Message::where('receiver_id', Auth::id())
             ->where('is_read', false)
             ->count();
 
-        return response()->json(['count' => $count]);
+        return response()->json(['count' => $nombre]);
     }
 
-    public function markAsRead(Request $request): JsonResponse
+    /**
+     * Marquer les messages comme lus.
+     *
+     * @param Request $requete
+     * @return JsonResponse
+     */
+    public function marquerCommeLu(Request $requete): JsonResponse
     {
-        $request->validate([
+        $requete->validate([
             'sender_id' => 'nullable|integer|exists:users,id',
         ]);
 
-        $senderId = $request->input('sender_id');
+        $idExpediteur = $requete->input('sender_id');
 
-        $query = Message::where('receiver_id', Auth::id())
+        $requeteMessages = Message::where('receiver_id', Auth::id())
             ->where('is_read', false);
 
-        if ($senderId) {
-            $query->where('sender_id', $senderId);
+        if ($idExpediteur) {
+            $requeteMessages->where('sender_id', $idExpediteur);
         }
 
-        $query->update(['is_read' => true]);
+        $requeteMessages->update(['is_read' => true]);
 
         return response()->json(['success' => true]);
     }
 }
+

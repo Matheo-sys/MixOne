@@ -65,18 +65,28 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function wallet()
+    /**
+     * Relation avec le portefeuille de l'utilisateur.
+     */
+    public function portefeuille()
     {
         return $this->hasOne(Wallet::class);
     }
 
-    public function wishlists()
+    /**
+     * Relation avec les listes de souhaits de l'utilisateur.
+     */
+    public function listesDeSouhaits()
     {
         return $this->hasMany(Wishlist::class);
     }
 
-    public function favoriteStudios()
+    /**
+     * Liste des studios mis en favoris par l'utilisateur.
+     */
+    public function studiosFavoris()
     {
         return $this->belongsToMany(Studio::class, 'wishlists', 'user_id', 'studio_id');
     }
 }
+

@@ -1,5 +1,5 @@
 @php
-    $whiteHeader = false;
+    $enTeteBlanc = false;
     $isHome = true;
 @endphp
 @extends('layouts.backend')

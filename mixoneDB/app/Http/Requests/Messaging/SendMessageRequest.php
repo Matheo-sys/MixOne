@@ -7,11 +7,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SendMessageRequest extends FormRequest
 {
+    /**
+     * Détermine si l'utilisateur est autorisé à effectuer cette requête.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Définit les règles de validation.
+     */
     public function rules(): array
     {
         return [
@@ -28,6 +34,9 @@ class SendMessageRequest extends FormRequest
         ];
     }
 
+    /**
+     * Définit les messages d'erreur personnalisés.
+     */
     public function messages(): array
     {
         return [
@@ -39,8 +48,12 @@ class SendMessageRequest extends FormRequest
         ];
     }
 
-    public function toDTO(): MessageDTO
+    /**
+     * Convertit la requête en MessageDTO.
+     */
+    public function versDTO(): MessageDTO
     {
-        return MessageDTO::fromRequest($this);
+        return MessageDTO::depuisRequete($this);
     }
 }
+

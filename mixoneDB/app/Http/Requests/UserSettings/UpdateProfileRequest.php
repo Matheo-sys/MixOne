@@ -58,8 +58,12 @@ class UpdateProfileRequest extends FormRequest
         ];
     }
 
-    public function toDTO(): UpdateProfileDTO
+    /**
+     * Convertit la requête en DTO.
+     */
+    public function versDTO(): UpdateProfileDTO
     {
-        return UpdateProfileDTO::fromRequest($this);
+        return UpdateProfileDTO::depuisRequete($this);
     }
+
 }

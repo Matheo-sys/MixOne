@@ -8,25 +8,29 @@ use Illuminate\Support\Facades\Storage;
 
 class UpdateProfileAction
 {
-    public function execute(User $user, UpdateProfileDTO $dto): bool
+    /**
+     * Exécute la mise à jour du profil.
+     */
+    public function executer(User $utilisateur, UpdateProfileDTO $dto): bool
     {
-        $data = $dto->toArray();
+        $donnees = $dto->enTableau();
 
-        // Handle Avatar removal
+        // Gérer la suppression de l'avatar
         if ($dto->remove_avatar) {
-            if ($user->avatar && $user->avatar !== 'media/img/misc/avatar-1.png') {
-                Storage::delete($user->avatar);
+            if ($utilisateur->avatar && $utilisateur->avatar !== 'media/img/misc/avatar-1.png') {
+                Storage::delete($utilisateur->avatar);
             }
-            $user->avatar = null;
+            $utilisateur->avatar = null;
         }
-        // Handle Avatar upload
+        // Gérer le téléchargement de l'avatar
         elseif ($dto->avatar) {
-            if ($user->avatar && $user->avatar !== 'media/img/misc/avatar-1.png') {
-                Storage::delete($user->avatar);
+            if ($utilisateur->avatar && $utilisateur->avatar !== 'media/img/misc/avatar-1.png') {
+                Storage::delete($utilisateur->avatar);
             }
-            $user->avatar = $dto->avatar->store('avatars');
+            $utilisateur->avatar = $dto->avatar->store('avatars');
         }
 
-        return $user->fill($data)->save();
+        return $utilisateur->fill($donnees)->save();
     }
 }
+

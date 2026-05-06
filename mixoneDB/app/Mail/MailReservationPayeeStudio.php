@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Reservation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -9,22 +10,25 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ReservationPaidStudioMail extends Mailable implements ShouldQueue
+class MailReservationPayeeStudio extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
+    /** @var Reservation */
     public $reservation;
 
     /**
-     * Create a new message instance.
+     * Crée une nouvelle instance de message.
+     *
+     * @param Reservation $reservation
      */
-    public function __construct(\App\Models\Reservation $reservation)
+    public function __construct(Reservation $reservation)
     {
         $this->reservation = $reservation;
     }
 
     /**
-     * Get the message envelope.
+     * Définit l'enveloppe du message.
      */
     public function envelope(): Envelope
     {
@@ -34,7 +38,7 @@ class ReservationPaidStudioMail extends Mailable implements ShouldQueue
     }
 
     /**
-     * Get the message content definition.
+     * Définit le contenu du message.
      */
     public function content(): Content
     {
@@ -44,7 +48,7 @@ class ReservationPaidStudioMail extends Mailable implements ShouldQueue
     }
 
     /**
-     * Get the attachments for the message.
+     * Définit les pièces jointes du message.
      *
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
@@ -53,3 +57,4 @@ class ReservationPaidStudioMail extends Mailable implements ShouldQueue
         return [];
     }
 }
+

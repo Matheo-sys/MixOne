@@ -7,11 +7,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ContactRequest extends FormRequest
 {
+    /**
+     * Détermine si l'utilisateur est autorisé à effectuer cette requête.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Définit les règles de validation.
+     */
     public function rules(): array
     {
         return [
@@ -22,6 +28,9 @@ class ContactRequest extends FormRequest
         ];
     }
 
+    /**
+     * Définit les messages d'erreur personnalisés.
+     */
     public function messages(): array
     {
         return [
@@ -36,8 +45,12 @@ class ContactRequest extends FormRequest
         ];
     }
 
-    public function toDTO(): ContactDTO
+    /**
+     * Convertit la requête en ContactDTO.
+     */
+    public function versDTO(): ContactDTO
     {
-        return ContactDTO::fromRequest($this);
+        return ContactDTO::depuisRequete($this);
     }
 }
+

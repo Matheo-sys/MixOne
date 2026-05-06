@@ -8,43 +8,52 @@ use Illuminate\Support\Facades\Storage;
 
 class UpdateStudioAction
 {
+    /**
+     * @param GetCoordinatesAction $actionRecupererCoordonnees
+     */
     public function __construct(
-        private GetCoordinatesAction $getCoordinatesAction
+        private GetCoordinatesAction $actionRecupererCoordonnees
     ) {}
 
-    public function execute(Studio $studio, StudioDTO $dto): bool
+    /**
+     * @param Studio $studio
+     * @param StudioDTO $dto
+     * @return bool
+     */
+    public function executer(Studio $studio, StudioDTO $dto): bool
     {
-        $data = $dto->toArray();
+        $donnees = $dto->enTableau();
 
-        // Handle geocoding
-        $fullAddress = trim("{$dto->address}, {$dto->city}, {$dto->zipcode}, {$dto->country}");
-        $coordinates = $this->getCoordinatesAction->execute($fullAddress);
+        // Gérer le géocodage
+        $adresseComplete = trim("{$dto->adresse}, {$dto->ville}, {$dto->code_postal}, {$dto->pays}");
+        $coordonnees = $this->actionRecupererCoordonnees->executer($adresseComplete);
 
-        if ($coordinates) {
-            $data['latitude'] = $coordinates['latitude'];
-            $data['longitude'] = $coordinates['longitude'];
+        if ($coordonnees) {
+            $donnees['latitude'] = $coordonnees['latitude'];
+            $donnees['longitude'] = $coordonnees['longitude'];
         }
 
-        // Handle image removals and updates
-        foreach ($dto->remove_images as $field => $shouldRemove) {
-            if ($shouldRemove) {
-                if ($studio->$field) {
-                    Storage::delete($studio->$field);
+        // Gérer les suppressions et mises à jour d'images
+        foreach ($dto->images_a_supprimer as $champ => $doitSupprimer) {
+            if ($doitSupprimer) {
+                if ($studio->$champ) {
+                    Storage::delete($studio->$champ);
                 }
-                $data[$field] = null;
+                $donnees[$champ] = null;
             }
         }
 
-        foreach ($dto->images as $field => $file) {
-            if ($file) {
-                // Delete old image if exists
-                if ($studio->$field) {
-                    Storage::delete($studio->$field);
+        foreach ($dto->images as $champ => $fichier) {
+            if ($fichier) {
+                // Supprimer l'ancienne image si elle existe
+                if ($studio->$champ) {
+                    Storage::delete($studio->$champ);
                 }
-                $data[$field] = $file->store('uploads/studios');
+                $donnees[$champ] = $fichier->store('uploads/studios');
             }
         }
 
-        return $studio->update($data);
+        return $studio->update($donnees);
     }
 }
+

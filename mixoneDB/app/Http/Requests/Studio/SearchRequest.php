@@ -7,11 +7,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SearchRequest extends FormRequest
 {
+    /**
+     * Détermine si l'utilisateur est autorisé à effectuer cette requête.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Définit les règles de validation.
+     */
     public function rules(): array
     {
         return [
@@ -28,8 +34,12 @@ class SearchRequest extends FormRequest
         ];
     }
 
-    public function toDTO(): StudioSearchDTO
+    /**
+     * Convertit la requête en StudioSearchDTO.
+     */
+    public function versDTO(): StudioSearchDTO
     {
-        return StudioSearchDTO::fromRequest($this);
+        return StudioSearchDTO::depuisRequete($this);
     }
 }
+

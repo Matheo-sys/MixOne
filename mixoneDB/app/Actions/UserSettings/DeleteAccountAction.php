@@ -9,25 +9,25 @@ use App\Models\Studio;
 class DeleteAccountAction
 {
     /**
-     * Execute the account deletion.
+     * Exécute la suppression du compte.
      */
-    public function execute(User $user): void
+    public function executer(User $utilisateur): void
     {
-        // 1. Delete user avatar if exists
-        if ($user->avatar) {
-            Storage::delete($user->avatar);
+        // 1. Supprimer l'avatar de l'utilisateur s'il existe
+        if ($utilisateur->avatar) {
+            Storage::delete($utilisateur->avatar);
         }
 
-        // 2. Delete studio images for all studios owned by the user
-        $studios = Studio::where('user_id', $user->id)->get();
+        // 2. Supprimer les images de tous les studios possédés par l'utilisateur
+        $studios = Studio::where('user_id', $utilisateur->id)->get();
         foreach ($studios as $studio) {
             if ($studio->image_path) {
                 Storage::delete($studio->image_path);
             }
-            // If there are multiple images, handle them here if applicable
         }
 
-        // 3. Delete the user (database cascades will handle the rest)
-        $user->delete();
+        // 3. Supprimer l'utilisateur (les cascades en base de données gèrent le reste)
+        $utilisateur->delete();
     }
 }
+

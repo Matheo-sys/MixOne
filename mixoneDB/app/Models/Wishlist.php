@@ -9,9 +9,9 @@ class Wishlist extends Model
     protected $fillable = ['user_id', 'studio_id'];
 
     // Relation avec User
-    public function user()
+    public function utilisateur()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Relation avec Studio
@@ -19,4 +19,5 @@ class Wishlist extends Model
     {
         return $this->belongsTo(Studio::class);
     }
+
 }

@@ -7,11 +7,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
 {
+    /**
+     * Détermine si l'utilisateur est autorisé à effectuer cette requête.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Définit les règles de validation.
+     */
     public function rules(): array
     {
         return [
@@ -35,6 +41,9 @@ class UpdateRequest extends FormRequest
         ];
     }
 
+    /**
+     * Définit les messages d'erreur personnalisés.
+     */
     public function messages(): array
     {
         return [
@@ -68,8 +77,12 @@ class UpdateRequest extends FormRequest
         ];
     }
 
-    public function toDTO(): StudioDTO
+    /**
+     * Convertit la requête en StudioDTO.
+     */
+    public function versDTO(): StudioDTO
     {
-        return StudioDTO::fromRequest($this);
+        return StudioDTO::depuisRequete($this);
     }
 }
+

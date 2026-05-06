@@ -28,31 +28,37 @@ class UpdateProfileDTO
         public readonly ?string $bic = null
     ) {}
 
-    public static function fromRequest(Request $request): self
+    /**
+     * Crée une instance depuis une requête.
+     */
+    public static function depuisRequete(Request $requete): self
     {
         return new self(
-            username: $request->validated('username'),
-            first_name: $request->validated('first_name'),
-            last_name: $request->validated('last_name'),
-            email: $request->validated('email'),
-            phone: $request->validated('phone'),
-            birth_date: $request->validated('birth_date'),
-            about: $request->validated('about'),
-            address_line1: $request->validated('address_line1'),
-            address_line2: $request->validated('address_line2'),
-            city: $request->validated('city'),
-            state: $request->validated('state'),
-            country: $request->validated('country'),
-            zipcode: $request->validated('zipcode'),
-            avatar: $request->file('avatar'),
-            remove_avatar: $request->boolean('remove_avatar'),
-            bank_name: $request->validated('bank_name'),
-            iban: $request->validated('iban'),
-            bic: $request->validated('bic')
+            username: $requete->validated('username'),
+            first_name: $requete->validated('first_name'),
+            last_name: $requete->validated('last_name'),
+            email: $requete->validated('email'),
+            phone: $requete->validated('phone'),
+            birth_date: $requete->validated('birth_date'),
+            about: $requete->validated('about'),
+            address_line1: $requete->validated('address_line1'),
+            address_line2: $requete->validated('address_line2'),
+            city: $requete->validated('city'),
+            state: $requete->validated('state'),
+            country: $requete->validated('country'),
+            zipcode: $requete->validated('zipcode'),
+            avatar: $requete->file('avatar'),
+            remove_avatar: $requete->boolean('remove_avatar'),
+            bank_name: $requete->validated('bank_name'),
+            iban: $requete->validated('iban'),
+            bic: $requete->validated('bic')
         );
     }
 
-    public function toArray(): array
+    /**
+     * Convertit l'objet en tableau.
+     */
+    public function enTableau(): array
     {
         return [
             'username' => $this->username,
@@ -73,4 +79,5 @@ class UpdateProfileDTO
             'bic' => $this->bic,
         ];
     }
+
 }

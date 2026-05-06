@@ -18,7 +18,7 @@
 
     <section class="layout-pt-md layout-pb-lg">
         <div class="container">
-            @if($favoriteStudios->isEmpty())
+            @if($studiosFavoris->isEmpty())
                 <!-- Code pour affichage vide -->
                 <div class="row">
                     <div class="col-12 text-center">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
             @else
-                @if(count($favoriteStudios) > 3)
+                @if(count($studiosFavoris) > 3)
                     <!-- Navigation horizontale pour le carrousel -->
                     <div class="d-flex x-gap-15 items-center justify-center pt-20 pb-30">
                         <div class="col-auto">
@@ -50,7 +50,7 @@
                     <!-- Swiper container pour plus de 3 éléments -->
                     <div class="swiper-container wishlist-container">
                         <div class="swiper-wrapper">
-                            @foreach($favoriteStudios as $studio)
+                            @foreach($studiosFavoris as $studio)
                                 <div class="swiper-slide">
                                     <div class="border-light rounded-4 p-10">
                                         <div class="cardImage ratio ratio-23:18 rounded-4 overflow-hidden">
@@ -120,7 +120,7 @@
                 @else
                     <!-- Affichage en grille pour 3 éléments ou moins -->
                     <div class="row y-gap-30">
-                        @foreach($favoriteStudios as $studio)
+                        @foreach($studiosFavoris as $studio)
                             <div class="col-lg-4 col-md-6 wishlist-item">
                                 <div class="border-light rounded-4 p-10">
                                     <!-- Conteneur de l'image -->
@@ -270,7 +270,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialiser les sliders individuels pour chaque studio
-            @foreach($favoriteStudios as $studio)
+            @foreach($studiosFavoris as $studio)
             // Premier layout (swiper-container)
             new Swiper('.js-cardImage-slider-{{ $studio->id }}', {
                 loop: true,

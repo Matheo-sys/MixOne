@@ -14,8 +14,12 @@ class PayoutRequest extends Model
         'notes',
     ];
 
-    public function user()
+    /**
+     * Relation avec l'utilisateur ayant fait la demande.
+     */
+    public function utilisateur()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
+
 }

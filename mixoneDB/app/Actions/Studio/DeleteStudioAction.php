@@ -7,16 +7,23 @@ use Illuminate\Support\Facades\Storage;
 
 class DeleteStudioAction
 {
-    public function execute(Studio $studio): bool
+    /**
+     * Supprime un studio et nettoie les images associées.
+     *
+     * @param Studio $studio
+     * @return bool
+     */
+    public function executer(Studio $studio): bool
     {
-        // Cleanup images
+        // Nettoyage des images
         for ($i = 1; $i <= 4; $i++) {
-            $field = "image{$i}";
-            if ($studio->$field) {
-                Storage::delete($studio->$field);
+            $champ = "image{$i}";
+            if ($studio->$champ) {
+                Storage::delete($studio->$champ);
             }
         }
 
         return $studio->delete();
     }
 }
+

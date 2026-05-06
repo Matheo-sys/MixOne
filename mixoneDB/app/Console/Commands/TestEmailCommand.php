@@ -6,26 +6,41 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactMail;
 
-class TestEmailCommand extends Command
+class CommandeTestEmail extends Command
 {
+    /**
+     * Le nom et la signature de la commande.
+     *
+     * @var string
+     */
     protected $signature = 'test:email {email}';
-    protected $description = 'Send a test email to verify configuration';
 
+    /**
+     * La description de la commande.
+     *
+     * @var string
+     */
+    protected $description = 'Envoyer un e-mail de test pour vérifier la configuration';
+
+    /**
+     * Exécuter la commande.
+     */
     public function handle()
     {
-        $email = $this->argument('email');
-        $this->info("Sending test email to {$email}...");
+        $courriel = $this->argument('email');
+        $this->info("Envoi d'un e-mail de test à {$courriel}...");
 
         try {
-            Mail::to($email)->send(new ContactMail([
-                'name' => 'Test User',
+            Mail::to($courriel)->send(new ContactMail([
+                'name' => 'Utilisateur Test',
                 'email' => 'test@example.com',
                 'subject' => 'Test MixOne',
                 'message' => 'Ceci est un test de configuration email pour MixOne.'
             ]));
-            $this->info("Email sent successfully!");
+            $this->info("E-mail envoyé avec succès !");
         } catch (\Exception $e) {
-            $this->error("Failed to send email: " . $e->getMessage());
+            $this->error("Échec de l'envoi de l'e-mail : " . $e->getMessage());
         }
     }
 }
+

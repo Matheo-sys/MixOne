@@ -9,19 +9,21 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ReservationPaidArtistMail extends Mailable
+class MailReservationPayeeArtiste extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
-     * Create a new message instance.
+     * Crée une nouvelle instance de message.
+     *
+     * @param Reservation $reservation
      */
     public function __construct(
         public Reservation $reservation
     ) {}
 
     /**
-     * Get the message envelope.
+     * Définit l'enveloppe du message.
      */
     public function envelope(): Envelope
     {
@@ -31,7 +33,7 @@ class ReservationPaidArtistMail extends Mailable
     }
 
     /**
-     * Get the message content definition.
+     * Définit le contenu du message.
      */
     public function content(): Content
     {
@@ -40,3 +42,4 @@ class ReservationPaidArtistMail extends Mailable
         );
     }
 }
+

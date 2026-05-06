@@ -8,14 +8,18 @@ use Exception;
 
 class UpdatePasswordAction
 {
-    public function execute(User $user, string $currentPassword, string $newPassword): bool
+    /**
+     * Exécute la mise à jour du mot de passe.
+     */
+    public function executer(User $utilisateur, string $motDePasseActuel, string $nouveauMotDePasse): bool
     {
-        if (!Hash::check($currentPassword, $user->password)) {
+        if (!Hash::check($motDePasseActuel, $utilisateur->password)) {
             throw new Exception('Le mot de passe actuel est incorrect');
         }
 
-        return $user->update([
-            'password' => Hash::make($newPassword)
+        return $utilisateur->update([
+            'password' => Hash::make($nouveauMotDePasse)
         ]);
     }
 }
+

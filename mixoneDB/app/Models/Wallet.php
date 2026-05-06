@@ -10,86 +10,68 @@ class Wallet extends Model
 {
     protected $fillable = ['user_id', 'balance', 'pending_balance'];
 
-    public function user()
+    /**
+     * Relation avec l'utilisateur possédant le portefeuille.
+     */
+    public function utilisateur()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Historique des transactions du portefeuille.
+     */
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
     }
 
-    public function hasSufficientBalance($amount)
+    /**
+     * Vérifie si le solde disponible est suffisant.
+     */
+    public function aUnSoldeSuffisant($montant)
     {
-        return $this->balance >= $amount;
+        return $this->balance >= $montant;
     }
 
-    public function deposit($amount, $description = null)
+    /**
+     * Ajoute des fonds au solde disponible.
+     */
+    public function deposer($montant, $description = null)
     {
-        return DB::transaction(function () use ($amount, $description) {
+        return DB::transaction(function () use ($montant, $description) {
             $this->lockForUpdate();
-            $this->balance += $amount;
+            $this->balance += $montant;
             $this->save();
 
             $this->transactions()->create([
                 'type' => 'deposit',
-                'amount' => $amount,
+                'amount' => $montant,
                 'description' => $description,
             ]);
         });
     }
 
-    public function hold($amount, $referenceId = null, $description = null)
+    /**
+     * Met des fonds en réserve (séquestre).
+     */
+    public function bloquer($montant, $referenceId = null, $description = null)
     {
-        return DB::transaction(function () use ($amount, $referenceId, $description) {
+        return DB::transaction(function () use ($montant, $referenceId, $description) {
             $this->lockForUpdate();
 
-            if (!$this->hasSufficientBalance($amount)) {
+            if (!$this->aUnSoldeSuffisant($montant)) {
                 throw new \Exception("Solde insuffisant.");
             }
 
-            $this->balance -= $amount;
-            $this->pending_balance += $amount;
+            $this->balance -= $montant;
+            $this->pending_balance += $montant;
             $this->save();
 
             $this->transactions()->create([
                 'type' => 'payment',
                 'status' => 'pending',
-                'amount' => -$amount,
-                'reference_id' => $referenceId,
-                'description' => $description,
-            ]);
-        });
-    }
-
-    public function refund($amount, $referenceId = null, $description = null)
-    {
-        return DB::transaction(function () use ($amount, $referenceId, $description) {
-            $this->lockForUpdate();
-            $this->pending_balance -= $amount;
-            $this->balance += $amount;
-            $this->save();
-
-            $this->transactions()->create([
-                'type' => 'refund',
-                'amount' => $amount,
-                'reference_id' => $referenceId,
-                'description' => $description,
-            ]);
-        });
-    }
-
-    public function earned($amount, $referenceId = null, $description = null)
-    {
-        return DB::transaction(function () use ($amount, $referenceId, $description) {
-            $this->lockForUpdate();
-            $this->balance += $amount;
-            $this->save();
-
-            $this->transactions()->create([
-                'type' => 'earned',
-                'amount' => $amount,
+                'amount' => -$montant,
                 'reference_id' => $referenceId,
                 'description' => $description,
             ]);
@@ -97,85 +79,136 @@ class Wallet extends Model
     }
 
     /**
-     * MARKETPLACE METHODS (Sellers/Studios)
+     * Rembourse des fonds bloqués vers le solde disponible.
      */
-
-    public function creditPending($amount, $referenceId = null, $description = null)
+    public function rembourser($montant, $referenceId = null, $description = null)
     {
-        return DB::transaction(function () use ($amount, $referenceId, $description) {
+        return DB::transaction(function () use ($montant, $referenceId, $description) {
             $this->lockForUpdate();
-            $this->pending_balance += $amount;
+            $this->pending_balance -= $montant;
+            $this->balance += $montant;
             $this->save();
 
             $this->transactions()->create([
-                'type' => 'deposit',
-                'status' => 'pending',
-                'amount' => $amount,
+                'type' => 'refund',
+                'amount' => $montant,
                 'reference_id' => $referenceId,
                 'description' => $description,
             ]);
         });
     }
 
-    public function confirmPending($amount, $referenceId = null, $description = null)
+    /**
+     * Encaisse des fonds directement.
+     */
+    public function encaisser($montant, $referenceId = null, $description = null)
     {
-        return DB::transaction(function () use ($amount, $referenceId, $description) {
+        return DB::transaction(function () use ($montant, $referenceId, $description) {
+            $this->lockForUpdate();
+            $this->balance += $montant;
+            $this->save();
+
+            $this->transactions()->create([
+                'type' => 'earned',
+                'amount' => $montant,
+                'reference_id' => $referenceId,
+                'description' => $description,
+            ]);
+        });
+    }
+
+    /**
+     * MÉTHODES PLACE DE MARCHÉ (Vendeurs/Studios)
+     */
+
+    /**
+     * Crédite des gains futurs (en attente).
+     */
+    public function crediterEnAttente($montant, $referenceId = null, $description = null)
+    {
+        return DB::transaction(function () use ($montant, $referenceId, $description) {
+            $this->lockForUpdate();
+            $this->pending_balance += $montant;
+            $this->save();
+
+            $this->transactions()->create([
+                'type' => 'deposit',
+                'status' => 'pending',
+                'amount' => $montant,
+                'reference_id' => $referenceId,
+                'description' => $description,
+            ]);
+        });
+    }
+
+    /**
+     * Débloque les gains en attente vers le solde disponible.
+     */
+    public function confirmerEnAttente($montant, $referenceId = null, $description = null)
+    {
+        return DB::transaction(function () use ($montant, $referenceId, $description) {
             $this->lockForUpdate();
 
-            if ($this->pending_balance < $amount) {
-                Log::warning('confirmPending : montant demandé supérieur au pending_balance', [
-                    'wallet_id' => $this->id,
-                    'requested' => $amount,
+            if ($this->pending_balance < $montant) {
+                Log::warning('confirmerEnAttente : montant demandé supérieur au pending_balance', [
+                    'portefeuille_id' => $this->id,
+                    'requested' => $montant,
                     'pending' => $this->pending_balance,
                 ]);
             }
 
-            $this->pending_balance = max(0, $this->pending_balance - $amount);
-            $this->balance += $amount;
+            $this->pending_balance = max(0, $this->pending_balance - $montant);
+            $this->balance += $montant;
             $this->save();
 
             $this->transactions()->create([
                 'type' => 'earned',
                 'status' => 'completed',
-                'amount' => $amount,
+                'amount' => $montant,
                 'reference_id' => $referenceId,
                 'description' => $description ?: 'Gains débloqués',
             ]);
         });
     }
 
-    public function cancelPending($amount, $referenceId = null, $description = null)
+    /**
+     * Annule des gains en attente (ex: remboursement client).
+     */
+    public function annulerEnAttente($montant, $referenceId = null, $description = null)
     {
-        return DB::transaction(function () use ($amount, $referenceId, $description) {
+        return DB::transaction(function () use ($montant, $referenceId, $description) {
             $this->lockForUpdate();
-            $this->pending_balance = max(0, $this->pending_balance - $amount);
+            $this->pending_balance = max(0, $this->pending_balance - $montant);
             $this->save();
 
             $this->transactions()->create([
                 'type' => 'refund',
                 'status' => 'completed',
-                'amount' => -$amount,
+                'amount' => -$montant,
                 'reference_id' => $referenceId,
                 'description' => $description ?: 'Gains annulés',
             ]);
         });
     }
 
-    public function requestPayout($amount, $iban, $notes = null)
+    /**
+     * Crée une demande de virement bancaire.
+     */
+    public function demanderVirement($montant, $iban, $notes = null)
     {
-        return DB::transaction(function () use ($amount, $iban, $notes) {
+        return DB::transaction(function () use ($montant, $iban, $notes) {
             $this->lockForUpdate();
 
-            if (!$this->hasSufficientBalance($amount)) {
+            if (!$this->aUnSoldeSuffisant($montant)) {
                 throw new \Exception("Solde disponible insuffisant pour ce retrait.");
             }
 
-            $this->balance -= $amount;
+            $this->balance -= $montant;
             $this->save();
 
             $payoutRequest = PayoutRequest::create([
                 'user_id' => $this->user_id,
-                'amount' => $amount,
+                'amount' => $montant,
                 'iban' => $iban,
                 'status' => 'pending',
                 'notes' => $notes,
@@ -184,7 +217,7 @@ class Wallet extends Model
             $this->transactions()->create([
                 'type' => 'payout',
                 'status' => 'pending',
-                'amount' => -$amount,
+                'amount' => -$montant,
                 'reference_id' => $payoutRequest->id,
                 'description' => 'Demande de virement bancaire',
             ]);
@@ -193,3 +226,4 @@ class Wallet extends Model
         });
     }
 }
+

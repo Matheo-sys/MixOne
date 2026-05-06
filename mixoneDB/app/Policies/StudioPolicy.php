@@ -10,16 +10,17 @@ class StudioPolicy
     /**
      * Seul le propriétaire peut modifier son studio.
      */
-    public function update(User $user, Studio $studio): bool
+    public function mettreAJour(User $utilisateur, Studio $studio): bool
     {
-        return $user->id === $studio->user_id;
+        return $utilisateur->id === $studio->user_id;
     }
 
     /**
      * Seul le propriétaire peut supprimer son studio.
      */
-    public function delete(User $user, Studio $studio): bool
+    public function supprimer(User $utilisateur, Studio $studio): bool
     {
-        return $user->id === $studio->user_id;
+        return $utilisateur->id === $studio->user_id;
     }
 }
+

@@ -7,8 +7,13 @@ use App\Models\Message;
 
 class SendMessageAction
 {
-    public function execute(MessageDTO $dto): Message
+    /**
+     * @param MessageDTO $dto
+     * @return Message
+     */
+    public function executer(MessageDTO $dto): Message
     {
-        return Message::create($dto->toArray());
+        return Message::create($dto->enTableau());
     }
 }
+

@@ -8,8 +8,12 @@ class Transaction extends Model
 {
     protected $fillable = ['wallet_id', 'type', 'amount', 'status', 'reference_id', 'description'];
 
-    public function wallet()
+    /**
+     * Relation avec le portefeuille associé à la transaction.
+     */
+    public function portefeuille()
     {
-        return $this->belongsTo(Wallet::class);
+        return $this->belongsTo(Wallet::class, 'wallet_id');
     }
+
 }

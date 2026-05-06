@@ -8,37 +8,39 @@ use Illuminate\Support\Facades\Log;
 class GetCoordinatesAction
 {
     /**
-     * @param string $location
+     * Récupère les coordonnées d'une adresse via Nominatim.
+     *
+     * @param string $adresse
      * @return array|null
      */
-    public function execute(string $location): ?array
+    public function executer(string $adresse): ?array
     {
         try {
-            Log::info('Requête Nominatim pour l\'adresse', ['address' => $location]);
+            Log::info('Requête Nominatim pour l\'adresse', ['address' => $adresse]);
 
-            $response = Http::withHeaders([
+            $reponse = Http::withHeaders([
                 'User-Agent' => 'MixOne/1.0'
             ])->timeout(5)->get("https://nominatim.openstreetmap.org/search", [
-                'q' => $location,
+                'q' => $adresse,
                 'format' => 'json',
                 'limit' => 1,
             ]);
 
-            if (!$response->successful()) {
-                Log::error('Nominatim API error', ['response' => $response->body()]);
+            if (!$reponse->successful()) {
+                Log::error('Erreur API Nominatim', ['response' => $reponse->body()]);
                 return null;
             }
 
-            $data = $response->json();
+            $donnees = $reponse->json();
 
-            if (!empty($data)) {
+            if (!empty($donnees)) {
                 return [
-                    'latitude' => $data[0]['lat'],
-                    'longitude' => $data[0]['lon'],
+                    'latitude' => $donnees[0]['lat'],
+                    'longitude' => $donnees[0]['lon'],
                 ];
             }
 
-            Log::warning('Aucune coordonnée trouvée pour cette adresse', ['location' => $location]);
+            Log::warning('Aucune coordonnée trouvée pour cette adresse', ['location' => $adresse]);
             return null;
 
         } catch (\Exception $e) {
@@ -47,3 +49,4 @@ class GetCoordinatesAction
         }
     }
 }
+

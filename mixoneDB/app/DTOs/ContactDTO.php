@@ -6,30 +6,50 @@ use Illuminate\Http\Request;
 
 class ContactDTO
 {
+    /**
+     * Crée une nouvelle instance de ContactDTO.
+     *
+     * @param string $nom Nom de l'expéditeur.
+     * @param string $courriel Adresse e-mail de l'expéditeur.
+     * @param string $sujet Sujet du message.
+     * @param string $message Contenu du message.
+     */
     public function __construct(
-        public readonly string $name,
-        public readonly string $email,
-        public readonly string $subject,
+        public readonly string $nom,
+        public readonly string $courriel,
+        public readonly string $sujet,
         public readonly string $message
     ) {}
 
-    public static function fromRequest(Request $request): self
+    /**
+     * Crée une instance depuis une requête validée.
+     *
+     * @param Request $requete
+     * @return self
+     */
+    public static function depuisRequete(Request $requete): self
     {
         return new self(
-            name: $request->validated('name'),
-            email: $request->validated('email'),
-            subject: $request->validated('subject'),
-            message: $request->validated('message')
+            nom: $requete->validated('name'),
+            courriel: $requete->validated('email'),
+            sujet: $requete->validated('subject'),
+            message: $requete->validated('message')
         );
     }
 
-    public function toArray(): array
+    /**
+     * Convertit l'objet en tableau.
+     *
+     * @return array
+     */
+    public function enTableau(): array
     {
         return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'subject' => $this->subject,
+            'name' => $this->nom,
+            'email' => $this->courriel,
+            'subject' => $this->sujet,
             'message' => $this->message,
         ];
     }
 }
+

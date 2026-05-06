@@ -7,7 +7,7 @@ use App\Actions\Reservation\UpdateReservationStatusAction;
 use App\Enums\ReservationStatus;
 use App\Http\Requests\Reservation\CreateReservationRequest;
 use App\Models\Reservation;
-use App\Mail\ReservationConfirmedArtistMail;
+use App\Mail\MailReservationConfirmeeArtiste;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -18,36 +18,44 @@ use Illuminate\Support\Facades\Mail;
 
 class ReservationController extends Controller
 {
+    /**
+     * @param CreateReservationAction $actionCreerReservation
+     * @param UpdateReservationStatusAction $actionMiseAJourStatutReservation
+     * @param StripeService $serviceStripe
+     */
     public function __construct(
-        private readonly CreateReservationAction $createReservationAction,
-        private readonly UpdateReservationStatusAction $updateReservationStatusAction,
-        private readonly StripeService $stripeService
+        private readonly CreateReservationAction $actionCreerReservation,
+        private readonly UpdateReservationStatusAction $actionMiseAJourStatutReservation,
+        private readonly StripeService $serviceStripe
     ) {}
 
     /**
      * Créer la réservation puis rediriger vers Stripe Checkout.
+     *
+     * @param CreateReservationRequest $requete
+     * @return RedirectResponse|JsonResponse
      */
-    public function store(CreateReservationRequest $request): RedirectResponse|JsonResponse
+    public function enregistrer(CreateReservationRequest $requete): RedirectResponse|JsonResponse
     {
         try {
-            $reservation = $this->createReservationAction->execute($request->toDTO());
+            $reservation = $this->actionCreerReservation->executer($requete->versDTO());
 
             // Créer la session Stripe Checkout
-            $session = $this->stripeService->createCheckoutSession(
+            $session = $this->serviceStripe->creerSessionPaiement(
                 reservationId: $reservation->id,
-                studioName: $reservation->studio->name,
+                nomStudio: $reservation->studio->name,
                 date: $reservation->date->format('d/m/Y'),
-                timeSlot: $reservation->time_slot,
-                hours: $reservation->number_of_hours,
-                price: (float) $reservation->price,
-                customerEmail: auth()->user()->email,
+                creneauHoraire: $reservation->time_slot,
+                heures: $reservation->number_of_hours,
+                prix: (float) $reservation->price,
+                emailClient: auth()->user()->email,
             );
 
             // Sauvegarder l'ID de session Stripe
             $reservation->update(['stripe_session_id' => $session->id]);
 
             // Rediriger vers Stripe Checkout
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json([
                     'status'   => 'success',
                     'redirect' => $session->url,
@@ -64,7 +72,7 @@ class ReservationController extends Controller
                 'user'  => auth()->id(),
             ]);
 
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $message], 422);
             }
 
@@ -74,24 +82,29 @@ class ReservationController extends Controller
 
     /**
      * Studio confirme une réservation en attente.
+     *
+     * @param Request $requete
+     * @param Reservation $reservation
+     * @return RedirectResponse|JsonResponse
      */
-    public function confirm(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
+    public function confirmer(Request $requete, Reservation $reservation): RedirectResponse|JsonResponse
     {
-        Gate::authorize('manageAsStudio', $reservation);
+        Gate::authorize('gererEnTantQueStudio', $reservation);
 
         try {
-            $this->updateReservationStatusAction->execute($reservation, ReservationStatus::Confirmed, 'studio');
+            $this->actionMiseAJourStatutReservation->executer($reservation, ReservationStatus::Confirmed, 'studio');
             
             // Envoyer l'email avec le code PIN à l'artiste
-            if ($reservation->user && $reservation->user->email) {
-                Mail::to($reservation->user->email)->send(new ReservationConfirmedArtistMail($reservation));
+            if ($reservation->client && $reservation->client->email) {
+                Mail::to($reservation->client->email)->send(new MailReservationConfirmeeArtiste($reservation));
             }
-            if ($request->ajax()) {
+
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Réservation confirmée avec succès !', 'new_status' => ReservationStatus::Confirmed->value]);
             }
             return redirect()->back()->with('success', 'Réservation confirmée !');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
             }
             return redirect()->back()->with('error', $e->getMessage());
@@ -100,19 +113,23 @@ class ReservationController extends Controller
 
     /**
      * Studio refuse une réservation en attente.
+     *
+     * @param Request $requete
+     * @param Reservation $reservation
+     * @return RedirectResponse|JsonResponse
      */
-    public function refuse(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
+    public function refuser(Request $requete, Reservation $reservation): RedirectResponse|JsonResponse
     {
-        Gate::authorize('manageAsStudio', $reservation);
+        Gate::authorize('gererEnTantQueStudio', $reservation);
 
         try {
-            $this->updateReservationStatusAction->execute($reservation, ReservationStatus::Refused, 'studio');
-            if ($request->ajax()) {
+            $this->actionMiseAJourStatutReservation->executer($reservation, ReservationStatus::Refused, 'studio');
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Réservation refusée. Le client sera remboursé.', 'new_status' => ReservationStatus::Refused->value]);
             }
             return redirect()->back()->with('success', 'Réservation refusée. Le client a été remboursé.');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
             }
             return redirect()->back()->with('error', $e->getMessage());
@@ -121,38 +138,47 @@ class ReservationController extends Controller
 
     /**
      * Studio ou artiste annule une réservation.
+     *
+     * @param Request $requete
+     * @param Reservation $reservation
+     * @return RedirectResponse|JsonResponse
      */
-    public function cancel(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
+    public function annuler(Request $requete, Reservation $reservation): RedirectResponse|JsonResponse
     {
         try {
             $role = auth()->user()->profile === 'artist' ? 'artist' : 'studio';
 
             if ($role === 'artist') {
-                Gate::authorize('cancelAsArtist', $reservation);
+                Gate::authorize('annulerEnTantQuArtiste', $reservation);
             } else {
-                Gate::authorize('manageAsStudio', $reservation);
+                Gate::authorize('gererEnTantQueStudio', $reservation);
             }
 
-            $this->updateReservationStatusAction->execute($reservation, ReservationStatus::Cancelled, $role);
-            if ($request->ajax()) {
+            $this->actionMiseAJourStatutReservation->executer($reservation, ReservationStatus::Cancelled, $role);
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Réservation annulée. Un remboursement a été initié.', 'new_status' => ReservationStatus::Cancelled->value]);
             }
             return redirect()->back()->with('success', 'Réservation annulée. Un remboursement a été initié.');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
             }
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    public function complete(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
+    /**
+     * @param Request $requete
+     * @param Reservation $reservation
+     * @return RedirectResponse|JsonResponse
+     */
+    public function terminer(Request $requete, Reservation $reservation): RedirectResponse|JsonResponse
     {
-        Gate::authorize('manageAsStudio', $reservation);
+        Gate::authorize('gererEnTantQueStudio', $reservation);
 
         // Vérification du code PIN
-        if ($reservation->pin_code && $request->input('pin_code') !== $reservation->pin_code) {
-            if ($request->ajax()) {
+        if ($reservation->pin_code && $requete->input('pin_code') !== $reservation->pin_code) {
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => 'Le code PIN est incorrect.'], 422);
             }
             return redirect()->back()->with('error', 'Le code PIN entré est incorrect.');
@@ -164,50 +190,55 @@ class ReservationController extends Controller
         }
 
         try {
-            $this->updateReservationStatusAction->execute($reservation, ReservationStatus::Completed, 'studio');
-            if ($request->ajax()) {
+            $this->actionMiseAJourStatutReservation->executer($reservation, ReservationStatus::Completed, 'studio');
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Session terminée avec succès !', 'new_status' => ReservationStatus::Completed->value]);
             }
             return redirect()->back()->with('success', 'Session terminée avec succès !');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
             }
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    public function dispute(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
+    /**
+     * @param Request $requete
+     * @param Reservation $reservation
+     * @return RedirectResponse|JsonResponse
+     */
+    public function litige(Request $requete, Reservation $reservation): RedirectResponse|JsonResponse
     {
         $role = auth()->user()->profile === 'artist' ? 'artist' : 'studio';
 
         if ($role === 'artist') {
-            Gate::authorize('cancelAsArtist', $reservation);
+            Gate::authorize('annulerEnTantQuArtiste', $reservation);
         } else {
-            Gate::authorize('manageAsStudio', $reservation);
+            Gate::authorize('gererEnTantQueStudio', $reservation);
         }
 
         if ($reservation->status !== \App\Enums\ReservationStatus::Confirmed) {
             return redirect()->back()->with('error', 'Vous ne pouvez signaler un litige que sur une réservation confirmée.');
         }
 
-        $request->validate([
+        $requete->validate([
             'dispute_reason' => 'required|string|max:255',
             'dispute_description' => 'required|string|max:2000',
             'dispute_image' => 'nullable|image|max:5120',
         ]);
 
         try {
-            $imagePath = null;
-            if ($request->hasFile('dispute_image')) {
-                $imagePath = $request->file('dispute_image')->store('dispute_proofs', 'public');
+            $cheminImage = null;
+            if ($requete->hasFile('dispute_image')) {
+                $cheminImage = $requete->file('dispute_image')->store('dispute_proofs', 'public');
             }
 
             $reservation->update([
                 'disputed_at' => now(),
-                'dispute_reason' => $request->input('dispute_reason'),
-                'dispute_description' => $request->input('dispute_description'),
-                'dispute_image' => $imagePath,
+                'dispute_reason' => $requete->input('dispute_reason'),
+                'dispute_description' => $requete->input('dispute_description'),
+                'dispute_image' => $cheminImage,
                 'status' => \App\Enums\ReservationStatus::Disputed,
             ]);
 
@@ -219,12 +250,16 @@ class ReservationController extends Controller
 
     /**
      * Artiste note la session terminée.
+     *
+     * @param Request $requete
+     * @param Reservation $reservation
+     * @return RedirectResponse|JsonResponse
      */
-    public function rate(Request $request, Reservation $reservation): RedirectResponse|JsonResponse
+    public function noter(Request $requete, Reservation $reservation): RedirectResponse|JsonResponse
     {
-        Gate::authorize('rate', $reservation);
+        Gate::authorize('noter', $reservation);
 
-        $request->validate([
+        $requete->validate([
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:1000',
         ]);
@@ -238,10 +273,11 @@ class ReservationController extends Controller
         }
 
         $reservation->update([
-            'rating' => $request->rating,
-            'comment' => $request->comment,
+            'rating' => $requete->rating,
+            'comment' => $requete->comment,
         ]);
 
         return redirect()->back()->with('success', 'Merci pour votre avis !');
     }
 }
+

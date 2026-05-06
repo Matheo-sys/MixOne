@@ -8,51 +8,59 @@ use Illuminate\Database\Eloquent\Collection;
 
 class SearchStudiosAction
 {
+    /**
+     * @param GetCoordinatesAction $actionRecupererCoordonnees
+     */
     public function __construct(
-        private GetCoordinatesAction $getCoordinatesAction
+        private GetCoordinatesAction $actionRecupererCoordonnees
     ) {}
 
-    public function execute(StudioSearchDTO $dto): array
+    /**
+     * @param StudioSearchDTO $dto
+     * @return array
+     */
+    public function executer(StudioSearchDTO $dto): array
     {
         $latitude = $dto->latitude;
         $longitude = $dto->longitude;
 
-        // Geocode city if provided but no coords
-        if ($dto->city && (!$latitude || !$longitude)) {
-            $coordinates = $this->getCoordinatesAction->execute($dto->city);
-            if ($coordinates) {
-                $latitude = $coordinates['latitude'];
-                $longitude = $coordinates['longitude'];
+        // Géocoder la ville si elle est fournie mais sans coordonnées
+        if ($dto->ville && (!$latitude || !$longitude)) {
+            $coordonnees = $this->actionRecupererCoordonnees->executer($dto->ville);
+            if ($coordonnees) {
+                $latitude = $coordonnees['latitude'];
+                $longitude = $coordonnees['longitude'];
             }
         }
 
-        $query = Studio::query()
-            ->with('user')
-            ->withCount('completedReservations')
-            ->withAvg('completedReservations', 'rating')
+        $requete = Studio::query()
+            ->with('proprietaire')
+            ->withCount('reservationsTerminees')
+            ->withAvg('reservationsTerminees', 'rating')
             ->where('is_verified', true);
 
-        if ($dto->min_hours !== null) {
-            $query->where('min_hours', '<=', $dto->min_hours);
+
+        if ($dto->heures_min !== null) {
+            $requete->where('min_hours', '<=', $dto->heures_min);
         }
 
         // Filtre par équipement : ne retourne que les studios ayant TOUS les équipements sélectionnés
-        if (!empty($dto->equipment)) {
-            foreach ($dto->equipment as $item) {
-                $query->whereJsonContains('equipment', $item);
+        if (!empty($dto->equipements)) {
+            foreach ($dto->equipements as $element) {
+                $requete->whereJsonContains('equipment', $element);
             }
         }
 
         if ($dto->date) {
-            $dayOfWeek = strtolower(\Carbon\Carbon::parse($dto->date)->format('l'));
-            $query->where(function($q) use ($dayOfWeek) {
-                $q->whereJsonContains("opening_hours->{$dayOfWeek}->is_open", "1")
-                  ->orWhereJsonContains("opening_hours->{$dayOfWeek}->is_open", true);
+            $jourSemaine = strtolower(\Carbon\Carbon::parse($dto->date)->format('l'));
+            $requete->where(function($q) use ($jourSemaine) {
+                $q->whereJsonContains("opening_hours->{$jourSemaine}->is_open", "1")
+                  ->orWhereJsonContains("opening_hours->{$jourSemaine}->is_open", true);
             });
         }
 
         if ($latitude && $longitude) {
-            $query->select('studios.*')
+            $requete->select('studios.*')
                 ->selectRaw("(6371 * acos(
                     cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
                     sin(radians(?)) * sin(radians(latitude))
@@ -60,25 +68,27 @@ class SearchStudiosAction
                 ->having('distance', '<=', $dto->distance);
         }
 
-        switch ($dto->sort_by) {
+        switch ($dto->trier_par) {
             case 'price':
-                $query->orderBy('hourly_rate', $dto->sort_direction);
+                $requete->orderBy('hourly_rate', $dto->direction_tri);
                 break;
             case 'distance':
             default:
                 if ($latitude && $longitude) {
-                    $query->orderBy('distance', 'asc');
+                    $requete->orderBy('distance', 'asc');
                 }
                 break;
         }
 
-        $mapStudios = (clone $query)->get();
+        $studiosCarte = (clone $requete)->get();
 
         return [
-            'studios' => $query->paginate(20),
-            'map_studios' => $mapStudios,
+            'studios' => $requete->paginate(20),
+            'studiosCarte' => $studiosCarte,
             'latitude' => $latitude,
             'longitude' => $longitude,
         ];
+
     }
 }
+

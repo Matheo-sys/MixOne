@@ -10,24 +10,34 @@ use Illuminate\Http\Request;
 
 class StudioController extends Controller
 {
+    /**
+     * Liste des studios.
+     */
     public function index(): View
     {
-        $studios = Studio::with('user')->orderBy('created_at', 'desc')->paginate(20);
+        $studios = Studio::with('proprietaire')->orderBy('created_at', 'desc')->paginate(20);
         return view('admin.studios.index', compact('studios'));
     }
 
-    public function destroy(Studio $studio): RedirectResponse
+    /**
+     * Supprimer un studio.
+     */
+    public function supprimer(Studio $studio): RedirectResponse
     {
         $studio->delete();
         return redirect()->route('admin.studios.index')->with('success', 'Studio supprimé avec succès.');
     }
 
-    public function toggleVerify(Studio $studio): RedirectResponse
+    /**
+     * Activer/Désactiver la vérification d'un studio.
+     */
+    public function basculerVerification(Studio $studio): RedirectResponse
     {
         $studio->is_verified = !$studio->is_verified;
         $studio->save();
 
-        $status = $studio->is_verified ? 'vérifié' : 'non vérifié';
-        return redirect()->back()->with('success', "Le studio est désormais $status.");
+        $statut = $studio->is_verified ? 'vérifié' : 'non vérifié';
+        return redirect()->back()->with('success', "Le studio est désormais $statut.");
     }
 }
+

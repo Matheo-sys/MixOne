@@ -16,14 +16,21 @@ class Message extends Model
         'is_edited',
     ];
 
-    public function sender()
+    /**
+     * Relation avec l'expéditeur du message.
+     */
+    public function expediteur()
     {
         return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function receiver()
+    /**
+     * Relation avec le destinataire du message.
+     */
+    public function destinataire()
     {
         return $this->belongsTo(User::class, 'receiver_id');
     }
 }
+
 

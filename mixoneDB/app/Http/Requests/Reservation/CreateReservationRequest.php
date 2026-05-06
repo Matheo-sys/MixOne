@@ -7,11 +7,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CreateReservationRequest extends FormRequest
 {
+    /**
+     * Détermine si l'utilisateur est autorisé à effectuer cette requête.
+     */
     public function authorize(): bool
     {
         return auth()->user()->profile !== 'studio';
     }
 
+    /**
+     * Définit les règles de validation.
+     */
     public function rules(): array
     {
         return [
@@ -23,6 +29,9 @@ class CreateReservationRequest extends FormRequest
         ];
     }
 
+    /**
+     * Définit les messages d'erreur personnalisés.
+     */
     public function messages(): array
     {
         return [
@@ -40,8 +49,12 @@ class CreateReservationRequest extends FormRequest
         ];
     }
 
-    public function toDTO(): ReservationDTO
+    /**
+     * Convertit la requête en ReservationDTO.
+     */
+    public function versDTO(): ReservationDTO
     {
-        return ReservationDTO::fromRequest($this);
+        return ReservationDTO::depuisRequete($this);
     }
 }
+

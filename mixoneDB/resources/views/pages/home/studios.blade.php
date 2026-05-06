@@ -66,7 +66,7 @@
                                     <div class="studioCard__badges">
                                         <div class="studioCard__wishlist">
                                             @php
-                                                $isFavorite = Auth::check() && Auth::user()->favoriteStudios->contains($studio->id);
+                                                $isFavorite = Auth::check() && Auth::user()->studiosFavoris->contains($studio->id);
                                             @endphp
                                             <button class="button -blue-1 bg-white size-30 rounded-full shadow-2 wishlist-toggle {{ $isFavorite ? '-active' : '' }}" data-studio-id="{{ $studio->id }}">
                                                 @if($isFavorite)

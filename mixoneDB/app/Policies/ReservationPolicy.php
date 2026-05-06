@@ -10,27 +10,28 @@ class ReservationPolicy
     /**
      * Seul l'artiste ayant fait la réservation peut la noter.
      */
-    public function rate(User $user, Reservation $reservation): bool
+    public function noter(User $utilisateur, Reservation $reservation): bool
     {
-        return $user->id === $reservation->user_id;
+        return $utilisateur->id === $reservation->user_id;
     }
 
     /**
      * Le studio propriétaire peut confirmer/refuser/compléter.
      */
-    public function manageAsStudio(User $user, Reservation $reservation): bool
+    public function gererEnTantQueStudio(User $utilisateur, Reservation $reservation): bool
     {
-        return $user->id === ($reservation->studio->user_id ?? null);
+        return $utilisateur->id === ($reservation->studio->user_id ?? null);
     }
 
     /**
      * L'artiste peut annuler sa propre réservation si les conditions de délai sont respectées.
      */
-    public function cancelAsArtist(User $user, Reservation $reservation): bool
+    public function annulerEnTantQuArtiste(User $utilisateur, Reservation $reservation): bool
     {
-        if ($user->id !== $reservation->user_id) {
+        if ($utilisateur->id !== $reservation->user_id) {
             return false;
         }
+
 
         // Si la réservation est déjà passée ou en cours, interdiction d'annuler
         if ($reservation->status === \App\Enums\ReservationStatus::Completed) {

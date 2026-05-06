@@ -15,21 +15,32 @@ use Illuminate\Http\JsonResponse;
 class UserSettingsController extends Controller
 {
     public function __construct(
-        private readonly UpdateProfileAction $updateProfileAction,
-        private readonly UpdatePasswordAction $updatePasswordAction,
-        private readonly DeleteAccountAction $deleteAccountAction
+        private readonly UpdateProfileAction $actionMiseAJourProfil,
+        private readonly UpdatePasswordAction $actionMiseAJourMotDePasse,
+        private readonly DeleteAccountAction $actionSuppressionCompte
     ) {}
 
-    public function edit(): View
+    /**
+     * Affiche le formulaire d'édition du profil.
+     *
+     * @return View
+     */
+    public function modifier(): View
     {
         return view('dashboard.artist.settings', ['user' => Auth::user()]);
     }
 
-    public function update(UpdateProfileRequest $request): RedirectResponse|JsonResponse
+    /**
+     * Met à jour le profil de l'utilisateur.
+     *
+     * @param UpdateProfileRequest $requete
+     * @return RedirectResponse|JsonResponse
+     */
+    public function mettreAJour(UpdateProfileRequest $requete): RedirectResponse|JsonResponse
     {
-        $this->updateProfileAction->execute(Auth::user(), $request->toDTO());
+        $this->actionMiseAJourProfil->executer(Auth::user(), $requete->versDTO());
 
-        if ($request->ajax()) {
+        if ($requete->ajax()) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'Profil mis à jour avec succès',
@@ -40,16 +51,22 @@ class UserSettingsController extends Controller
         return redirect()->back()->with('success', 'Profil mis à jour avec succès');
     }
 
-    public function updatePassword(UpdatePasswordRequest $request): RedirectResponse|JsonResponse
+    /**
+     * Met à jour le mot de passe de l'utilisateur.
+     *
+     * @param UpdatePasswordRequest $requete
+     * @return RedirectResponse|JsonResponse
+     */
+    public function mettreAJourMotDePasse(UpdatePasswordRequest $requete): RedirectResponse|JsonResponse
     {
         try {
-            $this->updatePasswordAction->execute(
+            $this->actionMiseAJourMotDePasse->executer(
                 Auth::user(),
-                $request->current_password,
-                $request->password
+                $requete->current_password,
+                $requete->password
             );
 
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Mot de passe mis à jour avec succès'
@@ -58,7 +75,7 @@ class UserSettingsController extends Controller
 
             return redirect()->back()->with('success', 'Mot de passe mis à jour avec succès');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json([
                     'status' => 'error',
                     'message' => $e->getMessage()
@@ -68,13 +85,19 @@ class UserSettingsController extends Controller
         }
     }
 
-    public function destroy(): RedirectResponse
+    /**
+     * Supprime le compte de l'utilisateur.
+     *
+     * @return RedirectResponse
+     */
+    public function supprimer(): RedirectResponse
     {
-        $user = Auth::user();
-        $this->deleteAccountAction->execute($user);
+        $utilisateur = Auth::user();
+        $this->actionSuppressionCompte->executer($utilisateur);
 
         Auth::logout();
 
         return redirect('/')->with('success', 'Votre compte a été supprimé avec succès.');
     }
 }
+

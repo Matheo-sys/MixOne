@@ -7,24 +7,28 @@ use Illuminate\Support\Facades\Auth;
 
 class ToggleWishlistAction
 {
-    public function execute(int $studioId): string
+    /**
+     * Bascule l'état d'un studio dans la liste de souhaits.
+     */
+    public function executer(int $idStudio): string
     {
-        $userId = Auth::id();
+        $idUtilisateur = Auth::id();
 
-        $wishlist = Wishlist::where('user_id', $userId)
-            ->where('studio_id', $studioId)
+        $favori = Wishlist::where('user_id', $idUtilisateur)
+            ->where('studio_id', $idStudio)
             ->first();
 
-        if ($wishlist) {
-            $wishlist->delete();
+        if ($favori) {
+            $favori->delete();
             return 'removed';
         }
 
         Wishlist::create([
-            'user_id' => $userId,
-            'studio_id' => $studioId
+            'user_id' => $idUtilisateur,
+            'studio_id' => $idStudio
         ]);
 
         return 'added';
     }
 }
+

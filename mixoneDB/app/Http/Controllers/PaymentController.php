@@ -10,17 +10,24 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Mail\MailNouvelleReservationStudio;
 
 class PaymentController extends Controller
 {
+    /**
+     * @param StripeService $serviceStripe
+     */
     public function __construct(
-        private readonly StripeService $stripeService
+        private readonly StripeService $serviceStripe
     ) {}
 
     /**
      * Créer une session Stripe Checkout et rediriger vers la page de paiement.
+     *
+     * @param Reservation $reservation
+     * @return RedirectResponse
      */
-    public function checkout(Reservation $reservation): RedirectResponse
+    public function caisse(Reservation $reservation): RedirectResponse
     {
         // Vérifier que l'utilisateur est le propriétaire de la réservation
         if ($reservation->user_id !== auth()->id()) {
@@ -34,14 +41,14 @@ class PaymentController extends Controller
         }
 
         try {
-            $session = $this->stripeService->createCheckoutSession(
+            $session = $this->serviceStripe->creerSessionPaiement(
                 reservationId: $reservation->id,
-                studioName: $reservation->studio->name,
+                nomStudio: $reservation->studio->name,
                 date: $reservation->date->format('d/m/Y'),
-                timeSlot: $reservation->time_slot,
-                hours: $reservation->number_of_hours,
-                price: (float) $reservation->price,
-                customerEmail: auth()->user()->email,
+                creneauHoraire: $reservation->time_slot,
+                heures: $reservation->number_of_hours,
+                prix: (float) $reservation->price,
+                emailClient: auth()->user()->email,
             );
 
             // Stocker l'ID de session Stripe sur la réservation
@@ -61,18 +68,21 @@ class PaymentController extends Controller
 
     /**
      * Page de succès après paiement.
+     *
+     * @param Request $requete
+     * @return View|RedirectResponse
      */
-    public function success(Request $request): View|RedirectResponse
+    public function succes(Request $requete): View|RedirectResponse
     {
-        $sessionId = $request->get('session_id');
+        $idSession = $requete->get('session_id');
 
-        if (!$sessionId) {
+        if (!$idSession) {
             return redirect()->route('dashboard')->with('error', 'Session de paiement invalide.');
         }
 
         try {
-            $session = $this->stripeService->retrieveSession($sessionId);
-            $reservation = Reservation::where('stripe_session_id', $sessionId)->firstOrFail();
+            $session = $this->serviceStripe->recupererSession($idSession);
+            $reservation = Reservation::where('stripe_session_id', $idSession)->firstOrFail();
 
             // Marquer comme payé si le paiement est complet
             if ($session->payment_status === 'paid' && $reservation->payment_status === PaymentStatus::Pending) {
@@ -82,10 +92,11 @@ class PaymentController extends Controller
                 ]);
 
                 // Prévenir le studio par mail
-                $studioOwner = $reservation->studio->user;
-                if ($studioOwner && $studioOwner->email) {
-                    \Illuminate\Support\Facades\Mail::to($studioOwner->email)->send(new \App\Mail\NewReservationStudioMail($reservation));
+                $proprietaireStudio = $reservation->studio->proprietaire;
+                if ($proprietaireStudio && $proprietaireStudio->email) {
+                    \Illuminate\Support\Facades\Mail::to($proprietaireStudio->email)->send(new MailNouvelleReservationStudio($reservation));
                 }
+
             }
 
             return view('pages.payment.success', [
@@ -99,13 +110,16 @@ class PaymentController extends Controller
 
     /**
      * Page d'annulation de paiement.
+     *
+     * @param Request $requete
+     * @return View
      */
-    public function cancel(Request $request): View
+    public function annuler(Request $requete): View
     {
         $reservation = null;
 
-        if ($request->has('reservation_id')) {
-            $reservation = Reservation::where('id', $request->get('reservation_id'))
+        if ($requete->has('reservation_id')) {
+            $reservation = Reservation::where('id', $requete->get('reservation_id'))
                 ->where('user_id', auth()->id())
                 ->first();
         }
@@ -115,3 +129,4 @@ class PaymentController extends Controller
         ]);
     }
 }
+

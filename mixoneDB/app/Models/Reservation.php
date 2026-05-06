@@ -47,9 +47,9 @@ class Reservation extends Model
 
     // ─── Relations ──────────────────────────────────────────────
 
-    public function user(): BelongsTo
+    public function client(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function studio(): BelongsTo
@@ -57,22 +57,22 @@ class Reservation extends Model
         return $this->belongsTo(Studio::class);
     }
 
-    // ─── Scopes (remplacent les méthodes statiques) ─────────────
+    // ─── Scopes (recherches personnalisées) ─────────────────────
 
     /**
      * Réservations de l'artiste (par user_id).
      */
-    public function scopeForArtist(Builder $query, int $userId): Builder
+    public function scopePourArtiste(Builder $requete, int $idUtilisateur): Builder
     {
-        return $query->where('user_id', $userId)->orderBy('id', 'desc');
+        return $requete->where('user_id', $idUtilisateur)->orderBy('id', 'desc');
     }
 
     /**
      * Réservations des studios appartenant à un propriétaire donné.
      */
-    public function scopeForStudioOwner(Builder $query, int $ownerId): Builder
+    public function scopePourProprietaireStudio(Builder $requete, int $idProprietaire): Builder
     {
-        return $query->whereHas('studio', fn (Builder $q) => $q->where('user_id', $ownerId))
+        return $requete->whereHas('studio', fn (Builder $q) => $q->where('user_id', $idProprietaire))
                      ->orderBy('id', 'desc');
     }
 }

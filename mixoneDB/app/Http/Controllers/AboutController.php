@@ -9,20 +9,32 @@ use Illuminate\Contracts\View\View;
 
 class AboutController extends Controller
 {
+    /**
+     * Affiche la page "À propos" avec les statistiques de la plateforme.
+     *
+     * @return View
+     */
     public function index(): View
     {
-        $studioCount = Studio::count();
-        $userCount = User::count();
-        $reservationCount = Reservation::count();
+        $nombreStudios = Studio::count();
+        $nombreUtilisateurs = User::count();
+        $nombreReservations = Reservation::count();
 
-        // Agrégation SQL directe au lieu de charger toute la collection en mémoire
-        $totalRatings = Reservation::whereNotNull('rating')->count();
-        $satisfiedRatings = Reservation::whereNotNull('rating')->where('rating', '>=', 4)->count();
+        // Agrégation SQL directe pour les évaluations
+        $totalEvaluations = Reservation::whereNotNull('rating')->count();
+        $evaluationsSatisfaites = Reservation::whereNotNull('rating')->where('rating', '>=', 4)->count();
 
-        $satisfactionPercentage = $totalRatings > 0
-            ? round(($satisfiedRatings / $totalRatings) * 100)
-            : 99; // Valeur par défaut si aucun avis
+        $pourcentageSatisfaction = $totalEvaluations > 0
+            ? round(($evaluationsSatisfaites / $totalEvaluations) * 100)
+            : 99; // Valeur par défaut si aucune évaluation
 
-        return view('pages.about', compact('studioCount', 'userCount', 'reservationCount', 'satisfactionPercentage'));
+        return view('pages.about', [
+            'nombreStudios' => $nombreStudios,
+            'nombreUtilisateurs' => $nombreUtilisateurs,
+            'nombreReservations' => $nombreReservations,
+            'pourcentageSatisfaction' => $pourcentageSatisfaction
+        ]);
+
     }
+
 }

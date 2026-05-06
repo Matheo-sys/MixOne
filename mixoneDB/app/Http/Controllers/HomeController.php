@@ -8,21 +8,28 @@ use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
 {
+    /**
+     * Affiche la page d'accueil avec les statistiques et les derniers studios.
+     *
+     * @return View
+     */
     public function index(): View
     {
-        $reservationStats = Reservation::whereNotNull('rating')
+        $statsReservations = Reservation::whereNotNull('rating')
             ->selectRaw('COUNT(*) as total_ratings, AVG(rating) as avg_rating')
             ->first();
 
         $totalReservations = Reservation::count();
-        $satisfiedClients = $totalReservations;
-        $globalRating = $reservationStats->avg_rating ? round($reservationStats->avg_rating, 2) : 4.88;
+        $clientsSatisfaits = $totalReservations;
+        $noteGlobale = $statsReservations->avg_rating ? round($statsReservations->avg_rating, 2) : 4.88;
 
         return view('pages.home', [
-            'whiteHeader'       => false,
+            'enTeteBlanc'       => false,
             'studios'           => Studio::where('is_verified', true)->latest()->limit(20)->get(),
-            'satisfiedClients'  => $satisfiedClients,
-            'globalRating'      => $globalRating,
+            'clientsSatisfaits' => $clientsSatisfaits,
+            'noteGlobale'       => $noteGlobale,
         ]);
+
     }
+
 }

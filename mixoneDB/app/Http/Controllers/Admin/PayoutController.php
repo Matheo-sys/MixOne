@@ -8,18 +8,25 @@ use Illuminate\Http\Request;
 
 class PayoutController extends Controller
 {
+    /**
+     * Liste des demandes de virement.
+     */
     public function index()
     {
-        $payouts = PayoutRequest::with('user')
+        $virements = PayoutRequest::with('utilisateur')
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('admin.payouts.index', compact('payouts'));
+        return view('admin.payouts.index', ['payouts' => $virements]);
     }
 
-    public function complete(PayoutRequest $payoutRequest)
+    /**
+     * Marquer un virement comme effectué.
+     */
+    public function terminer(PayoutRequest $demandeVirement)
     {
-        $payoutRequest->update(['status' => 'completed']);
+        $demandeVirement->update(['status' => 'completed']);
         return back()->with('success', 'Virement marqué comme effectué.');
     }
 }
+

@@ -9,17 +9,26 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewReservationStudioMail extends Mailable
+class MailNouvelleReservationStudio extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /** @var Reservation */
     public $reservation;
 
+    /**
+     * Crée une nouvelle instance de message.
+     *
+     * @param Reservation $reservation
+     */
     public function __construct(Reservation $reservation)
     {
         $this->reservation = $reservation;
     }
 
+    /**
+     * Définit l'enveloppe du message.
+     */
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -27,6 +36,9 @@ class NewReservationStudioMail extends Mailable
         );
     }
 
+    /**
+     * Définit le contenu du message.
+     */
     public function content(): Content
     {
         return new Content(
@@ -34,3 +46,4 @@ class NewReservationStudioMail extends Mailable
         );
     }
 }
+

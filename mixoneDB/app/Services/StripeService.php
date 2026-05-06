@@ -2,13 +2,16 @@
 
 namespace App\Services;
 
-use Stripe\Checkout\Session as StripeSession;
+use Stripe\Checkout\Session as SessionStripe;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Refund;
 use Stripe\Stripe;
 
 class StripeService
 {
+    /**
+     * Initialise le service avec la clé API Stripe.
+     */
     public function __construct()
     {
         Stripe::setApiKey(config('services.stripe.secret'));
@@ -17,29 +20,37 @@ class StripeService
     /**
      * Créer une session Stripe Checkout pour une réservation.
      *
+     * @param int $reservationId
+     * @param string $nomStudio
+     * @param string $date
+     * @param string $creneauHoraire
+     * @param int $heures
+     * @param float $prix
+     * @param string $emailClient
+     * @return SessionStripe
      * @throws ApiErrorException
      */
-    public function createCheckoutSession(
+    public function creerSessionPaiement(
         int    $reservationId,
-        string $studioName,
+        string $nomStudio,
         string $date,
-        string $timeSlot,
-        int    $hours,
-        float  $price,
-        string $customerEmail,
-    ): StripeSession {
-        return StripeSession::create([
+        string $creneauHoraire,
+        int    $heures,
+        float  $prix,
+        string $emailClient,
+    ): SessionStripe {
+        return SessionStripe::create([
             'payment_method_types' => ['card'],
             'mode'                 => 'payment',
-            'customer_email'       => $customerEmail,
+            'customer_email'       => $emailClient,
             'line_items'           => [
                 [
                     'price_data' => [
                         'currency'     => 'eur',
-                        'unit_amount'  => (int) round($price * 100), // Stripe utilise les centimes
+                        'unit_amount'  => (int) round($prix * 100), // Stripe utilise les centimes
                         'product_data' => [
-                            'name'        => "Session studio : {$studioName}",
-                            'description' => "📅 {$date} | ⏰ {$timeSlot} | 🕐 {$hours}h",
+                            'name'        => "Session studio : {$nomStudio}",
+                            'description' => "📅 {$date} | ⏰ {$creneauHoraire} | 🕐 {$heures}h",
                         ],
                     ],
                     'quantity' => 1,
@@ -56,38 +67,48 @@ class StripeService
     /**
      * Récupérer une session Stripe Checkout.
      *
+     * @param string $idSession
+     * @return SessionStripe
      * @throws ApiErrorException
      */
-    public function retrieveSession(string $sessionId): StripeSession
+    public function recupererSession(string $idSession): SessionStripe
     {
-        return StripeSession::retrieve($sessionId);
+        return SessionStripe::retrieve($idSession);
     }
 
     /**
      * Rembourser un paiement.
      *
+     * @param string $idIntentionPaiement
+     * @param int|null $montantEnCentimes
+     * @return Refund
      * @throws ApiErrorException
      */
-    public function refund(string $paymentIntentId, ?int $amountInCents = null): Refund
+    public function rembourser(string $idIntentionPaiement, ?int $montantEnCentimes = null): Refund
     {
-        $params = ['payment_intent' => $paymentIntentId];
+        $parametres = ['payment_intent' => $idIntentionPaiement];
 
-        if ($amountInCents !== null) {
-            $params['amount'] = $amountInCents;
+        if ($montantEnCentimes !== null) {
+            $parametres['amount'] = $montantEnCentimes;
         }
 
-        return Refund::create($params);
+        return Refund::create($parametres);
     }
 
     /**
      * Vérifier la signature d'un webhook Stripe.
+     *
+     * @param string $donnees
+     * @param string $enteteSignature
+     * @return \Stripe\Event
      */
-    public function constructWebhookEvent(string $payload, string $sigHeader): \Stripe\Event
+    public function construireEvenementWebhook(string $donnees, string $enteteSignature): \Stripe\Event
     {
         return \Stripe\Webhook::constructEvent(
-            $payload,
-            $sigHeader,
+            $donnees,
+            $enteteSignature,
             config('services.stripe.webhook')
         );
     }
 }
+

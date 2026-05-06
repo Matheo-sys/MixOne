@@ -11,22 +11,36 @@ use Illuminate\Http\JsonResponse;
 class WishlistController extends Controller
 {
     public function __construct(
-        private readonly ToggleWishlistAction $toggleWishlistAction
+        private readonly ToggleWishlistAction $actionBasculeFavoris
     ) {}
 
+    /**
+     * Affiche la liste des studios favoris de l'utilisateur.
+     *
+     * @return View
+     */
     public function index(): View
     {
-        $favoriteStudios = Auth::user()->favoriteStudios;
-        return view('dashboard.artist.wishlist', compact('favoriteStudios'));
+        $studiosFavoris = Auth::user()->studiosFavoris;
+        return view('dashboard.artist.wishlist', ['studiosFavoris' => $studiosFavoris]);
     }
 
-    public function toggle(ToggleWishlistRequest $request): JsonResponse
+
+    /**
+     * Ajoute ou retire un studio des favoris.
+     *
+     * @param ToggleWishlistRequest $requete
+     * @return JsonResponse
+     */
+    public function basculer(ToggleWishlistRequest $requete): JsonResponse
     {
-        $status = $this->toggleWishlistAction->execute($request->studio_id);
+        $statut = $this->actionBasculeFavoris->executer($requete->studio_id);
 
         return response()->json([
             'success' => true,
-            'status' => $status
+            'status' => $statut
         ]);
     }
+
+
 }

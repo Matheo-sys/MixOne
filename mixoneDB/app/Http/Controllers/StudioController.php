@@ -22,89 +22,105 @@ use Illuminate\Support\Facades\Http;
 
 class StudioController extends Controller
 {
+    /**
+     * @param CreateStudioAction $actionCreerStudio
+     * @param UpdateStudioAction $actionMettreAJourStudio
+     * @param DeleteStudioAction $actionSupprimerStudio
+     * @param SearchStudiosAction $actionRechercherStudios
+     */
     public function __construct(
-        private readonly CreateStudioAction $createStudioAction,
-        private readonly UpdateStudioAction $updateStudioAction,
-        private readonly DeleteStudioAction $deleteStudioAction,
-        private readonly SearchStudiosAction $searchStudiosAction
+        private readonly CreateStudioAction $actionCreerStudio,
+        private readonly UpdateStudioAction $actionMettreAJourStudio,
+        private readonly DeleteStudioAction $actionSupprimerStudio,
+        private readonly SearchStudiosAction $actionRechercherStudios
     ) {}
 
     /**
-     * Afficher la page d'un studio
+     * Afficher la page d'un studio.
+     *
+     * @param Studio $studio
+     * @return View
      */
-    public function show(Studio $studio): View
+    public function afficher(Studio $studio): View
     {
-        $studio->load(['user', 'reviews.user']);
+        $studio->load(['proprietaire', 'avis.proprietaire']);
         
         // Par défaut, on regarde pour aujourd'hui
-        $dayOfWeek = strtolower(now()->format('l'));
-        $openingHours = $studio->opening_hours[$dayOfWeek] ?? null;
+        $jourSemaine = strtolower(now()->format('l'));
+        $horairesOuverture = $studio->opening_hours[$jourSemaine] ?? null;
         
-        $timeSlots = [];
-        if ($openingHours && ($openingHours['is_open'] ?? false)) {
-            $start = $openingHours['start'] ?? '08:00';
-            $end = $openingHours['end'] ?? '22:00';
+        $creneauxHoraires = [];
+        if ($horairesOuverture && ($horairesOuverture['is_open'] ?? false)) {
+            $debut = $horairesOuverture['start'] ?? '08:00';
+            $fin = $horairesOuverture['end'] ?? '22:00';
             
-            $startTime = \Carbon\Carbon::createFromFormat('H:i', $start);
-            $endTime = \Carbon\Carbon::createFromFormat('H:i', $end);
+            $tempsDebut = \Carbon\Carbon::createFromFormat('H:i', $debut);
+            $tempsFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
             
-            while ($startTime->lt($endTime)) {
-                $timeSlots[] = $startTime->format('H:i');
-                $startTime->addHour();
+            while ($tempsDebut->lt($tempsFin)) {
+                $creneauxHoraires[] = $tempsDebut->format('H:i');
+                $tempsDebut->addHour();
             }
         }
 
-        return view('pages.studio.show', compact('studio', 'timeSlots'));
+        return view('pages.studio.show', compact('studio', 'creneauxHoraires'));
     }
 
     /**
-     * API pour récupérer les créneaux disponibles selon la date
+     * API pour récupérer les créneaux disponibles selon la date.
+     *
+     * @param Studio $studio
+     * @param Request $requete
+     * @return JsonResponse
      */
-    public function getAvailableTimeSlots(Studio $studio, Request $request): JsonResponse
+    public function recupererCreneauxDisponibles(Studio $studio, Request $requete): JsonResponse
     {
-        $date = $request->get('date');
+        $date = $requete->get('date');
         if (!$date) return response()->json([]);
 
-        $dayOfWeek = strtolower(\Carbon\Carbon::parse($date)->format('l'));
-        $openingHours = $studio->opening_hours[$dayOfWeek] ?? null;
+        $jourSemaine = strtolower(\Carbon\Carbon::parse($date)->format('l'));
+        $horairesOuverture = $studio->opening_hours[$jourSemaine] ?? null;
 
-        $timeSlots = [];
-        if ($openingHours && ($openingHours['is_open'] ?? false)) {
-            $start = $openingHours['start'] ?? '09:00';
-            $end = $openingHours['end'] ?? '20:00';
+        $creneauxHoraires = [];
+        if ($horairesOuverture && ($horairesOuverture['is_open'] ?? false)) {
+            $debut = $horairesOuverture['start'] ?? '09:00';
+            $fin = $horairesOuverture['end'] ?? '20:00';
 
-            $startTime = \Carbon\Carbon::createFromFormat('H:i', $start);
-            $endTime = \Carbon\Carbon::createFromFormat('H:i', $end);
+            $tempsDebut = \Carbon\Carbon::createFromFormat('H:i', $debut);
+            $tempsFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
 
-            while ($startTime->lt($endTime)) {
-                $timeSlots[] = $startTime->format('H:i');
-                $startTime->addHour();
+            while ($tempsDebut->lt($tempsFin)) {
+                $creneauxHoraires[] = $tempsDebut->format('H:i');
+                $tempsDebut->addHour();
             }
         }
 
-        return response()->json($timeSlots);
+        return response()->json($creneauxHoraires);
     }
 
     /**
-     * Create a studio
+     * Enregistrer un studio.
+     *
+     * @param CreateRequest $requete
+     * @return RedirectResponse|JsonResponse
      */
-    public function store(CreateRequest $request): RedirectResponse|JsonResponse
+    public function enregistrer(CreateRequest $requete): RedirectResponse|JsonResponse
     {
         try {
-            $studio = $this->createStudioAction->execute($request->toDTO());
-            $studio->load('user');
+            $studio = $this->actionCreerStudio->executer($requete->versDTO());
+            $studio->load('proprietaire');
 
-            // Notify Admins
-            $admins = User::where('is_admin', true)->get();
-            Notification::send($admins, new NewStudioCreated($studio));
+            // Notifier les Admins
+            $administrateurs = User::where('is_admin', true)->get();
+            Notification::send($administrateurs, new NewStudioCreated($studio));
 
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Votre studio a été ajouté avec succès !', 'redirect' => route('dashboard.studio.myStudios')]);
             }
             return redirect()->route('dashboard.studio.myStudios')
                 ->with('success', 'Votre studio a été ajouté avec succès !');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => 'Erreur lors de la création du studio. Veuillez vérifier les informations.'], 422);
             }
             return redirect()->route('studio.create')
@@ -115,133 +131,161 @@ class StudioController extends Controller
     }
 
     /**
-     * Afficher tous les studios (sans filtre)
+     * Afficher tous les studios (sans filtre).
+     *
+     * @return View
      */
     public function index(): View
     {
-        $baseQuery = Studio::with('user')
-            ->withCount('completedReservations')
-            ->withAvg('completedReservations', 'rating')
+        $requeteBase = Studio::with('proprietaire')
+            ->withCount('reservationsTerminees')
+            ->withAvg('reservationsTerminees', 'rating')
             ->where('is_verified', true);
 
-        $studios = (clone $baseQuery)->paginate(20);
-        $mapStudios = (clone $baseQuery)->get();
+        $studios = (clone $requeteBase)->paginate(20);
+        $studiosCarte = (clone $requeteBase)->get();
 
-        $favoriteIds = auth()->check() ? auth()->user()->favoriteStudios()->pluck('studios.id')->toArray() : [];
+        $idsFavoris = auth()->check() ? auth()->user()->studiosFavoris()->pluck('studios.id')->toArray() : [];
 
         return view('pages.studio_list', [
             'studios'           => $studios,
-            'map_studios'       => $mapStudios,
-            'favoriteIds'       => $favoriteIds,
+            'studiosCarte'      => $studiosCarte,
+            'idsFavoris'        => $idsFavoris,
             'latitude'          => 0,
             'longitude'         => 0,
             'distance'          => 50,
-            'min_hours'         => null,
-            'city'              => '',
-            'sort_by'           => 'distance',
-            'sort_direction'    => 'asc',
-            'selectedEquipment' => [],
+            'heuresMin'         => null,
+            'ville'             => '',
+            'trierPar'          => 'distance',
+            'directionTri'      => 'asc',
+            'equipementsSelectionnes' => [],
         ]);
     }
 
     /**
-     * Rechercher des studios en fonction des filtres
+     * Rechercher des studios en fonction des filtres.
+     *
+     * @param SearchRequest $requete
+     * @return View
      */
-    public function search(SearchRequest $request): View
+    public function rechercher(SearchRequest $requete): View
     {
-        $result = $this->searchStudiosAction->execute($request->toDTO());
-        $dto = $request->toDTO();
+        $resultat = $this->actionRechercherStudios->executer($requete->versDTO());
+        $dto = $requete->versDTO();
 
-        $favoriteIds = auth()->check() ? auth()->user()->favoriteStudios()->pluck('studios.id')->toArray() : [];
+        $idsFavoris = auth()->check() ? auth()->user()->studiosFavoris()->pluck('studios.id')->toArray() : [];
 
-        return view('pages.studio_list', array_merge($result, [
-            'favoriteIds'       => $favoriteIds,
+        return view('pages.studio_list', array_merge($resultat, [
+            'idsFavoris'        => $idsFavoris,
             'distance'          => $dto->distance,
-            'min_hours'         => $dto->min_hours,
-            'city'              => $dto->city,
-            'sort_by'           => $dto->sort_by,
-            'sort_direction'    => $dto->sort_direction,
-            'selectedEquipment' => $dto->equipment,
+            'heuresMin'         => $dto->heures_min,
+            'ville'             => $dto->ville,
+            'trierPar'          => $dto->trier_par,
+            'directionTri'      => $dto->direction_tri,
+            'equipementsSelectionnes' => $dto->equipements,
         ]));
     }
 
     /**
-     * Proxy de recherche géo (Nom -> Coords)
+     * Proxy de recherche géo (Nom -> Coords).
+     *
+     * @param Request $requete
+     * @return JsonResponse
      */
-    public function searchGeocode(Request $request): JsonResponse
+    public function rechercherGeocode(Request $requete): JsonResponse
     {
-        $request->validate(['q' => 'required|string|max:255']);
+        $requete->validate(['q' => 'required|string|max:255']);
 
-        $q = $request->get('q');
+        $recherche = $requete->get('q');
 
-        $response = Http::withHeaders(['User-Agent' => 'MixOne/1.0'])
+        $reponse = Http::withHeaders(['User-Agent' => 'MixOne/1.0'])
             ->timeout(5)
             ->get("https://nominatim.openstreetmap.org/search", [
-                'q' => $q,
+                'q' => $recherche,
                 'format' => 'json',
                 'limit' => 1,
             ]);
 
-        return response()->json($response->json());
+        return response()->json($reponse->json());
     }
 
     /**
-     * Proxy de recherche inverse (Coords -> Nom)
+     * Proxy de recherche inverse (Coords -> Nom).
+     *
+     * @param Request $requete
+     * @return JsonResponse
      */
-    public function reverseGeocode(Request $request): JsonResponse
+    public function geocodeInverse(Request $requete): JsonResponse
     {
-        $request->validate([
+        $requete->validate([
             'lat' => 'required|numeric',
             'lon' => 'required|numeric',
         ]);
 
-        $response = Http::withHeaders(['User-Agent' => 'MixOne/1.0'])
+        $reponse = Http::withHeaders(['User-Agent' => 'MixOne/1.0'])
             ->timeout(5)
             ->get("https://nominatim.openstreetmap.org/reverse", [
-                'lat' => $request->get('lat'),
-                'lon' => $request->get('lon'),
+                'lat' => $requete->get('lat'),
+                'lon' => $requete->get('lon'),
                 'format' => 'json',
                 'addressdetails' => 1,
             ]);
 
-        return response()->json($response->json());
+        return response()->json($reponse->json());
     }
 
-    public function destroy(Studio $studio): RedirectResponse
+    /**
+     * @param Studio $studio
+     * @return RedirectResponse
+     */
+    public function supprimer(Studio $studio): RedirectResponse
     {
-        Gate::authorize('delete', $studio);
+        Gate::authorize('supprimer', $studio);
 
-        $this->deleteStudioAction->execute($studio);
+        $this->actionSupprimerStudio->executer($studio);
         return redirect()->route('dashboard.studio.myStudios')->with('success', 'Studio supprimé avec succès.');
     }
 
-    public function create(): View
+    /**
+     * @return View
+     */
+    public function creer(): View
     {
         return view('dashboard.studio.create');
     }
 
-    public function edit(Studio $studio): View|RedirectResponse
+    /**
+     * @param Studio $studio
+     * @return View|RedirectResponse
+     */
+    public function modifier(Studio $studio): View|RedirectResponse
     {
-        Gate::authorize('update', $studio);
+        Gate::authorize('mettreAJour', $studio);
 
         return view('dashboard.studio.edit', compact('studio'));
     }
 
-    public function update(UpdateRequest $request, Studio $studio): RedirectResponse|JsonResponse
+    /**
+     * @param UpdateRequest $requete
+     * @param Studio $studio
+     * @return RedirectResponse|JsonResponse
+     */
+    public function mettreAJour(UpdateRequest $requete, Studio $studio): RedirectResponse|JsonResponse
     {
-        Gate::authorize('update', $studio);
+        Gate::authorize('mettreAJour', $studio);
 
         try {
-            $this->updateStudioAction->execute($studio, $request->toDTO());
-            if ($request->ajax()) {
+            $this->actionMettreAJourStudio->executer($studio, $requete->versDTO());
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Studio modifié avec succès !']);
             }
             return redirect()->route('dashboard.studio.edit', $studio)->with('success', 'Studio modifié avec succès !');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
+            if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => 'Erreur lors de la mise à jour du studio.'], 422);
             }
             return back()->withErrors(['update_error' => 'Erreur lors de la mise à jour du studio.']);
         }
     }
 }
+

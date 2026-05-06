@@ -6,65 +6,87 @@ use Illuminate\Http\Request;
 
 class StudioDTO
 {
+    /**
+     * @param string $nom
+     * @param string $adresse
+     * @param string $code_postal
+     * @param string $ville
+     * @param string $pays
+     * @param float $tarif_horaire
+     * @param int $heures_min
+     * @param string $description
+     * @param array $equipements
+     * @param array $horaires_ouverture
+     * @param int|null $id_utilisateur
+     * @param array $images
+     * @param array $images_a_supprimer
+     */
     public function __construct(
-        public readonly string $name,
-        public readonly string $address,
-        public readonly string $zipcode,
-        public readonly string $city,
-        public readonly string $country,
-        public readonly float $hourly_rate,
-        public readonly int $min_hours,
+        public readonly string $nom,
+        public readonly string $adresse,
+        public readonly string $code_postal,
+        public readonly string $ville,
+        public readonly string $pays,
+        public readonly float $tarif_horaire,
+        public readonly int $heures_min,
         public readonly string $description,
-        public readonly array $equipment = [],
-        public readonly array $opening_hours = [],
-        public readonly ?int $user_id = null,
+        public readonly array $equipements = [],
+        public readonly array $horaires_ouverture = [],
+        public readonly ?int $id_utilisateur = null,
         public readonly array $images = [],
-        public readonly array $remove_images = []
+        public readonly array $images_a_supprimer = []
     ) {}
 
-    public static function fromRequest(Request $request): self
+    /**
+     * Crée une instance depuis une requête validée.
+     */
+    public static function depuisRequete(Request $requete): self
     {
         return new self(
-            name: $request->validated('name'),
-            address: $request->validated('address'),
-            zipcode: $request->validated('zipcode'),
-            city: $request->validated('city'),
-            country: $request->validated('country'),
-            hourly_rate: (float) $request->validated('hourly_rate'),
-            min_hours: (int) $request->validated('min_hours'),
-            description: $request->validated('description'),
-            equipment: $request->input('equipment', []),
-            opening_hours: $request->input('opening_hours', []),
-            user_id: auth()->id(),
+            nom: $requete->validated('name'),
+            adresse: $requete->validated('address'),
+            code_postal: $requete->validated('zipcode'),
+            ville: $requete->validated('city'),
+            pays: $requete->validated('country'),
+            tarif_horaire: (float) $requete->validated('hourly_rate'),
+            heures_min: (int) $requete->validated('min_hours'),
+            description: $requete->validated('description'),
+            equipements: $requete->input('equipment', []),
+            horaires_ouverture: $requete->input('opening_hours', []),
+            id_utilisateur: auth()->id(),
             images: [
-                'image1' => $request->file('image1'),
-                'image2' => $request->file('image2'),
-                'image3' => $request->file('image3'),
-                'image4' => $request->file('image4'),
+                'image1' => $requete->file('image1'),
+                'image2' => $requete->file('image2'),
+                'image3' => $requete->file('image3'),
+                'image4' => $requete->file('image4'),
             ],
-            remove_images: [
-                'image1' => $request->boolean('remove_image1'),
-                'image2' => $request->boolean('remove_image2'),
-                'image3' => $request->boolean('remove_image3'),
-                'image4' => $request->boolean('remove_image4'),
+            images_a_supprimer: [
+                'image1' => $requete->boolean('remove_image1'),
+                'image2' => $requete->boolean('remove_image2'),
+                'image3' => $requete->boolean('remove_image3'),
+                'image4' => $requete->boolean('remove_image4'),
             ]
         );
     }
 
-    public function toArray(): array
+    /**
+     * Convertit l'objet en tableau.
+     */
+    public function enTableau(): array
     {
         return [
-            'name' => $this->name,
-            'address' => $this->address,
-            'zipcode' => $this->zipcode,
-            'city' => $this->city,
-            'country' => $this->country,
-            'hourly_rate' => $this->hourly_rate,
-            'min_hours' => $this->min_hours,
+            'name' => $this->nom,
+            'address' => $this->adresse,
+            'zipcode' => $this->code_postal,
+            'city' => $this->ville,
+            'country' => $this->pays,
+            'hourly_rate' => $this->tarif_horaire,
+            'min_hours' => $this->heures_min,
             'description' => $this->description,
-            'equipment' => $this->equipment,
-            'opening_hours' => $this->opening_hours,
-            'user_id' => $this->user_id,
+            'equipment' => $this->equipements,
+            'opening_hours' => $this->horaires_ouverture,
+            'user_id' => $this->id_utilisateur,
         ];
     }
 }
+

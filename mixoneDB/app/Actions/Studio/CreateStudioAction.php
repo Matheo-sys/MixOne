@@ -8,30 +8,38 @@ use Illuminate\Support\Facades\Storage;
 
 class CreateStudioAction
 {
+    /**
+     * @param GetCoordinatesAction $actionRecupererCoordonnees
+     */
     public function __construct(
-        private GetCoordinatesAction $getCoordinatesAction
+        private GetCoordinatesAction $actionRecupererCoordonnees
     ) {}
 
-    public function execute(StudioDTO $dto): Studio
+    /**
+     * @param StudioDTO $dto
+     * @return Studio
+     */
+    public function executer(StudioDTO $dto): Studio
     {
-        $data = $dto->toArray();
+        $donnees = $dto->enTableau();
 
-        // Handle image uploads
-        foreach ($dto->images as $field => $file) {
-            if ($file) {
-                $data[$field] = $file->store('uploads/studios');
+        // Gérer le téléchargement des images
+        foreach ($dto->images as $champ => $fichier) {
+            if ($fichier) {
+                $donnees[$champ] = $fichier->store('uploads/studios');
             }
         }
 
-        // Handle geocoding
-        $fullAddress = trim("{$dto->address}, {$dto->city}, {$dto->zipcode}, {$dto->country}");
-        $coordinates = $this->getCoordinatesAction->execute($fullAddress);
+        // Gérer le géocodage
+        $adresseComplete = trim("{$dto->adresse}, {$dto->ville}, {$dto->code_postal}, {$dto->pays}");
+        $coordonnees = $this->actionRecupererCoordonnees->executer($adresseComplete);
 
-        if ($coordinates) {
-            $data['latitude'] = $coordinates['latitude'];
-            $data['longitude'] = $coordinates['longitude'];
+        if ($coordonnees) {
+            $donnees['latitude'] = $coordonnees['latitude'];
+            $donnees['longitude'] = $coordonnees['longitude'];
         }
 
-        return Studio::create($data);
+        return Studio::create($donnees);
     }
 }
+

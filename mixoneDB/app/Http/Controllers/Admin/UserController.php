@@ -10,33 +10,49 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    /**
+     * Liste des utilisateurs.
+     */
     public function index(): View
     {
-        $users = User::orderBy('created_at', 'desc')->paginate(20);
-        return view('admin.users.index', compact('users'));
+        $utilisateurs = User::orderBy('created_at', 'desc')->paginate(20);
+        return view('admin.users.index', ['users' => $utilisateurs]);
     }
 
-    public function show(User $user): View
+    /**
+     * Détails d'un utilisateur.
+     */
+    public function afficher(User $utilisateur): View
     {
-        return view('admin.users.show', compact('user'));
+        return view('admin.users.show', ['user' => $utilisateur]);
     }
 
-    public function ban(User $user): RedirectResponse
+    /**
+     * Bannir un utilisateur.
+     */
+    public function bannir(User $utilisateur): RedirectResponse
     {
-        $user->update(['banned_at' => now()]);
+        $utilisateur->update(['banned_at' => now()]);
         return back()->with('success', 'Utilisateur banni avec succès.');
     }
 
-    public function unban(User $user): RedirectResponse
+    /**
+     * Débannir un utilisateur.
+     */
+    public function debannir(User $utilisateur): RedirectResponse
     {
-        $user->update(['banned_at' => null]);
+        $utilisateur->update(['banned_at' => null]);
         return back()->with('success', 'Utilisateur débanni avec succès.');
     }
 
-    public function verifyEmail(User $user): RedirectResponse
+    /**
+     * Vérifier manuellement l'email.
+     */
+    public function verifierEmail(User $utilisateur): RedirectResponse
     {
-        $user->email_verified_at = now();
-        $user->save();
+        $utilisateur->email_verified_at = now();
+        $utilisateur->save();
         return back()->with('success', "L'email de l'utilisateur a été vérifié manuellement.");
     }
 }
+

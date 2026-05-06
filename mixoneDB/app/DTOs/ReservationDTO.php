@@ -6,37 +6,52 @@ use Illuminate\Http\Request;
 
 class ReservationDTO
 {
+    /**
+     * @param int $id_studio
+     * @param string $date
+     * @param string $creneau_horaire
+     * @param int $nombre_heures
+     * @param float $prix
+     * @param int|null $id_utilisateur
+     */
     public function __construct(
-        public readonly int $studio_id,
+        public readonly int $id_studio,
         public readonly string $date,
-        public readonly string $time_slot,
-        public readonly int $number_of_hours,
-        public readonly float $price,
-        public readonly ?int $user_id = null
+        public readonly string $creneau_horaire,
+        public readonly int $nombre_heures,
+        public readonly float $prix,
+        public readonly ?int $id_utilisateur = null
     ) {}
 
-    public static function fromRequest(Request $request): self
+    /**
+     * Crée une instance depuis une requête validée.
+     */
+    public static function depuisRequete(Request $requete): self
     {
         return new self(
-            studio_id: (int) $request->validated('studio_id'),
-            date: $request->validated('date'),
-            time_slot: $request->validated('time_slot'),
-            number_of_hours: (int) $request->validated('number_of_hours'),
-            price: (float) $request->validated('total_price'),
-            user_id: auth()->id()
+            id_studio: (int) $requete->validated('studio_id'),
+            date: $requete->validated('date'),
+            creneau_horaire: $requete->validated('time_slot'),
+            nombre_heures: (int) $requete->validated('number_of_hours'),
+            prix: (float) $requete->validated('total_price'),
+            id_utilisateur: auth()->id()
         );
     }
 
-    public function toArray(): array
+    /**
+     * Convertit l'objet en tableau.
+     */
+    public function enTableau(): array
     {
         return [
-            'studio_id' => $this->studio_id,
-            'user_id' => $this->user_id,
+            'studio_id' => $this->id_studio,
+            'user_id' => $this->id_utilisateur,
             'date' => $this->date,
-            'time_slot' => $this->time_slot,
-            'number_of_hours' => $this->number_of_hours,
-            'price' => $this->price,
+            'time_slot' => $this->creneau_horaire,
+            'number_of_hours' => $this->nombre_heures,
+            'price' => $this->prix,
             'status' => 'En attente',
         ];
     }
 }
+

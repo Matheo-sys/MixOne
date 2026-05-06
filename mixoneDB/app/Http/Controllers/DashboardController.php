@@ -8,7 +8,7 @@ use Illuminate\Http\RedirectResponse;
 class DashboardController extends Controller
 {
     /**
-     * Redirect users to their specific dashboard based on profile.
+     * Redirige les utilisateurs vers leur tableau de bord spécifique selon leur profil.
      */
     public function index(): RedirectResponse
     {
@@ -19,3 +19,4 @@ class DashboardController extends Controller
         return redirect()->route('dashboard.studio');
     }
 }
+

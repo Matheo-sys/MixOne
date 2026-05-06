@@ -6,30 +6,45 @@ use Illuminate\Http\Request;
 
 class StudioSearchDTO
 {
+    /**
+     * @param float $latitude
+     * @param float $longitude
+     * @param int $distance
+     * @param int|null $heures_min
+     * @param string $ville
+     * @param string $trier_par
+     * @param string $direction_tri
+     * @param array $equipements
+     * @param string|null $date
+     */
     public function __construct(
         public readonly float $latitude = 0,
         public readonly float $longitude = 0,
         public readonly int $distance = 50,
-        public readonly ?int $min_hours = null,
-        public readonly string $city = '',
-        public readonly string $sort_by = 'distance',
-        public readonly string $sort_direction = 'asc',
-        public readonly array $equipment = [],
+        public readonly ?int $heures_min = null,
+        public readonly string $ville = '',
+        public readonly string $trier_par = 'distance',
+        public readonly string $direction_tri = 'asc',
+        public readonly array $equipements = [],
         public readonly ?string $date = null
     ) {}
 
-    public static function fromRequest(Request $request): self
+    /**
+     * Crée une instance depuis une requête.
+     */
+    public static function depuisRequete(Request $requete): self
     {
         return new self(
-            latitude: (float) $request->input('latitude', 0),
-            longitude: (float) $request->input('longitude', 0),
-            distance: (int) $request->input('distance', 50),
-            min_hours: $request->filled('min_hours') ? (int) $request->input('min_hours') : null,
-            city: $request->input('city', '') ?? '',
-            sort_by: $request->input('sort_by', 'distance'),
-            sort_direction: $request->input('sort_direction', 'asc'),
-            equipment: $request->input('equipment', []),
-            date: $request->input('date')
+            latitude: (float) $requete->input('latitude', 0),
+            longitude: (float) $requete->input('longitude', 0),
+            distance: (int) $requete->input('distance', 50),
+            heures_min: $requete->filled('min_hours') ? (int) $requete->input('min_hours') : null,
+            ville: $requete->input('city', '') ?? '',
+            trier_par: $requete->input('sort_by', 'distance'),
+            direction_tri: $requete->input('sort_direction', 'asc'),
+            equipements: $requete->input('equipment', []),
+            date: $requete->input('date')
         );
     }
 }
+

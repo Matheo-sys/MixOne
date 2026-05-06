@@ -16,7 +16,7 @@ enum ReservationStatus: string
      *
      * @return array<ReservationStatus>
      */
-    public function allowedTransitions(): array
+    public function transitionsAutorisees(): array
     {
         return match ($this) {
             self::Pending   => [self::Confirmed, self::Refused, self::Cancelled],
@@ -25,20 +25,24 @@ enum ReservationStatus: string
         };
     }
 
-    public function canTransitionTo(self $newStatus): bool
+    /**
+     * Vérifie si le passage vers un nouveau statut est autorisé.
+     */
+    public function peutPasserA(self $nouveauStatut): bool
     {
-        return in_array($newStatus, $this->allowedTransitions(), true);
+        return in_array($nouveauStatut, $this->transitionsAutorisees(), true);
     }
 
     /**
      * Normalise une string brute vers l'enum correspondant.
      */
-    public static function fromNormalized(string $value): self
+    public static function depuisValeurNormalisee(string $valeur): self
     {
-        $normalized = mb_convert_case(trim($value), MB_CASE_TITLE, 'UTF-8');
+        $normalisee = mb_convert_case(trim($valeur), MB_CASE_TITLE, 'UTF-8');
 
-        return self::from($normalized);
+        return self::from($normalisee);
     }
+
 
     public function label(): string
     {

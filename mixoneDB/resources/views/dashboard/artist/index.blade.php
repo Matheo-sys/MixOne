@@ -14,7 +14,7 @@
             <div class="row y-gap-20 justify-between items-center">
                 <div class="col-auto">
                     <div class="fw-500 lh-14">Solde Disponible</div>
-                    <div class="text-26 lh-16 fw-600 mt-5">{{ number_format($wallet->balance ?? 0, 2, ',', ' ') }} €</div>
+                    <div class="text-26 lh-16 fw-600 mt-5">{{ number_format($portefeuille->balance ?? 0, 2, ',', ' ') }} €</div>
                     <div class="text-15 lh-14 text-light-1 mt-5">Votre porte-monnaie</div>
                 </div>
                 <div class="col-auto">
@@ -29,7 +29,7 @@
             <div class="row y-gap-20 justify-between items-center">
                 <div class="col-auto">
                     <div class="fw-500 lh-14">Fonds en Attente</div>
-                    <div class="text-26 lh-16 fw-600 mt-5">{{ number_format($wallet->pending_balance ?? 0, 2, ',', ' ') }} €</div>
+                    <div class="text-26 lh-16 fw-600 mt-5">{{ number_format($portefeuille->pending_balance ?? 0, 2, ',', ' ') }} €</div>
                     <div class="text-15 lh-14 text-light-1 mt-5">Bloqué pour réservations</div>
                 </div>
                 <div class="col-auto">
