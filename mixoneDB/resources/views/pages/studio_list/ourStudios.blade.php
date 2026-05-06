@@ -8,7 +8,7 @@
             <p class="studioList-hero__subtitle">Explorez notre sélection de studios professionnels</p>
 
             <div class="mainSearch bg-white mt-30">
-                <form id="searchForm" action="{{route('studios.index')}}" method="GET">
+                <form id="searchForm" action="{{route('studios.search')}}" method="GET">
                     <input type="hidden" id="latitude" name="latitude" value="48.7748198">
                     <input type="hidden" id="longitude" name="longitude" value="2.3262945">
 
@@ -85,7 +85,7 @@
 
                     {{-- Filters --}}
                     <div class="studioList-sidebar__filters">
-                        <form action="{{ route('studios.index') }}" method="GET" id="sidebarFilterForm">
+                        <form action="{{ route('studios.search') }}" method="GET" id="sidebarFilterForm">
                             <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
                             <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
                             <input type="hidden" name="city" value="{{ request('city', '') }}">
@@ -181,7 +181,7 @@
 
                     <div class="studioList-toolbar__actions">
                         <div class="col-auto">
-                            <form action="{{ route('studios.index') }}" method="GET" id="sortForm">
+                            <form action="{{ route('studios.search') }}" method="GET" id="sortForm">
                                 <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
                                 <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
                                 <input type="hidden" name="city" value="{{ request('city', '') }}">
@@ -235,7 +235,7 @@
                             </div>
                         </div>
 
-                        <form action="{{ route('studios.index') }}" method="GET">
+                        <form action="{{ route('studios.search') }}" method="GET">
                             <input type="hidden" name="latitude" value="{{ request('latitude', 0) }}">
                             <input type="hidden" name="longitude" value="{{ request('longitude', 0) }}">
                             <input type="hidden" name="city" value="{{ request('city', '') }}">

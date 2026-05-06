@@ -65,7 +65,6 @@ class ReservationController extends Controller
             }
 
             return redirect($session->url);
-
         } catch (\Exception $e) {
             $message = $e->getMessage();
 
@@ -95,7 +94,7 @@ class ReservationController extends Controller
 
         try {
             $this->actionMiseAJourStatutReservation->executer($reservation, ReservationStatus::Confirmed, 'studio');
-            
+
             // Envoyer l'email avec le code PIN à l'artiste
             if ($reservation->client && $reservation->client->email) {
                 Mail::to($reservation->client->email)->queue(new ReservationConfirmedArtistMail($reservation));
@@ -188,7 +187,7 @@ class ReservationController extends Controller
 
         // Bloquer si la réservation est en litige
         if ($reservation->disputed_at) {
-             return redirect()->back()->with('error', 'Impossible de terminer : cette réservation est en litige.');
+            return redirect()->back()->with('error', 'Impossible de terminer : cette réservation est en litige.');
         }
 
         try {
@@ -282,4 +281,3 @@ class ReservationController extends Controller
         return redirect()->back()->with('success', 'Merci pour votre avis !');
     }
 }
-
