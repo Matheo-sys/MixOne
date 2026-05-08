@@ -41,4 +41,8 @@ return [
         'commission_rate' => env('MIXONE_COMMISSION_RATE', 10), // 10% by default
     ],
 
+    'locationiq' => [
+        'token' => env('LOCATIONIQ_TOKEN'),
+    ],
+
 ];

@@ -199,30 +199,37 @@ class StudioController extends Controller
         try {
             $requete->validate(['q' => 'required|string|max:255']);
             $recherche = $requete->get('q');
+            $token = config('services.locationiq.token');
 
-            $reponse = Http::withHeaders([
-                'User-Agent' => 'MixOne-App-Production (mixone.up.railway.app)'
-            ])
-            ->timeout(10)
-            ->get("https://nominatim.openstreetmap.org/search", [
+            $url = $token 
+                ? "https://us1.locationiq.com/v1/search.php" 
+                : "https://nominatim.openstreetmap.org/search";
+
+            $params = [
                 'q' => $recherche,
                 'format' => 'json',
                 'limit' => 1,
-            ]);
+            ];
+
+            if ($token) $params['key'] = $token;
+
+            $reponse = Http::withHeaders([
+                'User-Agent' => 'MixOne-App-Production'
+            ])
+            ->timeout(10)
+            ->get($url, $params);
 
             if ($reponse->failed()) {
-                \Illuminate\Support\Facades\Log::error('Nominatim Search API Error', [
+                \Illuminate\Support\Facades\Log::error('Geocode Search API Error', [
                     'status' => $reponse->status(),
-                    'body' => $reponse->body()
+                    'service' => $token ? 'LocationIQ' : 'Nominatim'
                 ]);
                 return response()->json(['error' => 'API Error'], 502);
             }
 
             return response()->json($reponse->json());
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Geocoder Search Proxy Exception', [
-                'message' => $e->getMessage()
-            ]);
+            \Illuminate\Support\Facades\Log::error('Geocoder Search Proxy Exception', ['message' => $e->getMessage()]);
             return response()->json(['error' => 'Server Error'], 500);
         }
     }
@@ -241,30 +248,38 @@ class StudioController extends Controller
                 'lon' => 'required|numeric',
             ]);
 
-            $reponse = Http::withHeaders([
-                'User-Agent' => 'MixOne-App-Production (mixone.up.railway.app)'
-            ])
-            ->timeout(10) // Augmenter le timeout pour Railway
-            ->get("https://nominatim.openstreetmap.org/reverse", [
+            $token = config('services.locationiq.token');
+            
+            $url = $token 
+                ? "https://us1.locationiq.com/v1/reverse.php" 
+                : "https://nominatim.openstreetmap.org/reverse";
+
+            $params = [
                 'lat' => $requete->get('lat'),
                 'lon' => $requete->get('lon'),
                 'format' => 'json',
                 'addressdetails' => 1,
-            ]);
+            ];
+
+            if ($token) $params['key'] = $token;
+
+            $reponse = Http::withHeaders([
+                'User-Agent' => 'MixOne-App-Production'
+            ])
+            ->timeout(10)
+            ->get($url, $params);
 
             if ($reponse->failed()) {
-                \Illuminate\Support\Facades\Log::error('Nominatim API Error', [
+                \Illuminate\Support\Facades\Log::error('Reverse Geocode API Error', [
                     'status' => $reponse->status(),
-                    'body' => $reponse->body()
+                    'service' => $token ? 'LocationIQ' : 'Nominatim'
                 ]);
                 return response()->json(['error' => 'API Error'], 502);
             }
 
             return response()->json($reponse->json());
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Geocoder Proxy Exception', [
-                'message' => $e->getMessage()
-            ]);
+            \Illuminate\Support\Facades\Log::error('Reverse Geocode Proxy Exception', ['message' => $e->getMessage()]);
             return response()->json(['error' => 'Server Error'], 500);
         }
     }
