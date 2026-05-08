@@ -7,28 +7,14 @@
             </p>
         </div>
         <div class="col-xl-4 col-lg-3">
-            <div class="d-flex justify-center lg:justify-end items-center" style="gap: 15px;">
-                <button onclick="acceptCookies()" class="button h-50 bg-blue-1 text-white rounded-4 fw-500" style="line-height: 50px !important; min-width: 160px !important; padding: 0 !important; display: block !important; text-align: center !important;">Tout accepter</button>
-                <button onclick="refuseCookies()" class="button h-50 bg-light-2 text-dark-1 rounded-4 fw-500" style="line-height: 50px !important; min-width: 160px !important; padding: 0 !important; display: block !important; text-align: center !important;">Refuser</button>
+            <div class="d-flex flex-wrap y-gap-10 x-gap-10 justify-center">
+                <button class="button -md bg-blue-1 text-white js-accept-cookies">Accepter</button>
+                <button class="button -md bg-light-2 text-dark-1 js-refuse-cookies">Refuser</button>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        if (!localStorage.getItem('cookies_accepted')) {
-            document.getElementById('cookie-banner').style.display = 'block';
-        }
-    });
-
-    function acceptCookies() {
-        localStorage.setItem('cookies_accepted', 'true');
-        document.getElementById('cookie-banner').style.display = 'none';
-    }
-
-    function refuseCookies() {
-        localStorage.setItem('cookies_accepted', 'refused');
-        document.getElementById('cookie-banner').style.display = 'none';
-    }
-</script>
+@push('scripts')
+    <script src="{{ asset('js/components/cookie-banner.js') }}"></script>
+@endpush

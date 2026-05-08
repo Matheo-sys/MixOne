@@ -175,7 +175,7 @@
                 </div>
 
                 <div class="pt-30" style="height: 350px; position: relative;">
-                    <canvas id="studioLineChart"></canvas>
+                    <canvas id="studioLineChart" data-chart="{{ json_encode($chartData ?? []) }}"></canvas>
                 </div>
             </div>
         </div>
@@ -184,49 +184,5 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('studioLineChart');
-    if (ctx) {
-        const chartDataRaw = {!! json_encode($chartData ?? []) !!};
-        const labels = Object.keys(chartDataRaw);
-        const data = Object.values(chartDataRaw);
-
-        const finalLabels = labels.length ? labels : ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'];
-        const finalData = data.length ? data : [0, 0, 0, 0, 0, 0];
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: finalLabels,
-                datasets: [{
-                    label: 'Gains (€)',
-                    data: finalData,
-                    borderColor: '#1E2ED6',
-                    backgroundColor: 'rgba(30, 46, 214, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#e5e5e5', borderDash: [5, 5] }
-                    },
-                    x: {
-                        grid: { display: false }
-                    }
-                }
-            }
-        });
-    }
-});
-</script>
+<script src="{{ asset('js/dashboard/studio/dashboard.js') }}"></script>
 @endpush

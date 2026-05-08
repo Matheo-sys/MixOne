@@ -18,6 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var list<string>
      */
     protected $fillable = [
+        'uuid',
         'username',
         'last_name',
         'first_name',
@@ -63,6 +64,20 @@ class User extends Authenticatable implements MustVerifyEmail
             'banned_at' => 'datetime',
             'is_admin' => 'boolean',
         ];
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            if (empty($user->uuid)) {
+                $user->uuid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 
     /**

@@ -15,9 +15,10 @@
                     <div class="tabs__content mt-30 md:mt-20 js-tabs-content">
                         <div class="tabs__pane -tab-item-1 is-tab-el-active">
                             <div class="mainSearch bg-white">
-                                <form id="searchForm" action="{{route("studios.index")}}" method="GET">
-                                    <input type="hidden" id="latitude" name="latitude" value="48.8588897">
-                                    <input type="hidden" id="longitude" name="longitude" value="2.320041">
+                                <form id="searchForm" action="{{route("studios.search")}}" method="GET">
+                                    <input type="hidden" id="latitude" name="latitude" value="">
+                                    <input type="hidden" id="longitude" name="longitude" value="">
+                                    <input type="hidden" name="distance" value="100">
 
                                     <div class="mainSearch__grid">
                                         <div class="mainSearch__item">
@@ -67,81 +68,6 @@
 
 
 
-<script>
-    function toggleHoursMenu(event) {
-        event.stopPropagation();
-        const menu = document.getElementById('hoursMenu');
-        menu.classList.toggle('hidden');
-    }
-
-    function changeHours(amount) {
-        const hoursInput = document.getElementById('min_hours');
-        const hoursValue = document.getElementById('hoursValue');
-        let currentValue = parseInt(hoursValue.textContent);
-        if (!isNaN(currentValue)) {
-            currentValue += amount;
-            if (currentValue < 1) {
-                currentValue = 1;
-            }
-            hoursValue.textContent = currentValue;
-            hoursInput.value = currentValue;
-        }
-    }
-
-    function updateDistanceValue(value) {
-        document.querySelector('.js-upper').textContent = value + "km";
-        document.getElementById('distance').value = value;
-    }
-
-    document.addEventListener('click', function(event) {
-        const hoursInput = document.getElementById('min_hours');
-        const hoursMenu = document.getElementById('hoursMenu');
-
-        if (hoursInput && hoursMenu && !hoursInput.contains(event.target) && !hoursMenu.contains(event.target)) {
-            hoursMenu.classList.add('hidden');
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const geolocateBtn = document.getElementById('geolocate-btn');
-
-        if (geolocateBtn) {
-            geolocateBtn.addEventListener('click', function() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        // Success
-                        function(position) {
-                            const latitude = position.coords.latitude;
-                            const longitude = position.coords.longitude;
-
-                            document.getElementById('latitude').value = latitude;
-                            document.getElementById('longitude').value = longitude;
-
-                            // Fetch the address using our backend proxy
-                            fetch(`/studios/geocoder-inverse?lat=${latitude}&lon=${longitude}`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    const city = data.address.city || data.address.town || data.address.village || "Unknown location";
-                                    document.getElementById('city').value = city;
-                                    document.getElementById('city').disabled = true;
-
-                                    // Visual feedback
-                                    geolocateBtn.innerHTML = '<i class="icon-check text-16"></i>';
-                                    geolocateBtn.classList.add('bg-white');
-                                })
-                                .catch(error => {
-                                    alert("Impossible de récupérer l'adresse. Veuillez entrer une ville manuellement.");
-                                });
-                        },
-                        // Error
-                        function(error) {
-                            alert("Impossible d'obtenir votre position. Veuillez entrer une ville manuellement.");
-                        }
-                    );
-                } else {
-                    alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
-                }
-            });
-        }
-    });
-</script>
+@push('scripts')
+    <script src="{{ asset('js/pages/home/search.js') }}"></script>
+@endpush

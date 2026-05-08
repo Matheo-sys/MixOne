@@ -13,6 +13,7 @@ class Studio extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'slug',
         'address',
         'zipcode',
         'city',
@@ -38,6 +39,20 @@ class Studio extends Model
         'opening_hours' => 'array',
         'is_verified' => 'boolean',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($studio) {
+            if (empty($studio->slug)) {
+                $studio->slug = \Illuminate\Support\Str::slug($studio->name) . '-' . \Illuminate\Support\Str::random(5);
+            }
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     /**
      * Relation avec le propriétaire du studio.

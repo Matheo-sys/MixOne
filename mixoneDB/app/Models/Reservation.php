@@ -14,6 +14,7 @@ class Reservation extends Model
     use HasFactory;
 
     protected $fillable = [
+        'uuid',
         'user_id',
         'studio_id',
         'date',
@@ -40,9 +41,22 @@ class Reservation extends Model
             'status'         => ReservationStatus::class,
             'payment_status' => PaymentStatus::class,
             'price'          => 'decimal:2',
-            'date'           => 'date',
             'disputed_at'    => 'datetime',
         ];
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($reservation) {
+            if (empty($reservation->uuid)) {
+                $reservation->uuid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 
     // ─── Relations ──────────────────────────────────────────────

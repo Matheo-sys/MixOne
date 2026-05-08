@@ -86,22 +86,8 @@
 </main>
 
 <!-- JavaScript -->
+<script src="{{ asset('js/bootstrap-maps-mock.js') }}"></script>
 <script src="{{ asset('vendor/js/vendors.js') }}"></script>
-{{-- Empêche le plantage global de main.js qui attend google.maps.OverlayView --}}
-<script>
-    if (typeof window.google === 'undefined') {
-        window.google = { 
-            maps: { 
-                OverlayView: class {}, 
-                Map: class {}, 
-                Marker: class {}, 
-                InfoWindow: class {},
-                LatLng: class {},
-                event: { addDomListener: () => {}, trigger: () => {}, addListener: () => {} }
-            } 
-        };
-    }
-</script>
 <script src="{{ asset('vendor/js/main.js') }}"></script>
     <div id="toast-container"></div>
 

@@ -1,5 +1,14 @@
 {
     "/js/main.js": "/js/main.js",
+    "/js/bootstrap-maps-mock.js": "/js/bootstrap-maps-mock.js",
+    "/js/pages/contact/contactForm.js": "/js/pages/contact/contactForm.js",
+    "/js/pages/studio_list/map.js": "/js/pages/studio_list/map.js",
+    "/js/pages/studio_list/ourStudios.js": "/js/pages/studio_list/ourStudios.js",
+    "/js/pages/studio/reservation.js": "/js/pages/studio/reservation.js",
+    "/js/components/cookie-banner.js": "/js/components/cookie-banner.js",
+    "/js/components/message-widget.js": "/js/components/message-widget.js",
+    "/js/pages/home/search.js": "/js/pages/home/search.js",
+    "/js/dashboard/studio/dashboard.js": "/js/dashboard/studio/dashboard.js",
     "/css/app.css": "/css/app.css",
     "/css/main-compiled.css": "/css/main-compiled.css"
 }

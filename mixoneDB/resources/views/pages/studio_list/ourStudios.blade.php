@@ -9,14 +9,15 @@
 
             <div class="mainSearch bg-white mt-30">
                 <form id="searchForm" action="{{route('studios.search')}}" method="GET">
-                    <input type="hidden" id="latitude" name="latitude" value="48.7748198">
-                    <input type="hidden" id="longitude" name="longitude" value="2.3262945">
+                    <input type="hidden" id="latitude" name="latitude" value="{{ request('latitude') }}">
+                    <input type="hidden" id="longitude" name="longitude" value="{{ request('longitude') }}">
+                    <input type="hidden" name="distance" value="{{ request('distance', 100) }}">
 
                     <div class="mainSearch__grid">
                         <div class="mainSearch__item">
                             <label for="city" class="text-15 fw-500 ls-2 lh-16">Ville</label>
                             <div class="mainSearch__input">
-                                <input type="text" id="city" name="city" placeholder="Ville" value="" class="js-search js-dd-focus">
+                                <input type="text" id="city" name="city" placeholder="Ville" value="{{ request('city', '') }}" class="js-search js-dd-focus">
                                 <button type="button" id="geolocate-btn">
                                     <i class="icon-location text-16"></i>
                                 </button>
@@ -59,7 +60,10 @@
    ========================================== --}}
 <section class="studioList-main">
     <div class="container">
-        <div class="row y-gap-30">
+        <div class="row y-gap-40" 
+         data-guest="{{ !Auth::check() ? 'true' : 'false' }}"
+         data-wishlist-url="{{ route('wishlist.toggle') }}"
+         data-login-url="{{ route('login') }}">
             {{-- ======= SIDEBAR ======= --}}
             <div class="col-xl-3 col-lg-4 desktop-sidebar">
                 <style>
@@ -99,7 +103,7 @@
                                     <i class="icon-location-2 text-14"></i>
                                     Périmètre
                                 </h5>
-                                <div class="js-price-rangeSlider">
+                                <div class="distance-slider-container">
                                     <div class="d-flex justify-between mb-15">
                                         <div class="studioList-sidebar__rangeLabel">
                                             <span class="js-lower">0km</span>
@@ -108,7 +112,7 @@
                                         </div>
                                     </div>
                                     <div class="studioList-sidebar__slider">
-                                        <input type="range" id="distance" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="studioList-rangeInput" oninput="updateDistanceValue(this.value); updateSliderTrack(this)">
+                                        <input type="range" id="distance" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="studioList-rangeInput js-distance-range">
                                     </div>
                                 </div>
                             </div>
@@ -245,7 +249,7 @@
 
                             <div class="sidebar__item">
                                 <h5 class="text-18 fw-500 mb-15">Périmètre</h5>
-                                <div class="js-price-rangeSlider">
+                                <div class="distance-slider-container">
                                     <div class="d-flex justify-between mb-20">
                                         <div class="text-15 text-dark-1">
                                             <span class="js-lower">0km</span>
@@ -254,7 +258,7 @@
                                         </div>
                                     </div>
                                     <div class="px-5">
-                                        <input type="range" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="studioList-rangeInput" oninput="document.querySelector('.js-upper-mobile').textContent = this.value + 'km'">
+                                        <input type="range" id="distance-mobile" name="distance" min="0" max="100" value="{{ request()->input('distance', 35) }}" class="studioList-rangeInput js-distance-range-mobile">
                                     </div>
                                 </div>
                             </div>
@@ -547,196 +551,6 @@
     </div>
 </section>
 
-{{-- ==========================================
-    SCRIPTS
-   ========================================== --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('search-input');
-        const searchButton = document.getElementById('search-button');
-
-        function performSearch() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const studioCards = document.querySelectorAll('.studioListCard');
-
-            studioCards.forEach(card => {
-                const studioName = card.querySelector('.studioListCard__name').textContent.toLowerCase();
-                const studioCity = card.querySelector('.studioListCard__location span').textContent.toLowerCase();
-
-                if (studioName.includes(searchTerm) || studioCity.includes(searchTerm)) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        if (searchButton) searchButton.addEventListener('click', performSearch);
-        if (searchInput) searchInput.addEventListener('keyup', function(event) {
-            if (event.key === 'Enter') performSearch();
-        });
-
-        window.updateDistanceValue = function(value) {
-            const lower = document.querySelector('.js-lower');
-            const upper = document.querySelector('.js-upper');
-            if (lower) lower.textContent = '0km';
-            if (upper) upper.textContent = value + 'km';
-        };
-    });
-
-    function toggleHoursMenu(event) {
-        event.stopPropagation();
-        const menu = document.getElementById('hoursMenu');
-        menu.classList.toggle('hidden');
-    }
-
-    function changeHours(amount) {
-        const hoursInput = document.getElementById('min_hours');
-        const hoursValue = document.getElementById('hoursValue');
-        let currentValue = parseInt(hoursValue.textContent);
-        if (!isNaN(currentValue)) {
-            currentValue += amount;
-            if (currentValue < 1) currentValue = 1;
-            hoursValue.textContent = currentValue;
-            hoursInput.value = currentValue;
-        }
-    }
-
-    function updateDistanceValue(value) {
-        const upper = document.querySelector('.js-upper');
-        if (upper) upper.textContent = value + "km";
-        const distInput = document.getElementById('distance');
-        if (distInput) distInput.value = value;
-    }
-
-    function updateSliderTrack(input) {
-        const val = (input.value - input.min) / (input.max - input.min) * 100;
-        input.style.background = `linear-gradient(to right, #3554D1 ${val}%, #fff ${val}%)`;
-    }
-
-    // Initialize track on load
-    document.addEventListener('DOMContentLoaded', function() {
-        const distRange = document.getElementById('distance');
-        if (distRange) updateSliderTrack(distRange);
-    });
-
-    document.addEventListener('click', function(event) {
-        const hoursInput = document.getElementById('min_hours');
-        const hoursMenu = document.getElementById('hoursMenu');
-        if (hoursInput && hoursMenu && !hoursInput.contains(event.target) && !hoursMenu.contains(event.target)) {
-            hoursMenu.classList.add('hidden');
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const geolocateBtn = document.getElementById('geolocate-btn');
-        if (geolocateBtn) {
-            geolocateBtn.addEventListener('click', function() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        function(position) {
-                            const latitude = position.coords.latitude;
-                            const longitude = position.coords.longitude;
-                            document.getElementById('latitude').value = latitude;
-                            document.getElementById('longitude').value = longitude;
-
-                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    const city = data.address.city || data.address.town || data.address.village || "Unknown location";
-                                    document.getElementById('city').value = city;
-                                    document.getElementById('city').disabled = true;
-                                    geolocateBtn.innerHTML = '<i class="icon-check text-16"></i>';
-                                    geolocateBtn.classList.add('bg-white');
-                                })
-                                .catch(error => {
-                                    alert("Impossible de récupérer l'adresse. Veuillez entrer une ville manuellement.");
-                                });
-                        },
-                        function(error) {
-                            alert("Impossible d'obtenir votre position. Veuillez entrer une ville manuellement.");
-                        }
-                    );
-                } else {
-                    alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
-                }
-            });
-        }
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-        let minHoursInput = document.getElementById("min_hours");
-        let hoursValue = document.getElementById("hoursValue");
-        if (minHoursInput && hoursValue) {
-            hoursValue.textContent = minHoursInput.value;
-            window.changeHours = function (amount) {
-                let newValue = parseInt(minHoursInput.value) + amount;
-                if (newValue < 1) newValue = 1;
-                minHoursInput.value = newValue;
-                hoursValue.textContent = newValue;
-            };
-        }
-    });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.wishlist-toggle').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const studioId = this.getAttribute('data-studio-id');
-
-                @if(!Auth::check())
-                    window.location.href = '{{ route('login') }}';
-                    return;
-                @endif
-
-                fetch('{{ route('wishlist.toggle') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ studio_id: studioId })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            if (data.status === 'added') {
-                                this.classList.add('-active');
-                                this.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="#ff4d4d"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
-                            } else {
-                                this.classList.remove('-active');
-                                this.innerHTML = `<i class="icon-heart text-12"></i>`;
-                            }
-                            this.classList.add('clicked');
-                            setTimeout(() => {
-                                this.classList.remove('clicked');
-                            }, 450);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur AJAX:', error);
-                    });
-            });
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const studioImageSliders = document.querySelectorAll('.js-cardImage-slider');
-        studioImageSliders.forEach(function(slider, index) {
-            new Swiper(slider, {
-                loop: true,
-                pagination: {
-                    el: slider.querySelector('.js-pagination'),
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: slider.querySelector('.js-next'),
-                    prevEl: slider.querySelector('.js-prev'),
-                },
-            });
-        });
-    });
-</script>
+@push('scripts')
+    <script src="{{ asset('js/pages/studio_list/ourStudios.js') }}"></script>
+@endpush
