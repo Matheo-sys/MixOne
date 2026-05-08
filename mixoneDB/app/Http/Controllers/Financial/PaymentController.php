@@ -51,6 +51,7 @@ class PaymentController extends Controller
                 heures: $reservation->number_of_hours,
                 prix: (float) $reservation->price,
                 emailClient: auth()->user()->email,
+                stripeAccountId: $reservation->studio->proprietaire->stripe_account_id ?? null,
             );
 
             // Stocker l'ID de session Stripe sur la réservation

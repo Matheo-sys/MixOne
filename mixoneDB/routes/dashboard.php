@@ -31,6 +31,11 @@ Route::group(['prefix' => 'studio'], function() {
     Route::get('/studios/{studio}/modifier', [StudioController::class, 'modifier'])->name('dashboard.studio.edit');
     Route::put('/studios/{studio}', [StudioController::class, 'mettreAJour'])->name('dashboard.studio.update');
     Route::delete('/studios/{studio}', [StudioController::class, 'supprimer'])->name('dashboard.studio.destroy');
+
+    // Onboarding Stripe Connect
+    Route::get('/stripe/connect', [\App\Http\Controllers\Financial\StripeConnectController::class, 'onboard'])->name('stripe.connect.onboard');
+    Route::get('/stripe/return', [\App\Http\Controllers\Financial\StripeConnectController::class, 'return'])->name('stripe.connect.return');
+    Route::get('/stripe/refresh', [\App\Http\Controllers\Financial\StripeConnectController::class, 'refresh'])->name('stripe.connect.refresh');
 });
 
 // Paramètres communs

@@ -38,8 +38,12 @@ class StripeService
         int    $heures,
         float  $prix,
         string $emailClient,
+        ?string $stripeAccountId = null,
     ): SessionStripe {
-        return SessionStripe::create([
+        $commissionRate = config('services.stripe.commission_rate', 10) / 100;
+        $applicationFeeAmount = (int) round(($prix * 100) * $commissionRate);
+
+        $sessionData = [
             'payment_method_types' => ['card'],
             'mode'                 => 'payment',
             'customer_email'       => $emailClient,
@@ -61,6 +65,56 @@ class StripeService
             ],
             'success_url' => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url'  => route('payment.cancel') . '?reservation_id=' . $reservationId,
+        ];
+
+        // Intégration Stripe Connect : si le studio a un compte Stripe connecté
+        if ($stripeAccountId) {
+            $sessionData['payment_intent_data'] = [
+                'application_fee_amount' => $applicationFeeAmount,
+                'transfer_data' => [
+                    'destination' => $stripeAccountId,
+                ],
+            ];
+        }
+
+        return SessionStripe::create($sessionData);
+    }
+
+    /**
+     * Crée un compte Stripe Express (Connect) pour un studio.
+     *
+     * @param string $email
+     * @return \Stripe\Account
+     * @throws ApiErrorException
+     */
+    public function creerCompteConnect(string $email): \Stripe\Account
+    {
+        return \Stripe\Account::create([
+            'type' => 'express',
+            'email' => $email,
+            'capabilities' => [
+                'card_payments' => ['requested' => true],
+                'transfers' => ['requested' => true],
+            ],
+        ]);
+    }
+
+    /**
+     * Crée un lien d'onboarding (Account Link) pour Stripe Connect.
+     *
+     * @param string $accountId
+     * @param string $returnUrl
+     * @param string $refreshUrl
+     * @return \Stripe\AccountLink
+     * @throws ApiErrorException
+     */
+    public function creerLienCompteConnect(string $accountId, string $returnUrl, string $refreshUrl): \Stripe\AccountLink
+    {
+        return \Stripe\AccountLink::create([
+            'account' => $accountId,
+            'refresh_url' => $refreshUrl,
+            'return_url' => $returnUrl,
+            'type' => 'account_onboarding',
         ]);
     }
 

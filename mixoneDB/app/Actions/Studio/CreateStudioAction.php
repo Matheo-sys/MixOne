@@ -42,4 +42,3 @@ class CreateStudioAction
         return Studio::create($donnees);
     }
 }
-

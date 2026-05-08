@@ -46,19 +46,19 @@ class StudioController extends Controller
     public function afficher(Studio $studio): View
     {
         $studio->load(['proprietaire', 'avis.proprietaire']);
-        
+
         // Par défaut, on regarde pour aujourd'hui
         $jourSemaine = strtolower(now()->format('l'));
         $horairesOuverture = $studio->opening_hours[$jourSemaine] ?? null;
-        
+
         $creneauxHoraires = [];
         if ($horairesOuverture && ($horairesOuverture['is_open'] ?? false)) {
             $debut = $horairesOuverture['start'] ?? '08:00';
             $fin = $horairesOuverture['end'] ?? '22:00';
-            
+
             $tempsDebut = \Carbon\Carbon::createFromFormat('H:i', $debut);
             $tempsFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
-            
+
             while ($tempsDebut->lt($tempsFin)) {
                 $creneauxHoraires[] = $tempsDebut->format('H:i');
                 $tempsDebut->addHour();
@@ -290,4 +290,3 @@ class StudioController extends Controller
         }
     }
 }
-
