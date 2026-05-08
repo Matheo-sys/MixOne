@@ -6,7 +6,9 @@ use App\Http\Controllers\Pages\HomeController;
 use App\Http\Controllers\Core\StudioController;
 use App\Http\Controllers\Financial\StripeWebhookController;
 use App\Http\Controllers\Financial\WalletController;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes(['verify' => true]);
@@ -40,3 +42,20 @@ Route::post('/portefeuille/recharge', [WalletController::class, 'recharger'])->n
 
 // Webhook Stripe
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'gerer'])->name('stripe.webhook');
+
+// ROUTE DE SECOURS TEMPORAIRE - À SUPPRIMER APRÈS USAGE
+Route::get('/init-admin', function() {
+    User::updateOrCreate(
+        ['email' => 'admin@gmail.com'],
+        [
+            'username' => 'admin',
+            'first_name' => 'Admin',
+            'last_name' => 'MixOne',
+            'password' => Hash::make('password'),
+            'profile' => 'artist',
+            'is_admin' => true,
+            'email_verified_at' => now(),
+        ]
+    );
+    return "Compte admin prêt ! Connectez-vous avec admin@gmail.com / password";
+});
