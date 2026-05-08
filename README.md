@@ -37,4 +37,4 @@ Si vous souhaitez faire tourner le projet sur votre machine (via Laravel Sail / 
 5. `./vendor/bin/sail artisan migrate`
 
 ## 👨‍💻 Développeur
-Développé par le compte **Matheo-sys** dans le cadre du projet MixOne.
+Développé par Elias Louhichi et Mathéo Soriano.
