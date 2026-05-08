@@ -40,9 +40,3 @@ Route::post('/portefeuille/recharge', [WalletController::class, 'recharger'])->n
 
 // Webhook Stripe
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'gerer'])->name('stripe.webhook');
-
-// ROUTE DE SECOURS - VALIDATION EMAIL
-Route::get('/verify-admin', function() {
-    \App\Models\User::where('email', 'admin@gmail.com')->update(['email_verified_at' => now()]);
-    return "Email de l'admin validé ! Vous pouvez maintenant accéder au dashboard.";
-});
