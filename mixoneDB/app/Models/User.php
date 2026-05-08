@@ -38,6 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'bic',
         'profile',
         'is_admin',
+        'password',
     ];
 
     /**
