@@ -9,7 +9,7 @@ use App\Models\Studio;
 class DeleteAccountAction
 {
     /**
-     * Exécute la suppression du compte.
+     * Exécute l'anonymisation du compte (Suppression RGPD).
      */
     public function executer(User $utilisateur): void
     {
@@ -18,16 +18,29 @@ class DeleteAccountAction
             Storage::delete($utilisateur->avatar);
         }
 
-        // 2. Supprimer les images de tous les studios possédés par l'utilisateur
-        $studios = Studio::where('user_id', $utilisateur->id)->get();
-        foreach ($studios as $studio) {
-            if ($studio->image_path) {
-                Storage::delete($studio->image_path);
-            }
-        }
+        // 2. Anonymiser les données personnelles
+        $utilisateur->username      = 'user_' . uniqid();
+        $utilisateur->first_name    = 'Utilisateur';
+        $utilisateur->last_name     = 'Anonyme';
+        $utilisateur->email         = 'deleted_' . uniqid() . '@mixone.fr';
+        $utilisateur->phone         = null;
+        $utilisateur->birth_date    = null;
+        $utilisateur->about         = null;
+        $utilisateur->avatar        = null;
+        $utilisateur->address_line1 = null;
+        $utilisateur->address_line2 = null;
+        $utilisateur->city          = null;
+        $utilisateur->state         = null;
+        $utilisateur->zipcode       = null;
+        $utilisateur->bank_name     = null;
+        $utilisateur->iban          = null;
+        $utilisateur->bic           = null;
+        $utilisateur->password      = bcrypt(str()->random(40)); // Verrouille le compte
+        $utilisateur->banned_at     = now(); // On utilise banned_at pour empêcher toute connexion future
+        $utilisateur->save();
 
-        // 3. Supprimer l'utilisateur (les cascades en base de données gèrent le reste)
-        $utilisateur->delete();
+        // 3. Désactiver ses studios s'il en a (on les cache mais on garde la data pour les factures)
+        Studio::where('user_id', $utilisateur->id)->update(['is_verified' => false]);
     }
 }
 

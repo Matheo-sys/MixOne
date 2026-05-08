@@ -33,10 +33,13 @@ class UpdateRequest extends FormRequest
             'image2'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'image3'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'image4'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image5'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'remove_image1' => 'nullable|boolean',
             'remove_image2' => 'nullable|boolean',
             'remove_image3' => 'nullable|boolean',
             'remove_image4' => 'nullable|boolean',
+            'remove_image5' => 'nullable|boolean',
+            'other_equipment' => 'nullable|string',
             'opening_hours' => 'nullable|array',
         ];
     }
@@ -74,6 +77,9 @@ class UpdateRequest extends FormRequest
             'image4.image'         => 'Le fichier doit être une image.',
             'image4.mimes'         => 'L\'image doit être au format JPEG ou PNG.',
             'image4.max'           => 'L\'image ne peut pas dépasser 2 Mo.',
+            'image5.image'         => 'Le fichier doit être une image.',
+            'image5.mimes'         => 'L\'image doit être au format JPEG ou PNG.',
+            'image5.max'           => 'L\'image ne peut pas dépasser 2 Mo.',
         ];
     }
 

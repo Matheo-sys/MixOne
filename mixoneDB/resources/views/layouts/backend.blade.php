@@ -95,6 +95,7 @@
     @auth
         @include('components.message-widget')
     @endauth
+    @include('components.cookie-banner')
     <script src="{{ asset('js/ajax-forms.js') }}"></script>
     @stack('scripts')
 </body>

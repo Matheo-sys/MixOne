@@ -7,6 +7,9 @@ use App\Models\Studio;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StudioValidatedMail;
+use App\Mail\StudioRejectedMail;
 
 class StudioController extends Controller
 {
@@ -35,6 +38,28 @@ class StudioController extends Controller
     {
         $studio->is_verified = !$studio->is_verified;
         $studio->save();
+
+        // Envoyer l'email si le studio vient d'être validé
+        if ($studio->is_verified) {
+            $studio->load('proprietaire');
+            if ($studio->proprietaire && $studio->proprietaire->email) {
+                try {
+                    Mail::to($studio->proprietaire->email)->send(new StudioValidatedMail($studio));
+                } catch (\Exception $e) {
+                    report($e);
+                }
+            }
+        } else {
+            // Envoyer l'email de refus/modification
+            $studio->load('proprietaire');
+            if ($studio->proprietaire && $studio->proprietaire->email) {
+                try {
+                    Mail::to($studio->proprietaire->email)->send(new StudioRejectedMail($studio));
+                } catch (\Exception $e) {
+                    report($e);
+                }
+            }
+        }
 
         $statut = $studio->is_verified ? 'vérifié' : 'non vérifié';
         return redirect()->back()->with('success', "Le studio est désormais $statut.");

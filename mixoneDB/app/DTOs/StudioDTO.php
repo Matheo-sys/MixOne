@@ -31,6 +31,7 @@ class StudioDTO
         public readonly int $heures_min,
         public readonly string $description,
         public readonly array $equipements = [],
+        public readonly ?string $autres_equipements = null,
         public readonly array $horaires_ouverture = [],
         public readonly ?int $id_utilisateur = null,
         public readonly array $images = [],
@@ -52,6 +53,7 @@ class StudioDTO
             heures_min: (int) $requete->validated('min_hours'),
             description: $requete->validated('description'),
             equipements: $requete->input('equipment', []),
+            autres_equipements: $requete->input('other_equipment'),
             horaires_ouverture: $requete->input('opening_hours', []),
             id_utilisateur: auth()->id(),
             images: [
@@ -59,12 +61,14 @@ class StudioDTO
                 'image2' => $requete->file('image2'),
                 'image3' => $requete->file('image3'),
                 'image4' => $requete->file('image4'),
+                'image5' => $requete->file('image5'),
             ],
             images_a_supprimer: [
                 'image1' => $requete->boolean('remove_image1'),
                 'image2' => $requete->boolean('remove_image2'),
                 'image3' => $requete->boolean('remove_image3'),
                 'image4' => $requete->boolean('remove_image4'),
+                'image5' => $requete->boolean('remove_image5'),
             ]
         );
     }
@@ -84,6 +88,7 @@ class StudioDTO
             'min_hours' => $this->heures_min,
             'description' => $this->description,
             'equipment' => $this->equipements,
+            'other_equipment' => $this->autres_equipements,
             'opening_hours' => $this->horaires_ouverture,
             'user_id' => $this->id_utilisateur,
         ];

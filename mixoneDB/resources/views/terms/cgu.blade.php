@@ -10,22 +10,29 @@
         <div class="row justify-center pt-60">
             <div class="col-xl-8 col-lg-10">
                 <div class="text-15 lh-16">
-                    <h2 class="text-20 fw-500 mb-20">1. Présentation de la plateforme</h2>
-                    <p class="mb-30">MixOne est une plateforme de mise en relation entre studios de musique ("Studios") et artistes ("Artistes"). MixOne agit en tant qu'intermédiaire technique permettant la réservation de créneaux horaires en studio.</p>
+                    <h2 class="text-20 fw-500 mb-20">1. Présentation du Service</h2>
+                    <p class="mb-30">MixOne est une place de marché opérée par Elias Louhichi, permettant la mise en relation entre des propriétaires de studios de musique ("Studios") et des musiciens ou producteurs ("Artistes"). MixOne intervient uniquement en tant qu'intermédiaire technique.</p>
 
-                    <h2 class="text-20 fw-500 mb-20">2. Création de compte</h2>
-                    <p class="mb-30">L'utilisation de MixOne nécessite la création d'un compte. Vous vous engagez à fournir des informations exactes et à les maintenir à jour. Le Studio est responsable de la véracité de ses informations et de ses tarifs.</p>
+                    <h2 class="text-20 fw-500 mb-20">2. Services de Paiement (Stripe Connect)</h2>
+                    <p class="mb-20">Le règlement des réservations s'effectue via le prestataire de services de paiement <strong>Stripe</strong>. En utilisant MixOne, vous acceptez les conditions d'utilisation de Stripe.</p>
+                    <p class="mb-30">MixOne prélève une commission de service (frais de plateforme) sur chaque transaction. Les fonds sont automatiquement répartis entre le Studio et MixOne au moment du paiement via le système <strong>Stripe Connect</strong>.</p>
 
-                    <h2 class="text-20 fw-500 mb-20">3. Réservations et Paiements</h2>
-                    <p class="mb-20">Les réservations sont fermes une fois confirmées par le Studio. Le paiement est effectué en ligne via Stripe au moment de la réservation ou de la confirmation.</p>
-                    <p class="mb-30"><strong>Politique d'annulation :</strong> Les conditions d'annulation sont régies par le Studio, sous réserve du respect des règles de la plateforme (politique de remboursement en cas d'annulation anticipée).</p>
+                    <h2 class="text-20 fw-500 mb-20">3. Obligations des Utilisateurs</h2>
+                    <p class="mb-20"><strong>Pour les Artistes :</strong> L'Artiste s'engage à respecter les locaux, le matériel et le règlement intérieur du Studio réservé. Il est responsable de tout dommage causé au matériel lors de sa session.</p>
+                    <p class="mb-30"><strong>Pour les Studios :</strong> The Studio s'engage à fournir un accès aux locaux et au matériel listé dans son annonce durant l'intégralité du créneau réservé. Il doit maintenir ses tarifs et ses disponibilités à jour.</p>
 
-                    <h2 class="text-20 fw-500 mb-20">4. Responsabilités</h2>
-                    <p class="mb-20">MixOne n'est pas partie au contrat de location entre l'Artiste et le Studio. En cas de dommage matériel, de retard ou de litige, les parties doivent s'adresser directement l'une à l'autre.</p>
-                    <p class="mb-30">Le Studio s'engage à fournir un local propre, fonctionnel et conforme à sa description lors du créneau réservé.</p>
+                    <h2 class="text-20 fw-500 mb-20">4. Annulations et Remboursements</h2>
+                    <p class="mb-20">Toute demande d'annulation doit être effectuée via la plateforme. Les conditions de remboursement dépendent du délai d'annulation :</p>
+                    <ul class="list-disc ml-20 mb-30">
+                        <li>Plus de 48h avant : Remboursement intégral (hors frais de service).</li>
+                        <li>Moins de 48h avant : Le remboursement est à la discrétion du Studio.</li>
+                    </ul>
 
-                    <h2 class="text-20 fw-500 mb-20">5. Litiges</h2>
-                    <p class="mb-40">En cas de désaccord, MixOne met à disposition un système de litiges via l'interface d'administration. MixOne se réserve le droit d'arbitrer les litiges simples basés sur les preuves fournies par les deux parties.</p>
+                    <h2 class="text-20 fw-500 mb-20">5. Litiges et Médiation</h2>
+                    <p class="mb-30">En cas de problème technique ou de prestation non conforme, MixOne propose un système de signalement de litige. MixOne agira en tant que médiateur pour trouver une solution amiable entre les parties avant toute action juridique.</p>
+
+                    <h2 class="text-20 fw-500 mb-20">6. Modifications des conditions</h2>
+                    <p class="mb-40">MixOne se réserve le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés de toute modification substantielle par email ou via une notification sur le site.</p>
                 </div>
             </div>
         </div>

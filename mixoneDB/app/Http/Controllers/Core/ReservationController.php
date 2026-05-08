@@ -10,6 +10,10 @@ use App\Enums\ReservationStatus;
 use App\Http\Requests\Reservation\CreateReservationRequest;
 use App\Models\Reservation;
 use App\Mail\ReservationConfirmedArtistMail;
+use App\Mail\ReservationRefusedMail;
+use App\Mail\ReservationCancelledMail;
+use App\Mail\NewReviewMail;
+use App\Mail\ReservationDisputedMail;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -126,6 +130,14 @@ class ReservationController extends Controller
 
         try {
             $this->actionMiseAJourStatutReservation->executer($reservation, ReservationStatus::Refused, 'studio');
+            
+            // Envoyer l'email de refus à l'artiste
+            if ($reservation->client && $reservation->client->email) {
+                try {
+                    Mail::to($reservation->client->email)->queue(new ReservationRefusedMail($reservation));
+                } catch (\Exception $e) { report($e); }
+            }
+
             if ($requete->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Réservation refusée. Le client sera remboursé.', 'new_status' => ReservationStatus::Refused->value]);
             }
@@ -157,6 +169,15 @@ class ReservationController extends Controller
             }
 
             $this->actionMiseAJourStatutReservation->executer($reservation, ReservationStatus::Cancelled, $role);
+            
+            // Envoyer l'email d'annulation à l'AUTRE partie
+            $destinataire = ($role === 'artist') ? $reservation->studio->proprietaire : $reservation->client;
+            if ($destinataire && $destinataire->email) {
+                try {
+                    Mail::to($destinataire->email)->queue(new ReservationCancelledMail($reservation, $role));
+                } catch (\Exception $e) { report($e); }
+            }
+
             if ($requete->ajax()) {
                 return response()->json(['status' => 'success', 'message' => 'Réservation annulée. Un remboursement a été initié.', 'new_status' => ReservationStatus::Cancelled->value]);
             }
@@ -244,6 +265,17 @@ class ReservationController extends Controller
                 'status' => \App\Enums\ReservationStatus::Disputed,
             ]);
 
+            // Prévenir l'autre partie
+            $destinataire = ($role === 'artist') ? $reservation->studio->proprietaire : $reservation->client;
+            if ($destinataire && $destinataire->email) {
+                try {
+                    Mail::to($destinataire->email)->queue(new ReservationDisputedMail($reservation, $role));
+                } catch (\Exception $e) { report($e); }
+            }
+            
+            // On pourrait aussi prévenir l'admin ici si besoin
+            // Mail::to(config('mail.from.address'))->send(new ReservationDisputedMail($reservation, $role));
+
             return redirect()->back()->with('success', 'Le litige a bien été signalé. Les fonds sont gelés jusqu\'à résolution par l\'administration.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur lors du signalement : ' . $e->getMessage());
@@ -278,6 +310,14 @@ class ReservationController extends Controller
             'rating' => $requete->rating,
             'comment' => $requete->comment,
         ]);
+
+        // Prévenir le propriétaire du studio
+        $proprietaire = $reservation->studio->proprietaire;
+        if ($proprietaire && $proprietaire->email) {
+            try {
+                Mail::to($proprietaire->email)->queue(new NewReviewMail($reservation));
+            } catch (\Exception $e) { report($e); }
+        }
 
         return redirect()->back()->with('success', 'Merci pour votre avis !');
     }

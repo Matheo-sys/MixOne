@@ -99,7 +99,44 @@ class UserSettingsController extends Controller
 
         Auth::logout();
 
-        return redirect('/')->with('success', 'Votre compte a été supprimé avec succès.');
+        return redirect()->route('home')->with('success', 'Votre compte a été supprimé avec succès.');
+    }
+
+    /**
+     * Exporte les données personnelles de l'utilisateur (Droit à la portabilité).
+     *
+     * @return JsonResponse
+     */
+    public function exporterDonnees(): JsonResponse
+    {
+        $user = Auth::user()->load(['portefeuille', 'listesDeSouhaits']);
+        
+        $data = [
+            'identite' => [
+                'username' => $user->username,
+                'nom' => $user->last_name,
+                'prenom' => $user->first_name,
+                'email' => $user->email,
+                'telephone' => $user->phone,
+                'date_naissance' => $user->birth_date,
+            ],
+            'adresse' => [
+                'ligne1' => $user->address_line1,
+                'ligne2' => $user->address_line2,
+                'ville' => $user->city,
+                'etat' => $user->state,
+                'code_postal' => $user->zipcode,
+                'pays' => $user->country,
+            ],
+            'compte' => [
+                'cree_le' => $user->created_at->toIso8601String(),
+                'profile' => $user->profile,
+            ]
+        ];
+
+        return response()->json($data, 200, [
+            'Content-Disposition' => 'attachment; filename="mes_donnees_mixone.json"',
+        ]);
     }
 }
 

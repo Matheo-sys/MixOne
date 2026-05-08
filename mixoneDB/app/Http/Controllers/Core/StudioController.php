@@ -117,10 +117,10 @@ class StudioController extends Controller
             Notification::send($administrateurs, new NewStudioCreated($studio));
 
             if ($requete->ajax()) {
-                return response()->json(['status' => 'success', 'message' => 'Votre studio a été ajouté avec succès !', 'redirect' => route('dashboard.studio.myStudios')]);
+                return response()->json(['status' => 'success', 'message' => 'Votre studio a été ajouté et est en attente d\'approbation par les administrateurs.', 'redirect' => route('dashboard.studio.myStudios')]);
             }
             return redirect()->route('dashboard.studio.myStudios')
-                ->with('success', 'Votre studio a été ajouté avec succès !');
+                ->with('success', 'Votre studio a été ajouté et est en attente d\'approbation par les administrateurs.');
         } catch (\Exception $e) {
             if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => 'Erreur lors de la création du studio. Veuillez vérifier les informations.'], 422);

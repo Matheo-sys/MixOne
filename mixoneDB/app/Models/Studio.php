@@ -28,6 +28,8 @@ class Studio extends Model
         'image2',
         'image3',
         'image4',
+        'image5',
+        'other_equipment',
         'is_verified'
     ];
 

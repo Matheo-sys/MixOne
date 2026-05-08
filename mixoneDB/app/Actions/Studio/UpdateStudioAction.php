@@ -10,9 +10,11 @@ class UpdateStudioAction
 {
     /**
      * @param GetCoordinatesAction $actionRecupererCoordonnees
+     * @param \App\Services\ImageService $serviceImage
      */
     public function __construct(
-        private GetCoordinatesAction $actionRecupererCoordonnees
+        private GetCoordinatesAction $actionRecupererCoordonnees,
+        private \App\Services\ImageService $serviceImage
     ) {}
 
     /**
@@ -49,7 +51,7 @@ class UpdateStudioAction
                 if ($studio->$champ) {
                     Storage::delete($studio->$champ);
                 }
-                $donnees[$champ] = $fichier->store('uploads/studios');
+                $donnees[$champ] = $this->serviceImage->traiterImageStudio($fichier);
             }
         }
 

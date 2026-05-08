@@ -15,25 +15,32 @@
                 <div class="text-15 lh-16">
                     <h2 class="text-20 fw-500 mb-20">1. Éditeur du site</h2>
                     <p class="mb-20">
-                        Le site MixOne est édité par <strong>Elias Louhichi</strong>, agissant en tant que personne physique, domicilié à L'Haÿ-les-Roses (94240).
+                        Le site <strong>MixOne</strong> est édité par <strong>Elias Louhichi</strong>, agissant en tant que personne physique, domicilié à L'Haÿ-les-Roses (94240), France.
                     </p>
                     <p class="mb-40">
-                        <strong>Directeur de la publication :</strong> Elias Louhichi
+                        <strong>Directeur de la publication :</strong> Elias Louhichi<br>
+                        <strong>Contact :</strong> mixone.contact@gmail.com
                     </p>
 
                     <h2 class="text-20 fw-500 mb-20">2. Hébergement</h2>
                     <p class="mb-40">
-                        Le site est hébergé par la société <strong>[Hébergeur, ex: OVHcloud / AWS / Vercel]</strong>, dont le siège social est situé à [Adresse hébergeur].
+                        Le site est hébergé par la société <strong>[Ton Hébergeur, ex: OVHcloud / Heroku / Vercel]</strong>.<br>
+                        Si le site est en local pour le projet : <em>Développement local (Environnement de test scolaire).</em>
                     </p>
 
                     <h2 class="text-20 fw-500 mb-20">3. Propriété intellectuelle</h2>
                     <p class="mb-40">
-                        L'ensemble du contenu présent sur le site MixOne (textes, images, logos, icônes, sons, logiciels) est la propriété exclusive de l'éditeur ou de ses partenaires. Toute reproduction, représentation, modification ou adaptation de tout ou partie des éléments du site est strictement interdite sans autorisation écrite préalable.
+                        L'ensemble du contenu présent sur le site MixOne (textes, images, logos, icônes, logiciels) est la propriété exclusive de Elias Louhichi ou de ses partenaires. Toute reproduction, représentation, modification ou adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite, sauf autorisation écrite préalable.
                     </p>
 
-                    <h2 class="text-20 fw-500 mb-20">4. Contact</h2>
+                    <h2 class="text-20 fw-500 mb-20">4. Limitation de responsabilité</h2>
                     <p class="mb-40">
-                        Pour toute question ou demande d'information concernant le site, vous pouvez nous contacter à l'adresse suivante : <strong>mixone.contact@gmail.com</strong>.
+                        MixOne est une plateforme de mise en relation. Elias Louhichi ne saurait être tenu pour responsable des dommages directs ou indirects résultant de l'utilisation du site ou des prestations effectuées par les studios partenaires. Chaque studio est responsable de ses propres prestations et de sa conformité fiscale.
+                    </p>
+
+                    <h2 class="text-20 fw-500 mb-20">5. Contact</h2>
+                    <p class="mb-40">
+                        Pour tout signalement de contenu illicite ou demande d'information, merci de nous contacter à l'adresse suivante : <strong>mixone.contact@gmail.com</strong>.
                     </p>
                 </div>
             </div>

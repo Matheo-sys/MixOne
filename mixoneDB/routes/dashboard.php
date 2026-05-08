@@ -41,8 +41,9 @@ Route::group(['prefix' => 'studio'], function() {
 // Paramètres communs
 Route::get('/parametres', [UserSettingsController::class, 'modifier'])->name('dashboard.settings');
 Route::post('/parametres/mise-a-jour', [UserSettingsController::class, 'mettreAJour'])->name('dashboard.settings.update');
-Route::post('/parametres/mise-a-jour-mot-de-passe', [UserSettingsController::class, 'mettreAJourMotDePasse'])->name('dashboard.settings.password');
-Route::delete('/parametres/supprimer', [UserSettingsController::class, 'supprimer'])->name('dashboard.settings.delete');
+Route::put('/parametres/mot-de-passe', [UserSettingsController::class, 'mettreAJourMotDePasse'])->name('dashboard.settings.password');
+Route::delete('/parametres/suppression', [UserSettingsController::class, 'supprimer'])->name('dashboard.settings.delete');
+Route::get('/parametres/export', [UserSettingsController::class, 'exporterDonnees'])->name('dashboard.settings.export');
 
 // Favoris
 Route::get('/favoris', [WishlistController::class, 'afficher'])->name('wishlist.index');

@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Mail\NewReservationStudioMail;
+use App\Mail\ReservationReceiptMail;
 
 class PaymentController extends Controller
 {
@@ -98,6 +99,11 @@ class PaymentController extends Controller
                 $proprietaireStudio = $reservation->studio->proprietaire;
                 if ($proprietaireStudio && $proprietaireStudio->email) {
                     \Illuminate\Support\Facades\Mail::to($proprietaireStudio->email)->queue(new NewReservationStudioMail($reservation));
+                }
+
+                // Envoyer le reçu à l'artiste
+                if ($reservation->client && $reservation->client->email) {
+                    \Illuminate\Support\Facades\Mail::to($reservation->client->email)->queue(new ReservationReceiptMail($reservation));
                 }
 
             }

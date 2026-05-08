@@ -205,18 +205,31 @@
 
                 <div class="tabs__pane -tab-item-4">
                     <div class="col-xl-9">
+                        {{-- Export des données --}}
+                        <div class="bg-blue-1-05 rounded-4 px-30 py-30 mb-30">
+                            <h4 class="text-18 fw-500 text-blue-1">Exporter mes données (RGPD)</h4>
+                            <p class="text-15 text-light-1 mt-10">
+                                Conformément au Règlement Général sur la Protection des Données, vous pouvez télécharger une copie de toutes vos données personnelles enregistrées sur MixOne au format JSON.
+                            </p>
+                            <a href="{{ route('dashboard.settings.export') }}" class="button h-50 px-24 bg-blue-1 text-white mt-20">
+                                <i class="icon-download text-16 mr-10"></i>
+                                Télécharger mes données (.json)
+                            </a>
+                        </div>
+
+                        {{-- Suppression du compte --}}
                         <div class="bg-red-3 rounded-4 px-30 py-30">
-                            <h4 class="text-18 fw-500 text-red-2">Supprimer mon compte</h4>
+                            <h4 class="text-18 fw-500 text-red-2">Anonymiser mon compte</h4>
                             <p class="text-15 text-red-2 mt-10">
-                                Une fois que vous aurez supprimé votre compte, il n'y aura plus de retour en arrière. Toutes vos données, studios et réservations seront définitivement supprimés.
+                                Si vous demandez la suppression de votre compte, toutes vos données personnelles (nom, email, téléphone, etc.) seront **définitivement anonymisées**. Vos studios seront désactivés. Cette action est irréversible et vous ne pourrez plus vous connecter à ce compte.
                             </p>
                             
-                            <form action="{{ route('dashboard.settings.delete') }}" method="POST" class="mt-20" onsubmit="return confirm('Êtes-vous absolument sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">
+                            <form action="{{ route('dashboard.settings.delete') }}" method="POST" class="mt-20" onsubmit="return confirm('Êtes-vous absolument sûr de vouloir anonymiser votre compte ? Cette action est irréversible et vous perdrez l\'accès à vos données.')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="button h-50 px-24 bg-red-2 text-white">
                                     <i class="icon-trash text-16 mr-10"></i>
-                                    Supprimer définitivement mon compte
+                                    Anonymiser mon compte définitivement
                                 </button>
                             </form>
                         </div>

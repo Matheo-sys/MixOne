@@ -16,6 +16,7 @@ class DeleteStudioAction
     public function executer(Studio $studio): bool
     {
         // Nettoyage des images
+        // @Todo Créer un dossier à partir de l'id d'un studio et supprimer tout le dossier
         for ($i = 1; $i <= 4; $i++) {
             $champ = "image{$i}";
             if ($studio->$champ) {
@@ -26,4 +27,3 @@ class DeleteStudioAction
         return $studio->delete();
     }
 }
-

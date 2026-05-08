@@ -218,9 +218,10 @@
                     {{-- Section des images dans edit.blade.php --}}
                     <div class="tabs__pane -tab-item-4">
                         <div class="col-xl-12">
-                            <div class="text-18 fw-500 mb-10">Photos</div>
+                            <div class="text-18 fw-500 mb-5">Photos</div>
+                            <div class="text-14 text-light-1 mb-20">Utilisez de préférence des photos au format <b>paysage (3:2)</b> pour éviter le recadrage automatique. Taille recommandée : 1200x800px.</div>
                             <div class="d-flex flex-wrap x-gap-20 y-gap-20">
-                                @for ($i = 1; $i <= 4; $i++)
+                                @for ($i = 1; $i <= 5; $i++)
                                     <div class="d-flex flex-column align-items-center mb-20"> <!-- Nettoyage des marges -->
                                         <div class="d-flex ratio ratio-3:2 w-200 position-relative">
                                             @php
@@ -351,6 +352,16 @@
                                         </div>
                                     </div>
                                 @endforeach
+
+                                <div class="col-12">
+                                    <div class="bg-light-2 rounded-8 p-20 mt-20">
+                                        <div class="text-15 fw-600 mb-15 text-dark-1">➕ Autres équipements</div>
+                                        <div class="form-input">
+                                            <textarea name="other_equipment" rows="3">{{ old('other_equipment') }}</textarea>
+                                            <label class="lh-1 text-16 text-light-1">Précisez ici vos autres équipements (instruments, logiciels spécifiques...)</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

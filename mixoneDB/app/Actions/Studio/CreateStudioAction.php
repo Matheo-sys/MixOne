@@ -5,14 +5,18 @@ namespace App\Actions\Studio;
 use App\DTOs\StudioDTO;
 use App\Models\Studio;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StudioCreatedMail;
 
 class CreateStudioAction
 {
     /**
      * @param GetCoordinatesAction $actionRecupererCoordonnees
+     * @param \App\Services\ImageService $serviceImage
      */
     public function __construct(
-        private GetCoordinatesAction $actionRecupererCoordonnees
+        private GetCoordinatesAction $actionRecupererCoordonnees,
+        private \App\Services\ImageService $serviceImage
     ) {}
 
     /**
@@ -26,7 +30,7 @@ class CreateStudioAction
         // Gérer le téléchargement des images
         foreach ($dto->images as $champ => $fichier) {
             if ($fichier) {
-                $donnees[$champ] = $fichier->store('uploads/studios');
+                $donnees[$champ] = $this->serviceImage->traiterImageStudio($fichier);
             }
         }
 
@@ -39,6 +43,19 @@ class CreateStudioAction
             $donnees['longitude'] = $coordonnees['longitude'];
         }
 
-        return Studio::create($donnees);
+        $studio = Studio::create($donnees);
+
+        // Envoyer l'email de confirmation (si le propriétaire a un email)
+        $studio->load('proprietaire');
+        if ($studio->proprietaire && $studio->proprietaire->email) {
+            try {
+                Mail::to($studio->proprietaire->email)->send(new StudioCreatedMail($studio));
+            } catch (\Exception $e) {
+                // On log l'erreur ou on continue si le mail échoue (ne pas bloquer la création)
+                report($e);
+            }
+        }
+
+        return $studio;
     }
 }

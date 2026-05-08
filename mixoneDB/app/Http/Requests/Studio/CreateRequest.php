@@ -25,7 +25,7 @@ class CreateRequest extends FormRequest
             'name'        => 'required|string|max:255',
             'description' => 'required|string|min:20',
             'address'     => 'required|string|max:255',
-            'zipcode'     => 'required|string|max:10',
+            'zipcode'     => 'required|string|max:255',
             'city'        => 'required|string|max:255',
             'country'     => 'required|string|max:255',
             'hourly_rate' => 'required|numeric|min:1',
@@ -36,6 +36,14 @@ class CreateRequest extends FormRequest
             'image2'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'image3'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'image4'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image5'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'other_equipment' => 'nullable|string',
+            'equipment' => 'nullable|array',
+            'remove_image1' => 'nullable|string',
+            'remove_image2' => 'nullable|string',
+            'remove_image3' => 'nullable|string',
+            'remove_image4' => 'nullable|string',
+            'remove_image5' => 'nullable|string',
             'opening_hours' => 'nullable|array',
         ];
     }
@@ -74,6 +82,9 @@ class CreateRequest extends FormRequest
             'image4.image'         => 'Le fichier doit être une image.',
             'image4.mimes'         => 'L\'image doit être au format JPEG ou PNG.',
             'image4.max'           => 'L\'image ne peut pas dépasser 2 Mo.',
+            'image5.image'         => 'Le fichier doit être une image.',
+            'image5.mimes'         => 'L\'image doit être au format JPEG ou PNG.',
+            'image5.max'           => 'L\'image ne peut pas dépasser 2 Mo.',
         ];
     }
 

@@ -91,8 +91,7 @@
                     <img src="{{ $studio->image4 ? \Illuminate\Support\Facades\Storage::url($studio->image4) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
                 </div>
                 <div class="galleryGrid__item relative d-flex">
-                    <!-- Cette dernière image pourrait être une réutilisation de la première image ou une image fixe -->
-                    <img src="{{ $studio->image3 ? \Illuminate\Support\Facades\Storage::url($studio->image3) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="rounded-4">
+                    <img src="{{ $studio->image5 ? \Illuminate\Support\Facades\Storage::url($studio->image5) : ($studio->image1 ? \Illuminate\Support\Facades\Storage::url($studio->image1) : asset('media/img/backgrounds/11.jpg')) }}" alt="image" class="rounded-4">
                 </div>
             </div>
         </div>
@@ -208,6 +207,13 @@
                                     @endif
                                 @endforeach
                             </div>
+                            @endif
+
+                            @if($studio->other_equipment)
+                                <h3 class="text-22 fw-500 pt-40 border-top-light">Autres équipements & Fiche technique</h3>
+                                <div class="text-15 text-dark-1 mt-20 lh-16" style="white-space: pre-line;">
+                                    {{ $studio->other_equipment }}
+                                </div>
                             @endif
                             
                             {{-- Section Avis Clients --}}
