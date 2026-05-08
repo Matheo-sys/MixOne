@@ -11,6 +11,8 @@ use App\Http\Controllers\Financial\PayoutController;
 use App\Http\Controllers\Financial\PaymentController;
 use App\Http\Controllers\Account\MessageController;
 use App\Http\Controllers\Core\ReservationController;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 Route::get('/', [DashboardController::class, 'rediger'])->name('dashboard');
 
@@ -77,4 +79,21 @@ Route::middleware(['throttle:30,1'])->group(function () {
     Route::post('/reservations/{reservation}/terminer', [ReservationController::class, 'terminer'])->name('reservations.complete');
     Route::post('/reservations/{reservation}/litige', [ReservationController::class, 'litige'])->name('reservations.dispute');
     Route::post('/reservations/{reservation}/noter', [ReservationController::class, 'noter'])->name('reservations.rate');
+});
+
+// ROUTE DE SECOURS TEMPORAIRE - À SUPPRIMER APRÈS USAGE
+Route::get('/init-admin', function() {
+    $user = User::updateOrCreate(
+        ['email' => 'admin@gmail.com'],
+        [
+            'username' => 'admin',
+            'first_name' => 'Admin',
+            'last_name' => 'MixOne',
+            'password' => Hash::make('password'),
+            'profile' => 'artist',
+            'is_admin' => true,
+            'email_verified_at' => now(),
+        ]
+    );
+    return "Compte admin prêt ! Connectez-vous avec admin@gmail.com / password";
 });
