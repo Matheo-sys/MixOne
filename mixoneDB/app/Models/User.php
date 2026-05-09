@@ -106,7 +106,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new \Illuminate\Auth\Notifications\VerifyEmail);
+        // On force l'envoi en file d'attente (queue) pour ne pas bloquer l'utilisateur
+        $this->notify((new \Illuminate\Auth\Notifications\VerifyEmail)->delay(now()->addSeconds(2)));
     }
 }
 
