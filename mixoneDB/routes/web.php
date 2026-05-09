@@ -9,7 +9,7 @@ use App\Http\Controllers\Financial\WalletController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Auth::routes(['verify' => false]);
+Auth::routes(['verify' => true]);
 
 Route::get('/', [HomeController::class, 'afficher'])->name('home');
 
