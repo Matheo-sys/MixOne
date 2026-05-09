@@ -49,7 +49,7 @@ class CreateStudioAction
         $studio->load('proprietaire');
         if ($studio->proprietaire && $studio->proprietaire->email) {
             try {
-                Mail::to($studio->proprietaire->email)->send(new StudioCreatedMail($studio));
+                Mail::to($studio->proprietaire->email)->queue(new StudioCreatedMail($studio));
             } catch (\Exception $e) {
                 // On log l'erreur ou on continue si le mail échoue (ne pas bloquer la création)
                 report($e);

@@ -44,7 +44,7 @@ class StudioController extends Controller
             $studio->load('proprietaire');
             if ($studio->proprietaire && $studio->proprietaire->email) {
                 try {
-                    Mail::to($studio->proprietaire->email)->send(new StudioValidatedMail($studio));
+                    Mail::to($studio->proprietaire->email)->queue(new StudioValidatedMail($studio));
                 } catch (\Exception $e) {
                     report($e);
                 }
@@ -54,7 +54,7 @@ class StudioController extends Controller
             $studio->load('proprietaire');
             if ($studio->proprietaire && $studio->proprietaire->email) {
                 try {
-                    Mail::to($studio->proprietaire->email)->send(new StudioRejectedMail($studio));
+                    Mail::to($studio->proprietaire->email)->queue(new StudioRejectedMail($studio));
                 } catch (\Exception $e) {
                     report($e);
                 }
