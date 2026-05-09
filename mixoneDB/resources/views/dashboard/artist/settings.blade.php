@@ -36,7 +36,7 @@
                         <div class="row y-gap-30 items-center">
                             <div class="col-auto">
                                 <div class="d-flex ratio ratio-1:1 w-200">
-                                    <img id="avatarImage" src="{{ auth()->user()->avatar ? \Illuminate\Support\Facades\Storage::url(auth()->user()->avatar) : asset('media/img/misc/avatar-default.png') }}" alt="image" class="img-ratio rounded-4">
+                                    <img id="avatarImage" src="{{ auth()->user()->avatar ? storage_url(auth()->user()->avatar) : asset('media/img/misc/avatar-default.png') }}" alt="image" class="img-ratio rounded-4">
                                     <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
                                         <div class="size-40 bg-white rounded-4 cursor-pointer" onclick="removeImage()">
                                             <i class="icon-trash text-16"></i>

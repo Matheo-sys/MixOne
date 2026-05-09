@@ -307,7 +307,7 @@
                                                         if (!empty($studio->$imageField)) {
                                                             $hasImages = true;
                                                             echo '<div class="swiper-slide">';
-                                                            echo '<img class="col-12 studioListCard__img" src="' . \Illuminate\Support\Facades\Storage::url($studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
+                                                            echo '<img class="col-12 studioListCard__img" src="' . storage_url($studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
                                                             echo '</div>';
                                                         }
                                                     }

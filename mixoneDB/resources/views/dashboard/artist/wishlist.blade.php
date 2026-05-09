@@ -66,7 +66,7 @@
                                                                 if (!empty($studio->$imageField)) {
                                                                     $hasImages = true;
                                                                     echo '<div class="swiper-slide">';
-                                                                    echo '<img class="col-12" src="' . \Illuminate\Support\Facades\Storage::url($studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
+                                                                    echo '<img class="col-12" src="' . storage_url($studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
                                                                     echo '</div>';
                                                                 }
                                                             }
@@ -137,7 +137,7 @@
                                                             if (!empty($studio->$imageField)) {
                                                                 $hasImages = true;
                                                                 echo '<div class="swiper-slide">';
-                                                                echo '<img class="col-12" src="' . \Illuminate\Support\Facades\Storage::url($studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
+                                                                echo '<img class="col-12" src="' . storage_url($studio->$imageField) . '" alt="Image studio ' . $studio->name . '">';
                                                                 echo '</div>';
                                                             }
                                                         }

@@ -37,7 +37,7 @@
                 @if($reservation->dispute_image)
                 <div class="col-12">
                     <div class="text-14 text-light-1 mb-10">Preuve visuelle :</div>
-                    <img src="{{ Storage::url($reservation->dispute_image) }}" alt="Preuve litige" class="rounded-4 w-1/1" style="max-height: 500px; object-fit: contain; background: #f5f5f5;">
+                    <img src="{{ storage_url($reservation->dispute_image) }}" alt="Preuve litige" class="rounded-4 w-1/1" style="max-height: 500px; object-fit: contain; background: #f5f5f5;">
                 </div>
                 @endif
             </div>

@@ -226,10 +226,10 @@
                                         <div class="d-flex ratio ratio-3:2 w-200 position-relative">
                                             @php
                                                 $imageField = "image{$i}";
-                                                $imageUrl = isset($studio) && $studio->$imageField ? \Illuminate\Support\Facades\Storage::url($studio->$imageField) : asset('media/img/backgrounds/11.jpg');
+                                                $imageUrl = isset($studio) && $studio->$imageField ? storage_url($studio->$imageField) : asset('media/img/backgrounds/11.jpg');
                                             @endphp
                                             <img id="studioImage{{ $i }}"
-                                                 src="{{ isset($studio->$imageField) && $studio->$imageField ? \Illuminate\Support\Facades\Storage::url($studio->$imageField) : asset('media/img/backgrounds/11.jpg') }}"
+                                                 src="{{ isset($studio->$imageField) && $studio->$imageField ? storage_url($studio->$imageField) : asset('media/img/backgrounds/11.jpg') }}"
                                                  alt="Image {{ $i }}"
                                                  class="img-ratio rounded-4">
                                             <div class="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
