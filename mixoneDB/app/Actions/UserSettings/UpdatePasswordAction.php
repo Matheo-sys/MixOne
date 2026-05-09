@@ -17,9 +17,8 @@ class UpdatePasswordAction
             throw new Exception('Le mot de passe actuel est incorrect');
         }
 
-        return $utilisateur->update([
-            'password' => $nouveauMotDePasse
-        ]);
+        $utilisateur->password = $nouveauMotDePasse;
+        return $utilisateur->save();
     }
 }
 
