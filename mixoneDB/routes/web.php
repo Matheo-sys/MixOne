@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['verify' => true]);
 
+// ROUTE TEMPORAIRE POUR MIGRATIONS (À supprimer après usage)
+Route::get('/admin/migrate-force', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return "Migrations terminées avec succès ! <br><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
+    } catch (\Exception $e) {
+        return "Erreur lors de la migration : " . $e->getMessage();
+    }
+});
+
 // Page d'accueil principale
 Route::get('/', [HomeController::class, 'afficher'])->name('home');
 
