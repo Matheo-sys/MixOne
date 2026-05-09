@@ -30,12 +30,12 @@ class StudioDTO
         public readonly float $tarif_horaire,
         public readonly int $heures_min,
         public readonly string $description,
-        public readonly array $equipements = [],
-        public readonly ?string $autres_equipements = null,
-        public readonly array $horaires_ouverture = [],
-        public readonly ?int $id_utilisateur = null,
-        public readonly array $images = [],
-        public readonly array $images_a_supprimer = []
+        public readonly array $equipements,
+        public readonly ?string $autres_equipements,
+        public readonly array $horaires_ouverture,
+        public readonly ?int $id_utilisateur,
+        public readonly array $images,
+        public readonly array $images_a_supprimer
     ) {}
 
     /**
@@ -52,9 +52,9 @@ class StudioDTO
             tarif_horaire: (float) $requete->validated('hourly_rate'),
             heures_min: (int) $requete->validated('min_hours'),
             description: $requete->validated('description'),
-            equipements: $requete->input('equipment', []),
+            equipements: (array) ($requete->input('equipment', []) ?? []),
             autres_equipements: $requete->input('other_equipment'),
-            horaires_ouverture: $requete->input('opening_hours', []),
+            horaires_ouverture: (array) ($requete->input('opening_hours', []) ?? []),
             id_utilisateur: auth()->id(),
             images: [
                 'image1' => $requete->file('image1'),
@@ -94,4 +94,3 @@ class StudioDTO
         ];
     }
 }
-
