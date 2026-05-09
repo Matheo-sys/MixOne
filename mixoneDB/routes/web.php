@@ -12,6 +12,17 @@ use Illuminate\Support\Facades\Route;
 Auth::routes(['verify' => true]);
 
 // Page d'accueil principale
+Route::get('/test-mail', function() {
+    try {
+        \Illuminate\Support\Facades\Mail::raw('Test MixOne', function($message) {
+            $message->to('mixone.contact@gmail.com')->subject('Diagnostic Mail');
+        });
+        return 'Tentative d\'envoi effectuée. Vérifie ta boîte (et tes spams) !';
+    } catch (\Exception $e) {
+        return 'Erreur lors de l\'envoi : ' . $e->getMessage();
+    }
+});
+
 Route::get('/', [HomeController::class, 'afficher'])->name('home');
 
 Route::get('/studios', [StudioController::class, 'liste'])->name('studios.index');
