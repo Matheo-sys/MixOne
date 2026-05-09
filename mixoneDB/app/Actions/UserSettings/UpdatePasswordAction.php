@@ -18,7 +18,7 @@ class UpdatePasswordAction
         }
 
         return $utilisateur->update([
-            'password' => Hash::make($nouveauMotDePasse)
+            'password' => $nouveauMotDePasse
         ]);
     }
 }
