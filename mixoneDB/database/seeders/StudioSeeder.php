@@ -18,7 +18,7 @@ class StudioSeeder extends Seeder
                 'username' => 'admin',
                 'first_name' => 'Admin',
                 'last_name' => 'MixOne',
-                'password' => Hash::make('password'),
+                'password' => 'password',
                 'profile' => 'artist',
                 'is_admin' => true,
                 'email_verified_at' => now(),
