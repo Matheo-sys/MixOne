@@ -121,6 +121,7 @@
                 <div class="tabs__pane -tab-item-3">
                     <form action="{{ route('dashboard.settings.password') }}" method="POST" class="js-ajax-form" data-reset>
                         @csrf
+                        @method('PUT')
                         <div class="col-xl-9">
                             <div class="row x-gap-20 y-gap-20">
                                 <div class="col-12">
