@@ -230,7 +230,7 @@ class StudioController extends Controller
             return response()->json($reponse->json());
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Geocoder Search Proxy Exception', ['message' => $e->getMessage()]);
-            return response()->json(['error' => 'Server Error', 'debug' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Server Error'], 500);
         }
     }
 
@@ -280,7 +280,7 @@ class StudioController extends Controller
             return response()->json($reponse->json());
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Reverse Geocode Proxy Exception', ['message' => $e->getMessage()]);
-            return response()->json(['error' => 'Server Error', 'debug' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Server Error'], 500);
         }
     }
 
