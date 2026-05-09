@@ -103,5 +103,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Studio::class, 'wishlists', 'user_id', 'studio_id');
     }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \Illuminate\Auth\Notifications\VerifyEmail);
+    }
 }
 
