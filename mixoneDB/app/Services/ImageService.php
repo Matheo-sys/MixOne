@@ -10,11 +10,19 @@ use Illuminate\Support\Str;
 
 class ImageService
 {
-    private ImageManager $manager;
+    private ?ImageManager $manager = null;
 
-    public function __construct()
+    /**
+     * Initialise le manager d'image à la demande (Lazy Loading)
+     * pour éviter de faire planter l'application si l'extension GD est manquante
+     * sur une page qui n'utilise pas d'images.
+     */
+    private function getManager(): ImageManager
     {
-        $this->manager = new ImageManager(new Driver());
+        if ($this->manager === null) {
+            $this->manager = new ImageManager(new Driver());
+        }
+        return $this->manager;
     }
 
     /**
@@ -30,22 +38,23 @@ class ImageService
     {
         // 1. Créer un nom unique en .webp
         $nomFichier = Str::uuid() . '.webp';
-        $cheminComplet = storage_path('app/public/' . $dossier . '/' . $nomFichier);
-
-        // Assurer que le dossier existe
-        if (!file_exists(storage_path('app/public/' . $dossier))) {
-            mkdir(storage_path('app/public/' . $dossier), 0755, true);
+        
+        // S'assurer que le dossier existe dans le disque public
+        if (!Storage::disk('public')->exists($dossier)) {
+            Storage::disk('public')->makeDirectory($dossier);
         }
 
-        // 2. Lire l'image et la traiter
-        $image = $this->manager->read($fichier);
+        // 2. Lire l'image et la traiter via le manager lazy-loadé
+        $image = $this->getManager()->read($fichier);
 
-        // Redimensionnement intelligent (cover) pour s'adapter au format du site
-        // On veut que l'image remplisse le cadre de 1200x800
+        // Redimensionnement intelligent (cover)
         $image->cover($largeur, $hauteur);
 
-        // 3. Sauvegarder en format WebP (compressé)
-        $image->toWebp(80)->save($cheminComplet);
+        // 3. Encoder en WebP
+        $encoded = $image->toWebp(80);
+
+        // 4. Sauvegarder via Storage (plus propre pour Railway/S3)
+        Storage::disk('public')->put($dossier . '/' . $nomFichier, (string) $encoded);
 
         return $dossier . '/' . $nomFichier;
     }
