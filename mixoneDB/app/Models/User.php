@@ -106,8 +106,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailVerificationNotification()
     {
-        // On force l'envoi en file d'attente (queue) pour ne pas bloquer l'utilisateur
-        $this->notify((new \Illuminate\Auth\Notifications\VerifyEmail)->delay(now()->addSeconds(2)));
+        try {
+            // On tente l'envoi en file d'attente
+            $this->notify((new \Illuminate\Auth\Notifications\VerifyEmail)->delay(now()->addSeconds(2)));
+        } catch (\Exception $e) {
+            // Si ça échoue (ex: table jobs manquante ou Gmail offline), on ne bloque pas l'inscription
+            \Illuminate\Support\Facades\Log::error("Erreur envoi mail vérification: " . $e->getMessage());
+        }
     }
 }
 
