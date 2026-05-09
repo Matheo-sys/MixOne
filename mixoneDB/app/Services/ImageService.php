@@ -14,8 +14,6 @@ class ImageService
 
     /**
      * Initialise le manager d'image à la demande (Lazy Loading)
-     * pour éviter de faire planter l'application si l'extension GD est manquante
-     * sur une page qui n'utilise pas d'images.
      */
     private function getManager(): ImageManager
     {
@@ -26,35 +24,21 @@ class ImageService
     }
 
     /**
-     * Traite et sauvegarde une image de studio.
-     *
-     * @param UploadedFile $fichier
-     * @param string $dossier
-     * @param int $largeur
-     * @param int $hauteur
-     * @return string Chemin relatif de l'image sauvegardée
+     * Traite et sauvegarde une image.
+     * Bascule automatiquement entre Local et S3 selon ta config.
      */
     public function traiterImageStudio(UploadedFile $fichier, string $dossier = 'uploads/studios', int $largeur = 1200, int $hauteur = 800): string
     {
-        // 1. Créer un nom unique en .webp
         $nomFichier = Str::uuid() . '.webp';
-        
-        // S'assurer que le dossier existe dans le disque public
-        if (!Storage::disk('public')->exists($dossier)) {
-            Storage::disk('public')->makeDirectory($dossier);
-        }
+        $disk = config('filesystems.default'); // Utilise S3 si FILESYSTEM_DISK=s3
 
-        // 2. Lire l'image et la traiter via le manager lazy-loadé
+        // 1. Préparer le manager
         $image = $this->getManager()->read($fichier);
-
-        // Redimensionnement intelligent (cover)
         $image->cover($largeur, $hauteur);
-
-        // 3. Encoder en WebP
         $encoded = $image->toWebp(80);
 
-        // 4. Sauvegarder via Storage (plus propre pour Railway/S3)
-        Storage::disk('public')->put($dossier . '/' . $nomFichier, (string) $encoded);
+        // 2. Sauvegarder sur le disque configuré
+        Storage::disk($disk)->put($dossier . '/' . $nomFichier, (string) $encoded);
 
         return $dossier . '/' . $nomFichier;
     }
