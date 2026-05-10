@@ -57,6 +57,7 @@ function showToast(type, message) {
 function clearFormErrors(form) {
     form.querySelectorAll('.ajax-error').forEach(el => el.remove());
     form.querySelectorAll('.ajax-error-summary').forEach(el => el.remove());
+    form.querySelectorAll('.ajax-global-error').forEach(el => el.remove());
     form.querySelectorAll('.is-error input, .is-error textarea, .is-error select').forEach(el => {
         el.style.borderColor = '';
     });
@@ -127,9 +128,30 @@ function showValidationErrors(form, errors) {
         const firstInput = form.querySelector(`[name="${errorKeys[0]}"]`);
         if (firstInput) {
             firstInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            firstInput.focus();
         }
     }
+}
+
+/**
+ * Affiche une alerte rouge en haut du formulaire pour les erreurs globales
+ */
+function showGlobalError(form, message) {
+    const existing = form.querySelector('.ajax-global-error');
+    if (existing) existing.remove();
+
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'ajax-global-error';
+    errorDiv.style.cssText = 'background:#fff5f5;border:1px solid #ffcdd2;color:#c62828;padding:14px 18px;border-radius:10px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;animation:fadeInError .3s ease;';
+    errorDiv.innerHTML = `
+        <i class="icon-close" style="font-size:14px;background:#dd2727;color:#fff;border-radius:50%;padding:3px;flex-shrink:0;margin-top:2px;"></i>
+        <div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:2px;">Oups ! Quelque chose a coincé</div>
+            <div style="font-size:13px;line-height:1.4;">${message}</div>
+        </div>
+    `;
+
+    form.insertBefore(errorDiv, form.firstChild);
+    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // ─── Gestionnaire AJAX principal ──────────────────────────────────────────────
@@ -188,33 +210,34 @@ async function handleAjaxForm(form) {
             }
 
         } else if (response.status === 422) {
-            // Erreurs de validation Laravel
-            if (data.errors) {
+            // Erreurs de validation Laravel ou erreurs personnalisées
+            if (data.errors && Object.keys(data.errors).length > 0) {
                 showValidationErrors(form, data.errors);
                 const errorCount = Object.keys(data.errors).length;
-                showToast('error', data.message || `Veuillez corriger les ${errorCount} erreur${errorCount > 1 ? 's' : ''} dans le formulaire.`);
+                showToast('error', data.message || `Veuillez corriger les ${errorCount} erreur${errorCount > 1 ? 's' : ''}.`);
             } else {
-                showToast('error', data.message || 'Veuillez vérifier les informations saisies.');
+                // Erreur métier renvoyée sans champ spécifique
+                showGlobalError(form, data.message || 'Veuillez vérifier les informations saisies.');
+                showToast('error', data.message || 'Veuillez vérifier les informations.');
             }
 
         } else if (response.status === 403) {
-            showToast('error', data.message || 'Vous n\'êtes pas autorisé à effectuer cette action.');
+            showToast('error', data.message || 'Action non autorisée.');
+            showGlobalError(form, data.message || 'Vous n\'avez pas les permissions pour effectuer cette action.');
 
         } else if (response.status === 401) {
-            showToast('error', 'Vous devez être connecté pour effectuer cette action.');
+            showToast('error', 'Session expirée. Reconnexion...');
             setTimeout(() => { window.location.href = '/login'; }, 2000);
 
-        } else if (response.status === 404) {
-            showToast('error', 'La ressource demandée est introuvable.');
-
         } else if (response.status === 429) {
-            showToast('error', 'Trop de tentatives. Veuillez patienter un instant avant de réessayer.');
+            showToast('error', 'Trop de tentatives. Réessayez dans une minute.');
 
         } else if (response.status >= 500) {
-            showToast('error', 'Une erreur serveur est survenue. Veuillez réessayer dans quelques instants.');
+            showToast('error', 'Erreur serveur. Nos équipes sont prévenues.');
+            showGlobalError(form, 'Une erreur technique est survenue sur le serveur. Veuillez réessayer plus tard.');
 
         } else {
-            showToast('error', data.message || 'Une erreur inattendue est survenue.');
+            showToast('error', data.message || 'Une erreur est survenue.');
         }
 
     } catch (err) {

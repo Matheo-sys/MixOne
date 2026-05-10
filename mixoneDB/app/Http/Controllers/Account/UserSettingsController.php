@@ -40,17 +40,27 @@ class UserSettingsController extends Controller
      */
     public function mettreAJour(UpdateProfileRequest $requete): RedirectResponse|JsonResponse
     {
-        $this->actionMiseAJourProfil->executer(Auth::user(), $requete->versDTO());
+        try {
+            $this->actionMiseAJourProfil->executer(Auth::user(), $requete->versDTO());
 
-        if ($requete->ajax()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Profil mis à jour avec succès',
-                'avatar_url' => Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('media/img/misc/avatar-default.png')
-            ]);
+            if ($requete->ajax()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Profil mis à jour avec succès !',
+                    'avatar_url' => Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('media/img/misc/avatar-default.png')
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Profil mis à jour avec succès !');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Erreur mise à jour profil: " . $e->getMessage());
+            
+            $msg = "Erreur lors de la mise à jour : " . $e->getMessage();
+            if ($requete->ajax()) {
+                return response()->json(['status' => 'error', 'message' => $msg], 422);
+            }
+            return redirect()->back()->with('error', $msg);
         }
-
-        return redirect()->back()->with('success', 'Profil mis à jour avec succès');
     }
 
     /**
@@ -77,13 +87,14 @@ class UserSettingsController extends Controller
 
             return redirect()->back()->with('success', 'Mot de passe mis à jour avec succès');
         } catch (\Exception $e) {
+            $msg = "Erreur : " . $e->getMessage();
             if ($requete->ajax()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $e->getMessage()
+                    'message' => $msg
                 ], 422);
             }
-            return back()->withErrors(['current_password' => $e->getMessage()]);
+            return back()->withErrors(['password_error' => $msg]);
         }
     }
 

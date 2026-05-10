@@ -30,17 +30,21 @@ class MessageController extends Controller
      */
     public function enregistrer(SendMessageRequest $requete): JsonResponse
     {
-        $dto = $requete->versDTO();
-        $this->actionEnvoyerMessage->executer($dto);
+        try {
+            $dto = $requete->versDTO();
+            $this->actionEnvoyerMessage->executer($dto);
 
-        // Réafficher la conversation si un nouveau message est envoyé
-        HiddenConversation::where(function($query) use ($dto) {
-            $query->where('user_id', Auth::id())->where('contact_id', $dto->id_destinataire);
-        })->orWhere(function($query) use ($dto) {
-            $query->where('user_id', $dto->id_destinataire)->where('contact_id', Auth::id());
-        })->delete();
+            // Réafficher la conversation si un nouveau message est envoyé
+            HiddenConversation::where(function($query) use ($dto) {
+                $query->where('user_id', Auth::id())->where('contact_id', $dto->id_destinataire);
+            })->orWhere(function($query) use ($dto) {
+                $query->where('user_id', $dto->id_destinataire)->where('contact_id', Auth::id());
+            })->delete();
 
-        return response()->json(['success' => 'Message envoyé avec succès.']);
+            return response()->json(['status' => 'success', 'message' => 'Message envoyé avec succès.']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Impossible d\'envoyer le message : ' . $e->getMessage()], 422);
+        }
     }
 
     /**

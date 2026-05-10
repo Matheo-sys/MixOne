@@ -71,10 +71,10 @@ class ReservationController extends Controller
 
             return redirect($session->url);
         } catch (\Exception $e) {
-            $message = $e->getMessage();
+            $message = "Impossible de traiter la réservation : " . $e->getMessage();
 
             Log::error('Erreur création réservation/paiement', [
-                'error' => $message,
+                'error' => $e->getMessage(),
                 'user'  => auth()->id(),
             ]);
 
@@ -82,7 +82,7 @@ class ReservationController extends Controller
                 return response()->json(['status' => 'error', 'message' => $message], 422);
             }
 
-            return back()->withInput()->withErrors(['time_slot' => $message]);
+            return back()->withInput()->withErrors(['booking_error' => $message]);
         }
     }
 
@@ -110,10 +110,11 @@ class ReservationController extends Controller
             }
             return redirect()->back()->with('success', 'Réservation confirmée !');
         } catch (\Exception $e) {
+            $msg = "Erreur lors de la confirmation : " . $e->getMessage();
             if ($requete->ajax()) {
-                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+                return response()->json(['status' => 'error', 'message' => $msg], 422);
             }
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', $msg);
         }
     }
 
@@ -143,10 +144,11 @@ class ReservationController extends Controller
             }
             return redirect()->back()->with('success', 'Réservation refusée. Le client a été remboursé.');
         } catch (\Exception $e) {
+            $msg = "Erreur lors du refus : " . $e->getMessage();
             if ($requete->ajax()) {
-                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+                return response()->json(['status' => 'error', 'message' => $msg], 422);
             }
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', $msg);
         }
     }
 
@@ -183,10 +185,11 @@ class ReservationController extends Controller
             }
             return redirect()->back()->with('success', 'Réservation annulée. Un remboursement a été initié.');
         } catch (\Exception $e) {
+            $msg = "Erreur lors de l'annulation : " . $e->getMessage();
             if ($requete->ajax()) {
-                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+                return response()->json(['status' => 'error', 'message' => $msg], 422);
             }
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', $msg);
         }
     }
 

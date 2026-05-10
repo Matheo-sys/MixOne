@@ -123,17 +123,20 @@ class StudioController extends Controller
                 ->with('success', 'Votre studio a été ajouté et est en attente d\'approbation par les administrateurs.');
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Erreur création studio: " . $e->getMessage());
+            
+            $msg = "Impossible de créer le studio : " . $e->getMessage();
+            if ($e->getCode() == 401) $msg = "Vous n'êtes pas autorisé à créer un studio.";
+            
             if ($requete->ajax()) {
                 return response()->json([
                     'status' => 'error', 
-                    'message' => 'Erreur: ' . $e->getMessage(),
-                    'debug' => app()->isLocal() || config('app.debug') ? $e->getTraceAsString() : null
+                    'message' => $msg
                 ], 422);
             }
             return redirect()->route('studio.create')
                 ->withInput()
                 ->with('active_tab', '2')
-                ->withErrors(['address_not_found' => 'Erreur: ' . $e->getMessage()]);
+                ->withErrors(['studio_error' => $msg]);
         }
     }
 
@@ -336,10 +339,14 @@ class StudioController extends Controller
             }
             return redirect()->route('dashboard.studio.edit', $studio)->with('success', 'Studio modifié avec succès !');
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Erreur mise à jour studio: " . $e->getMessage());
+            
+            $msg = "Une erreur est survenue lors de la modification : " . $e->getMessage();
+            
             if ($requete->ajax()) {
-                return response()->json(['status' => 'error', 'message' => 'Erreur lors de la mise à jour du studio.'], 422);
+                return response()->json(['status' => 'error', 'message' => $msg], 422);
             }
-            return back()->withErrors(['update_error' => 'Erreur lors de la mise à jour du studio.']);
+            return back()->withErrors(['update_error' => $msg]);
         }
     }
 }
