@@ -122,13 +122,18 @@ class StudioController extends Controller
             return redirect()->route('dashboard.studio.myStudios')
                 ->with('success', 'Votre studio a été ajouté et est en attente d\'approbation par les administrateurs.');
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Erreur création studio: " . $e->getMessage());
             if ($requete->ajax()) {
-                return response()->json(['status' => 'error', 'message' => 'Erreur lors de la création du studio. Veuillez vérifier les informations.'], 422);
+                return response()->json([
+                    'status' => 'error', 
+                    'message' => 'Erreur: ' . $e->getMessage(),
+                    'debug' => app()->isLocal() || config('app.debug') ? $e->getTraceAsString() : null
+                ], 422);
             }
             return redirect()->route('studio.create')
                 ->withInput()
                 ->with('active_tab', '2')
-                ->withErrors(['address_not_found' => 'Erreur lors de la création du studio. Veuillez vérifier les informations.']);
+                ->withErrors(['address_not_found' => 'Erreur: ' . $e->getMessage()]);
         }
     }
 
