@@ -29,6 +29,9 @@ Route::group(['prefix' => 'studio'], function() {
     Route::get('/reservations', [StudioDashboardController::class, 'reservations'])->name('dashboard.studio.booking');
     
     Route::get('/studios/creer', [StudioController::class, 'creer'])->name('studio.create');
+    Route::get('/studios', function() {
+        return redirect()->route('studio.create');
+    });
     Route::post('/studios', [StudioController::class, 'enregistrer'])->name('studio.store');
     Route::get('/studios/{studio}/modifier', [StudioController::class, 'modifier'])->name('dashboard.studio.edit');
     Route::put('/studios/{studio}', [StudioController::class, 'mettreAJour'])->name('dashboard.studio.update');
