@@ -115,4 +115,15 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
+    /**
+     * Envoyer la notification de réinitialisation de mot de passe.
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        try {
+            $this->notify(new \App\Notifications\ResetPasswordQueued($token));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Erreur envoi mail reset password: " . $e->getMessage());
+        }
+    }
 }
