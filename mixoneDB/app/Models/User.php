@@ -109,8 +109,8 @@ class User extends Authenticatable implements MustVerifyEmail
         try {
             // On utilise notre version "Queued" pour ne pas bloquer l'inscription
             $this->notify(new \App\Notifications\VerifyEmailQueued);
-        } catch (\Exception $e) {
-            // Si ça échoue (ex: Redis offline), on ne bloque pas l'inscription
+        } catch (\Throwable $e) {
+            // Si ça échoue, on ne bloque surtout pas l'inscription
             \Illuminate\Support\Facades\Log::error("Erreur envoi mail vérification: " . $e->getMessage());
         }
     }
