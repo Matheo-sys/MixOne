@@ -34,6 +34,13 @@ class ImageService
 
         // Cas particulier pour Cloudinary (optimisation maximale)
         if ($disk === 'cloudinary' || env('CLOUDINARY_URL')) {
+            // Force la configuration si elle est manquante
+            if (!config('cloudinary.cloud_name') && env('CLOUDINARY_URL')) {
+                $url = env('CLOUDINARY_URL');
+                // On essaie de configurer le moteur à la volée
+                config(['cloudinary.cloud_url' => $url]);
+            }
+
             $uploadedFile = Cloudinary::upload($fichier->getRealPath(), [
                 'folder' => $dossier,
                 'transformation' => [
@@ -45,8 +52,6 @@ class ImageService
                 ]
             ]);
             
-            // On retourne soit l'URL complète, soit le public_id selon tes besoins.
-            // Pour Laravel Storage, on préfère l'URL sécurisée.
             return $uploadedFile->getSecurePath();
         }
 
