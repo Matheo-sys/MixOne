@@ -14,8 +14,9 @@ use Symfony\Component\Mailer\Transport\Dsn;
  */
 if (!function_exists('storage_url')) {
     function storage_url($path) {
-        if (!$path) return null;
-        return str_starts_with($path, 'http') ? $path : \Illuminate\Support\Facades\Storage::url($path);
+        if (empty($path)) return null;
+        if (str_starts_with($path, 'http')) return $path;
+        return \Illuminate\Support\Facades\Storage::url($path);
     }
 }
 
