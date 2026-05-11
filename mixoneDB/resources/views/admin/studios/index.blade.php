@@ -29,9 +29,9 @@
                 <tr>
                     <td>#{{ $studio->id }}</td>
                     <td class="fw-500">{{ $studio->name }}</td>
-                    <td>{{ $studio->user->first_name ?? 'Inconnu' }} {{ $studio->user->last_name ?? '' }}</td>
+                    <td>{{ $studio->proprietaire->first_name ?? 'Inconnu' }} {{ $studio->proprietaire->last_name ?? '' }}</td>
                     <td>{{ $studio->city }}</td>
-                    <td>{{ $studio->price_per_hour }} €</td>
+                    <td>{{ $studio->hourly_rate }} €</td>
                     <td>
                         @if($studio->is_verified)
                             <span class="fw-600" style="color: #05a011 !important;">Oui</span>
