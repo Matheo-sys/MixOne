@@ -24,7 +24,35 @@ class UserController extends Controller
      */
     public function afficher(User $utilisateur): View
     {
+        $utilisateur->load([
+            'studios', 
+            'reservations.studio', 
+            'reservationsRecues.user',
+            'portefeuille.transactions' => function($query) {
+                $query->orderBy('created_at', 'desc')->limit(10);
+            }
+        ]);
+
         return view('admin.users.show', ['user' => $utilisateur]);
+    }
+
+    /**
+     * Basculer le statut administrateur.
+     */
+    public function basculerAdmin(User $utilisateur): RedirectResponse
+    {
+        // Empêcher de s'enlever soi-même les droits admin pour éviter d'être bloqué
+        if (auth()->id() === $utilisateur->id) {
+            return back()->with('error', 'Vous ne pouvez pas retirer vos propres droits administrateur.');
+        }
+
+        $utilisateur->update(['is_admin' => !$utilisateur->is_admin]);
+        
+        $message = $utilisateur->is_admin 
+            ? "L'utilisateur est désormais administrateur." 
+            : "Les droits administrateur ont été retirés.";
+
+        return back()->with('success', $message);
     }
 
     /**

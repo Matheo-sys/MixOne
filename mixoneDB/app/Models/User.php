@@ -97,6 +97,30 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Liste des studios possédés par l'utilisateur.
+     */
+    public function studios()
+    {
+        return $this->hasMany(Studio::class);
+    }
+
+    /**
+     * Liste des réservations effectuées par l'utilisateur (en tant qu'artiste).
+     */
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    /**
+     * Liste des réservations reçues par l'utilisateur (via ses studios).
+     */
+    public function reservationsRecues()
+    {
+        return $this->hasManyThrough(Reservation::class, Studio::class);
+    }
+
+    /**
      * Liste des studios mis en favoris par l'utilisateur.
      */
     public function studiosFavoris()

@@ -14,6 +14,7 @@ Route::get('/utilisateurs', [UserController::class, 'liste'])->name('admin.users
 Route::get('/utilisateurs/{user}', [UserController::class, 'afficher'])->name('admin.users.show');
 Route::post('/utilisateurs/{user}/bannir', [UserController::class, 'bannir'])->name('admin.users.ban');
 Route::post('/utilisateurs/{user}/debannir', [UserController::class, 'debannir'])->name('admin.users.unban');
+Route::post('/utilisateurs/{user}/basculer-admin', [UserController::class, 'basculerAdmin'])->name('admin.users.toggle-admin');
 Route::post('/utilisateurs/{user}/verifier-email', [UserController::class, 'verifierEmail'])->name('admin.users.verify-email');
 
 Route::get('/studios', [StudioController::class, 'liste'])->name('admin.studios.index');
