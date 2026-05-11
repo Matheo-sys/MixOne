@@ -44,7 +44,7 @@ class StripeConnectController extends Controller
             ]);
 
             return redirect()->route('dashboard.studio')
-                ->with('error', 'Erreur Stripe : ' . $e->getMessage());
+                ->with('error', 'Impossible de se connecter à Stripe pour le moment. Veuillez réessayer plus tard.');
         }
     }
 
