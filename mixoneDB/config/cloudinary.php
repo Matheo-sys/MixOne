@@ -13,12 +13,6 @@ return [
 
     'cloud_url' => env('CLOUDINARY_URL'),
 
-    /**
-    |--------------------------------------------------------------------------
-    | Cloud Name
-    |--------------------------------------------------------------------------
-    | The name of your Cloudinary cloud.
-    */
     'cloud' => [
         'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
         'api_key'    => env('CLOUDINARY_API_KEY'),
@@ -26,5 +20,4 @@ return [
     ],
 
     'upload_preset' => env('CLOUDINARY_UPLOAD_PRESET'),
-
 ];

@@ -31,16 +31,10 @@ class ImageService
     public function traiterImageStudio(UploadedFile $fichier, string $dossier = 'uploads/studios', int $largeur = 1200, int $hauteur = 800): string
     {
         $disk = config('filesystems.default');
+        $cloudinaryUrl = config('cloudinary.cloud_url');
 
         // Cas particulier pour Cloudinary (optimisation maximale)
-        if ($disk === 'cloudinary' || env('CLOUDINARY_URL')) {
-            // Force la configuration si elle est manquante
-            if (!config('cloudinary.cloud_name') && env('CLOUDINARY_URL')) {
-                $url = env('CLOUDINARY_URL');
-                // On essaie de configurer le moteur à la volée
-                config(['cloudinary.cloud_url' => $url]);
-            }
-
+        if ($disk === 'cloudinary' || !empty($cloudinaryUrl)) {
             $uploadedFile = Cloudinary::upload($fichier->getRealPath(), [
                 'folder' => $dossier,
                 'transformation' => [
