@@ -37,7 +37,13 @@ class HomeController extends Controller
 
         return view('pages.home', [
             'enTeteBlanc'       => false,
-            'studios'           => Studio::where('is_verified', true)->latest()->limit(20)->get(),
+            'studios'           => Studio::where('is_verified', true)
+                ->whereHas('proprietaire', function($q) {
+                    $q->whereNotNull('stripe_account_id');
+                })
+                ->latest()
+                ->limit(20)
+                ->get(),
             'clientsSatisfaits' => $clientsSatisfaits,
             'noteGlobale'       => $noteGlobale,
             'avis'              => $avis

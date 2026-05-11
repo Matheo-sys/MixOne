@@ -293,7 +293,7 @@
 
                 {{-- ======= STUDIO CARDS ======= --}}
                 <div class="studioList-grid">
-                    @foreach($studios as $studio)
+                    @forelse($studios as $studio)
                         <div class="studioListCard">
                             <div class="studioListCard__imageWrap">
                                 <div class="cardImage ratio studioListCard__ratio">
@@ -468,7 +468,15 @@
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <div class="col-12">
+                            <div class="text-center py-50 bg-light-2 rounded-4">
+                                <i class="icon-search text-40 text-blue-1 mb-20"></i>
+                                <h3 class="text-20 fw-500">Il n'existe pas encore de studio correspondant à votre recherche.</h3>
+                                <p class="text-light-1 mt-10">Essayez de modifier vos filtres ou de changer de localisation.</p>
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
 
                 {{-- ======= PAGINATION ======= --}}
