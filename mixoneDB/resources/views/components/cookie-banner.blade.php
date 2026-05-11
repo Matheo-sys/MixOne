@@ -7,9 +7,9 @@
             </p>
         </div>
         <div class="col-xl-4 col-lg-3">
-            <div class="d-flex flex-wrap y-gap-10 x-gap-10 justify-center">
-                <button class="button -md bg-blue-1 text-white js-accept-cookies">Accepter</button>
-                <button class="button -md bg-light-2 text-dark-1 js-refuse-cookies">Refuser</button>
+            <div class="d-flex flex-wrap y-gap-10 x-gap-20 justify-end md:justify-center">
+                <button class="button -md bg-blue-1 text-white js-accept-cookies px-30" style="min-width: 130px;">Accepter</button>
+                <button class="button -md bg-light-2 text-dark-1 js-refuse-cookies px-30" style="min-width: 130px;">Refuser</button>
             </div>
         </div>
     </div>
