@@ -41,7 +41,7 @@
                     </td>
                     <td>
                         <div class="d-flex x-gap-10">
-                            <a href="{{ route('studios.show', $studio->id) }}" target="_blank" class="px-15 py-5 bg-blue-1 text-white rounded-4 text-14 fw-500">Voir site</a>
+                            <a href="{{ route('studios.show', $studio) }}" target="_blank" class="px-15 py-5 bg-blue-1 text-white rounded-4 text-14 fw-500">Voir site</a>
                             
                             <form action="{{ route('admin.studios.toggle-verify', $studio) }}" method="POST">
                                 @csrf
