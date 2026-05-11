@@ -29,3 +29,8 @@ Route::post('/litiges/{reservation}/resoudre', [DisputeController::class, 'resou
 
 Route::get('/virements', [PayoutController::class, 'liste'])->name('admin.payouts.index');
 Route::post('/virements/{payoutRequest}/terminer', [PayoutController::class, 'terminer'])->name('admin.payouts.complete');
+
+// Modération d'images
+Route::get('/moderation-images', [\App\Http\Controllers\Admin\ModerationController::class, 'index'])->name('admin.moderation.index');
+Route::post('/moderation-images/{imageRequest}/approuver', [\App\Http\Controllers\Admin\ModerationController::class, 'approve'])->name('admin.moderation.approve');
+Route::post('/moderation-images/{imageRequest}/refuser', [\App\Http\Controllers\Admin\ModerationController::class, 'reject'])->name('admin.moderation.reject');

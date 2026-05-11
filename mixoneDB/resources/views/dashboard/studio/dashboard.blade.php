@@ -7,6 +7,79 @@
             <div class="text-16 text-light-1">Suivez l'activité de vos studios en un clin d'œil.</div>
         </div>
     </div>
+
+    @php
+        $user = auth()->user();
+        $hasStripe = !empty($user->stripe_account_id);
+        $hasVerifiedStudio = $user->studios()->where('is_verified', true)->exists();
+        $hasPendingStudio = $user->studios()->where('is_verified', false)->exists();
+        $isFullyActive = $hasStripe && $hasVerifiedStudio;
+    @endphp
+
+    @if(!$isFullyActive)
+    <div class="row y-gap-20 pb-30">
+        <div class="col-12">
+            <div class="py-25 px-30 rounded-4 bg-yellow-1-05 border-yellow-1">
+                <div class="row y-gap-20 justify-between items-center">
+                    <div class="col-auto">
+                        <div class="d-flex items-center">
+                            <i class="icon-notification text-24 text-yellow-2 mr-20"></i>
+                            <div>
+                                <h4 class="text-18 lh-15 fw-500 text-yellow-2">Votre visibilité est restreinte</h4>
+                                <p class="text-15 text-yellow-2">Pour que vos studios soient visibles et réservables par le public, vous devez remplir les conditions suivantes :</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row x-gap-40 y-gap-15 pt-20">
+                    <div class="col-auto">
+                        <div class="d-flex items-center">
+                            @if($hasStripe)
+                                <div class="size-20 flex-center bg-green-1 rounded-full mr-10">
+                                    <i class="icon-check text-10 text-white"></i>
+                                </div>
+                                <span class="text-15 fw-500 text-green-2">Compte Stripe connecté</span>
+                            @else
+                                <div class="size-20 flex-center bg-red-1 rounded-full mr-10">
+                                    <i class="icon-close text-10 text-white"></i>
+                                </div>
+                                <span class="text-15 fw-500 text-red-2">Compte Stripe non connecté</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="col-auto">
+                        <div class="d-flex items-center">
+                            @if($hasVerifiedStudio)
+                                <div class="size-20 flex-center bg-green-1 rounded-full mr-10">
+                                    <i class="icon-check text-10 text-white"></i>
+                                </div>
+                                <span class="text-15 fw-500 text-green-2">Studio validé par l'admin</span>
+                            @elseif($hasPendingStudio)
+                                <div class="size-20 flex-center bg-yellow-1 rounded-full mr-10">
+                                    <i class="icon-clock text-10 text-white"></i>
+                                </div>
+                                <span class="text-15 fw-500 text-yellow-2">Studio en attente de validation</span>
+                            @else
+                                <div class="size-20 flex-center bg-red-1 rounded-full mr-10">
+                                    <i class="icon-close text-10 text-white"></i>
+                                </div>
+                                <span class="text-15 fw-500 text-red-2">Aucun studio créé</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                @if(!$hasStripe)
+                    <div class="mt-20">
+                        <a href="{{ route('stripe.connect.onboard') }}" class="button -sm bg-blue-1 text-white px-20 py-10 rounded-4">Connecter Stripe maintenant</a>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+    @endif
     <div class="row y-gap-30">
         <div class="col-xl-4 col-md-6">
             <div class="py-30 px-30 sm:px-20 rounded-4 bg-white shadow-3 h-full">

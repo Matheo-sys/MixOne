@@ -35,7 +35,7 @@ class UpdateStudioAction
             $donnees['longitude'] = $coordonnees['longitude'];
         }
 
-        // Gérer les suppressions et mises à jour d'images
+        // Gérer les suppressions d'images (immédiat)
         foreach ($dto->images_a_supprimer as $champ => $doitSupprimer) {
             if ($doitSupprimer) {
                 if ($studio->$champ) {
@@ -45,14 +45,28 @@ class UpdateStudioAction
             }
         }
 
+        // Gérer les NOUVELLES images (modération obligatoire)
+        $imagesAAprouver = [];
         foreach ($dto->images as $champ => $fichier) {
             if ($fichier) {
-                // Supprimer l'ancienne image si elle existe
-                if ($studio->$champ) {
-                    Storage::delete($studio->$champ);
-                }
-                $donnees[$champ] = $this->serviceImage->traiterImageStudio($fichier);
+                $imagesAAprouver[$champ] = $this->serviceImage->traiterImageStudio($fichier);
             }
+        }
+
+        if (!empty($imagesAAprouver)) {
+            // On crée une demande de modération
+            \App\Models\StudioImageRequest::create(array_merge(
+                ['studio_id' => $studio->id],
+                $imagesAAprouver
+            ));
+            
+            // On informe via la session qu'un admin doit valider
+            session()->flash('info', 'Vos nouvelles images ont été envoyées pour modération. Elles apparaîtront une fois validées par nos administrateurs.');
+        }
+
+        // On ne met PAS à jour les colonnes imageX dans $donnees
+        foreach (['image1', 'image2', 'image3', 'image4', 'image5'] as $imgKey) {
+            unset($donnees[$imgKey]);
         }
 
         return $studio->update($donnees);

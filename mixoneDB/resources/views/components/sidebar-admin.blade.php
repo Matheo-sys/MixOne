@@ -25,6 +25,14 @@
         </div>
 
         <div class="sidebar__item">
+            <div class="sidebar__button {{ request()->routeIs('admin.moderation.*') ? '-is-active' : '' }}">
+                <a href="{{route('admin.moderation.index')}}" class="d-flex items-center text-15 lh-1 fw-500">
+                    Modération Images
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar__item">
             <div class="sidebar__button {{ request()->routeIs('admin.reservations.*') ? '-is-active' : '' }}">
                 <a href="{{route('admin.reservations.index')}}" class="d-flex items-center text-15 lh-1 fw-500">
                     Réservations
