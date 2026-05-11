@@ -11,6 +11,7 @@ class Studio extends Model
 
     protected $table = 'studios';
     protected $fillable = [
+        'uuid',
         'user_id',
         'name',
         'slug',
@@ -43,6 +44,9 @@ class Studio extends Model
     protected static function booted()
     {
         static::creating(function ($studio) {
+            if (empty($studio->uuid)) {
+                $studio->uuid = (string) \Illuminate\Support\Str::uuid();
+            }
             if (empty($studio->slug)) {
                 $studio->slug = \Illuminate\Support\Str::slug($studio->name) . '-' . \Illuminate\Support\Str::random(5);
             }
@@ -51,7 +55,7 @@ class Studio extends Model
 
     public function getRouteKeyName()
     {
-        return 'slug';
+        return 'uuid';
     }
 
     /**

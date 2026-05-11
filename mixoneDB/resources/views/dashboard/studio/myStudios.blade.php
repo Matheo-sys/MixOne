@@ -58,17 +58,17 @@
                                         <td data-label="Action">
                                             <div class="d-flex align-items-center gap-2">
                                                 <!-- Bouton Vue -->
-                                                <a href="{{ route('studios.show', $studio->id) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2" title="Voir">
+                                                <a href="{{ route('studios.show', $studio) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2" title="Voir">
                                                     <i class="icon-eye text-16 text-light-1"></i>
                                                 </a>
 
                                                 <!-- Bouton Modifier -->
-                                                <a href="{{ route('dashboard.studio.edit', $studio->id) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2 ml-10" title="Modifier">
+                                                <a href="{{ route('dashboard.studio.edit', $studio) }}" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2 ml-10" title="Modifier">
                                                     <i class="icon-edit text-16 text-light-1"></i>
                                                 </a>
 
                                                 <!-- Bouton Supprimer -->
-                                                <form class="ml-10" action="{{ route('dashboard.studio.destroy', $studio->id) }}" method="POST"
+                                                <form class="ml-10" action="{{ route('dashboard.studio.destroy', $studio) }}" method="POST"
                                                       onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce studio ?');">
                                                     @csrf
                                                     @method('DELETE')
