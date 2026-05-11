@@ -13,10 +13,12 @@
             </div>
         </div>
 
+        @if($studios->count() > 0)
         <div class="relative overflow-hidden pt-40 sm:pt-20 js-section-slider" data-gap="30" data-scrollbar data-slider-cols="xl-4 lg-3 md-2 sm-2 base-1" data-nav-prev="js-hotels-prev" data-pagination="js-hotels-pag" data-nav-next="js-hotels-next">
             <div class="swiper-wrapper">
-                @forelse($studios as $studio)
+                @foreach($studios as $studio)
                     <div class="swiper-slide">
+                        {{-- ... le contenu de studioCard existant ... --}}
                         <a href="{{ route('studios.show', $studio) }}" class="studioCard">
                             {{-- Image Section --}}
                             <div class="studioCard__image">
@@ -129,19 +131,9 @@
                             </div>
                         </a>
                     </div>
-                @empty
-                    <div class="col-12">
-                        <div class="text-center py-50 bg-light-2 rounded-4">
-                            <i class="icon-search text-40 text-blue-1 mb-20"></i>
-                            <h3 class="text-20 fw-500">Il n'existe pas encore de studio sur la plateforme.</h3>
-                            <p class="text-light-1 mt-10">Revenez bientôt pour découvrir nos studios partenaires !</p>
-                        </div>
-                    </div>
-                @endforelse
+                @endforeach
             </div>
 
-
-            @if($studios->count() > 0)
             <div class="d-flex x-gap-15 items-center justify-center pt-40 sm:pt-20">
                 <div class="col-auto">
                     <button class="d-flex items-center text-24 arrow-left-hover js-hotels-prev">
@@ -159,9 +151,13 @@
                     </button>
                 </div>
             </div>
-            @endif
-
         </div>
+        @else
+            <div class="text-center pt-40 pb-40">
+                <div class="text-18 fw-500 text-light-1 italic">Aucun studio n'est disponible pour le moment...</div>
+                <div class="text-14 text-light-1 mt-10">Revenez bientôt pour découvrir nos studios partenaires !</div>
+            </div>
+        @endif
     </div>
 </section>
     </div>
