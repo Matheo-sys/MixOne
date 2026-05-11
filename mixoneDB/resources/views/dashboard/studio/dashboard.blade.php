@@ -30,11 +30,14 @@
             <div class="py-30 px-30 sm:px-20 rounded-4 bg-white shadow-3 h-full">
                 <div class="row y-gap-20 justify-between items-center">
                     <div class="col-auto">
-                        <div class="fw-500 lh-14 text-light-1">Gains (Solde Dispo)</div>
-                        <div class="text-26 lh-16 fw-600 mt-5">
-                            {{ number_format($portefeuille->balance ?? 0, 2, ',', ' ') }} €
+                        <div class="fw-500 lh-14 text-light-1">Configuration Paiements</div>
+                        <div class="text-20 lh-16 fw-600 mt-5">
+                            @if(auth()->user()->stripe_account_id)
+                                <span class="text-green-2">✅ Compte Stripe lié</span>
+                            @else
+                                <span class="text-red-1">❌ Stripe non connecté</span>
+                            @endif
                         </div>
-                        <div class="text-15 lh-14 text-light-1 mt-5">Gains retirables</div>
                     </div>
 
                     <div class="col-auto">
@@ -42,19 +45,17 @@
                     </div>
                 </div>
                 <div class="mt-20">
-                    <form action="{{ route('wallet.payout') }}" method="POST" class="d-flex flex-column y-gap-10">
-                        @csrf
-                        <div class="single-field relative d-flex items-center">
-                            <input class="pl-15 bg-white text-dark-1 h-40 rounded-8 w-1/1 border-light" type="number" name="amount" placeholder="Montant (€)" required min="10" max="{{ $portefeuille->balance ?? 0 }}" step="0.01">
-                        </div>
-                        <div class="single-field relative d-flex items-center">
-                            <input class="pl-15 bg-white text-dark-1 h-40 rounded-8 w-1/1 border-light" type="text" name="iban" placeholder="Votre IBAN" required minlength="15" value="{{ old('iban', auth()->user()->iban) }}">
-                        </div>
-                        @if(!auth()->user()->iban)
-                            <div class="text-11 text-red-1">⚠️ Aucun IBAN enregistré. <a href="{{ route('dashboard.settings') }}" class="underline">Configurez-le ici</a>.</div>
-                        @endif
-                        <button type="submit" class="button -md -blue-1 bg-blue-1-05 text-blue-1 w-1/1 mt-5" {{ ($portefeuille->balance ?? 0) < 10 ? 'disabled' : '' }}>Demander un virement</button>
-                    </form>
+                    @if(auth()->user()->stripe_account_id)
+                        <p class="text-13 text-light-1 mb-10">Vos gains sont transférés automatiquement sur votre compte bancaire via Stripe.</p>
+                        <a href="https://dashboard.stripe.com/login" target="_blank" class="button -md bg-blue-1-05 text-blue-1 w-1/1">
+                            Accéder au portail Stripe
+                        </a>
+                    @else
+                        <p class="text-13 text-light-1 mb-10">Pour recevoir vos paiements, vous devez lier un compte Stripe à votre profil MixOne.</p>
+                        <a href="{{ route('stripe.connect.onboard') }}" class="button -md bg-blue-1 text-white w-1/1">
+                            Configurer mes paiements
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

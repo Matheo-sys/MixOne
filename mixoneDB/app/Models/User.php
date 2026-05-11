@@ -34,9 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'country',
         'zipcode',
         'banned_at',
-        'bank_name',
-        'iban',
-        'bic',
+        'stripe_account_id',
         'profile',
         'is_admin',
     ];
