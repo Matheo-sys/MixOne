@@ -43,33 +43,42 @@ class ReservationController extends Controller
      */
     public function enregistrer(CreateReservationRequest $requete): RedirectResponse|JsonResponse
     {
+        $reservation = null;
         try {
             $reservation = $this->actionCreerReservation->executer($requete->versDTO());
 
-            // Créer la session Stripe Checkout
-            $session = $this->serviceStripe->creerSessionPaiement(
-                reservationId: $reservation->id,
-                nomStudio: $reservation->studio->name,
-                date: $reservation->date->format('d/m/Y'),
-                creneauHoraire: $reservation->time_slot,
-                heures: $reservation->number_of_hours,
-                prix: (float) $reservation->price,
-                emailClient: auth()->user()->email,
-                stripeAccountId: $reservation->studio->proprietaire->stripe_account_id ?? null,
-            );
+            try {
+                // Créer la session Stripe Checkout
+                $session = $this->serviceStripe->creerSessionPaiement(
+                    reservationId: $reservation->id,
+                    nomStudio: $reservation->studio->name,
+                    date: $reservation->date->format('d/m/Y'),
+                    creneauHoraire: $reservation->time_slot,
+                    heures: $reservation->number_of_hours,
+                    prix: (float) $reservation->price,
+                    emailClient: auth()->user()->email,
+                    stripeAccountId: $reservation->studio->proprietaire->stripe_account_id ?? null,
+                );
 
-            // Sauvegarder l'ID de session Stripe
-            $reservation->update(['stripe_session_id' => $session->id]);
+                // Sauvegarder l'ID de session Stripe
+                $reservation->update(['stripe_session_id' => $session->id]);
 
-            // Rediriger vers Stripe Checkout
-            if ($requete->ajax()) {
-                return response()->json([
-                    'status'   => 'success',
-                    'redirect' => $session->url,
-                ]);
+                // Rediriger vers Stripe Checkout
+                if ($requete->ajax()) {
+                    return response()->json([
+                        'status'   => 'success',
+                        'redirect' => $session->url,
+                    ]);
+                }
+
+                return redirect($session->url);
+            } catch (\Exception $eStripe) {
+                // SI STRIPE ECHOUE (clé API, réseau, etc.) : on supprime la réservation pour libérer le créneau
+                if ($reservation) {
+                    $reservation->delete();
+                }
+                throw $eStripe;
             }
-
-            return redirect($session->url);
         } catch (\Exception $e) {
             $message = "Impossible de traiter la réservation : " . $e->getMessage();
 
