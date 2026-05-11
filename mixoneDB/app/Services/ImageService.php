@@ -35,7 +35,7 @@ class ImageService
 
         // Cas particulier pour Cloudinary (optimisation maximale)
         if ($disk === 'cloudinary' || !empty($cloudinaryUrl)) {
-            $uploadedFile = Cloudinary::upload($fichier->getRealPath(), [
+            $uploadedFile = cloudinary()->uploadApi()->upload($fichier->getRealPath(), [
                 'folder' => $dossier,
                 'transformation' => [
                     'width' => $largeur,
@@ -46,7 +46,7 @@ class ImageService
                 ]
             ]);
             
-            return $uploadedFile->getSecurePath();
+            return $uploadedFile['secure_url'];
         }
 
         // Cas classique (Local ou S3)
