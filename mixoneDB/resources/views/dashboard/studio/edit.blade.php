@@ -47,7 +47,7 @@
             </div>
 
             <div class="tabs__content pt-30 pb-40 js-tabs-content">
-                <form action="{{ route('dashboard.studio.update', $studio->id) }}" method="POST" enctype="multipart/form-data" class="js-ajax-form" id="studioEditForm">
+                <form action="{{ route('dashboard.studio.update', $studio->uuid) }}" method="POST" enctype="multipart/form-data" class="js-ajax-form" id="studioEditForm">
                     @csrf
                     @method('PUT')
 
@@ -165,16 +165,25 @@
 
                                 @foreach($days as $key => $label)
                                 @php
-                                    $isOpen = isset($openingHours[$key]['is_open']) && $openingHours[$key]['is_open'];
-                                    $startTime = $openingHours[$key]['start'] ?? '08:00';
-                                    $endTime = $openingHours[$key]['end'] ?? '22:00';
+                                    $isOpen = isset($openingHours[$key]['is_open']) && ($openingHours[$key]['is_open'] == 1 || $openingHours[$key]['is_open'] == "1" || $openingHours[$key]['is_open'] === true);
+                                    
+                                    // Récupération des périodes
+                                    $periods = [];
+                                    if (isset($openingHours[$key]['periods']) && is_array($openingHours[$key]['periods'])) {
+                                        $periods = $openingHours[$key]['periods'];
+                                    } else {
+                                        $periods[] = [
+                                            'start' => $openingHours[$key]['start'] ?? '08:00',
+                                            'end'   => $openingHours[$key]['end'] ?? '22:00',
+                                        ];
+                                    }
                                 @endphp
-                                <div class="col-12">
+                                <div class="col-12 border-bottom pb-20 mb-10">
                                     <div class="row x-gap-20 y-gap-10 items-center">
                                         <div class="col-md-2 col-4">
                                             <div class="text-16 fw-500">{{ $label }}</div>
                                         </div>
-                                        <div class="col-md-3 col-8">
+                                        <div class="col-md-2 col-8">
                                             <div class="d-flex items-center">
                                                 <label class="mx-switch-container">
                                                     <input type="checkbox" name="opening_hours[{{ $key }}][is_open]" value="1" {{ $isOpen ? 'checked' : '' }} id="switch-edit-{{ $key }}">
@@ -183,25 +192,33 @@
                                                 <label class="text-14 ml-10" for="switch-edit-{{ $key }}">Ouvert</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-7 col-12 d-flex items-center x-gap-15" id="hours-range-edit-{{ $key }}">
-                                            <div class="d-flex items-center flex-grow-1">
-                                                <div class="flex-center size-32 rounded-4 bg-blue-1 mr-10 shrink-0">
-                                                    <i class="icon-clock text-12 text-white"></i>
+                                        <div class="col-md-8 col-12" id="hours-container-{{ $key }}">
+                                            <div id="periods-list-{{ $key }}" class="row y-gap-10">
+                                                @foreach($periods as $index => $period)
+                                                <div class="col-12 period-item">
+                                                    <div class="d-flex items-center x-gap-15">
+                                                        <div class="d-flex items-center flex-grow-1">
+                                                            <div class="form-input flex-grow-1">
+                                                                <input type="time" name="opening_hours[{{ $key }}][periods][{{ $index }}][start]" value="{{ $period['start'] }}">
+                                                                <label class="lh-1 text-12 text-light-1">Début</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-14 text-light-1">à</div>
+                                                        <div class="d-flex items-center flex-grow-1">
+                                                            <div class="form-input flex-grow-1">
+                                                                <input type="time" name="opening_hours[{{ $key }}][periods][{{ $index }}][end]" value="{{ $period['end'] }}">
+                                                                <label class="lh-1 text-12 text-light-1">Fin</label>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="text-red-1 text-18" onclick="removePeriod(this)" style="{{ count($periods) <= 1 ? 'display:none;' : '' }}"><i class="icon-trash"></i></button>
+                                                    </div>
                                                 </div>
-                                                <div class="form-input flex-grow-1">
-                                                    <input type="time" name="opening_hours[{{ $key }}][start]" value="{{ $startTime }}">
-                                                    <label class="lh-1 text-12 text-light-1">Début</label>
-                                                </div>
+                                                @endforeach
                                             </div>
-                                            <div class="text-14 text-light-1">à</div>
-                                            <div class="d-flex items-center flex-grow-1">
-                                                <div class="flex-center size-32 rounded-4 bg-blue-1 mr-10 shrink-0">
-                                                    <i class="icon-clock text-12 text-white"></i>
-                                                </div>
-                                                <div class="form-input flex-grow-1">
-                                                    <input type="time" name="opening_hours[{{ $key }}][end]" value="{{ $endTime }}">
-                                                    <label class="lh-1 text-12 text-light-1">Fin</label>
-                                                </div>
+                                            <div class="mt-10">
+                                                <button type="button" class="text-14 text-blue-1 fw-500 d-flex items-center" onclick="addPeriod('{{ $key }}')">
+                                                    <i class="icon-plus text-12 mr-5"></i> Ajouter une tranche
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -485,15 +502,15 @@
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         days.forEach(day => {
             const switchEl = document.getElementById(`switch-edit-${day}`);
-            const rangeEl = document.getElementById(`hours-range-edit-${day}`);
+            const containerEl = document.getElementById(`hours-container-${day}`);
             
-            if (switchEl && rangeEl) {
+            if (switchEl && containerEl) {
                 const toggle = () => {
-                    rangeEl.style.opacity = switchEl.checked ? '1' : '0.3';
-                    rangeEl.style.pointerEvents = switchEl.checked ? 'auto' : 'none';
+                    containerEl.style.opacity = switchEl.checked ? '1' : '0.3';
+                    containerEl.style.pointerEvents = switchEl.checked ? 'auto' : 'none';
                 };
                 switchEl.addEventListener('change', toggle);
-                toggle(); // Initial state
+                toggle();
             }
         });
 
@@ -715,6 +732,46 @@
         });
 
     }); // fin DOMContentLoaded
+
+    function addPeriod(day) {
+        const list = document.getElementById('periods-list-' + day);
+        const index = list.querySelectorAll('.period-item').length;
+        
+        const div = document.createElement('div');
+        div.className = 'col-12 period-item mt-10';
+        div.innerHTML = `
+            <div class="d-flex items-center x-gap-15">
+                <div class="d-flex items-center flex-grow-1">
+                    <div class="form-input flex-grow-1">
+                        <input type="time" name="opening_hours[${day}][periods][${index}][start]" value="14:00">
+                        <label class="lh-1 text-12 text-light-1">Début</label>
+                    </div>
+                </div>
+                <div class="text-14 text-light-1">à</div>
+                <div class="d-flex items-center flex-grow-1">
+                    <div class="form-input flex-grow-1">
+                        <input type="time" name="opening_hours[${day}][periods][${index}][end]" value="18:00">
+                        <label class="lh-1 text-12 text-light-1">Fin</label>
+                    </div>
+                </div>
+                <button type="button" class="text-red-1 text-18" onclick="removePeriod(this)"><i class="icon-trash"></i></button>
+            </div>
+        `;
+        list.appendChild(div);
+        
+        list.querySelectorAll('.text-red-1').forEach(btn => btn.style.display = 'block');
+    }
+
+    function removePeriod(btn) {
+        const item = btn.closest('.period-item');
+        const list = item.parentElement;
+        if (list.querySelectorAll('.period-item').length > 1) {
+            item.remove();
+            if (list.querySelectorAll('.period-item').length === 1) {
+                list.querySelector('.text-red-1').style.display = 'none';
+            }
+        }
+    }
 
 </script>
 

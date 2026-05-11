@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('mixone:auto-complete-reservations')->daily();
+Schedule::command('reservations:cancel-expired')->everyMinute();

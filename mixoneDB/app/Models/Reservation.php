@@ -41,6 +41,7 @@ class Reservation extends Model
             'status'         => ReservationStatus::class,
             'payment_status' => PaymentStatus::class,
             'price'          => 'decimal:2',
+            'date'           => 'date',
             'disputed_at'    => 'datetime',
         ];
     }

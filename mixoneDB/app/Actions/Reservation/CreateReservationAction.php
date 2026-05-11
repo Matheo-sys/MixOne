@@ -21,9 +21,16 @@ class CreateReservationAction
      */
     public function executer(ReservationDTO $dto): Reservation
     {
+        $studio = \App\Models\Studio::findOrFail($dto->id_studio);
+
         // Calculer l'heure de début et de fin de la nouvelle réservation
         $debutNouveau = \Carbon\Carbon::createFromFormat('H:i', $dto->creneau_horaire);
         $finNouveau = (clone $debutNouveau)->addHours($dto->nombre_heures);
+
+        // Vérifier si le créneau est dans le passé
+        if (\Carbon\Carbon::parse($dto->date)->isToday() && $debutNouveau->lt(now())) {
+            throw new Exception("Vous ne pouvez pas réserver un créneau déjà passé.");
+        }
 
         // Récupérer les réservations existantes pour ce studio et ce jour (non annulées)
         $reservationsExistantes = Reservation::where('studio_id', $dto->id_studio)
@@ -39,6 +46,39 @@ class CreateReservationAction
             if ($debutNouveau->lt($finRes) && $finNouveau->gt($debutRes)) {
                 throw new Exception("Ce créneau horaire chevauche une réservation existante ({$res->time_slot} pour {$res->number_of_hours}h).");
             }
+        }
+
+        // Vérifier si la réservation tombe entièrement dans une période d'ouverture
+        $jourSemaine = strtolower(\Carbon\Carbon::parse($dto->date)->format('l'));
+        $horaires = $studio->opening_hours[$jourSemaine] ?? null;
+        
+        if (!$horaires || !(isset($horaires['is_open']) && $horaires['is_open'])) {
+            throw new Exception("Le studio est fermé ce jour-là.");
+        }
+
+        $periods = [];
+        if (isset($horaires['periods']) && is_array($horaires['periods'])) {
+            $periods = $horaires['periods'];
+        } else {
+            $periods[] = [
+                'start' => $horaires['start'] ?? '08:00',
+                'end'   => $horaires['end'] ?? '22:00',
+            ];
+        }
+
+        $estDansUnePeriodeValide = false;
+        foreach ($periods as $p) {
+            $debutTranche = \Carbon\Carbon::createFromFormat('H:i', $p['start']);
+            $finTranche = \Carbon\Carbon::createFromFormat('H:i', $p['end']);
+
+            if ($debutNouveau->gte($debutTranche) && $finNouveau->lte($finTranche)) {
+                $estDansUnePeriodeValide = true;
+                break;
+            }
+        }
+
+        if (!$estDansUnePeriodeValide) {
+            throw new Exception("L'horaire demandé n'est pas compatible avec les heures d'ouverture du studio.");
         }
 
         return DB::transaction(function () use ($dto) {

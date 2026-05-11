@@ -52,16 +52,26 @@ class StudioController extends Controller
         $horairesOuverture = $studio->opening_hours[$jourSemaine] ?? null;
 
         $creneauxHoraires = [];
-        if ($horairesOuverture && ($horairesOuverture['is_open'] ?? false)) {
+        $isOpen = false;
+        if ($horairesOuverture) {
+            $val = $horairesOuverture['is_open'] ?? false;
+            $isOpen = ($val === true || $val === 1 || $val === "1" || $val === "on");
+        }
+
+        if ($isOpen) {
             $debut = $horairesOuverture['start'] ?? '08:00';
             $fin = $horairesOuverture['end'] ?? '22:00';
 
-            $tempsDebut = \Carbon\Carbon::createFromFormat('H:i', $debut);
-            $tempsFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
+            try {
+                $tempsDebut = \Carbon\Carbon::createFromFormat('H:i', $debut);
+                $tempsFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
 
-            while ($tempsDebut->lt($tempsFin)) {
-                $creneauxHoraires[] = $tempsDebut->format('H:i');
-                $tempsDebut->addHour();
+                while ($tempsDebut->lt($tempsFin)) {
+                    $creneauxHoraires[] = $tempsDebut->format('H:i');
+                    $tempsDebut->addHour();
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Erreur format heure studio (afficher): " . $e->getMessage());
             }
         }
 
@@ -84,16 +94,80 @@ class StudioController extends Controller
         $horairesOuverture = $studio->opening_hours[$jourSemaine] ?? null;
 
         $creneauxHoraires = [];
-        if ($horairesOuverture && ($horairesOuverture['is_open'] ?? false)) {
-            $debut = $horairesOuverture['start'] ?? '09:00';
-            $fin = $horairesOuverture['end'] ?? '20:00';
+        
+        // Vérification plus robuste de is_open (gère "1", 1, true, "on")
+        $isOpen = false;
+        if ($horairesOuverture) {
+            $val = $horairesOuverture['is_open'] ?? false;
+            $isOpen = ($val === true || $val === 1 || $val === "1" || $val === "on");
+        }
 
-            $tempsDebut = \Carbon\Carbon::createFromFormat('H:i', $debut);
-            $tempsFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
+        if ($isOpen) {
+            // Support de l'ancien format (start/end direct) et du nouveau (tableau de periods)
+            $periods = [];
+            if (isset($horairesOuverture['periods']) && is_array($horairesOuverture['periods'])) {
+                $periods = $horairesOuverture['periods'];
+            } else {
+                $periods[] = [
+                    'start' => $horairesOuverture['start'] ?? '09:00',
+                    'end'   => $horairesOuverture['end'] ?? '20:00',
+                ];
+            }
 
-            while ($tempsDebut->lt($tempsFin)) {
-                $creneauxHoraires[] = $tempsDebut->format('H:i');
-                $tempsDebut->addHour();
+            try {
+                $maintenant = now();
+                $margeReservation = (clone $maintenant)->addHour();
+                $estAujourdhui = \Carbon\Carbon::parse($date)->isToday();
+
+                // Récupérer les réservations existantes pour ce jour
+                $reservations = \App\Models\Reservation::where('studio_id', $studio->id)
+                    ->whereDate('date', $date)
+                    ->whereIn('status', ['En attente', 'Confirmée', 'Terminée', 'Completed', 'Confirmed', 'Pending'])
+                    ->get();
+
+                $heuresOccupees = [];
+                foreach ($reservations as $res) {
+                    $heureDebutRes = \Carbon\Carbon::createFromFormat('H:i', $res->time_slot);
+                    $nbHeures = $res->number_of_hours;
+                    for ($i = 0; $i < $nbHeures; $i++) {
+                        $heuresOccupees[] = $heureDebutRes->format('H:i');
+                        $heureDebutRes->addHour();
+                    }
+                }
+
+                foreach ($periods as $p) {
+                    $debut = $p['start'] ?? '09:00';
+                    $fin = $p['end'] ?? '20:00';
+                    if (empty($debut) || empty($fin)) continue;
+
+                    $tempsDebut = \Carbon\Carbon::createFromFormat('H:i', $debut);
+                    $tempsFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
+
+                    // La durée minimale du studio
+                    $minHours = (int) $studio->min_hours;
+
+                    while ($tempsDebut->lt($tempsFin)) {
+                        $slot = $tempsDebut->format('H:i');
+                        
+                        // Vérifier si on a assez de temps avant la fin de CETTE tranche
+                        $finReservationTheorique = (clone $tempsDebut)->addHours($minHours);
+                        $tropProcheDeLaFin = $finReservationTheorique->gt($tempsFin);
+
+                        $estOccupe = in_array($slot, $heuresOccupees);
+                        $estTropTard = $estAujourdhui && $tempsDebut->lt($margeReservation);
+
+                        if (!$estOccupe && !$estTropTard && !$tropProcheDeLaFin) {
+                            $creneauxHoraires[] = $slot;
+                        }
+                        $tempsDebut->addHour();
+                    }
+                }
+                
+                // Trier les créneaux par heure
+                sort($creneauxHoraires);
+                
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Erreur filtrage créneaux: " . $e->getMessage());
             }
         }
 

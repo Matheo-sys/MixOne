@@ -75,30 +75,41 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 
       // Afficher l'état de chargement pour les créneaux
       if (timeSlotSelect) {
+        console.log("Tentative de récupération des créneaux pour le studio:", config.studioId, "à la date:", date);
         timeSlotSelect.innerHTML = '<option disabled selected>Chargement...</option>';
-        fetch("/studios/".concat(config.studioId, "/creneaux?date=").concat(date)).then(function (response) {
-          return response.json();
-        }).then(function (slots) {
-          timeSlotSelect.innerHTML = '';
-          if (slots.length > 0) {
-            slots.forEach(function (slot) {
+        
+        fetch("/studios/" + config.studioId + "/creneaux?date=" + date)
+          .then(function (response) {
+            if (!response.ok) {
+              alert("Erreur API : " + response.status + " sur l'URL /studios/" + config.studioId + "/creneaux");
+              throw new Error("Erreur HTTP " + response.status);
+            }
+            return response.json();
+          })
+          .then(function (slots) {
+            console.log("Créneaux reçus:", slots);
+            timeSlotSelect.innerHTML = '';
+            if (slots && slots.length > 0) {
+              slots.forEach(function (slot) {
+                var option = document.createElement('option');
+                option.value = slot;
+                option.textContent = slot;
+                timeSlotSelect.appendChild(option);
+              });
+            } else {
+              alert("L'API a répondu mais la liste des créneaux est VIDE pour cette date.");
               var option = document.createElement('option');
-              option.value = slot;
-              option.textContent = slot;
+              option.disabled = true;
+              option.selected = true;
+              option.textContent = 'Aucun créneau disponible (Fermé)';
               timeSlotSelect.appendChild(option);
-            });
-          } else {
-            var option = document.createElement('option');
-            option.disabled = true;
-            option.selected = true;
-            option.textContent = 'Aucun créneau disponible (Fermé)';
-            timeSlotSelect.appendChild(option);
-          }
-        })["catch"](function (error) {
-          var _console;
-          /* eslint-disable */(_console = console).error.apply(_console, _toConsumableArray(oo_tx("864074535_93_24_93_92_11", 'Erreur lors de la récupération des créneaux:', error)));
-          timeSlotSelect.innerHTML = '<option disabled selected>Erreur de chargement</option>';
-        });
+            }
+          })
+          .catch(function (error) {
+            alert("Erreur critique JS : " + error.message);
+            console.error("Erreur détaillée lors de la récupération:", error);
+            timeSlotSelect.innerHTML = '<option disabled selected>Erreur de chargement</option>';
+          });
       }
     };
 
@@ -143,6 +154,11 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           hiddenDateInput.value = today;
         }
         dateInput.addEventListener('change', handleDateChange);
+        
+        // Charger les créneaux immédiatement au chargement de la page
+        if (dateInput.value) {
+          handleDateChange();
+        }
       }
 
       // Configurer les boutons +/- pour les heures

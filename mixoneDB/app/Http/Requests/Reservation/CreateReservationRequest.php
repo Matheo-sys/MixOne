@@ -40,6 +40,7 @@ class CreateReservationRequest extends FormRequest
             'date.required'             => 'Veuillez sélectionner une date pour votre réservation.',
             'date.date'                 => 'La date saisie n\'est pas valide.',
             'date.after_or_equal'       => 'La date de réservation doit être aujourd\'hui ou une date future.',
+            'time_slot.required'        => 'Veuillez sélectionner un créneau horaire.',
             'number_of_hours.required'  => 'Veuillez indiquer le nombre d\'heures.',
             'number_of_hours.integer'   => 'Le nombre d\'heures doit être un nombre entier.',
             'number_of_hours.min'       => 'Le nombre d\'heures minimum est de 1.',

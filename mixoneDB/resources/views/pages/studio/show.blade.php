@@ -276,12 +276,11 @@
 
                             <!-- Formulaire de réservation -->
                             <form action="{{ route('reservation.store') }}" method="POST" id="reservationForm" class="js-ajax-form"
-                                  data-studio-id="{{ $studio->id }}"
+                                  data-studio-id="{{ $studio->uuid }}"
                                   data-min-hours="{{ $studio->min_hours }}"
                                   data-hourly-rate="{{ $studio->hourly_rate }}">
                                 @csrf
                                 <input type="hidden" name="studio_id" value="{{ $studio->id }}">
-                                <input type="hidden" name="date" id="hidden_date" value="">
                                 <input type="hidden" name="number_of_hours" id="hidden_number_of_hours" value="{{ $studio->min_hours }}" required>
                                 <input type="hidden" name="total_price" id="total_price" value="">
 
@@ -371,9 +370,6 @@
                                         </select>
                                         <i class="icon-arrow-down text-14 absolute right-20 top-15 text-light-1"></i>
                                     </div>
-                                    @if(empty($timeSlots))
-                                        <p class="text-14 text-red-1 mt-5">Veuillez sélectionner une date valide</p>
-                                    @endif
                                 </div>
 
                                 <!-- Messages d'erreur/succès -->
@@ -421,6 +417,93 @@
     </section>
 
 @push('scripts')
-    <script src="{{ asset('js/pages/studio/reservation.js') }}"></script>
+<script>
+(function () {
+  'use strict';
+  document.addEventListener('DOMContentLoaded', function () {
+    console.log("=== LOGIQUE RESERVATION COMPLETE START ===");
+    
+    var container = document.getElementById('reservationForm');
+    if (!container) return;
+
+    var config = {
+      studioId: container.getAttribute('data-studio-id'),
+      minHours: parseInt(container.getAttribute('data-min-hours')),
+      hourlyRate: parseFloat(container.getAttribute('data-hourly-rate'))
+    };
+
+    var decreaseBtn = container.querySelector('.js-down');
+    var increaseBtn = container.querySelector('.js-up');
+    var hourDisplays = container.querySelectorAll('.js-count-adult');
+    var dateInput = document.getElementById('date');
+    var hoursInput = document.getElementById('hidden_number_of_hours');
+    var totalPriceInput = document.getElementById('total_price');
+    var priceDisplay = document.querySelector('[data-price]');
+    var timeSlotSelect = document.getElementById('time_slot');
+    var selectedHours = config.minHours;
+
+    var updateDisplay = function () {
+      hourDisplays.forEach(function (d) { d.textContent = selectedHours; });
+      if (hoursInput) hoursInput.value = selectedHours;
+      var total = selectedHours * config.hourlyRate;
+      if (totalPriceInput) totalPriceInput.value = total.toFixed(2);
+      if (priceDisplay) priceDisplay.textContent = total.toFixed(2) + '€';
+      if (decreaseBtn) decreaseBtn.disabled = selectedHours <= config.minHours;
+    };
+
+    var handleDateChange = function () {
+      if (!dateInput) return;
+      var date = dateInput.value;
+      if (!date) return;
+
+      if (timeSlotSelect) {
+        timeSlotSelect.innerHTML = '<option disabled selected>Chargement...</option>';
+        fetch("/studios/" + config.studioId + "/creneaux?date=" + date)
+          .then(function (res) { return res.json(); })
+          .then(function (slots) {
+            timeSlotSelect.innerHTML = '';
+            if (slots && slots.length > 0) {
+              slots.forEach(function (s) {
+                var opt = document.createElement('option');
+                opt.value = s; opt.textContent = s;
+                timeSlotSelect.appendChild(opt);
+              });
+            } else {
+              timeSlotSelect.innerHTML = '<option disabled selected>Aucun créneau disponible</option>';
+            }
+          });
+      }
+    };
+
+    if (dateInput) {
+      dateInput.addEventListener('change', handleDateChange);
+      if (dateInput.value) {
+        handleDateChange();
+      } else {
+        var today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+        handleDateChange();
+      }
+    }
+
+    if (decreaseBtn) {
+      decreaseBtn.addEventListener('click', function () {
+        if (selectedHours > config.minHours) { selectedHours--; updateDisplay(); }
+      });
+    }
+    if (increaseBtn) {
+      increaseBtn.addEventListener('click', function () {
+        selectedHours++; updateDisplay();
+      });
+    }
+
+    container.addEventListener('submit', function() {
+        console.log("Envoi du formulaire avec time_slot:", timeSlotSelect.value);
+    });
+
+    updateDisplay();
+  });
+})();
+</script>
 @endpush
 @endsection
