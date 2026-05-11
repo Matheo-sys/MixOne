@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('stripe_account_id')->nullable()->after('profile');
+            if (!Schema::hasColumn('users', 'stripe_account_id')) {
+                $table->string('stripe_account_id')->nullable()->after('profile');
+            }
             
             // On supprime les anciennes colonnes bancaires manuelles
             if (Schema::hasColumn('users', 'bank_name')) {
