@@ -22,9 +22,9 @@ class UserController extends Controller
     /**
      * Détails d'un utilisateur.
      */
-    public function afficher(User $utilisateur): View
+    public function afficher(User $user): View
     {
-        $utilisateur->load([
+        $user->load([
             'studios', 
             'reservations.studio', 
             'reservationsRecues.user',
@@ -33,22 +33,22 @@ class UserController extends Controller
             }
         ]);
 
-        return view('admin.users.show', ['user' => $utilisateur]);
+        return view('admin.users.show', ['user' => $user]);
     }
 
     /**
      * Basculer le statut administrateur.
      */
-    public function basculerAdmin(User $utilisateur): RedirectResponse
+    public function basculerAdmin(User $user): RedirectResponse
     {
         // Empêcher de s'enlever soi-même les droits admin pour éviter d'être bloqué
-        if (auth()->id() === $utilisateur->id) {
+        if (auth()->id() === $user->id) {
             return back()->with('error', 'Vous ne pouvez pas retirer vos propres droits administrateur.');
         }
 
-        $utilisateur->update(['is_admin' => !$utilisateur->is_admin]);
+        $user->update(['is_admin' => !$user->is_admin]);
         
-        $message = $utilisateur->is_admin 
+        $message = $user->is_admin 
             ? "L'utilisateur est désormais administrateur." 
             : "Les droits administrateur ont été retirés.";
 
@@ -58,28 +58,28 @@ class UserController extends Controller
     /**
      * Bannir un utilisateur.
      */
-    public function bannir(User $utilisateur): RedirectResponse
+    public function bannir(User $user): RedirectResponse
     {
-        $utilisateur->update(['banned_at' => now()]);
+        $user->update(['banned_at' => now()]);
         return back()->with('success', 'Utilisateur banni avec succès.');
     }
 
     /**
      * Débannir un utilisateur.
      */
-    public function debannir(User $utilisateur): RedirectResponse
+    public function debannir(User $user): RedirectResponse
     {
-        $utilisateur->update(['banned_at' => null]);
+        $user->update(['banned_at' => null]);
         return back()->with('success', 'Utilisateur débanni avec succès.');
     }
 
     /**
      * Vérifier manuellement l'email.
      */
-    public function verifierEmail(User $utilisateur): RedirectResponse
+    public function verifierEmail(User $user): RedirectResponse
     {
-        $utilisateur->email_verified_at = now();
-        $utilisateur->save();
+        $user->email_verified_at = now();
+        $user->save();
         return back()->with('success', "L'email de l'utilisateur a été vérifié manuellement.");
     }
 }
