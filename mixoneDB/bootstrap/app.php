@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Foundation\Application;
+
+// Chargement des helpers personnalisés
+require_once __DIR__ . '/../app/helpers.php';
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 

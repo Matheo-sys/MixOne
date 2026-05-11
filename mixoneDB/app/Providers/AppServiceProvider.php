@@ -7,19 +7,6 @@ use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoTransportFactory;
 use Symfony\Component\Mailer\Transport\Dsn;
 
-/**
- * Définition globale du helper storage_url.
- * On le place ici, en dehors de la classe, pour qu'il soit accessible partout
- * sans risque de double déclaration lors du boot de Laravel.
- */
-if (!function_exists('storage_url')) {
-    function storage_url($path) {
-        if (empty($path)) return null;
-        if (str_starts_with($path, 'http')) return $path;
-        return \Illuminate\Support\Facades\Storage::url($path);
-    }
-}
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
