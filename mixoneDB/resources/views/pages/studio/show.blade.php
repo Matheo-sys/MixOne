@@ -403,19 +403,24 @@
                                 @endphp
 
                                     <!-- Bouton de réservation -->
-                                <button type="submit" id = "reserveButton"
+                                <button type="submit" id="reserveButton"
                                         class="button px-35 h-60 col-12 transition-all fw-500 flex items-center justify-center
-               {{ $isStudio ? 'bg-gray-800 text-gray-900 cursor-not-allowed' : 'bg-blue-1 text-white hover:bg-blue-2' }}"
-                                        style="margin-top: 10px; border-radius: 8px; opacity: {{ $isStudio ? '1' : '1' }};"
+                                        {{ $isStudio ? 'bg-gray-800 text-gray-900 cursor-not-allowed' : 'bg-blue-1 text-white hover:bg-blue-2' }}"
+                                        style="margin-top: 10px; border-radius: 8px;"
                                         {{ $isStudio ? 'disabled' : '' }}
                                         @if($isStudio) data-tooltip="Vous ne pouvez pas réserver connecté en tant que studio" @endif>
                                     <span>Réserver maintenant</span>
                                     <i class="icon-arrow-right text-16 ml-10"></i>
                                 </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                                <!-- Ajout du tooltip (message au survol) -->
 @push('scripts')
     <script src="{{ asset('js/pages/studio/reservation.js') }}"></script>
 @endpush
 @endsection
-
