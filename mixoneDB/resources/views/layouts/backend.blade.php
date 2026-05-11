@@ -34,14 +34,16 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('title', 'MixOne | Réservez le studio de musique idéal')">
     <meta property="og:description" content="@yield('meta_description', 'Réservez votre studio de musique en quelques clics sur MixOne.')">
-    <meta property="og:image" content="{{ asset('media/img/general/og-image.png') }}">
+    <meta property="og:image" content="{{ secure_asset('media/img/general/og-image-v1.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="@yield('title', 'MixOne | Réservez le studio de musique idéal')">
     <meta property="twitter:description" content="@yield('meta_description', 'Réservez votre studio de musique en quelques clics sur MixOne.')">
-    <meta property="twitter:image" content="{{ asset('media/img/general/og-image.png') }}">
+    <meta property="twitter:image" content="{{ secure_asset('media/img/general/og-image-v1.png') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
