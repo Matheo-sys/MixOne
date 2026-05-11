@@ -19,7 +19,13 @@
                 </div>
 
                 <div class="col-xl-3 col-6">
-                    <div class="text-40 lg:text-30 lh-13 fw-600">{{ $pourcentageSatisfaction }}%</div>
+                    <div class="text-40 lg:text-30 lh-13 fw-600">
+                        @if($pourcentageSatisfaction > 0)
+                            {{ $pourcentageSatisfaction }}%
+                        @else
+                            N/A
+                        @endif
+                    </div>
                     <div class="text-14 lh-14 text-light-1 mt-5">Satisfaction client</div>
                 </div>
 

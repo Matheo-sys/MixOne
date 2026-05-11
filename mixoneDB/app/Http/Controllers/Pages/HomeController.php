@@ -23,13 +23,24 @@ class HomeController extends Controller
 
         $totalReservations = Reservation::count();
         $clientsSatisfaits = $totalReservations;
-        $noteGlobale = $statsReservations->avg_rating ? round($statsReservations->avg_rating, 2) : 4.88;
+        
+        // On renvoie null si aucune note pour pouvoir afficher un message par défaut dans la vue
+        $noteGlobale = $statsReservations->avg_rating ? round($statsReservations->avg_rating, 2) : null;
+
+        // Récupérer les 5 derniers avis réels avec client et studio
+        $avis = Reservation::whereNotNull('rating')
+            ->whereNotNull('comment')
+            ->with(['client', 'studio'])
+            ->latest()
+            ->limit(5)
+            ->get();
 
         return view('pages.home', [
             'enTeteBlanc'       => false,
             'studios'           => Studio::where('is_verified', true)->latest()->limit(20)->get(),
             'clientsSatisfaits' => $clientsSatisfaits,
             'noteGlobale'       => $noteGlobale,
+            'avis'              => $avis
         ]);
 
     }

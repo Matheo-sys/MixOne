@@ -28,13 +28,22 @@ class AboutController extends Controller
 
         $pourcentageSatisfaction = $totalEvaluations > 0
             ? round(($evaluationsSatisfaites / $totalEvaluations) * 100)
-            : 99; // Valeur par défaut si aucune évaluation
+            : 0; // 0% par défaut si aucune évaluation en prod
+
+        // On récupère aussi quelques avis pour la page About
+        $avis = Reservation::whereNotNull('rating')
+            ->whereNotNull('comment')
+            ->with(['client', 'studio'])
+            ->latest()
+            ->limit(6)
+            ->get();
 
         return view('pages.about', [
             'nombreStudios' => $nombreStudios,
             'nombreUtilisateurs' => $nombreUtilisateurs,
             'nombreReservations' => $nombreReservations,
-            'pourcentageSatisfaction' => $pourcentageSatisfaction
+            'pourcentageSatisfaction' => $pourcentageSatisfaction,
+            'avis' => $avis
         ]);
 
     }
