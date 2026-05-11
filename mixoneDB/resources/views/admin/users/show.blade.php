@@ -22,7 +22,7 @@
         <div class="py-30 px-30 rounded-4 bg-white shadow-3">
             <div class="d-flex flex-column items-center text-center">
                 <div class="relative">
-                    <img src="{{ $user->avatar ? storage_url($user->avatar) : asset('media/images/avatar-default.png') }}" 
+                    <img src="{{ $user->avatar ? storage_url($user->avatar) : asset('media/img/misc/avatar-default.png') }}" 
                          alt="avatar" class="size-120 rounded-full object-cover mb-20 border-light">
                     @if($user->is_admin)
                         <div class="absolute bottom-10 right-0 bg-purple-1 text-white size-32 rounded-full flex-center border-white-2" title="Administrateur">
