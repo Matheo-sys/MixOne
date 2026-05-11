@@ -134,18 +134,18 @@
                                     @if($s === 'en attente')
                                         {{-- En attente → Le studio peut Confirmer ou Refuser via des boutons --}}
                                         <div class="d-flex x-gap-10 y-gap-5 flex-wrap">
-                                            <form action="{{ route('reservations.confirm', $reservation->id) }}" method="POST">
+                                            <form action="{{ route('reservations.confirm', $reservation->uuid) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="button -sm bg-blue-1 text-white px-10 py-5 rounded-4 text-13 fw-500">Confirmer</button>
                                             </form>
-                                            <form action="{{ route('reservations.refuse', $reservation->id) }}" method="POST">
+                                            <form action="{{ route('reservations.refuse', $reservation->uuid) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="button -sm bg-red-2 text-white px-10 py-5 rounded-4 text-13 fw-500">Refuser</button>
                                             </form>
                                         </div>
                                     @elseif($s === 'confirmée')
                                         <div class="d-flex x-gap-10 y-gap-5 flex-wrap">
-                                            <form action="{{ route('reservations.complete', $reservation->id) }}" method="POST">
+                                            <form action="{{ route('reservations.complete', $reservation->uuid) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="button -sm bg-green-1 text-green-2 px-10 py-5 rounded-4 text-13 fw-500" title="Marquer comme payée / effectuée">Terminer</button>
                                             </form>

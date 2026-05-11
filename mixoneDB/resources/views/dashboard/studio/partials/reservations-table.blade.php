@@ -53,13 +53,13 @@
                 @if($s === 'en attente')
                     {{-- En attente → Le studio peut Confirmer ou Refuser via des boutons --}}
                     <div class="d-flex x-gap-10 y-gap-5 flex-wrap">
-                        <form action="{{ route('reservations.confirm', $reservation->id) }}" method="POST">
+                        <form action="{{ route('reservations.confirm', $reservation->uuid) }}" method="POST">
                             @csrf
                             <button type="submit" class="button -sm bg-blue-1 text-white px-15 py-5 rounded-4 text-13 fw-500">
                                 Confirmer
                             </button>
                         </form>
-                        <form action="{{ route('reservations.refuse', $reservation->id) }}" method="POST">
+                        <form action="{{ route('reservations.refuse', $reservation->uuid) }}" method="POST">
                             @csrf
                             <button type="submit" class="button -sm bg-red-2 text-white px-15 py-5 rounded-4 text-13 fw-500">
                                 Refuser
@@ -73,7 +73,7 @@
                             Terminer (Code PIN)
                         </button>
                         
-                        <form action="{{ route('reservations.dispute', $reservation->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir signaler un problème ? Les fonds seront bloqués.');">
+                        <form action="{{ route('reservations.dispute', $reservation->uuid) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir signaler un problème ? Les fonds seront bloqués.');">
                             @csrf
                             <button type="submit" class="button -sm bg-red-1 text-white px-15 py-5 rounded-4 text-13 fw-500 w-1/1">
                                 Signaler un litige
@@ -86,7 +86,7 @@
                         <div class="col-12 text-left">
                             <h4 class="text-16 fw-600 mb-10">Validation Session</h4>
                             <p class="text-13 text-light-1 mb-15">Veuillez entrer le code à 4 chiffres fourni par l'artiste.</p>
-                            <form action="{{ route('reservations.complete', $reservation->id) }}" method="POST">
+                            <form action="{{ route('reservations.complete', $reservation->uuid) }}" method="POST">
                                 @csrf
                                 <div class="mb-15">
                                     <input type="text" name="pin_code" class="form-control text-20 text-center fw-600 tracking-wider h-50" placeholder="0000" maxlength="4" required pattern="\d{4}">
