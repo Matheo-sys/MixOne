@@ -109,7 +109,7 @@
                         @foreach($reservations->sortByDesc('created_at')->take(6) as $index => $reservation)
                             <tr>
                                 <td data-label="N°">N°{{ $reservation->id }}</td>
-                                <td data-label="Client">{{ $reservation->user->email }}</td>
+                                <td data-label="Client">{{ $reservation->client->email }}</td>
                                 <td data-label="Total" class="fw-500">{{ number_format($reservation->price, 2) }}€</td>
                                 <td data-label="Payé">{{ $reservation->status === 'Confirmée' ? number_format($reservation->price, 2).'€' : '0,00€' }}</td>
                                 <td data-label="Statut">

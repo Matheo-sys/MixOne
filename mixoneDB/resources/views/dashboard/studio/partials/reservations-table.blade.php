@@ -15,7 +15,7 @@
     @foreach($rows as $reservation)
         <tr>
             <td data-label="N°">{{ $reservation->id }}</td>
-            <td data-label="Client">{{ $reservation->user->first_name ?? '' }} {{ $reservation->user->last_name ?? $reservation->user->email }}</td>
+            <td data-label="Client">{{ $reservation->client->first_name ?? '' }} {{ $reservation->client->last_name ?? $reservation->client->email }}</td>
             <td data-label="Date">{{ $reservation->created_at->format('d/m/Y') }}</td>
             <td data-label="Créneau" class="lh-16 text-right sm:text-left">
                 {{ \Carbon\Carbon::parse($reservation->time_slot)->format('d/m/Y') }}<br>
