@@ -4,7 +4,7 @@
 Une nouvelle réservation vient d'être payée pour votre studio **{{ $reservation->studio->name }}**.
 
 ### Détails de la demande :
-* **Artiste :** {{ $reservation->user->first_name }} {{ $reservation->user->last_name }}
+* **Artiste :** {{ $reservation->client->first_name }} {{ $reservation->client->last_name }}
 * **Date :** {{ \Carbon\Carbon::parse($reservation->date)->format('d/m/Y') }}
 * **Créneau :** {{ \Carbon\Carbon::parse($reservation->time_slot)->format('H:i') }} ({{ $reservation->number_of_hours }} heure(s))
 * **Montant :** {{ $reservation->price }} €

@@ -1,7 +1,7 @@
 <x-mail::message>
 # Réservation Confirmée ! 🎉
 
-Bonjour **{{ $reservation->user->first_name ?? 'Artiste' }}**,
+Bonjour **{{ $reservation->client->first_name ?? 'Artiste' }}**,
 
 Votre session au studio **{{ $reservation->studio->name }}** a été officiellement confirmée par le propriétaire !
 

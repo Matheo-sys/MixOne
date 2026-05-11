@@ -1,7 +1,7 @@
 <x-mail::message>
 # Paiement reçu ! 🎸
 
-Bonjour {{ $reservation->user->first_name }},
+Bonjour {{ $reservation->client->first_name }},
 
 Bonne nouvelle ! Votre paiement de **{{ number_format($reservation->price, 2) }} €** pour la séance au studio **{{ $reservation->studio->name }}** a bien été reçu.
 

@@ -3,7 +3,7 @@
 
 Bonjour **{{ $reservation->studio->user->first_name ?? 'Studio' }}**,
 
-Bonne nouvelle ! L'artiste **{{ $reservation->user->first_name ?? 'Un artiste' }}** vient de payer pour une session dans votre studio **{{ $reservation->studio->name }}**.
+Bonne nouvelle ! L'artiste **{{ $reservation->client->first_name ?? 'Un artiste' }}** vient de payer pour une session dans votre studio **{{ $reservation->studio->name }}**.
 
 ### Détails de la session :
 * **Date :** {{ \Carbon\Carbon::parse($reservation->time_slot)->format('d/m/Y') }}
