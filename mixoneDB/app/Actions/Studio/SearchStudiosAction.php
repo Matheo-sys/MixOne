@@ -37,7 +37,10 @@ class SearchStudiosAction
             ->with('proprietaire')
             ->withCount('reservationsTerminees')
             ->withAvg('reservationsTerminees', 'rating')
-            ->where('is_verified', true);
+            ->where('is_verified', true)
+            ->whereHas('proprietaire', function($q) {
+                $q->whereNotNull('stripe_account_id');
+            });
 
 
         if ($dto->heures_min !== null) {

@@ -224,7 +224,10 @@ class StudioController extends Controller
         $requeteBase = Studio::with('proprietaire')
             ->withCount('reservationsTerminees')
             ->withAvg('reservationsTerminees', 'rating')
-            ->where('is_verified', true);
+            ->where('is_verified', true)
+            ->whereHas('proprietaire', function($q) {
+                $q->whereNotNull('stripe_account_id');
+            });
 
         $studios = (clone $requeteBase)->paginate(20);
         $studiosCarte = (clone $requeteBase)->get();

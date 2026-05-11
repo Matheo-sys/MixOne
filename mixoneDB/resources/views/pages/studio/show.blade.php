@@ -395,19 +395,38 @@
                                     </div>
                                 @endif
                                 @php
-                                    $isStudio = auth()->check() && auth()->user()->profile === 'studio'; // Vérifie si l'utilisateur est un studio
+                                    $owner = $studio->proprietaire;
+                                    $stripeReady = !empty($owner->stripe_account_id);
+                                    $isStudio = auth()->check() && auth()->user()->profile === 'studio';
                                 @endphp
 
+                                @if(!$stripeReady)
+                                    <div class="bg-yellow-1-05 border-yellow-1 rounded-4 p-20 mb-10">
+                                        <div class="d-flex x-gap-15 y-gap-10 items-center">
+                                            <div class="flex-center size-40 rounded-full bg-yellow-1">
+                                                <i class="icon-notification text-16 text-white"></i>
+                                            </div>
+                                            <div class="text-14 fw-500 text-yellow-2">
+                                                Ce studio finalise sa configuration bancaire. Les réservations seront bientôt disponibles.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="button px-35 h-60 col-12 bg-light-2 text-light-1 cursor-not-allowed" style="border-radius: 8px;" disabled>
+                                        <span>Bientôt disponible</span>
+                                        <i class="icon-lock text-16 ml-10"></i>
+                                    </button>
+                                @else
                                     <!-- Bouton de réservation -->
-                                <button type="submit" id="reserveButton"
-                                        class="button px-35 h-60 col-12 transition-all fw-500 flex items-center justify-center
-                                        {{ $isStudio ? 'bg-gray-800 text-gray-900 cursor-not-allowed' : 'bg-blue-1 text-white hover:bg-blue-2' }}"
-                                        style="margin-top: 10px; border-radius: 8px;"
-                                        {{ $isStudio ? 'disabled' : '' }}
-                                        @if($isStudio) data-tooltip="Vous ne pouvez pas réserver connecté en tant que studio" @endif>
-                                    <span>Réserver maintenant</span>
-                                    <i class="icon-arrow-right text-16 ml-10"></i>
-                                </button>
+                                    <button type="submit" id="reserveButton"
+                                            class="button px-35 h-60 col-12 transition-all fw-500 flex items-center justify-center
+                                            {{ $isStudio ? 'bg-gray-800 text-gray-900 cursor-not-allowed' : 'bg-blue-1 text-white hover:bg-blue-2' }}"
+                                            style="margin-top: 10px; border-radius: 8px;"
+                                            {{ $isStudio ? 'disabled' : '' }}
+                                            @if($isStudio) data-tooltip="Vous ne pouvez pas réserver connecté en tant que studio" @endif>
+                                        <span>Réserver maintenant</span>
+                                        <i class="icon-arrow-right text-16 ml-10"></i>
+                                    </button>
+                                @endif
                             </form>
                         </div>
                     </div>
