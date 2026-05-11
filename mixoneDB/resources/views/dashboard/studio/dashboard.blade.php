@@ -80,7 +80,23 @@
         </div>
     </div>
     @endif
-    <div class="row y-gap-30">
+    @if(session('success'))
+        <div class="px-20 py-15 mb-20 bg-green-1-05 text-green-1 rounded-4 text-14">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="px-20 py-15 mb-20 bg-red-1-05 text-red-1 rounded-4 text-14">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if(session('info'))
+        <div class="px-20 py-15 mb-20 bg-blue-1-05 text-blue-1 rounded-4 text-14">
+            {{ session('info') }}
+        </div>
+    @endif
         <div class="col-xl-4 col-md-6">
             <div class="py-30 px-30 sm:px-20 rounded-4 bg-white shadow-3 h-full">
                 <div class="row y-gap-20 justify-between items-center">
