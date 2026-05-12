@@ -206,7 +206,7 @@
                                                 @if($res->user_id === $user->id)
                                                     <span class="text-blue-1">Moi (Client)</span>
                                                 @else
-                                                    {{ $res->user?->first_name ?? 'Inconnu' }} (Propriétaire)
+                                                    {{ $res->client?->first_name ?? 'Inconnu' }} (Propriétaire)
                                                 @endif
                                             </td>
                                             <td>{{ $res->total_price }} €</td>

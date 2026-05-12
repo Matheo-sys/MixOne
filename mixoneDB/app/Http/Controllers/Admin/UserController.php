@@ -27,7 +27,7 @@ class UserController extends Controller
         $user->load([
             'studios', 
             'reservations.studio', 
-            'reservationsRecues.user',
+            'reservationsRecues.client',
             'portefeuille.transactions' => function($query) {
                 $query->orderBy('created_at', 'desc')->limit(10);
             }
