@@ -16,8 +16,9 @@ class AdminDashboardController extends Controller
     public function afficher(): \Illuminate\Contracts\View\View
     {
         // Statistiques globales
-        $totalUtilisateurs = User::count();
+        $totalArtistes = User::where('profile', 'artist')->count();
         $totalStudios = Studio::count();
+        $totalUtilisateursStudios = User::where('profile', 'studio')->count();
         
         // Chiffre d'affaires total (réservations terminées)
         $volumeTotal = Reservation::where('status', \App\Enums\ReservationStatus::Completed)->sum('price');
@@ -33,8 +34,9 @@ class AdminDashboardController extends Controller
         $virementsEnAttente = \App\Models\PayoutRequest::where('status', 'pending')->count();
 
         return view('admin.dashboard', [
-            'totalUsers'       => $totalUtilisateurs,
+            'totalArtists'     => $totalArtistes,
             'totalStudios'     => $totalStudios,
+            'totalStudioUsers' => $totalUtilisateursStudios,
             'totalVolume'      => $volumeTotal,
             'totalCommission'  => $commissionTotale,
             'pendingDisputes'  => $litigesEnAttente,

@@ -41,13 +41,13 @@
         </div>
     </div>
 
-    <!-- Utilisateurs -->
+    <!-- Artistes -->
     <div class="col-xl-3 col-md-6">
         <div class="py-30 px-30 rounded-4 bg-white shadow-3">
             <div class="row y-gap-20 justify-between items-center flex-nowrap">
                 <div class="col-auto">
                     <div class="fw-500 text-light-1">Artistes inscrits</div>
-                    <div class="text-30 fw-600 mt-5">{{ $totalUsers }}</div>
+                    <div class="text-30 fw-600 mt-5">{{ $totalArtists }}</div>
                 </div>
                 <div class="col-auto">
                     <img src="{{ asset('media/img/dashboard/icons/3.svg') }}" alt="icon">
@@ -61,8 +61,9 @@
         <div class="py-30 px-30 rounded-4 bg-white shadow-3">
             <div class="row y-gap-20 justify-between items-center flex-nowrap">
                 <div class="col-auto">
-                    <div class="fw-500 text-light-1">Studios actifs</div>
-                    <div class="text-30 fw-600 mt-5">{{ $totalStudios }}</div>
+                    <div class="fw-500 text-light-1">Gestionnaires de Studios</div>
+                    <div class="text-30 fw-600 mt-5">{{ $totalStudioUsers }}</div>
+                    <div class="text-14 text-blue-1 mt-5">{{ $totalStudios }} studios actifs</div>
                 </div>
                 <div class="col-auto">
                     <img src="{{ asset('media/img/dashboard/icons/4.svg') }}" alt="icon">
