@@ -15,33 +15,44 @@ class AdminDashboardController extends Controller
      */
     public function afficher(): \Illuminate\Contracts\View\View
     {
-        // Statistiques globales
-        $totalArtistes = User::where('profile', 'artist')->count();
-        $totalStudios = Studio::count();
-        $totalUtilisateursStudios = User::where('profile', 'studio')->count();
-        
-        // Chiffre d'affaires total (réservations terminées)
+        $now = now();
+        $thirtyDaysAgo = now()->subDays(30);
+
+        // 1. Métriques Financières
         $volumeTotal = Reservation::where('status', \App\Enums\ReservationStatus::Completed)->sum('price');
+        $volume30Jours = Reservation::where('status', \App\Enums\ReservationStatus::Completed)
+                                     ->where('created_at', '>=', $thirtyDaysAgo)
+                                     ->sum('price');
         
-        // Commissions MixOne (ex: 10% par défaut)
         $tauxCommission = config('services.stripe.commission_rate', 10) / 100;
         $commissionTotale = $volumeTotal * $tauxCommission;
+        $commission30Jours = $volume30Jours * $tauxCommission;
 
-        // Litiges en attente
+        // 2. Utilisateurs & Croissance
+        $totalUtilisateurs = User::count();
+        $nouveauxUtilisateurs30j = User::where('created_at', '>=', $thirtyDaysAgo)->count();
+        $utilisateursBannis = User::whereNotNull('banned_at')->count();
+
+        // 3. Offre (Studios)
+        $totalStudiosActifs = Studio::where('is_verified', true)->count();
+        $studiosEnAttente = Studio::where('is_verified', false)->count();
+        
+        // 4. Modération & Litiges
         $litigesEnAttente = Reservation::where('status', \App\Enums\ReservationStatus::Disputed)->count();
-
-        // Demandes de virements en attente
         $virementsEnAttente = \App\Models\PayoutRequest::where('status', 'pending')->count();
+        $imagesEnAttente = \App\Models\StudioImageRequest::where('status', 'pending')->count();
 
-        return view('admin.dashboard', [
-            'totalArtists'     => $totalArtistes,
-            'totalStudios'     => $totalStudios,
-            'totalStudioUsers' => $totalUtilisateursStudios,
-            'totalVolume'      => $volumeTotal,
-            'totalCommission'  => $commissionTotale,
-            'pendingDisputes'  => $litigesEnAttente,
-            'pendingPayouts'   => $virementsEnAttente,
-        ]);
+        // 5. Réservations
+        $reservationsTotales = Reservation::count();
+        $reservations30j = Reservation::where('created_at', '>=', $thirtyDaysAgo)->count();
+
+        return view('admin.dashboard', compact(
+            'volumeTotal', 'volume30Jours', 'commissionTotale', 'commission30Jours',
+            'totalUtilisateurs', 'nouveauxUtilisateurs30j', 'utilisateursBannis',
+            'totalStudiosActifs', 'studiosEnAttente',
+            'litigesEnAttente', 'virementsEnAttente', 'imagesEnAttente',
+            'reservationsTotales', 'reservations30j'
+        ));
     }
 }
 
