@@ -37,11 +37,11 @@
             <div class="row y-gap-20 justify-between items-center flex-nowrap">
                 <div class="col-auto">
                     <div class="fw-500 text-light-1">Commissions (Gains)</div>
-                    <div class="text-30 fw-600 mt-5 text-green-1">{{ number_format($commission30Jours, 2) }} €</div>
+                    <div class="text-30 fw-600 mt-5" style="color: #05a011 !important;">{{ number_format($commission30Jours, 2) }} €</div>
                     <div class="text-13 text-light-1 mt-5">Total historique: {{ number_format($commissionTotale, 2) }} €</div>
                 </div>
                 <div class="col-auto">
-                    <div class="size-50 bg-green-1-05 rounded-full flex-center text-green-1 text-24">
+                    <div class="size-50 bg-green-1-05 rounded-full flex-center text-24" style="color: #05a011 !important;">
                         <i class="icon-menu-2"></i>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                 @if($litigesEnAttente > 0)
                     <a href="{{ route('admin.disputes.index') }}" class="badge bg-red-1 text-white px-15 py-5">{{ $litigesEnAttente }} à traiter</a>
                 @else
-                    <span class="text-green-1 fw-500"><i class="icon-check"></i> Aucun</span>
+                    <span class="fw-500" style="color: #05a011 !important;"><i class="icon-check"></i> Aucun</span>
                 @endif
             </div>
 
@@ -111,7 +111,7 @@
                 @if($virementsEnAttente > 0)
                     <a href="{{ route('admin.payouts.index') }}" class="badge bg-blue-1 text-white px-15 py-5">{{ $virementsEnAttente }} en attente</a>
                 @else
-                    <span class="text-green-1 fw-500"><i class="icon-check"></i> À jour</span>
+                    <span class="fw-500" style="color: #05a011 !important;"><i class="icon-check"></i> À jour</span>
                 @endif
             </div>
         </div>
@@ -129,7 +129,7 @@
                 @if($studiosEnAttente > 0)
                     <a href="{{ route('admin.studios.index') }}" class="badge bg-yellow-1 text-white px-15 py-5">{{ $studiosEnAttente }} à vérifier</a>
                 @else
-                    <span class="text-green-1 fw-500"><i class="icon-check"></i> Aucun</span>
+                    <span class="fw-500" style="color: #05a011 !important;"><i class="icon-check"></i> Aucun</span>
                 @endif
             </div>
 
@@ -138,7 +138,7 @@
                 @if($imagesEnAttente > 0)
                     <a href="{{ route('admin.moderation.index') }}" class="badge bg-yellow-1 text-white px-15 py-5">{{ $imagesEnAttente }} à valider</a>
                 @else
-                    <span class="text-green-1 fw-500"><i class="icon-check"></i> À jour</span>
+                    <span class="fw-500" style="color: #05a011 !important;"><i class="icon-check"></i> À jour</span>
                 @endif
             </div>
 
