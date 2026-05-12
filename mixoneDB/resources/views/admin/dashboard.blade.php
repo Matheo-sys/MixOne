@@ -9,8 +9,8 @@
         <div class="text-15 text-light-1">Cockpit de pilotage de la plateforme.</div>
     </div>
     <div class="col-auto">
-        <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex items-center x-gap-10">
-            <label class="text-14 fw-500">Période :</label>
+        <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex items-center" style="gap: 10px;">
+            <label class="text-14 fw-500 mb-0" style="white-space: nowrap;">Période :</label>
             <select name="period" onchange="this.form.submit()" class="form-select border-light rounded-4 px-15 py-10">
                 <option value="7" {{ $period == '7' ? 'selected' : '' }}>7 derniers jours</option>
                 <option value="30" {{ $period == '30' ? 'selected' : '' }}>30 derniers jours</option>
@@ -33,8 +33,8 @@
                     <div class="text-13 text-light-1 mt-5">Total historique: {{ number_format($volumeTotal, 2) }} €</div>
                 </div>
                 <div class="col-auto">
-                    <div class="size-50 bg-blue-1-05 rounded-full flex-center text-blue-1 text-24">
-                        <i class="icon-wallet"></i>
+                    <div class="size-50 bg-blue-1 rounded-full d-flex justify-content-center align-items-center text-white text-24">
+                        <span style="font-weight: bold;">€</span>
                     </div>
                 </div>
             </div>
