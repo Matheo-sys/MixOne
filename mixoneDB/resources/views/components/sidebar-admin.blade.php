@@ -59,7 +59,21 @@
                 </a>
             </div>
         </div>
+        <div class="sidebar__item mt-20 border-top-light pt-20">
+            <div class="text-12 fw-500 text-light-1 mb-10 px-20">MES DASHBOARDS</div>
+            
+            <div class="sidebar__button">
+                <a href="{{ route('dashboard.artist.index') }}" class="d-flex items-center text-15 lh-1 fw-500">
+                    <i class="icon-customer text-16 mr-10"></i> Dashboard Artiste
+                </a>
+            </div>
 
+            <div class="sidebar__button">
+                <a href="{{ route('dashboard.studio') }}" class="d-flex items-center text-15 lh-1 fw-500">
+                    <i class="icon-home text-16 mr-10"></i> Dashboard Studio
+                </a>
+            </div>
+        </div>
         <div class="sidebar__item mt-10 border-top-light pt-10">
             <a href="/"
                onclick="event.preventDefault();

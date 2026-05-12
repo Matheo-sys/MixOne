@@ -73,6 +73,49 @@
     </div>
 </div>
 
+    <div class="col-xl-6">
+        <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+            <div class="d-flex justify-between items-center mb-20">
+                <h2 class="text-18 fw-500">
+                    <i class="icon-customer text-blue-1 mr-10"></i>Activité Artistes
+                </h2>
+            </div>
+            <div class="row y-gap-10">
+                <div class="col-12 d-flex justify-between items-center">
+                    <span class="text-15">Réservations effectuées</span>
+                    <span class="fw-500">{{ \App\Models\Reservation::count() }}</span>
+                </div>
+                <div class="col-12 d-flex justify-between items-center">
+                    <span class="text-15">Nouveaux artistes (30j)</span>
+                    <span class="fw-500">{{ \App\Models\User::where('profile', 'artist')->where('created_at', '>=', now()->subDays(30))->count() }}</span>
+                </div>
+            </div>
+            <a href="{{ route('admin.users.index') }}" class="button -md -outline-blue-1 text-blue-1 mt-20 w-100">Gérer les artistes</a>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+            <div class="d-flex justify-between items-center mb-20">
+                <h2 class="text-18 fw-500">
+                    <i class="icon-home text-purple-1 mr-10"></i>Activité Studios
+                </h2>
+            </div>
+            <div class="row y-gap-10">
+                <div class="col-12 d-flex justify-between items-center">
+                    <span class="text-15">Studios en attente de vérification</span>
+                    <span class="fw-500">{{ \App\Models\Studio::where('is_verified', false)->count() }}</span>
+                </div>
+                <div class="col-12 d-flex justify-between items-center">
+                    <span class="text-15">Nouveaux studios (30j)</span>
+                    <span class="fw-500">{{ \App\Models\Studio::where('created_at', '>=', now()->subDays(30))->count() }}</span>
+                </div>
+            </div>
+            <a href="{{ route('admin.studios.index') }}" class="button -md -outline-purple-1 text-purple-1 mt-20 w-100">Gérer les studios</a>
+        </div>
+    </div>
+</div>
+
 <div class="row y-gap-30 pt-30">
     <div class="col-xl-6">
         <div class="py-30 px-30 rounded-4 bg-white shadow-3">
@@ -87,8 +130,7 @@
             
             @if($pendingDisputes > 0)
                 <p class="text-15 text-dark-1">Des sessions sont en litige. L'argent est bloqué. Vous devez trancher manuellement.</p>
-                <!-- Ici viendra la liste des litiges -->
-                <button class="button -md -red-1 text-white mt-20">Gérer les litiges</button>
+                <a href="{{ route('admin.disputes.index') }}" class="button -md -red-1 text-white mt-20">Gérer les litiges</a>
             @else
                 <div class="text-center py-40">
                     <div class="size-60 bg-green-1-05 text-green-1 rounded-full flex-center mx-auto mb-10 text-24">
@@ -113,8 +155,7 @@
 
             @if($pendingPayouts > 0)
                 <p class="text-15 text-dark-1">Des studios demandent à retirer leurs gains. Vous devez envoyer l'argent via votre banque.</p>
-                <!-- Ici viendra la liste des payouts -->
-                <button class="button -md -blue-1 text-white mt-20">Gérer les virements</button>
+                <a href="{{ route('admin.payouts.index') }}" class="button -md -blue-1 text-white mt-20">Gérer les virements</a>
             @else
                 <div class="text-center py-40">
                     <div class="size-60 bg-green-1-05 text-green-1 rounded-full flex-center mx-auto mb-10 text-24">
