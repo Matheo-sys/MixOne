@@ -212,10 +212,10 @@
                                             <td>{{ $res->total_price }} €</td>
                                             <td>
                                                 <span class="badge 
-                                                    @if($res->status == 'confirmed') bg-green-1-05 text-green-1
-                                                    @elseif($res->status == 'pending') bg-yellow-1-05 text-yellow-1
+                                                    @if($res->status === \App\Enums\ReservationStatus::Confirmed) bg-green-1-05 text-green-1
+                                                    @elseif($res->status === \App\Enums\ReservationStatus::Pending) bg-yellow-1-05 text-yellow-1
                                                     @else bg-red-1-05 text-red-1 @endif">
-                                                    {{ ucfirst($res->status) }}
+                                                    {{ $res->status->label() }}
                                                 </span>
                                             </td>
                                         </tr>
