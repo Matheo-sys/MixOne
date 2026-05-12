@@ -205,40 +205,51 @@
                     const studioId = this.getAttribute('data-studio-id');
                     const studioCard = this.closest('.swiper-slide') || this.closest('.wishlist-item');
 
-                    if (confirm('Êtes-vous sûr de vouloir supprimer ce studio de vos favoris?')) {
-                        // Envoyer une requête AJAX pour supprimer des favoris
-                        fetch('{{ route('wishlist.toggle') }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                studio_id: studioId
+                    Swal.fire({
+                        title: 'Confirmation',
+                        text: 'Êtes-vous sûr de vouloir supprimer ce studio de vos favoris ?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3554D1',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Oui, supprimer',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Envoyer une requête AJAX pour supprimer des favoris
+                            fetch('{{ route('wishlist.toggle') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    studio_id: studioId
+                                })
                             })
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success && data.status === 'removed') {
-                                    // Animation de suppression
-                                    studioCard.style.transition = 'opacity 0.5s ease';
-                                    studioCard.style.opacity = 0;
-
-                                    setTimeout(() => {
-                                        studioCard.remove();
-
-                                        // Vérifier s'il reste des studios
-                                        const remainingStudios = document.querySelectorAll('.swiper-slide, .wishlist-item');
-                                        if (remainingStudios.length === 0) {
-                                            location.reload(); // Recharger pour afficher le message "pas de favoris"
-                                        }
-                                    }, 500);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                            });
-                    }
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success && data.status === 'removed') {
+                                        // Animation de suppression
+                                        studioCard.style.transition = 'opacity 0.5s ease';
+                                        studioCard.style.opacity = 0;
+    
+                                        setTimeout(() => {
+                                            studioCard.remove();
+    
+                                            // Vérifier s'il reste des studios
+                                            const remainingStudios = document.querySelectorAll('.swiper-slide, .wishlist-item');
+                                            if (remainingStudios.length === 0) {
+                                                location.reload(); // Recharger pour afficher le message "pas de favoris"
+                                            }
+                                        }, 500);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                        }
+                    });
                 });
             });
 

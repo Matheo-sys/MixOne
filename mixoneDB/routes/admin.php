@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\StudioController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\DisputeController;
 use App\Http\Controllers\Admin\PayoutController;
+use App\Http\Controllers\Admin\ReportController;
 
 Route::get('/', [AdminDashboardController::class, 'afficher'])->name('admin.dashboard');
 
@@ -16,6 +17,7 @@ Route::post('/utilisateurs/{user}/bannir', [UserController::class, 'bannir'])->n
 Route::post('/utilisateurs/{user}/debannir', [UserController::class, 'debannir'])->name('admin.users.unban');
 Route::post('/utilisateurs/{user}/basculer-admin', [UserController::class, 'basculerAdmin'])->name('admin.users.toggle-admin');
 Route::post('/utilisateurs/{user}/verifier-email', [UserController::class, 'verifierEmail'])->name('admin.users.verify-email');
+Route::post('/utilisateurs/{user}/envoyer-message', [UserController::class, 'envoyerMessage'])->name('admin.users.send-message');
 
 Route::get('/studios', [StudioController::class, 'liste'])->name('admin.studios.index');
 Route::delete('/studios/{studio}', [StudioController::class, 'supprimer'])->name('admin.studios.destroy');
@@ -29,6 +31,11 @@ Route::post('/litiges/{reservation}/resoudre', [DisputeController::class, 'resou
 
 Route::get('/virements', [PayoutController::class, 'liste'])->name('admin.payouts.index');
 Route::post('/virements/{payoutRequest}/terminer', [PayoutController::class, 'terminer'])->name('admin.payouts.complete');
+
+// Signalements (Messagerie)
+Route::get('/signalements', [ReportController::class, 'index'])->name('admin.reports.index');
+Route::get('/signalements/{report}', [ReportController::class, 'show'])->name('admin.reports.show');
+Route::post('/signalements/{report}/resoudre', [ReportController::class, 'resolve'])->name('admin.reports.resolve');
 
 // Modération d'images
 Route::get('/moderation-images', [\App\Http\Controllers\Admin\ModerationController::class, 'index'])->name('admin.moderation.index');

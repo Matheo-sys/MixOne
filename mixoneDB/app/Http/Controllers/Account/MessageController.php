@@ -9,6 +9,8 @@ use App\Http\Requests\Messaging\SendMessageRequest;
 use App\Models\Message;
 use App\Models\HiddenConversation;
 use App\Models\User;
+use App\Models\BlockedUser;
+use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +34,18 @@ class MessageController extends Controller
     {
         try {
             $dto = $requete->versDTO();
+
+            // Vérification de blocage
+            $isBlocked = BlockedUser::where(function ($query) use ($dto) {
+                $query->where('blocker_id', Auth::id())->where('blocked_id', $dto->id_destinataire);
+            })->orWhere(function ($query) use ($dto) {
+                $query->where('blocker_id', $dto->id_destinataire)->where('blocked_id', Auth::id());
+            })->exists();
+
+            if ($isBlocked) {
+                return response()->json(['status' => 'error', 'message' => 'Impossible d\'envoyer un message. Cet utilisateur est bloqué.'], 403);
+            }
+
             $this->actionEnvoyerMessage->executer($dto);
 
             // Réafficher la conversation si un nouveau message est envoyé
@@ -93,9 +107,13 @@ class MessageController extends Controller
         $contactsMasques = HiddenConversation::where('user_id', Auth::id())
             ->pluck('contact_id');
 
+        $contactsBloques = BlockedUser::where('blocker_id', Auth::id())
+            ->pluck('blocked_id');
+
         return response()->json([
             'messages' => $messages,
-            'hidden_contacts' => $contactsMasques
+            'hidden_contacts' => $contactsMasques,
+            'blocked_contacts' => $contactsBloques
         ]);
     }
 
@@ -196,6 +214,97 @@ class MessageController extends Controller
         $requeteMessages->update(['is_read' => true]);
 
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * Bloquer un utilisateur.
+     */
+    public function blockUser(Request $request): JsonResponse
+    {
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+
+        $blockedId = $request->input('user_id');
+
+        if ($blockedId == Auth::id()) {
+            return response()->json(['error' => 'Vous ne pouvez pas vous bloquer vous-même.'], 400);
+        }
+
+        BlockedUser::firstOrCreate([
+            'blocker_id' => Auth::id(),
+            'blocked_id' => $blockedId
+        ]);
+
+        // Optionnel : masquer la conversation automatiquement
+        HiddenConversation::firstOrCreate([
+            'user_id' => Auth::id(),
+            'contact_id' => $blockedId
+        ]);
+
+        return response()->json(['success' => 'Utilisateur bloqué avec succès.']);
+    }
+
+    /**
+     * Débloquer un utilisateur.
+     */
+    public function unblockUser(Request $request): JsonResponse
+    {
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+
+        $blockedId = $request->input('user_id');
+
+        BlockedUser::where('blocker_id', Auth::id())
+            ->where('blocked_id', $blockedId)
+            ->delete();
+
+        // On enlève aussi de la liste des conversations cachées
+        HiddenConversation::where('user_id', Auth::id())
+            ->where('contact_id', $blockedId)
+            ->delete();
+
+        return response()->json(['success' => 'Utilisateur débloqué avec succès.']);
+    }
+
+    /**
+     * Obtenir la liste des utilisateurs bloqués.
+     */
+    public function getBlockedUsers(): JsonResponse
+    {
+        $blockedIds = BlockedUser::where('blocker_id', Auth::id())->pluck('blocked_id');
+        $users = User::whereIn('id', $blockedIds)
+            ->get(['id', 'uuid', 'first_name', 'last_name', 'username', 'avatar']);
+
+        return response()->json($users);
+    }
+
+    /**
+     * Signaler un utilisateur.
+     */
+    public function reportUser(Request $request): JsonResponse
+    {
+        $request->validate([
+            'reported_id' => 'required|integer|exists:users,id',
+            'reason' => 'required|string|max:255',
+            'custom_reason' => 'nullable|string|max:1000',
+        ]);
+
+        $reportedId = $request->input('reported_id');
+
+        if ($reportedId == Auth::id()) {
+            return response()->json(['error' => 'Vous ne pouvez pas vous signaler vous-même.'], 400);
+        }
+
+        Report::create([
+            'reporter_id' => Auth::id(),
+            'reported_id' => $reportedId,
+            'reason' => $request->input('reason'),
+            'custom_reason' => $request->input('custom_reason'),
+        ]);
+
+        return response()->json(['success' => 'Signalement envoyé avec succès. Merci.']);
     }
 }
 

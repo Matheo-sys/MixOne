@@ -52,10 +52,10 @@
 
 <main>
     <div class="dashboard mt-90" data-x="dashboard" data-x-toggle="-is-sidebar-open">
-        @if( auth()->user()->profile == 'artist')
-            @include('components.sidebar-artist')
-        @else
+        @if(Str::contains(Route::currentRouteName(), 'studio'))
             @include('components.sidebar-studio')
+        @else
+            @include('components.sidebar-artist')
         @endif
 
         <div class="dashboard__main">

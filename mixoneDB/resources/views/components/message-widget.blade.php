@@ -322,14 +322,18 @@
     <!-- Chat Window -->
     <div id="messaging-window" class="messaging-window d-none">
         <div class="messaging-window__header">
-            <div class="d-flex items-center" style="display: flex; align-items: center;">
-                <h5 class="text-18 fw-500 text-white mb-0">Messages</h5>
-                <button id="show-search" class="text-white ml-15 btn-new-message" style="background: rgba(255,255,255,0.2); border: none; border-radius: 20px; padding: 4px 12px; font-size: 12px; cursor:pointer; display: flex; align-items: center; transition: all 0.2s ease;">
-                    <i class="icon-plus mr-5" style="font-size: 10px;"></i>
-                    <span>Nouveau Message</span>
-                </button>
+            <div class="d-flex items-center" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div class="d-flex items-center">
+                    <h5 class="text-18 fw-500 text-white mb-0">Messages</h5>
+                    <button id="show-search" class="text-white ml-15 btn-new-message" style="background: rgba(255,255,255,0.2); border: none; border-radius: 20px; padding: 4px 12px; font-size: 12px; cursor:pointer; display: flex; align-items: center; transition: all 0.2s ease;" title="Nouveau Message">
+                        <i class="icon-plus" style="font-size: 12px;"></i>
+                    </button>
+                    <button id="show-blocked-users" class="text-white ml-10 btn-new-message" style="background: rgba(255,255,255,0.2); border: none; border-radius: 20px; padding: 4px 12px; font-size: 12px; cursor:pointer; display: flex; align-items: center; transition: all 0.2s ease;" title="Utilisateurs Bloqués">
+                        <i class="icon-shield" style="font-size: 12px;"></i>
+                    </button>
+                </div>
+                <button id="close-messaging" class="text-white text-24" style="background:none; border:none; cursor:pointer;">&times;</button>
             </div>
-            <button id="close-messaging" class="text-white text-24" style="background:none; border:none; cursor:pointer;">&times;</button>
         </div>
 
         <div class="messaging-window__body">
@@ -346,6 +350,50 @@
                 </div>
             </div>
 
+            <!-- Blocked Users Interface -->
+            <div id="blocked-users-interface" class="d-none" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="active-chat__header d-flex items-center" style="padding: 10px;">
+                    <button id="close-blocked-users" class="mr-10" style="background:none; border:none; cursor:pointer; padding: 0 10px;">
+                        <i class="icon-arrow-left text-14"></i>
+                    </button>
+                    <h4 class="text-16 fw-500 mb-0">Utilisateurs Bloqués</h4>
+                </div>
+                <div id="blocked-users-list" class="flex-1 overflow-y-auto" style="background: #fbfbfb; height: 100%;">
+                    <div class="text-center py-20 text-light-1">Chargement...</div>
+                </div>
+            </div>
+
+            <!-- Report Interface -->
+            <div id="report-interface" class="d-none" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="active-chat__header d-flex items-center" style="padding: 10px;">
+                    <button id="cancel-report" class="mr-10" style="background:none; border:none; cursor:pointer; padding: 0 10px;">
+                        <i class="icon-arrow-left text-14"></i>
+                    </button>
+                    <h4 class="text-16 fw-500 mb-0">Signaler l'utilisateur</h4>
+                </div>
+                <div class="p-20 flex-1 overflow-y-auto" style="background: #fbfbfb; height: 100%;">
+                    <form id="report-user-form" class="p-20 bg-white shadow-1 rounded-8" style="border: 1px solid #eee;">
+                        <input type="hidden" id="report-target-id">
+                        <div class="mb-15">
+                            <label class="text-14 fw-500 mb-5 d-block">Motif du signalement :</label>
+                            <select id="report-reason" class="w-100 rounded-4 px-10 py-5 text-14" required style="border: 1px solid #ddd; outline: none; height: 40px; background: white;">
+                                <option value="" disabled selected>Sélectionnez un motif</option>
+                                <option value="Spam / Publicité indésirable">Spam / Publicité indésirable</option>
+                                <option value="Harcèlement / Menaces">Harcèlement / Menaces</option>
+                                <option value="Propos inappropriés / Discours de haine">Propos inappropriés / Discours de haine</option>
+                                <option value="Faux profil / Usurpation d'identité">Faux profil / Usurpation d'identité</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </div>
+                        <div id="custom-reason-container" class="mb-15 d-none">
+                            <label class="text-14 fw-500 mb-5 d-block">Précisez (obligatoire) :</label>
+                            <textarea id="report-custom-reason" class="w-100 rounded-4 p-10 text-14" rows="4" placeholder="Expliquez-nous brièvement la situation..." style="border: 1px solid #ddd; outline: none; resize: none;"></textarea>
+                        </div>
+                        <button type="submit" class="button -md -dark-1 bg-blue-1 text-white w-100 mt-10 transition" style="box-shadow: 0 4px 15px rgba(53,84,209,0.2);">Envoyer le signalement</button>
+                    </form>
+                </div>
+            </div>
+
             <!-- Conversation List -->
             <div id="conversation-list" class="conversation-list">
                 <div class="text-center py-20 text-light-1">Chargement...</div>
@@ -353,16 +401,35 @@
 
             <!-- Active Chat Area -->
             <div id="active-chat" class="active-chat d-none">
-                <div class="active-chat__header d-flex items-center" style="display: flex; align-items: center; padding: 10px;">
-                    <button id="back-to-list" class="mr-10" style="background:none; border:none; cursor:pointer; padding: 0 10px;">
-                        <i class="icon-arrow-left text-14"></i>
-                    </button>
-                    <div class="d-flex items-center" style="display: flex; align-items: center;">
-                        <img id="chat-partner-avatar" src="{{ asset('media/img/misc/avatar-default.png') }}" alt=""  style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
-                        <span id="chat-partner-name" style="font-weight: 500; color: #051036;">Collaborateur</span>
+                <div class="active-chat__header d-flex items-center justify-between" style="padding: 10px;">
+                    <div class="d-flex items-center">
+                        <button id="back-to-list" class="mr-10" style="background:none; border:none; cursor:pointer; padding: 0 10px;">
+                            <i class="icon-arrow-left text-14"></i>
+                        </button>
+                        <div class="d-flex items-center">
+                            <img id="chat-partner-avatar" src="{{ asset('media/img/misc/avatar-default.png') }}" alt=""  style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+                            <span id="chat-partner-name" style="font-weight: 500; color: #051036;">Collaborateur</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Menu Options -->
+                    <div style="position: relative;">
+                        <button id="chat-options-btn" style="background:none; border:none; cursor:pointer; padding: 5px;">
+                            <i class="icon-menu-2 text-18 text-light-1"></i>
+                        </button>
+                        <div id="chat-options-menu" class="d-none shadow-3 rounded-4 bg-white" style="position: absolute; right: 0; top: 100%; width: 180px; z-index: 5;">
+                            <button id="btn-report-user" class="w-100 text-left px-15 py-10 text-14 border-bottom-light hover-bg-light-2" style="background:none; border:none; cursor:pointer; border-bottom: 1px solid #eee;">
+                                <i class="icon-alert-triangle mr-10 text-yellow-2"></i> Signaler
+                            </button>
+                            <button id="btn-block-user" class="w-100 text-left px-15 py-10 text-14 text-red-1 hover-bg-light-2" style="background:none; border:none; cursor:pointer;">
+                                <i class="icon-shield mr-10"></i> Bloquer
+                            </button>
+                        </div>
                     </div>
                 </div>
+                
                 <div id="message-history" class="message-history"></div>
+                
                 <form id="send-message-form" class="message-input-area">
                     <input type="hidden" id="receiver-id">
                     <textarea id="message-text" placeholder="Écrire un message..." required></textarea>
@@ -372,6 +439,10 @@
                         </svg>
                     </button>
                 </form>
+
+                <div id="blocked-status-area" class="message-input-area d-none" style="justify-content: center; background: #f9f9f9;">
+                    <p class="text-13 text-red-1 mb-0 text-center fw-500">Vous avez bloqué cet utilisateur.</p>
+                </div>
             </div>
         </div>
     </div>

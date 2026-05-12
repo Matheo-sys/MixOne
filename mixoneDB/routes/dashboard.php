@@ -71,6 +71,12 @@ Route::middleware(['throttle:60,1'])->group(function () {
     Route::get('/message/nombre-non-lus', [MessageController::class, 'recupererNombreMessagesNonLus']);
     Route::post('/message/lire', [MessageController::class, 'marquerCommeLu']);
     Route::get('/api/utilisateurs/rechercher', [MessageController::class, 'rechercherUtilisateurs']);
+    
+    // Blocage et Signalements
+    Route::post('/message/block', [MessageController::class, 'blockUser']);
+    Route::post('/message/unblock', [MessageController::class, 'unblockUser']);
+    Route::get('/message/blocked-users', [MessageController::class, 'getBlockedUsers']);
+    Route::post('/message/report', [MessageController::class, 'reportUser']);
 });
 
 // Réservations

@@ -53,6 +53,14 @@
         </div>
 
         <div class="sidebar__item">
+            <div class="sidebar__button {{ request()->routeIs('admin.reports.*') ? '-is-active' : '' }}">
+                <a href="{{route('admin.reports.index')}}" class="d-flex items-center text-15 lh-1 fw-500">
+                    Signalements
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar__item">
             <div class="sidebar__button {{ request()->routeIs('admin.payouts.*') ? '-is-active' : '' }}">
                 <a href="{{route('admin.payouts.index')}}" class="d-flex items-center text-15 lh-1 fw-500">
                     Virements

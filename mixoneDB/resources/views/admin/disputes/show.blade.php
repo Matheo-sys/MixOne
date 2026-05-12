@@ -83,12 +83,12 @@
 
                 <div class="row y-gap-10">
                     <div class="col-12">
-                        <button type="submit" name="action" value="complete" class="button -md bg-blue-1 text-white w-1/1" onclick="return confirm('Payer le studio ?')">
+                        <button type="submit" name="action" value="complete" class="button -md bg-blue-1 text-white w-1/1" onclick="confirmAction(event, this, 'Payer le studio ?')">
                             Régler en faveur du STUDIO
                         </button>
                     </div>
                     <div class="col-12">
-                        <button type="submit" name="action" value="cancel" class="button -md bg-red-1 text-white w-1/1" onclick="return confirm('Rembourser l\'artiste ?')">
+                        <button type="submit" name="action" value="cancel" class="button -md bg-red-1 text-white w-1/1" onclick="confirmAction(event, this, 'Rembourser l\'artiste ?')">
                             Régler en faveur de l'ARTISTE
                         </button>
                     </div>

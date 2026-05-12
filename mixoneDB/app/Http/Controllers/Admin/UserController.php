@@ -64,7 +64,19 @@ class UserController extends Controller
             }
         ]);
 
-        return view('admin.users.show', ['user' => $user]);
+        // Signalements (reçus et envoyés)
+        $reportsReceived = \App\Models\Report::where('reported_id', $user->id)->with('reporter')->orderBy('created_at', 'desc')->get();
+        $reportsSent = \App\Models\Report::where('reporter_id', $user->id)->with('reported')->orderBy('created_at', 'desc')->get();
+
+        // Litiges
+        $disputes = \App\Models\Reservation::where(function($q) use ($user) {
+            $q->where('user_id', $user->id)->orWhereHas('studio', fn($sq) => $sq->where('user_id', $user->id));
+        })->where('status', \App\Enums\ReservationStatus::Disputed)->with('studio')->orderBy('updated_at', 'desc')->get();
+
+        // Virements
+        $payouts = \App\Models\PayoutRequest::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+
+        return view('admin.users.show', compact('user', 'reportsReceived', 'reportsSent', 'disputes', 'payouts'));
     }
 
     /**
@@ -118,6 +130,27 @@ class UserController extends Controller
         $user->email_verified_at = now();
         $user->save();
         return back()->with('success', "L'email de l'utilisateur a été vérifié manuellement.");
+    }
+
+    /**
+     * Envoyer un message admin à l'utilisateur.
+     */
+    public function envoyerMessage(User $user, Request $request): RedirectResponse
+    {
+        $request->validate([
+            'message' => 'required|string'
+        ]);
+
+        $admin = auth()->user();
+        
+        \App\Models\Message::create([
+            'sender_id' => $admin->id,
+            'receiver_id' => $user->id,
+            'message' => $request->message,
+            'is_read' => false,
+        ]);
+
+        return back()->with('success', "Message envoyé avec succès à l'utilisateur.");
     }
 }
 

@@ -104,11 +104,21 @@
               geolocateBtn.classList.add('bg-white');
             })["catch"](function (error) {
               geolocateBtn.innerHTML = '<i class="icon-location text-16"></i>';
-              alert("Impossible de récupérer l'adresse.");
+              Swal.fire({
+                title: 'Erreur',
+                text: "Impossible de récupérer l'adresse.",
+                icon: 'error',
+                confirmButtonColor: '#3554D1'
+              });
             });
           }, function (error) {
             geolocateBtn.innerHTML = '<i class="icon-location text-16"></i>';
-            alert("Géolocalisation refusée ou indisponible.");
+            Swal.fire({
+              title: 'Attention',
+              text: "Géolocalisation refusée ou indisponible.",
+              icon: 'warning',
+              confirmButtonColor: '#3554D1'
+            });
           });
         }
       });

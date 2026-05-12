@@ -181,14 +181,49 @@
                                 Si vous demandez la suppression de votre compte, toutes vos données personnelles (nom, email, téléphone, etc.) seront **définitivement anonymisées**. Vos studios seront désactivés. Cette action est irréversible et vous ne pourrez plus vous connecter à ce compte.
                             </p>
                             
-                            <form action="{{ route('dashboard.settings.delete') }}" method="POST" class="mt-20" onsubmit="return confirm('Êtes-vous absolument sûr de vouloir anonymiser votre compte ? Cette action est irréversible et vous perdrez l\'accès à vos données.')">
+                            <form action="{{ route('dashboard.settings.delete') }}" method="POST" class="mt-20" id="delete-account-form">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="button h-50 px-24 bg-red-2 text-white">
+                                <button type="button" class="button h-50 px-24 bg-red-2 text-white" id="btn-delete-account">
                                     <i class="icon-trash text-16 mr-10"></i>
                                     Anonymiser mon compte définitivement
                                 </button>
                             </form>
+
+                            <script>
+                            document.getElementById('btn-delete-account').addEventListener('click', function() {
+                                Swal.fire({
+                                    title: 'Êtes-vous sûr ?',
+                                    text: "Cette action est irréversible. Toutes vos données seront anonymisées.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#aaa',
+                                    confirmButtonText: 'Oui, continuer',
+                                    cancelButtonText: 'Annuler'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        Swal.fire({
+                                            title: 'Confirmation finale',
+                                            html: '<p style="color:#777;">Tapez <strong style="color:#d33;">SUPPRIMER</strong> pour confirmer.</p>',
+                                            input: 'text',
+                                            inputPlaceholder: 'SUPPRIMER',
+                                            confirmButtonColor: '#d33',
+                                            confirmButtonText: 'Supprimer définitivement',
+                                            showCancelButton: true,
+                                            cancelButtonText: 'Annuler',
+                                            inputValidator: (value) => {
+                                                if (value !== 'SUPPRIMER') return 'Veuillez taper exactement SUPPRIMER pour confirmer.';
+                                            }
+                                        }).then((result2) => {
+                                            if (result2.isConfirmed) {
+                                                document.getElementById('delete-account-form').submit();
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                            </script>
                         </div>
                     </div>
                 </div>
@@ -265,7 +300,12 @@
                     removeAvatarInput.value = '0';
                 }
             } else {
-                alert('Only PNG and JPG images are allowed.');
+                Swal.fire({
+                    title: 'Format invalide',
+                    text: 'Seuls les formats PNG et JPG sont autorisés.',
+                    icon: 'error',
+                    confirmButtonColor: '#3554D1'
+                });
                 event.target.value = ''; // Réinitialise l’input
             }
         }

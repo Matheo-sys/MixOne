@@ -69,7 +69,7 @@
 
                                                 <!-- Bouton Supprimer -->
                                                 <form class="ml-10" action="{{ route('dashboard.studio.destroy', $studio) }}" method="POST"
-                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce studio ?');">
+                                                      onsubmit="confirmAction(event, this, 'Êtes-vous sûr de vouloir supprimer ce studio ?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="d-flex justify-content-center align-items-center bg-light-2 rounded-4 p-2" title="Supprimer">

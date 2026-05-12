@@ -69,40 +69,17 @@
                 @elseif($s === 'confirmée')
                     {{-- Confirmée → Le studio peut Terminer ou Signaler un litige --}}
                     <div class="d-flex x-gap-10 y-gap-5 flex-wrap flex-column">
-                        <button type="button" class="button -sm bg-green-1 text-green-2 px-15 py-5 rounded-4 text-13 fw-500 w-1/1" title="Marquer comme payée / effectuée" data-x-click="modal-pin-{{ $reservation->id }}">
+                        <button type="button" class="button -sm bg-green-1 text-green-2 px-15 py-5 rounded-4 text-13 fw-500 w-1/1 js-pin-modal" data-uuid="{{ $reservation->uuid }}" title="Marquer comme payée / effectuée">
                             Terminer (Code PIN)
                         </button>
                         
-                        <form action="{{ route('reservations.dispute', $reservation->uuid) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir signaler un problème ? Les fonds seront bloqués.');">
+                        <form action="{{ route('reservations.dispute', $reservation->uuid) }}" method="POST" onsubmit="confirmAction(event, this, 'Êtes-vous sûr de vouloir signaler un problème ? Les fonds seront bloqués.');">
                             @csrf
                             <button type="submit" class="button -sm bg-red-1 text-white px-15 py-5 rounded-4 text-13 fw-500 w-1/1">
                                 Signaler un litige
                             </button>
                         </form>
                     </div>
-
-                    {{-- Modal Code PIN --}}
-                    <div class="row items-center x-gap-30 y-gap-20 d-none" id="modal-pin-{{ $reservation->id }}" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 300px;">
-                        <div class="col-12 text-left">
-                            <h4 class="text-16 fw-600 mb-10">Validation Session</h4>
-                            <p class="text-13 text-light-1 mb-15">Veuillez entrer le code à 4 chiffres fourni par l'artiste.</p>
-                            <form action="{{ route('reservations.complete', $reservation->uuid) }}" method="POST">
-                                @csrf
-                                <div class="mb-15">
-                                    <input type="text" name="pin_code" class="form-control text-20 text-center fw-600 tracking-wider h-50" placeholder="0000" maxlength="4" required pattern="\d{4}">
-                                </div>
-                                <div class="d-flex x-gap-10">
-                                    <button type="submit" class="button -sm bg-blue-1 text-white px-15 py-5 rounded-4 text-13 fw-500 w-1/1">Valider</button>
-                                    <button type="button" class="button -sm bg-light-2 text-dark-1 px-15 py-5 rounded-4 text-13 fw-500" onclick="document.getElementById('modal-pin-{{ $reservation->id }}').classList.add('d-none')">Fermer</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <script>
-                        document.querySelector('[data-x-click="modal-pin-{{ $reservation->id }}"]').addEventListener('click', function() {
-                            document.getElementById('modal-pin-{{ $reservation->id }}').classList.remove('d-none');
-                        });
-                    </script>
                 @else
                     {{-- Annulée / Refusée / Terminée → Aucune action possible --}}
                     <span class="text-light-1 text-13">—</span>
@@ -112,3 +89,93 @@
     @endforeach
     </tbody>
 </table>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // === Code PIN via SweetAlert2 ===
+    document.querySelectorAll('.js-pin-modal').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const uuid = this.dataset.uuid;
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+            Swal.fire({
+                title: '🔐 Validation de Session',
+                html: `
+                    <p style="color:#777; font-size:14px; margin-bottom:18px;">
+                        Entrez le code PIN à 4 chiffres fourni par l'artiste pour valider la session et débloquer votre paiement.
+                    </p>
+                    <input id="swal-pin-input" class="swal2-input" type="text" inputmode="numeric" maxlength="4" pattern="\\d{4}" placeholder="• • • •"
+                        style="text-align:center; font-size:32px; letter-spacing:14px; font-weight:700; width:200px; border-radius:12px; border:2px solid #e5e7eb;">
+                `,
+                confirmButtonText: 'Valider la session',
+                confirmButtonColor: '#3554D1',
+                showCancelButton: true,
+                cancelButtonText: 'Annuler',
+                focusConfirm: false,
+                didOpen: () => {
+                    const input = document.getElementById('swal-pin-input');
+                    input.focus();
+                    input.addEventListener('input', (e) => {
+                        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                    });
+                },
+                preConfirm: () => {
+                    const pin = document.getElementById('swal-pin-input').value;
+                    if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+                        Swal.showValidationMessage('Veuillez entrer un code à 4 chiffres.');
+                        return false;
+                    }
+                    return pin;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/tableau-de-bord/reservation/${uuid}/terminer`;
+                    form.innerHTML = `<input type="hidden" name="_token" value="${csrfToken}"><input type="hidden" name="pin_code" value="${result.value}">`;
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    // === Confirmation Réservation (Confirmer) ===
+    document.querySelectorAll('form[action*="confirmer"]').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const f = this;
+            Swal.fire({
+                title: 'Confirmer la réservation ?',
+                text: "L'artiste recevra un email avec son Code PIN pour la session.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3554D1',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Oui, confirmer',
+                cancelButtonText: 'Annuler'
+            }).then((result) => { if (result.isConfirmed) f.submit(); });
+        });
+    });
+
+    // === Refus Réservation ===
+    document.querySelectorAll('form[action*="refuser"]').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const f = this;
+            Swal.fire({
+                title: 'Refuser cette réservation ?',
+                text: "L'artiste sera automatiquement remboursé.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Oui, refuser',
+                cancelButtonText: 'Annuler'
+            }).then((result) => { if (result.isConfirmed) f.submit(); });
+        });
+    });
+});
+</script>
+@endpush

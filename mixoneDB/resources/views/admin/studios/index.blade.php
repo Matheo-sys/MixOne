@@ -93,7 +93,7 @@
                                 </button>
                             </form>
 
-                            <form action="{{ route('admin.studios.destroy', $studio) }}" method="POST" onsubmit="return confirm('Supprimer ce studio définitivement ?');">
+                            <form action="{{ route('admin.studios.destroy', $studio) }}" method="POST" onsubmit="confirmAction(event, this, 'Supprimer ce studio définitivement ?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="px-15 py-5 bg-red-1 text-white rounded-4 text-14 fw-500">Supprimer</button>

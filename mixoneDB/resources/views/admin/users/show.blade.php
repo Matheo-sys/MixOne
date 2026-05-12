@@ -24,14 +24,15 @@
                 <div class="relative mb-20">
                     <img src="{{ $user->avatar ? storage_url($user->avatar) : asset('media/img/misc/avatar-default.png') }}" 
                          alt="avatar" class="size-120 rounded-full object-cover border-light">
+                </div>
+                <div class="d-flex justify-center items-center text-22 fw-500">
+                    {{ $user->first_name }} {{ $user->last_name }} 
                     @if($user->is_admin)
-                        <div class="absolute bottom-0 right-0 bg-purple-1 text-white size-32 rounded-full flex-center border-white-2" title="Administrateur">
-                            <i class="icon-shield text-14"></i>
-                        </div>
+                        <span class="bg-red-1 text-white text-12 fw-600 px-10 py-4 rounded-4 ml-10 d-flex items-center">
+                            <i class="icon-shield text-12 mr-5"></i> ADMIN
+                        </span>
                     @endif
                 </div>
-                
-                <h2 class="text-22 fw-500">{{ $user->first_name }} {{ $user->last_name }}</h2>
                 <div class="text-15 text-light-1 mb-10">{{ $user->email }}</div>
                 <div class="text-14 text-light-1 mb-20">ID: {{ $user->uuid }}</div>
 
@@ -40,10 +41,6 @@
                         <span class="badge bg-blue-1-05 text-blue-1 px-15 py-5 text-14">Artiste</span>
                     @else
                         <span class="badge bg-purple-1-05 text-purple-1 px-15 py-5 text-14">Studio</span>
-                    @endif
-                    
-                    @if($user->is_admin)
-                        <span class="badge bg-red-1-05 text-red-1 px-15 py-5 text-14">Admin</span>
                     @endif
                 </div>
 
@@ -72,13 +69,36 @@
                                     </button>
                                 </form>
                             @else
-                                <form action="{{ route('admin.users.ban', $user) }}" method="POST" onsubmit="let reason = prompt('Raison du bannissement :', 'Violation des conditions d\'utilisation.'); if(reason === null) return false; this.querySelector('input[name=reason]').value = reason; return true;">
+                                <form action="{{ route('admin.users.ban', $user) }}" method="POST" id="ban-form-{{ $user->id }}">
                                     @csrf
-                                    <input type="hidden" name="reason" value="">
-                                    <button type="submit" class="button -md -red-1 text-white w-100">
+                                    <input type="hidden" name="reason" value="" id="ban-reason-{{ $user->id }}">
+                                    <button type="button" class="button -md -red-1 text-white w-100" onclick="banUserSwal({{ $user->id }})">
                                         <i class="icon-close text-16 mr-10"></i> Bannir
                                     </button>
                                 </form>
+                                <script>
+                                function banUserSwal(userId) {
+                                    Swal.fire({
+                                        title: 'Bannir cet utilisateur ?',
+                                        html: '<p style="color:#777; font-size:14px;">Cette action empêchera l\'utilisateur de se connecter.</p>',
+                                        input: 'textarea',
+                                        inputPlaceholder: 'Raison du bannissement...',
+                                        inputValue: 'Violation des conditions d\'utilisation.',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#d33',
+                                        confirmButtonText: 'Bannir',
+                                        cancelButtonText: 'Annuler',
+                                        inputValidator: (value) => {
+                                            if (!value.trim()) return 'Veuillez indiquer la raison du bannissement.';
+                                        }
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            document.getElementById('ban-reason-' + userId).value = result.value;
+                                            document.getElementById('ban-form-' + userId).submit();
+                                        }
+                                    });
+                                }
+                                </script>
                             @endif
                         </div>
 
@@ -114,6 +134,18 @@
                 </div>
                 <div class="col-auto">
                     <button class="tabs__button text-18 fw-500 js-tabs-button" data-tab-target=".-tab-item-4">Transactions</button>
+                </div>
+                <div class="col-auto">
+                    <button class="tabs__button text-18 fw-500 js-tabs-button" data-tab-target=".-tab-item-5">Signalements ({{ $reportsReceived->count() + $reportsSent->count() }})</button>
+                </div>
+                <div class="col-auto">
+                    <button class="tabs__button text-18 fw-500 js-tabs-button" data-tab-target=".-tab-item-6">Litiges ({{ $disputes->count() }})</button>
+                </div>
+                <div class="col-auto">
+                    <button class="tabs__button text-18 fw-500 js-tabs-button" data-tab-target=".-tab-item-7">Virements ({{ $payouts->count() }})</button>
+                </div>
+                <div class="col-auto">
+                    <button class="tabs__button text-18 fw-500 js-tabs-button" data-tab-target=".-tab-item-8">Messages</button>
                 </div>
             </div>
 
@@ -281,8 +313,121 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+                {{-- Onglet Signalements --}}
+                <div class="tabs__pane -tab-item-5">
+                    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+                        <h4 class="text-18 fw-500 mb-20">Historique des Signalements</h4>
+                        
+                        <div class="row y-gap-30">
+                            <div class="col-12">
+                                <div class="text-16 fw-500 mb-10 text-blue-1">Signalements reçus ({{ $reportsReceived->count() }})</div>
+                                <div class="overflow-scroll scroll-bar-1">
+                                    <table class="table-2 col-12">
+                                        <thead><tr><th>Date</th><th>Par</th><th>Motif</th><th>Statut</th><th>Action</th></tr></thead>
+                                        <tbody>
+                                            @forelse($reportsReceived as $r)
+                                                <tr>
+                                                    <td>{{ $r->created_at->format('d/m/Y') }}</td>
+                                                    <td>{{ $r->reporter->first_name }}</td>
+                                                    <td>{{ $r->reason }}</td>
+                                                    <td><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1 text-yellow-2' : 'bg-green-1 text-green-2' }}">{{ $r->status }}</span></td>
+                                                    <td><a href="{{ route('admin.reports.show', $r) }}" class="text-blue-1">Voir</a></td>
+                                                </tr>
+                                            @empty
+                                                <tr><td colspan="5" class="text-center py-20">Aucun signalement reçu.</td></tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col-12 border-top-light pt-30">
+                                <div class="text-16 fw-500 mb-10 text-purple-1">Signalements envoyés ({{ $reportsSent->count() }})</div>
+                                <div class="overflow-scroll scroll-bar-1">
+                                    <table class="table-2 col-12">
+                                        <thead><tr><th>Date</th><th>Contre</th><th>Motif</th><th>Statut</th><th>Action</th></tr></thead>
+                                        <tbody>
+                                            @forelse($reportsSent as $r)
+                                                <tr>
+                                                    <td>{{ $r->created_at->format('d/m/Y') }}</td>
+                                                    <td>{{ $r->reported->first_name }}</td>
+                                                    <td>{{ $r->reason }}</td>
+                                                    <td><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1 text-yellow-2' : 'bg-green-1 text-green-2' }}">{{ $r->status }}</span></td>
+                                                    <td><a href="{{ route('admin.reports.show', $r) }}" class="text-blue-1">Voir</a></td>
+                                                </tr>
+                                            @empty
+                                                <tr><td colspan="5" class="text-center py-20">Aucun signalement envoyé.</td></tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Onglet Litiges --}}
+                <div class="tabs__pane -tab-item-6">
+                    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+                        <table class="table-2 col-12">
+                            <thead><tr><th>Date</th><th>Studio</th><th>Montant</th><th>Action</th></tr></thead>
+                            <tbody>
+                                @forelse($disputes as $d)
+                                    <tr>
+                                        <td>{{ $d->updated_at->format('d/m/Y') }}</td>
+                                        <td>{{ $d->studio->name }}</td>
+                                        <td>{{ $d->price }}€</td>
+                                        <td><a href="{{ route('admin.disputes.index', ['search' => $d->id]) }}" class="text-blue-1">Voir</a></td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="4" class="text-center py-20">Aucun litige en cours.</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {{-- Onglet Virements --}}
+                <div class="tabs__pane -tab-item-7">
+                    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+                        <table class="table-2 col-12">
+                            <thead><tr><th>Date</th><th>Montant</th><th>Statut</th></tr></thead>
+                            <tbody>
+                                @forelse($payouts as $p)
+                                    <tr>
+                                        <td>{{ $p->created_at->format('d/m/Y') }}</td>
+                                        <td>{{ $p->amount }}€</td>
+                                        <td><span class="badge {{ $p->status == 'pending' ? 'bg-yellow-1 text-yellow-2' : 'bg-green-1 text-green-2' }}">{{ $p->status }}</span></td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="3" class="text-center py-20">Aucune demande de virement.</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {{-- Onglet Message Admin --}}
+                <div class="tabs__pane -tab-item-8">
+                    <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+                        <h4 class="text-18 fw-500 mb-20">Envoyer un message officiel MixOne</h4>
+                        <p class="text-15 text-light-1 mb-20">Ce message apparaîtra dans la messagerie de l'utilisateur avec un badge "Admin".</p>
+                        
+                        <form action="{{ route('admin.users.send-message', $user) }}" method="POST">
+                            @csrf
+                            <div class="form-group mb-20">
+                                <label class="text-14 fw-500 mb-10">Votre message</label>
+                                <textarea name="message" rows="5" class="form-control border-light rounded-4 px-15 py-15" placeholder="Écrivez votre message ici..." required></textarea>
+                            </div>
+                            <button type="submit" class="button -md bg-blue-1 text-white px-30">
+                                Envoyer le message
+                            </button>
+                        </form>
+                    </div>
+                </div> {{-- Fin onglet 8 --}}
+            </div> {{-- Fin tabs__content --}}
+        </div> {{-- Fin tabs --}}
+    </div> {{-- Fin col-xl-8 --}}
+</div> {{-- Fin row --}}
 @endsection

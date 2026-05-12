@@ -17,6 +17,40 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main-compiled.css') }}">
 
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <script>
+        window.confirmAction = function(event, element, message) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Confirmation',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3554D1',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, confirmer',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (element.tagName === 'FORM') {
+                        element.submit();
+                    } else if (element.tagName === 'BUTTON' && element.type === 'submit' && element.form) {
+                        if (element.name) {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = element.name;
+                            input.value = element.value;
+                            element.form.appendChild(input);
+                        }
+                        element.form.submit();
+                    }
+                }
+            });
+        };
+    </script>
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Admin Panel') - MixOne</title>
