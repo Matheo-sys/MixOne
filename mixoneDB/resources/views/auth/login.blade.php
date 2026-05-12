@@ -12,6 +12,22 @@
                                 <p class="mt-10">Toujours pas de compte ? <a href="{{ route('register') }}" class="text-blue-1">S'inscrire gratuitement</a></p>
                             </div>
 
+                            @if(session('error'))
+                                <div class="col-12">
+                                    <div class="d-flex items-center justify-between bg-red-1-05 border-1 rounded-4 px-20 py-15">
+                                        <div class="text-red-1 fw-500">{{ session('error') }}</div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if(session('success'))
+                                <div class="col-12">
+                                    <div class="d-flex items-center justify-between bg-green-1-05 border-1 rounded-4 px-20 py-15">
+                                        <div class="text-green-1 fw-500">{{ session('success') }}</div>
+                                    </div>
+                                </div>
+                            @endif
+
                             <form method="POST" action="{{ route('login') }}" class="js-ajax-form">
                                 @csrf
                                 <div class="col-12">
