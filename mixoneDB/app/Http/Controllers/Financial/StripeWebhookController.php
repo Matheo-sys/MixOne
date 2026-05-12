@@ -81,6 +81,12 @@ class StripeWebhookController extends Controller
             return;
         }
 
+        // Idempotence : ne traiter que si le paiement est encore en attente
+        if ($reservation->payment_status === PaymentStatus::Paid) {
+            Log::info('Webhook checkout déjà traité (idempotence)', ['reservation_id' => $idReservation]);
+            return;
+        }
+
         // Mettre à jour le statut de paiement
         $reservation->update([
             'payment_status'    => PaymentStatus::Paid,

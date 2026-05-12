@@ -34,7 +34,7 @@ class SearchStudiosAction
         }
 
         $requete = Studio::query()
-            ->with('proprietaire')
+            ->with('proprietaire:id,first_name,last_name,email,stripe_account_id,avatar')
             ->withCount('reservationsTerminees')
             ->withAvg('reservationsTerminees', 'rating')
             ->where('is_verified', true)
@@ -83,7 +83,18 @@ class SearchStudiosAction
                 break;
         }
 
-        $studiosCarte = (clone $requete)->get();
+        // Optimisation : utiliser la même requête clonée pour éviter la double exécution
+        // Limite les résultats carte à 200 pour les performances front-end
+        $studiosCarte = (clone $requete)->select(
+            'studios.id', 'studios.uuid', 'studios.name', 'studios.slug',
+            'studios.latitude', 'studios.longitude', 'studios.city',
+            'studios.hourly_rate', 'studios.image1'
+        )->when($latitude && $longitude, function($q) use ($latitude, $longitude) {
+            $q->selectRaw("(6371 * acos(
+                cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
+                sin(radians(?)) * sin(radians(latitude))
+            )) AS distance", [$latitude, $longitude, $latitude]);
+        })->limit(200)->get();
 
         return [
             'studios' => $requete->paginate(20),
@@ -94,4 +105,3 @@ class SearchStudiosAction
 
     }
 }
-

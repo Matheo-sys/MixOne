@@ -80,12 +80,13 @@ class ReservationController extends Controller
                 throw $eStripe;
             }
         } catch (\Exception $e) {
-            $message = "Impossible de traiter la réservation : " . $e->getMessage();
-
             Log::error('Erreur création réservation/paiement', [
                 'error' => $e->getMessage(),
                 'user'  => auth()->id(),
+                'trace' => $e->getTraceAsString(),
             ]);
+
+            $message = 'Impossible de finaliser votre réservation pour le moment. Veuillez vérifier vos informations et réessayer.';
 
             if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $message], 422);
@@ -119,7 +120,8 @@ class ReservationController extends Controller
             }
             return redirect()->back()->with('success', 'Réservation confirmée !');
         } catch (\Exception $e) {
-            $msg = "Erreur lors de la confirmation : " . $e->getMessage();
+            Log::error('Erreur confirmation réservation', ['reservation_id' => $reservation->id, 'error' => $e->getMessage()]);
+            $msg = 'Une erreur est survenue lors de la confirmation. Veuillez réessayer.';
             if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $msg], 422);
             }
@@ -153,7 +155,8 @@ class ReservationController extends Controller
             }
             return redirect()->back()->with('success', 'Réservation refusée. Le client a été remboursé.');
         } catch (\Exception $e) {
-            $msg = "Erreur lors du refus : " . $e->getMessage();
+            Log::error('Erreur refus réservation', ['reservation_id' => $reservation->id, 'error' => $e->getMessage()]);
+            $msg = 'Une erreur est survenue lors du refus. Veuillez réessayer.';
             if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $msg], 422);
             }
@@ -194,7 +197,8 @@ class ReservationController extends Controller
             }
             return redirect()->back()->with('success', 'Réservation annulée. Un remboursement a été initié.');
         } catch (\Exception $e) {
-            $msg = "Erreur lors de l'annulation : " . $e->getMessage();
+            Log::error('Erreur annulation réservation', ['reservation_id' => $reservation->id, 'error' => $e->getMessage()]);
+            $msg = 'Une erreur est survenue lors de l\'annulation. Veuillez réessayer ou contacter le support.';
             if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $msg], 422);
             }
@@ -231,10 +235,12 @@ class ReservationController extends Controller
             }
             return redirect()->back()->with('success', 'Session terminée avec succès !');
         } catch (\Exception $e) {
+            Log::error('Erreur terminaison réservation', ['reservation_id' => $reservation->id, 'error' => $e->getMessage()]);
+            $msg = 'Une erreur est survenue. Veuillez réessayer ou contacter le support.';
             if ($requete->ajax()) {
-                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+                return response()->json(['status' => 'error', 'message' => $msg], 422);
             }
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', $msg);
         }
     }
 
@@ -290,7 +296,8 @@ class ReservationController extends Controller
 
             return redirect()->back()->with('success', 'Le litige a bien été signalé. Les fonds sont gelés jusqu\'à résolution par l\'administration.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erreur lors du signalement : ' . $e->getMessage());
+            Log::error('Erreur signalement litige', ['reservation_id' => $reservation->id, 'error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Une erreur est survenue lors du signalement. Veuillez réessayer.');
         }
     }
 

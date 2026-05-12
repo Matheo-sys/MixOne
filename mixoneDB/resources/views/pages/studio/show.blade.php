@@ -7,24 +7,67 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "{{ $studio->name }}",
-  "description": "{{ $studio->description ?? 'Studio professionnel de musique' }}",
+  "@type": "MusicVenue",
+  "name": "{{ e($studio->name) }}",
+  "description": "{{ e(Str::limit($studio->description ?? 'Studio professionnel de musique disponible à la réservation sur MixOne.', 200)) }}",
   "url": "{{ url()->current() }}",
-  "telephone": "{{ $studio->phone ?? '' }}",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "{{ $studio->address }}",
-    "addressLocality": "{{ $studio->city }}",
+    "streetAddress": "{{ e($studio->address) }}",
+    "addressLocality": "{{ e($studio->city) }}",
+    "postalCode": "{{ e($studio->zipcode) }}",
     "addressCountry": "FR"
   },
   "geo": {
     "@type": "GeoCoordinates",
-    "latitude": {{ $studio->latitude }},
-    "longitude": {{ $studio->longitude }}
+    "latitude": {{ $studio->latitude ?? 0 }},
+    "longitude": {{ $studio->longitude ?? 0 }}
   },
-  "priceRange": "{{ $studio->hourly_rate }}€/h",
-  "image": "{{ $studio->image1 ? storage_url($studio->image1) : asset('media/img/backgrounds/11.jpg') }}"
+  "priceRange": "À partir de {{ $studio->hourly_rate }}€/h",
+  "currenciesAccepted": "EUR",
+  "paymentAccepted": "Carte bancaire",
+  "image": [
+    @if($studio->image1)"{{ storage_url($studio->image1) }}"@endif
+    @if($studio->image2), "{{ storage_url($studio->image2) }}"@endif
+    @if($studio->image3), "{{ storage_url($studio->image3) }}"@endif
+  ]
+  @if($studio->nombre_avis > 0)
+  ,"aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ $studio->note_moyenne }}",
+    "reviewCount": "{{ $studio->nombre_avis }}",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+  @endif
+}
+</script>
+
+{{-- BreadcrumbList pour le SEO --}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Accueil",
+      "item": "{{ route('home') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Studios",
+      "item": "{{ route('studios.index') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ e($studio->name) }}",
+      "item": "{{ url()->current() }}"
+    }
+  ]
 }
 </script>
 @endsection

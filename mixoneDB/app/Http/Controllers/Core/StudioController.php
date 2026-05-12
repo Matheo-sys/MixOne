@@ -196,10 +196,16 @@ class StudioController extends Controller
             return redirect()->route('dashboard.studio.myStudios')
                 ->with('success', 'Votre studio a été ajouté et est en attente d\'approbation par les administrateurs.');
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Erreur création studio: " . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error("Erreur création studio", [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             
-            $msg = "Impossible de créer le studio : " . $e->getMessage();
-            if ($e->getCode() == 401) $msg = "Vous n'êtes pas autorisé à créer un studio.";
+            $msg = 'Une erreur est survenue lors de la création de votre studio. Veuillez vérifier vos informations et réessayer.';
+            if ($e->getCode() == 401) {
+                $msg = 'Vous n\'êtes pas autorisé à créer un studio avec ce compte.';
+            }
             
             if ($requete->ajax()) {
                 return response()->json([
@@ -211,7 +217,6 @@ class StudioController extends Controller
                 ->withInput()
                 ->with('active_tab', '2')
                 ->withErrors(['studio_error' => $msg]);
-        }
     }
 
     /**
@@ -221,7 +226,7 @@ class StudioController extends Controller
      */
     public function liste(): View
     {
-        $requeteBase = Studio::with('proprietaire')
+        $requeteBase = Studio::with('proprietaire:id,first_name,last_name,email,stripe_account_id,avatar')
             ->withCount('reservationsTerminees')
             ->withAvg('reservationsTerminees', 'rating')
             ->where('is_verified', true)
@@ -416,9 +421,13 @@ class StudioController extends Controller
             }
             return redirect()->route('dashboard.studio.edit', $studio)->with('success', 'Studio modifié avec succès !');
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Erreur mise à jour studio: " . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Erreur mise à jour studio', [
+                'studio_id' => $studio->id,
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+            ]);
             
-            $msg = "Une erreur est survenue lors de la modification : " . $e->getMessage();
+            $msg = 'Une erreur est survenue lors de la modification. Veuillez vérifier vos informations et réessayer.';
             
             if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $msg], 422);

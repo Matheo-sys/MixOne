@@ -53,9 +53,12 @@ class UserSettingsController extends Controller
 
             return redirect()->back()->with('success', 'Profil mis à jour avec succès !');
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Erreur mise à jour profil: " . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Erreur mise à jour profil', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+            ]);
             
-            $msg = "Erreur lors de la mise à jour : " . $e->getMessage();
+            $msg = 'Une erreur est survenue lors de la mise à jour de votre profil. Veuillez réessayer.';
             if ($requete->ajax()) {
                 return response()->json(['status' => 'error', 'message' => $msg], 422);
             }
@@ -87,7 +90,14 @@ class UserSettingsController extends Controller
 
             return redirect()->back()->with('success', 'Mot de passe mis à jour avec succès');
         } catch (\Exception $e) {
-            $msg = "Erreur : " . $e->getMessage();
+            \Illuminate\Support\Facades\Log::error('Erreur changement mot de passe', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+            ]);
+            // Le message de l'exception est souvent "Le mot de passe actuel est incorrect", ce qui est déjà UX-safe
+            $msg = str_contains($e->getMessage(), 'actuel') 
+                ? $e->getMessage() 
+                : 'Une erreur est survenue lors du changement de mot de passe. Veuillez réessayer.';
             if ($requete->ajax()) {
                 return response()->json([
                     'status' => 'error',

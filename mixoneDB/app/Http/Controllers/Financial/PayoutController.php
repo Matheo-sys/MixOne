@@ -37,7 +37,12 @@ class PayoutController extends Controller
             return redirect()->back()->with('success', 'Votre demande de virement a été enregistrée avec succès. Elle sera traitée sous peu.');
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Erreur demande virement', [
+                'user_id' => $utilisateur->id,
+                'amount' => $requete->amount,
+                'error' => $e->getMessage(),
+            ]);
+            return redirect()->back()->with('error', 'Impossible de traiter votre demande de virement pour le moment. Veuillez vérifier vos informations et réessayer.');
         }
     }
 
