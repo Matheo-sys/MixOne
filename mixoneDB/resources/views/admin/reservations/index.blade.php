@@ -50,17 +50,17 @@
                     <td class="fw-600">{{ number_format($reservation->price, 2) }} €</td>
                     <td>
                         @php
-                            $status = $reservation->status->value;
+                            $status = $reservation->status;
                             $badgeClass = match($status) {
-                                'En attente' => 'bg-yellow-4 text-yellow-3',
-                                'Confirmée' => 'bg-blue-1-05 text-blue-1',
-                                'Terminée' => 'bg-green-1-05 text-green-1',
-                                'Litige' => 'bg-red-1-05 text-red-1',
-                                'Annulée', 'Refusée' => 'bg-light-2 text-light-1',
+                                \App\Enums\ReservationStatus::Pending   => 'bg-yellow-4 text-yellow-3',
+                                \App\Enums\ReservationStatus::Confirmed => 'bg-blue-1-05 text-blue-1',
+                                \App\Enums\ReservationStatus::Completed => 'bg-green-1-05 text-green-1',
+                                \App\Enums\ReservationStatus::Disputed  => 'bg-red-1-05 text-red-1',
+                                \App\Enums\ReservationStatus::Cancelled, \App\Enums\ReservationStatus::Refused => 'bg-light-2 text-light-1',
                                 default => 'bg-light-2 text-dark-1',
                             };
                         @endphp
-                        <span class="badge {{ $badgeClass }} px-10 py-5 rounded-4 text-12">{{ $status }}</span>
+                        <span class="badge {{ $badgeClass }} px-10 py-5 rounded-4 text-12">{{ $status->label() }}</span>
                     </td>
                 </tr>
                 @empty

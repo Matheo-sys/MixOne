@@ -122,7 +122,11 @@ class StudioController extends Controller
                 // Récupérer les réservations existantes pour ce jour
                 $reservations = \App\Models\Reservation::where('studio_id', $studio->id)
                     ->whereDate('date', $date)
-                    ->whereIn('status', ['En attente', 'Confirmée', 'Terminée', 'Completed', 'Confirmed', 'Pending'])
+                    ->whereIn('status', [
+                        \App\Enums\ReservationStatus::Pending->value,
+                        \App\Enums\ReservationStatus::Confirmed->value,
+                        \App\Enums\ReservationStatus::Completed->value
+                    ])
                     ->get();
 
                 $heuresOccupees = [];

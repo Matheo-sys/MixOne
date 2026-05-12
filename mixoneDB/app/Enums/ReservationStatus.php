@@ -4,12 +4,12 @@ namespace App\Enums;
 
 enum ReservationStatus: string
 {
-    case Pending = 'En attente';
-    case Confirmed = 'Confirmée';
-    case Refused = 'Refusée';
-    case Cancelled = 'Annulée';
-    case Completed = 'Terminée';
-    case Disputed = 'Litige';
+    case Pending = 'pending';
+    case Confirmed = 'confirmed';
+    case Refused = 'refused';
+    case Cancelled = 'cancelled';
+    case Completed = 'completed';
+    case Disputed = 'disputed';
 
     /**
      * Transitions autorisées depuis ce statut.
@@ -46,6 +46,13 @@ enum ReservationStatus: string
 
     public function label(): string
     {
-        return $this->value;
+        return match($this) {
+            self::Pending   => 'En attente',
+            self::Confirmed => 'Confirmée',
+            self::Refused   => 'Refusée',
+            self::Cancelled => 'Annulée',
+            self::Completed => 'Terminée',
+            self::Disputed  => 'Litige',
+        };
     }
 }
