@@ -223,27 +223,27 @@
                             <table class="table-2 col-12">
                                 <thead class="bg-light-2">
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Studio</th>
-                                        <th>Client/Artiste</th>
-                                        <th>Prix</th>
-                                        <th>Statut</th>
+                                        <th class="px-20">Date</th>
+                                        <th class="px-20">Studio</th>
+                                        <th class="px-20">Client/Artiste</th>
+                                        <th class="px-20">Prix</th>
+                                        <th class="px-20">Statut</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($allReservations as $res)
                                         <tr>
-                                            <td>{{ $res->date->format('d/m/Y') }} à {{ $res->time_slot }}</td>
-                                            <td>{{ $res->studio?->name ?? 'Studio supprimé' }}</td>
-                                            <td>
+                                            <td class="px-20">{{ $res->date->format('d/m/Y') }} à {{ $res->time_slot }}</td>
+                                            <td class="px-20">{{ $res->studio?->name ?? 'Studio supprimé' }}</td>
+                                            <td class="px-20">
                                                 @if($res->user_id === $user->id)
                                                     <span class="text-blue-1">Moi (Client)</span>
                                                 @else
                                                     {{ $res->client?->first_name ?? 'Inconnu' }} (Propriétaire)
                                                 @endif
                                             </td>
-                                            <td>{{ $res->price }} €</td>
-                                            <td>
+                                            <td class="px-20">{{ $res->price }} €</td>
+                                            <td class="px-20">
                                                 <span class="badge 
                                                     @if($res->status === \App\Enums\ReservationStatus::Confirmed) bg-green-1-05 text-green-1
                                                     @elseif($res->status === \App\Enums\ReservationStatus::Pending) bg-yellow-1-05 text-yellow-1
@@ -254,7 +254,12 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center py-20 text-light-1">Aucune réservation.</td>
+                                            <td colspan="5" class="text-center py-30 text-light-1">
+                                                <div class="d-flex flex-column items-center">
+                                                    <i class="icon-calendar text-24 mb-10"></i>
+                                                    <span>Aucune réservation enregistrée.</span>
+                                                </div>
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -277,30 +282,35 @@
                             <table class="table-2 col-12">
                                 <thead class="bg-light-2">
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Type</th>
-                                        <th>Description</th>
-                                        <th>Montant</th>
+                                        <th class="px-20">Date</th>
+                                        <th class="px-20">Type</th>
+                                        <th class="px-20">Description</th>
+                                        <th class="px-20">Montant</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if($user->portefeuille && $user->portefeuille->transactions)
                                         @forelse($user->portefeuille->transactions as $trans)
                                             <tr>
-                                                <td>{{ $trans->created_at->format('d/m/Y H:i') }}</td>
-                                                <td>
+                                                <td class="px-20">{{ $trans->created_at->format('d/m/Y H:i') }}</td>
+                                                <td class="px-20">
                                                     <span class="badge {{ $trans->type == 'credit' ? 'bg-green-1-05 text-green-1' : 'bg-red-1-05 text-red-1' }}">
                                                         {{ $trans->type == 'credit' ? 'Crédit' : 'Débit' }}
                                                     </span>
                                                 </td>
-                                                <td>{{ $trans->description }}</td>
-                                                <td class="fw-500 {{ $trans->type == 'credit' ? 'text-green-1' : 'text-red-1' }}">
+                                                <td class="px-20">{{ $trans->description }}</td>
+                                                <td class="px-20 fw-500 {{ $trans->type == 'credit' ? 'text-green-1' : 'text-red-1' }}">
                                                     {{ $trans->type == 'credit' ? '+' : '-' }}{{ $trans->amount }} €
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-center py-20 text-light-1">Aucune transaction.</td>
+                                                <td colspan="4" class="text-center py-30 text-light-1">
+                                                    <div class="d-flex flex-column items-center">
+                                                        <i class="icon-payment text-24 mb-10"></i>
+                                                        <span>Aucune transaction trouvée.</span>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         @endforelse
                                     @else
@@ -324,18 +334,33 @@
                                 <div class="text-16 fw-500 mb-10 text-blue-1">Signalements reçus ({{ $reportsReceived->count() }})</div>
                                 <div class="overflow-scroll scroll-bar-1">
                                     <table class="table-2 col-12">
-                                        <thead><tr><th>Date</th><th>Par</th><th>Motif</th><th>Statut</th><th>Action</th></tr></thead>
+                                        <thead class="bg-light-2">
+                                            <tr>
+                                                <th class="px-20">Date</th>
+                                                <th class="px-20">Par</th>
+                                                <th class="px-20">Motif</th>
+                                                <th class="px-20">Statut</th>
+                                                <th class="px-20">Action</th>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             @forelse($reportsReceived as $r)
                                                 <tr>
-                                                    <td>{{ $r->created_at->format('d/m/Y') }}</td>
-                                                    <td>{{ $r->reporter->first_name }}</td>
-                                                    <td>{{ $r->reason }}</td>
-                                                    <td><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1 text-yellow-2' : 'bg-green-1 text-green-2' }}">{{ $r->status }}</span></td>
-                                                    <td><a href="{{ route('admin.reports.show', $r) }}" class="text-blue-1">Voir</a></td>
+                                                    <td class="px-20">{{ $r->created_at->format('d/m/Y') }}</td>
+                                                    <td class="px-20">{{ $r->reporter->first_name }}</td>
+                                                    <td class="px-20">{{ $r->reason }}</td>
+                                                    <td class="px-20"><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1-05 text-yellow-1' : 'bg-green-1-05 text-green-1' }}">{{ $r->status }}</span></td>
+                                                    <td class="px-20"><a href="{{ route('admin.reports.show', $r) }}" class="text-blue-1">Voir</a></td>
                                                 </tr>
                                             @empty
-                                                <tr><td colspan="5" class="text-center py-20">Aucun signalement reçu.</td></tr>
+                                                <tr>
+                                                    <td colspan="5" class="text-center py-30 text-light-1">
+                                                        <div class="d-flex flex-column items-center">
+                                                            <i class="icon-alert-triangle text-24 mb-10"></i>
+                                                            <span>Aucun signalement reçu.</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             @endforelse
                                         </tbody>
                                     </table>
@@ -346,18 +371,33 @@
                                 <div class="text-16 fw-500 mb-10 text-purple-1">Signalements envoyés ({{ $reportsSent->count() }})</div>
                                 <div class="overflow-scroll scroll-bar-1">
                                     <table class="table-2 col-12">
-                                        <thead><tr><th>Date</th><th>Contre</th><th>Motif</th><th>Statut</th><th>Action</th></tr></thead>
+                                        <thead class="bg-light-2">
+                                            <tr>
+                                                <th class="px-20">Date</th>
+                                                <th class="px-20">Contre</th>
+                                                <th class="px-20">Motif</th>
+                                                <th class="px-20">Statut</th>
+                                                <th class="px-20">Action</th>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             @forelse($reportsSent as $r)
                                                 <tr>
                                                     <td>{{ $r->created_at->format('d/m/Y') }}</td>
                                                     <td>{{ $r->reported->first_name }}</td>
                                                     <td>{{ $r->reason }}</td>
-                                                    <td><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1 text-yellow-2' : 'bg-green-1 text-green-2' }}">{{ $r->status }}</span></td>
+                                                    <td><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1-05 text-yellow-1' : 'bg-green-1-05 text-green-1' }}">{{ $r->status }}</span></td>
                                                     <td><a href="{{ route('admin.reports.show', $r) }}" class="text-blue-1">Voir</a></td>
                                                 </tr>
                                             @empty
-                                                <tr><td colspan="5" class="text-center py-20">Aucun signalement envoyé.</td></tr>
+                                                <tr>
+                                                    <td colspan="5" class="text-center py-30 text-light-1">
+                                                        <div class="d-flex flex-column items-center">
+                                                            <i class="icon-shield text-24 mb-10"></i>
+                                                            <span>Aucun signalement envoyé.</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             @endforelse
                                         </tbody>
                                     </table>
@@ -371,17 +411,31 @@
                 <div class="tabs__pane -tab-item-6">
                     <div class="py-30 px-30 rounded-4 bg-white shadow-3">
                         <table class="table-2 col-12">
-                            <thead><tr><th>Date</th><th>Studio</th><th>Montant</th><th>Action</th></tr></thead>
+                            <thead class="bg-light-2">
+                                <tr>
+                                    <th class="px-20">Date</th>
+                                    <th class="px-20">Studio</th>
+                                    <th class="px-20">Montant</th>
+                                    <th class="px-20">Action</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 @forelse($disputes as $d)
                                     <tr>
-                                        <td>{{ $d->updated_at->format('d/m/Y') }}</td>
-                                        <td>{{ $d->studio->name }}</td>
-                                        <td>{{ $d->price }}€</td>
-                                        <td><a href="{{ route('admin.disputes.index', ['search' => $d->id]) }}" class="text-blue-1">Voir</a></td>
+                                        <td class="px-20">{{ $d->updated_at->format('d/m/Y') }}</td>
+                                        <td class="px-20">{{ $d->studio->name }}</td>
+                                        <td class="px-20">{{ $d->price }}€</td>
+                                        <td class="px-20"><a href="{{ route('admin.disputes.index', ['search' => $d->id]) }}" class="text-blue-1">Voir</a></td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="4" class="text-center py-20">Aucun litige en cours.</td></tr>
+                                    <tr>
+                                        <td colspan="4" class="text-center py-30 text-light-1">
+                                            <div class="d-flex flex-column items-center">
+                                                <i class="icon-dispute text-24 mb-10"></i>
+                                                <span>Aucun litige en cours.</span>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -392,16 +446,29 @@
                 <div class="tabs__pane -tab-item-7">
                     <div class="py-30 px-30 rounded-4 bg-white shadow-3">
                         <table class="table-2 col-12">
-                            <thead><tr><th>Date</th><th>Montant</th><th>Statut</th></tr></thead>
+                            <thead class="bg-light-2">
+                                <tr>
+                                    <th class="px-20">Date</th>
+                                    <th class="px-20">Montant</th>
+                                    <th class="px-20">Statut</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 @forelse($payouts as $p)
                                     <tr>
-                                        <td>{{ $p->created_at->format('d/m/Y') }}</td>
-                                        <td>{{ $p->amount }}€</td>
-                                        <td><span class="badge {{ $p->status == 'pending' ? 'bg-yellow-1 text-yellow-2' : 'bg-green-1 text-green-2' }}">{{ $p->status }}</span></td>
+                                        <td class="px-20">{{ $p->created_at->format('d/m/Y') }}</td>
+                                        <td class="px-20">{{ $p->amount }}€</td>
+                                        <td class="px-20"><span class="badge {{ $p->status == 'pending' ? 'bg-yellow-1-05 text-yellow-1' : 'bg-green-1-05 text-green-1' }}">{{ $p->status }}</span></td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="3" class="text-center py-20">Aucune demande de virement.</td></tr>
+                                    <tr>
+                                        <td colspan="3" class="text-center py-30 text-light-1">
+                                            <div class="d-flex flex-column items-center">
+                                                <i class="icon-payment text-24 mb-10"></i>
+                                                <span>Aucune demande de virement effectuée.</span>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>

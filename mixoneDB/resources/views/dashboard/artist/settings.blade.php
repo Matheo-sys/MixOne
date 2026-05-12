@@ -65,7 +65,7 @@
                                         <label class="lh-1 text-16 text-light-1">@Nom d'utilisateur</label>
                                     </div>
                                     <div class="text-12 text-light-1 mt-5">
-                                        Votre identité unique : <strong>@{{ auth()->user()->username ?? 'non défini' }}</strong> — Lettres, chiffres, points et underscores uniquement (3 à 30 caractères).
+                                        Votre identité unique : <strong>{{ '@' . (auth()->user()->username ?? 'non défini') }}</strong> — Lettres, chiffres, points et underscores uniquement (3 à 30 caractères).
                                     </div>
                                 </div>
                                 <div class="col-md-6">
