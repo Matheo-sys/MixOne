@@ -27,7 +27,7 @@
                 @forelse($payouts as $payout)
                 <tr>
                     <td>{{ $payout->created_at->format('d/m/Y H:i') }}</td>
-                    <td class="fw-500">{{ $payout->user->first_name }} {{ $payout->user->last_name }}</td>
+                    <td class="fw-500">{{ $payout->utilisateur->first_name }} {{ $payout->utilisateur->last_name }}</td>
                     <td class="text-blue-1 fw-600">{{ number_format($payout->amount, 2) }} €</td>
                     <td class="text-14">{{ $payout->iban }}</td>
                     <td>

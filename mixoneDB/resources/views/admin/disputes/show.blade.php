@@ -98,9 +98,9 @@
             <div class="mt-30 pt-30 border-top-light">
                 <h5 class="text-15 fw-500 mb-10">Détails Réservation</h5>
                 <div class="text-14 lh-16">
-                    <div><strong>Artiste :</strong> {{ $reservation->user->first_name }} {{ $reservation->user->last_name }}</div>
+                    <div><strong>Artiste :</strong> {{ $reservation->client->first_name }} {{ $reservation->client->last_name }}</div>
                     <div><strong>Studio :</strong> {{ $reservation->studio->name }}</div>
-                    <div><strong>Propriétaire :</strong> {{ $reservation->studio->user->first_name }} {{ $reservation->studio->user->last_name }}</div>
+                    <div><strong>Propriétaire :</strong> {{ $reservation->studio->proprietaire->first_name }} {{ $reservation->studio->proprietaire->last_name }}</div>
                     <div><strong>Date :</strong> {{ $reservation->date->format('d/m/Y') }}</div>
                     <div><strong>Heures :</strong> {{ $reservation->number_of_hours }}h ({{ $reservation->time_slot }})</div>
                 </div>

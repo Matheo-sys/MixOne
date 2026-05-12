@@ -29,8 +29,8 @@
                 <tr>
                     <td>#{{ $reservation->id }}</td>
                     <td class="fw-500">
-                        @if($reservation->user)
-                            {{ $reservation->user->first_name }} {{ $reservation->user->last_name }}
+                        @if($reservation->client)
+                            {{ $reservation->client->first_name }} {{ $reservation->client->last_name }}
                         @else
                             <span class="text-red-1">Inconnu</span>
                         @endif

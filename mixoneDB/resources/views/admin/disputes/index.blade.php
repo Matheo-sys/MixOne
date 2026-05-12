@@ -29,7 +29,7 @@
                     <td class="text-14">{{ $dispute->disputed_at ? $dispute->disputed_at->format('d/m/Y H:i') : 'N/A' }}</td>
                     <td class="fw-500">#{{ $dispute->id }}</td>
                     <td class="text-15">
-                        {{ $dispute->user->first_name ?? 'Inconnu' }} {{ $dispute->user->last_name ?? '' }}
+                        {{ $dispute->client->first_name ?? 'Inconnu' }} {{ $dispute->client->last_name ?? '' }}
                     </td>
                     <td class="text-blue-1 fw-500">
                         {{ $dispute->studio->name ?? 'Studio supprimé' }}
