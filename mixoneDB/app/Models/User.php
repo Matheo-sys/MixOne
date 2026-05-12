@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -68,9 +69,69 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         static::creating(function ($user) {
             if (empty($user->uuid)) {
-                $user->uuid = (string) \Illuminate\Support\Str::uuid();
+                $user->uuid = (string) Str::uuid();
+            }
+
+            // Auto-générer un username si non fourni
+            if (empty($user->username)) {
+                $user->username = static::generateUniqueUsername(
+                    $user->first_name,
+                    $user->last_name
+                );
             }
         });
+    }
+
+    /**
+     * Génère un username unique basé sur prénom.nom.
+     * Ex: "jean.dupont", "jean.dupont1", "jean.dupont2"
+     */
+    public static function generateUniqueUsername(string $firstName, string $lastName): string
+    {
+        $base = Str::slug($firstName . '.' . $lastName, '.');
+        $base = preg_replace('/[^a-z0-9._]/', '', strtolower($base));
+
+        if (strlen($base) < 3) {
+            $base = 'user' . Str::random(4);
+        }
+
+        $base = substr($base, 0, 30);
+        $username = $base;
+        $counter = 1;
+
+        while (static::where('username', $username)->exists()) {
+            $suffix = (string) $counter;
+            $username = substr($base, 0, 30 - strlen($suffix)) . $suffix;
+            $counter++;
+        }
+
+        return $username;
+    }
+
+    /**
+     * Retourne l'identité affichable : @username ou Prénom Nom en fallback.
+     */
+    public function getDisplayIdentityAttribute(): string
+    {
+        if (!empty($this->username)) {
+            return '@' . $this->username;
+        }
+
+        return trim($this->first_name . ' ' . $this->last_name) ?: 'Utilisateur';
+    }
+
+    /**
+     * Retourne l'URL de l'avatar ou l'avatar par défaut.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            return function_exists('storage_url')
+                ? storage_url($this->avatar)
+                : asset('storage/' . $this->avatar);
+        }
+
+        return asset('media/img/misc/avatar-default.png');
     }
 
     public function getRouteKeyName()

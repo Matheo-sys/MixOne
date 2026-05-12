@@ -34,6 +34,14 @@
 
                                 <div class="col-12">
                                     <div class="form-input">
+                                        <input type="text" name="username" value="{{ old('username') }}" pattern="[a-zA-Z0-9._]+" maxlength="30" minlength="3">
+                                        <label class="lh-1 text-14 text-light-1">Nom d'utilisateur (@username)</label>
+                                    </div>
+                                    <div class="text-12 text-light-1 mt-5">Lettres, chiffres, points et underscores uniquement. Laissez vide pour un username auto-généré.</div>
+                                </div>
+
+                                <div class="col-12 mt-20">
+                                    <div class="form-input">
                                         <input type="text" required name="first_name" value="{{ old('first_name') }}">
                                         <label class="lh-1 text-14 text-light-1">Prénom</label>
                                     </div>

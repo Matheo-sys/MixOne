@@ -17,7 +17,7 @@ class UpdateProfileRequest extends FormRequest
     {
         $user = auth()->user();
         return [
-            'username'      => ['nullable', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'username'      => ['nullable', 'string', 'min:3', 'max:30', 'regex:/^[a-zA-Z0-9._]+$/', Rule::unique('users')->ignore($user->id)],
             'first_name'    => 'required|string|max:255',
             'last_name'     => 'required|string|max:255',
             'email'         => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
@@ -46,7 +46,9 @@ class UpdateProfileRequest extends FormRequest
             'email.email'         => 'Veuillez saisir une adresse e-mail valide.',
             'email.unique'        => 'Cette adresse e-mail est déjà utilisée par un autre compte.',
             'username.unique'     => 'Ce nom d\'utilisateur est déjà pris.',
-            'username.max'        => 'Le nom d\'utilisateur ne peut pas dépasser 255 caractères.',
+            'username.max'        => 'Le nom d\'utilisateur ne peut pas dépasser 30 caractères.',
+            'username.min'        => 'Le nom d\'utilisateur doit contenir au moins 3 caractères.',
+            'username.regex'      => 'Le nom d\'utilisateur ne peut contenir que des lettres, chiffres, points et underscores.',
             'phone.max'           => 'Le numéro de téléphone ne peut pas dépasser 20 caractères.',
             'about.max'           => 'La description ne peut pas dépasser 1000 caractères.',
             'avatar.image'        => 'Le fichier doit être une image.',

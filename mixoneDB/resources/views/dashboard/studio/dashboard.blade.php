@@ -174,8 +174,8 @@
     </div>
 
     <div class="row y-gap-30 pt-30">
-        {{-- Liste des réservations - Masquée sur mobile (max-width 767px) --}}
-        <div class="col-xl-8 md:d-none">
+        {{-- Liste des réservations --}}
+        <div class="col-xl-8">
             <div class="py-30 px-30 sm:px-15 rounded-4 bg-white shadow-3 h-full">
                 <div class="d-flex justify-between items-center mb-15">
                     <h2 class="text-18 lh-1 fw-500">

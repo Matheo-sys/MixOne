@@ -67,7 +67,7 @@ Route::middleware(['throttle:60,1'])->group(function () {
     Route::post('/message', [MessageController::class, 'enregistrer']);
     Route::put('/message/{message}', [MessageController::class, 'mettreAJour']);
     Route::get('/message', [MessageController::class, 'afficher']);
-    Route::post('/message/masquer/{contactId}', [MessageController::class, 'masquerConversation'])->whereNumber('contactId');
+    Route::post('/message/masquer/{contactId}', [MessageController::class, 'masquerConversation']);
     Route::get('/message/nombre-non-lus', [MessageController::class, 'recupererNombreMessagesNonLus']);
     Route::post('/message/lire', [MessageController::class, 'marquerCommeLu']);
     Route::get('/api/utilisateurs/rechercher', [MessageController::class, 'rechercherUtilisateurs']);

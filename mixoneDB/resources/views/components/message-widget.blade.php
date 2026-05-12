@@ -331,7 +331,7 @@
             <!-- Search Interface -->
             <div id="search-interface" class="d-none">
                 <div class="new-message-search">
-                    <input type="text" id="user-search-input" placeholder="Rechercher un utilisateur...">
+                    <input type="text" id="user-search-input" placeholder="Rechercher par @username ou nom...">
                 </div>
                 <div id="search-results" class="search-results">
                     <!-- Results will be loaded here -->

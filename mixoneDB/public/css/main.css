@@ -1912,3 +1912,568 @@
   text-align: left !important;
   width: 100%;
 }
+
+/* ========================================
+   GLOBAL RESPONSIVE UTILITIES
+   ======================================== */
+
+/* Only prevent horizontal overflow on small screens */
+@media (max-width: 991px) {
+  body,
+  html {
+    overflow-x: hidden;
+  }
+
+  .dashboard__content {
+    overflow-x: hidden;
+  }
+}
+
+/* ========================================
+   STUDIO SHOW PAGE – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 991px) {
+  /* Gallery grid: 2 columns on tablet */
+  .galleryGrid.-type-1 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .galleryGrid.-type-1 .galleryGrid__item:first-child {
+    grid-column: span 2;
+  }
+
+  /* Sidebar (reservation form) goes full width below content */
+  .studio-show-header + section .col-xl-4 {
+    margin-left: 0 !important;
+  }
+
+  .studio-show-header + section .ml-50 {
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Gallery: single column on mobile */
+  .galleryGrid.-type-1 {
+    grid-template-columns: 1fr !important;
+    gap: 6px;
+  }
+
+  .galleryGrid.-type-1 .galleryGrid__item:first-child {
+    grid-column: span 1;
+  }
+
+  .galleryGrid.-type-1 .galleryGrid__item {
+    max-height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  /* Hide extra images beyond 3 on small mobile */
+  .galleryGrid.-type-1 .galleryGrid__item:nth-child(n+4) {
+    display: none;
+  }
+
+  /* Studio header: stack vertically */
+  .studio-show-header .row.justify-between {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Price block full-width */
+  .studio-show-header .col-auto:last-child {
+    width: 100%;
+    text-align: left;
+  }
+
+  /* Reservation card: reduce padding */
+  .px-30.py-30.border-light.rounded-4.shadow-4 {
+    padding: 20px 16px !important;
+  }
+
+  /* Fix equipment grid on mobile */
+  .row.x-gap-0.y-gap-15 .col-md-6.col-lg-4 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  /* Reviews section */
+  .size-60.rounded-full {
+    width: 45px !important;
+    height: 45px !important;
+    min-width: 45px;
+    font-size: 15px !important;
+  }
+
+  /* Booking form sticky on mobile */
+  .studio-show-header + section .col-xl-4 .px-30.py-30 {
+    position: relative;
+  }
+}
+
+@media (max-width: 575px) {
+  .studio-show-header {
+    margin-top: 70px !important;
+  }
+
+  .studio-show-header h1 {
+    font-size: 22px !important;
+  }
+
+  /* Equipment grid: single column on very small */
+  .row.x-gap-0.y-gap-15 .col-md-6.col-lg-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  /* Shrink booking buttons */
+  .button.px-35.h-60.col-12 {
+    height: 50px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* ========================================
+   DASHBOARD – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 991px) {
+  /* Sidebar off-canvas overlay */
+  .dashboard.-is-sidebar-open .dashboard__sidebar {
+    transform: translateX(0) !important;
+    z-index: 1001;
+  }
+
+  .dashboard__sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 280px;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Dashboard main content: full width */
+  .dashboard__main {
+    padding-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .dashboard__content {
+    padding: 20px 15px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  /* KPI cards: ensure they don't overflow */
+  .col-xl-4.col-md-6 .py-30.px-30 {
+    padding: 20px 16px !important;
+  }
+
+  .col-xl-4.col-md-6 .text-26 {
+    font-size: 22px !important;
+  }
+
+  /* Dashboard title */
+  .dashboard__content h1 {
+    font-size: 24px !important;
+  }
+
+  /* Dashboard recent reservations: show on mobile as cards */
+  .col-xl-8.md\:d-none {
+    display: block !important;
+  }
+
+  /* Info banners: stack icon and text */
+  .bg-yellow-1-05 .d-flex.items-center > i,
+  .bg-blue-1-05 .d-flex.items-center > i {
+    margin-bottom: 10px;
+    align-self: flex-start;
+    flex-shrink: 0;
+  }
+
+  .bg-yellow-1-05 .d-flex.items-center,
+  .bg-blue-1-05 .d-flex.items-center {
+    flex-wrap: wrap;
+  }
+
+  /* Alert banner text */
+  .bg-yellow-1-05 p,
+  .bg-yellow-1-05 h4 {
+    font-size: 14px !important;
+  }
+
+  /* Stripe config card */
+  .text-20.lh-16.fw-600 {
+    font-size: 16px !important;
+  }
+
+  /* Chart container */
+  .pt-30[style*="height: 350px"] {
+    height: 250px !important;
+  }
+}
+
+/* ========================================
+   BOOKING PAGE – RESPONSIVE (Studio + Artist)
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Search bar in booking header */
+  .w-230 {
+    width: 100% !important;
+  }
+
+  /* Header layout: stack title & search */
+  .row.y-gap-20.justify-between.items-end.pb-60 {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .row.y-gap-20.justify-between.items-end.pb-60 .col-auto {
+    width: 100%;
+  }
+
+  .row.y-gap-20.justify-between.items-end.pb-60 .d-flex.items-center {
+    width: 100%;
+  }
+
+  /* Tab controls: horizontal scroll */
+  .tabs.-underline-2 .tabs__controls {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .tabs.-underline-2 .tabs__controls::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabs.-underline-2 .tabs__controls .col-auto {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* Table wrapper: forced scroll */
+  .overflow-scroll,
+  .overflow-x-auto {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Table minimum widths for readability */
+  .table-2,
+  .table-4,
+  table.table-responsive-cards {
+    min-width: 700px;
+  }
+
+  /* Booking table container */
+  .py-30.px-30.rounded-4.bg-white.shadow-3 {
+    padding: 15px 10px !important;
+  }
+
+  /* Action buttons in table */
+  .d-flex.x-gap-10.y-gap-5.flex-wrap {
+    gap: 6px !important;
+  }
+
+  .button.-sm {
+    font-size: 12px !important;
+    padding: 5px 8px !important;
+  }
+}
+
+/* ========================================
+   SETTINGS PAGE – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Avatar section */
+  .d-flex.ratio.ratio-1\:1.w-200 {
+    width: 120px !important;
+  }
+
+  .row.y-gap-30.items-center .col-auto {
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Form inputs container */
+  .col-xl-9 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* RGPD/Delete sections */
+  .bg-blue-1-05.rounded-4.px-30.py-30,
+  .bg-red-3.rounded-4.px-30.py-30 {
+    padding: 20px 16px !important;
+  }
+
+  /* Password buttons */
+  .row.x-gap-10.y-gap-10 {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .row.x-gap-10.y-gap-10 .col-auto {
+    width: 100%;
+  }
+
+  .row.x-gap-10.y-gap-10 .button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* ========================================
+   MY STUDIOS PAGE – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Header: stack title and button */
+  .row.y-gap-20.justify-between.items-end.pb-40 {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch !important;
+  }
+
+  .row.y-gap-20.justify-between.items-end.pb-40 .col-auto {
+    width: 100%;
+    margin: 0 !important;
+    text-align: center;
+  }
+
+  /* Add studio button: full width */
+  .row.y-gap-20.justify-between.items-end.pb-40 .button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Studio action buttons */
+  .d-flex.align-items-center.gap-2 {
+    gap: 8px !important;
+  }
+}
+
+/* ========================================
+   ADMIN DASHBOARD – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Admin KPI cards */
+  .col-xl-3.col-md-6 .text-30 {
+    font-size: 24px !important;
+  }
+
+  /* Admin stats sections */
+  .col-xl-6 .py-30.px-30 {
+    padding: 20px 16px !important;
+  }
+}
+
+/* ========================================
+   ADMIN USER SHOW – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 991px) {
+  /* User profile: full width */
+  .col-xl-4 .py-30.px-30.rounded-4.bg-white.shadow-3 {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Page header */
+  .row.y-gap-20.justify-between.items-end.pb-30 {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .row.y-gap-20.justify-between.items-end.pb-30 .col-auto {
+    width: 100%;
+  }
+
+  /* Tabs: scrollable */
+  .tabs__controls.row.x-gap-40 {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .tabs__controls.row.x-gap-40::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* User avatar size on mobile */
+  .size-120 {
+    width: 90px !important;
+    height: 90px !important;
+  }
+
+  /* Badge container */
+  .d-flex.x-gap-10.mb-30 {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* Action buttons: smaller */
+  .button.-md.w-100 {
+    font-size: 14px !important;
+    padding: 10px 16px !important;
+  }
+}
+
+/* ========================================
+   ADMIN TABLES (Disputes, Payouts, etc.)
+   ======================================== */
+
+@media (max-width: 991px) {
+  /* Force horizontal scroll on all admin tables */
+  .overflow-scroll.scroll-bar-1 {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .overflow-scroll.scroll-bar-1 table {
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Admin page headers */
+  .row.y-gap-20.justify-between.items-end.pb-60,
+  .row.y-gap-20.justify-between.items-end.pb-40 {
+    padding-bottom: 24px !important;
+  }
+
+  .row.y-gap-20.justify-between.items-end.pb-60 h1,
+  .row.y-gap-20.justify-between.items-end.pb-40 h1 {
+    font-size: 22px !important;
+  }
+}
+
+/* ========================================
+   FOOTER – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 767px) {
+  .footer .col-xl-4,
+  .footer .col-lg-4,
+  .footer .col-auto {
+    width: 100% !important;
+    text-align: center;
+  }
+}
+
+/* ========================================
+   NEWSLETTER – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 575px) {
+  .newsletter__form {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .newsletter__form input {
+    width: 100% !important;
+  }
+
+  .newsletter__form button {
+    width: 100% !important;
+  }
+}
+
+/* ========================================
+   COOKIE BANNER – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 575px) {
+  .cookie-consent {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 10px !important;
+    max-width: calc(100% - 20px) !important;
+    padding: 16px !important;
+  }
+}
+
+/* ========================================
+   MAP MODAL – RESPONSIVE
+   ======================================== */
+
+@media (max-width: 767px) {
+  .mapModal {
+    width: 100% !important;
+    height: 100vh !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+  }
+}
+
+/* ========================================
+   AUTH PAGES – RESPONSIVE (Login/Register)
+   ======================================== */
+
+@media (max-width: 575px) {
+  .form-input input,
+  .form-input textarea {
+    font-size: 14px !important;
+    height: 46px !important;
+  }
+
+  .profile-selection-container {
+    max-width: 100% !important;
+  }
+
+  .profile-btn {
+    font-size: 14px !important;
+    padding: 12px 10px !important;
+  }
+}
+
+/* ========================================
+   GLOBAL SPACING MOBILE FIXES
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Reduce top margin for content after header */
+  .mt-90 {
+    margin-top: 70px !important;
+  }
+
+  /* Compact padding for cards */
+  .sm\:px-15 {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+
+  .sm\:px-20 {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Large bottom paddings */
+  .pb-60 {
+    padding-bottom: 30px !important;
+  }
+}

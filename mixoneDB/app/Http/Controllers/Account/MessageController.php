@@ -85,7 +85,7 @@ class MessageController extends Controller
     {
         $messages = Message::where('sender_id', Auth::id())
             ->orWhere('receiver_id', Auth::id())
-            ->with(['expediteur:id,first_name,last_name,avatar', 'destinataire:id,first_name,last_name,avatar'])
+            ->with(['sender:id,uuid,first_name,last_name,avatar,username,profile', 'receiver:id,uuid,first_name,last_name,avatar,username,profile'])
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -101,6 +101,7 @@ class MessageController extends Controller
 
     /**
      * Rechercher des utilisateurs pour la messagerie.
+     * Supporte la recherche par @username, prénom ou nom.
      *
      * @param Request $requete
      * @return JsonResponse
@@ -117,13 +118,17 @@ class MessageController extends Controller
             return response()->json([]);
         }
 
+        // Si la recherche commence par @, chercher par username
+        $rechercheUsername = ltrim($recherche, '@');
+
         $utilisateurs = User::where('id', '!=', Auth::id())
-            ->where(function($q) use ($recherche) {
-                $q->where('first_name', 'like', "%{$recherche}%")
+            ->where(function($q) use ($recherche, $rechercheUsername) {
+                $q->where('username', 'like', "%{$rechercheUsername}%")
+                  ->orWhere('first_name', 'like', "%{$recherche}%")
                   ->orWhere('last_name', 'like', "%{$recherche}%");
             })
             ->limit(10)
-            ->get(['id', 'first_name', 'last_name', 'avatar']);
+            ->get(['id', 'uuid', 'first_name', 'last_name', 'avatar', 'username', 'profile']);
 
         return response()->json($utilisateurs);
     }
@@ -134,16 +139,20 @@ class MessageController extends Controller
      * @param int $idContact
      * @return JsonResponse
      */
-    public function masquerConversation(int $idContact): JsonResponse
+    public function masquerConversation($idContact): JsonResponse
     {
-        // Valider que le contact existe
-        if (!User::where('id', $idContact)->exists()) {
+        // Chercher par ID ou par UUID pour être robuste
+        $contact = User::where('id', $idContact)
+            ->orWhere('uuid', $idContact)
+            ->first();
+
+        if (!$contact) {
             return response()->json(['error' => 'Contact introuvable.'], 404);
         }
 
         HiddenConversation::firstOrCreate([
             'user_id' => Auth::id(),
-            'contact_id' => $idContact
+            'contact_id' => $contact->id
         ]);
 
         return response()->json(['success' => true]);

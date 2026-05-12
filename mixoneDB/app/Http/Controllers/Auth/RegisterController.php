@@ -50,12 +50,18 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'profile'   => ['required', 'in:studio,artist'],
+            'username'  => ['nullable', 'string', 'min:3', 'max:30', 'regex:/^[a-zA-Z0-9._]+$/', 'unique:users,username'],
             'last_name' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/'],
         ], [
             'profile.required' => 'Veuillez sélectionner un profil.',
+
+            'username.min'     => 'Le nom d\'utilisateur doit contenir au moins 3 caractères.',
+            'username.max'     => 'Le nom d\'utilisateur ne peut pas dépasser 30 caractères.',
+            'username.regex'   => 'Le nom d\'utilisateur ne peut contenir que des lettres, chiffres, points et underscores.',
+            'username.unique'  => 'Ce nom d\'utilisateur est déjà pris.',
 
             'first_name.required' => 'Le prénom est requis.',
             'first_name.string' => 'Le prénom doit être une chaîne de caractères valide.',
@@ -91,6 +97,11 @@ class RegisterController extends Controller
             'first_name' => $data['first_name'],
             'email' => $data['email'],
         ]);
+
+        // Username : valeur saisie ou auto-génération via le hook booted()
+        if (!empty($data['username'])) {
+            $user->username = strtolower($data['username']);
+        }
 
         // Champs sensibles assignés explicitement (hors $fillable)
         $user->profile = $data['profile'];

@@ -33,7 +33,7 @@
     </div>
 
 
-    <div class="py-30 px-30 rounded-4 bg-white shadow-3 mt-90">
+    <div class="py-30 px-30 sm:px-15 rounded-4 bg-white shadow-3 mt-30">
         <div class="tabs -underline-2 js-tabs">
             <div class="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
                 <div class="col-auto">

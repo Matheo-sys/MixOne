@@ -99,17 +99,37 @@
         });
 
         /**
+         * Helper : affiche le nom avec @username et badge profil
+         */
+        function formatUserDisplay(user) {
+            const name = `${user.first_name} ${user.last_name}`;
+            const username = user.username ? `@${user.username}` : '';
+            const badgeColor = user.profile === 'studio' ? '#3554D1' : '#10b981';
+            const badgeText = user.profile === 'studio' ? 'Studio' : 'Artiste';
+            const badge = user.profile ? `<span style="background: ${badgeColor}; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 6px;">${badgeText}</span>` : '';
+            return { name, username, badge };
+        }
+
+        /**
          * Affiche les résultats de recherche d'utilisateurs
          */
         function renderSearchResults(users) {
             searchResults.innerHTML = users.length === 0 
                 ? '<div class="text-center py-15 text-light-1">Aucun utilisateur trouvé</div>'
-                : users.map(user => `
-                    <div class="conversation-item js-start-chat" data-id="${user.id}" data-name="${user.first_name} ${user.last_name}" data-avatar="${user.avatar}" style="padding: 10px 20px; display: flex; align-items: center; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
+                : users.map(user => {
+                    const display = formatUserDisplay(user);
+                    return `
+                    <div class="conversation-item js-start-chat" data-id="${user.id}" data-name="${display.name}" data-avatar="${user.avatar}" style="padding: 10px 20px; display: flex; align-items: center; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
                         <img src="${user.avatar ? '/storage/' + user.avatar : '/media/img/misc/avatar-default.png'}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-right: 12px;">
-                        <span style="font-weight: 500; color: #051036; font-size: 14px;">${user.first_name} ${user.last_name}</span>
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center;">
+                                <span style="font-weight: 500; color: #051036; font-size: 14px;">${display.name}</span>
+                                ${display.badge}
+                            </div>
+                            ${display.username ? `<span style="font-size: 12px; color: #3554D1; font-weight: 500;">${display.username}</span>` : ''}
+                        </div>
                     </div>
-                `).join('');
+                `}).join('');
 
             searchResults.querySelectorAll('.js-start-chat').forEach(el => {
                 el.addEventListener('click', () => {
@@ -255,23 +275,29 @@
 
             conversationList.innerHTML = visibleConvs.length === 0 
                 ? '<div style="text-align: center; padding: 20px; color: #777;">Aucune conversation</div>'
-                : visibleConvs.map(conv => `
-                    <div class="conversation-item js-conv-item" data-id="${conv.user.id}" data-name="${conv.user.first_name} ${conv.user.last_name}" data-avatar="${conv.user.avatar}" style="padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
+                : visibleConvs.map(conv => {
+                    const display = formatUserDisplay(conv.user);
+                    return `
+                    <div class="conversation-item js-conv-item" data-id="${conv.user.id}" data-name="${display.name}" data-avatar="${conv.user.avatar}" style="padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
                         <img src="${conv.user.avatar ? '/storage/' + conv.user.avatar : '/media/img/misc/avatar-default.png'}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px;">
                         <div style="flex: 1; overflow: hidden;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                                <span style="font-weight: 500; color: #051036; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${conv.user.first_name} ${conv.user.last_name}</span>
-                                <div style="display: flex; align-items: center;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                                <div style="display: flex; align-items: center; overflow: hidden;">
+                                    <span style="font-weight: 500; color: #051036; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${display.name}</span>
+                                    ${display.badge}
+                                </div>
+                                <div style="display: flex; align-items: center; flex-shrink: 0;">
                                     <span style="font-size: 10px; color: #777; margin-right: 8px;">${formatMessageDate(conv.lastMessage.created_at)}</span>
                                     <div class="js-hide-conv" data-id="${conv.user.id}" style="color: #bbb; cursor: pointer; padding: 2px;">
                                         <i class="icon-trash" style="font-size: 12px;"></i>
                                     </div>
                                 </div>
                             </div>
+                            ${display.username ? `<div style="font-size: 11px; color: #3554D1; font-weight: 500; margin-bottom: 3px;">${display.username}</div>` : ''}
                             <p style="font-size: 12px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0;">${conv.lastMessage.message}</p>
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
 
             conversationList.querySelectorAll('.js-conv-item').forEach(el => {
                 el.addEventListener('click', (e) => {
