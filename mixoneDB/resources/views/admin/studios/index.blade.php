@@ -11,6 +11,38 @@
 </div>
 
 <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+    
+    {{-- Barre de filtres --}}
+    <div class="row y-gap-20 items-center justify-between pb-30">
+        <div class="col-12">
+            <form action="{{ route('admin.studios.index') }}" method="GET" class="row y-gap-20 items-end">
+                <div class="col-auto">
+                    <div class="text-14 fw-500 mb-5">Recherche</div>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Nom, Ville, Pseudo proprio..." class="border-light rounded-4 px-15 py-10">
+                </div>
+                
+                <div class="col-auto">
+                    <div class="text-14 fw-500 mb-5">Statut de validation</div>
+                    <select name="status" class="form-select border-light rounded-4 px-15 py-10">
+                        <option value="">Tous</option>
+                        <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>Vérifié</option>
+                        <option value="unverified" {{ request('status') == 'unverified' ? 'selected' : '' }}>Non vérifié</option>
+                    </select>
+                </div>
+                
+                <div class="col-auto">
+                    <button type="submit" class="button -md bg-blue-1 text-white px-20">Filtrer</button>
+                </div>
+                
+                @if(request()->anyFilled(['search', 'status']))
+                <div class="col-auto">
+                    <a href="{{ route('admin.studios.index') }}" class="button -md bg-light-2 text-dark-1 px-20">Réinitialiser</a>
+                </div>
+                @endif
+            </form>
+        </div>
+    </div>
+
     <div class="overflow-scroll scroll-bar-1">
         <table class="table-3 -border-bottom col-12">
             <thead class="bg-light-2">
@@ -35,7 +67,12 @@
                         </div>
                     </td>
                     <td class="fw-500">{{ $studio->name }}</td>
-                    <td>{{ $studio->proprietaire->first_name ?? 'Inconnu' }} {{ $studio->proprietaire->last_name ?? '' }}</td>
+                    <td>
+                        <div class="fw-500">{{ $studio->proprietaire->first_name ?? 'Inconnu' }} {{ $studio->proprietaire->last_name ?? '' }}</div>
+                        @if($studio->proprietaire)
+                            <div class="text-13 text-light-1">{{ '@' . $studio->proprietaire->username }}</div>
+                        @endif
+                    </td>
                     <td>{{ $studio->city }}</td>
                     <td>{{ $studio->hourly_rate }} €</td>
                     <td>

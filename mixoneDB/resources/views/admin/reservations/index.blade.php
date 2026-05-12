@@ -11,6 +11,41 @@
 </div>
 
 <div class="py-30 px-30 rounded-4 bg-white shadow-3">
+    
+    {{-- Barre de filtres --}}
+    <div class="row y-gap-20 items-center justify-between pb-30">
+        <div class="col-12">
+            <form action="{{ route('admin.reservations.index') }}" method="GET" class="row y-gap-20 items-end">
+                <div class="col-auto">
+                    <div class="text-14 fw-500 mb-5">Recherche</div>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="ID, Artiste, Studio..." class="border-light rounded-4 px-15 py-10">
+                </div>
+                
+                <div class="col-auto">
+                    <div class="text-14 fw-500 mb-5">Statut</div>
+                    <select name="status" class="form-select border-light rounded-4 px-15 py-10">
+                        <option value="">Tous les statuts</option>
+                        @foreach(\App\Enums\ReservationStatus::cases() as $status)
+                            <option value="{{ $status->value }}" {{ request('status') === $status->value ? 'selected' : '' }}>
+                                {{ $status->label() }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div class="col-auto">
+                    <button type="submit" class="button -md bg-blue-1 text-white px-20">Filtrer</button>
+                </div>
+                
+                @if(request()->anyFilled(['search', 'status']))
+                <div class="col-auto">
+                    <a href="{{ route('admin.reservations.index') }}" class="button -md bg-light-2 text-dark-1 px-20">Réinitialiser</a>
+                </div>
+                @endif
+            </form>
+        </div>
+    </div>
+
     <div class="overflow-scroll scroll-bar-1">
         <table class="table-3 -border-bottom col-12">
             <thead class="bg-light-2">
@@ -28,9 +63,10 @@
                 @forelse($reservations as $reservation)
                 <tr>
                     <td>#{{ $reservation->id }}</td>
-                    <td class="fw-500">
+                    <td>
                         @if($reservation->client)
-                            {{ $reservation->client->first_name }} {{ $reservation->client->last_name }}
+                            <div class="fw-500">{{ $reservation->client->first_name }} {{ $reservation->client->last_name }}</div>
+                            <div class="text-13 text-light-1">{{ '@' . $reservation->client->username }}</div>
                         @else
                             <span class="text-red-1">Inconnu</span>
                         @endif

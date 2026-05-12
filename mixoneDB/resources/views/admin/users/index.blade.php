@@ -44,12 +44,12 @@
                             </div>
                             
                             <div class="col-auto">
-                                <button type="submit" class="button -md -blue-1 text-white px-20">Filtrer</button>
+                                <button type="submit" class="button -md bg-blue-1 text-white px-20">Filtrer</button>
                             </div>
                             
                             @if(request()->anyFilled(['search', 'profile', 'status']))
                             <div class="col-auto">
-                                <a href="{{ route('admin.users.index') }}" class="button -md -light-1 text-dark-1 px-20">Réinitialiser</a>
+                                <a href="{{ route('admin.users.index') }}" class="button -md bg-light-2 text-dark-1 px-20">Réinitialiser</a>
                             </div>
                             @endif
                         </form>
@@ -61,7 +61,7 @@
                         <thead class="bg-light-2">
                             <tr>
                                 <th>ID</th>
-                                <th>Nom complet</th>
+                                <th>Utilisateur</th>
                                 <th>Email</th>
                                 <th>Rôle</th>
                                 <th>Date d'inscription</th>
@@ -73,7 +73,10 @@
                             @forelse($users as $user)
                             <tr>
                                 <td>#{{ $user->id }}</td>
-                                <td class="fw-500">{{ $user->first_name }} {{ $user->last_name }}</td>
+                                <td>
+                                    <div class="fw-500">{{ $user->first_name }} {{ $user->last_name }}</div>
+                                    <div class="text-13 text-light-1">{{ '@' . $user->username }}</div>
+                                </td>
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     @if($user->profile == 'artist')

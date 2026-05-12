@@ -16,9 +16,34 @@ class StudioController extends Controller
     /**
      * Liste des studios.
      */
-    public function liste(): View
+    public function liste(Request $request): View
     {
-        $studios = Studio::with('proprietaire')->orderBy('created_at', 'desc')->paginate(20);
+        $query = Studio::with('proprietaire');
+
+        // Filtre Recherche
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('city', 'like', "%{$search}%")
+                  ->orWhereHas('proprietaire', function($qProp) use ($search) {
+                      $qProp->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%")
+                            ->orWhere('username', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Filtre Statut Validation
+        if ($request->filled('status')) {
+            if ($request->status === 'verified') {
+                $query->where('is_verified', true);
+            } elseif ($request->status === 'unverified') {
+                $query->where('is_verified', false);
+            }
+        }
+
+        $studios = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
         return view('admin.studios.index', compact('studios'));
     }
 

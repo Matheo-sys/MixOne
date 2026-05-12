@@ -11,11 +11,24 @@ class PayoutController extends Controller
     /**
      * Liste des demandes de virement.
      */
-    public function liste()
+    public function liste(Request $request)
     {
-        $virements = PayoutRequest::with('utilisateur')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $query = PayoutRequest::with('utilisateur');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('utilisateur', function($qUser) use ($search) {
+                $qUser->where('first_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%")
+                      ->orWhere('username', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $virements = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
 
         return view('admin.payouts.index', ['payouts' => $virements]);
     }

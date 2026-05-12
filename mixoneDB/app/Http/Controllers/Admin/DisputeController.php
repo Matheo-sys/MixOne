@@ -12,12 +12,37 @@ class DisputeController extends Controller
     /**
      * Liste des litiges en cours.
      */
-    public function liste()
+    public function liste(Request $request)
     {
-        $disputes = Reservation::where('status', ReservationStatus::Disputed)
-            ->with(['client', 'studio'])
-            ->orderBy('disputed_at', 'desc')
-            ->paginate(20);
+        $query = Reservation::with(['client', 'studio']);
+
+        // Par défaut, afficher uniquement les litiges en cours. 
+        // Si on a un filtre status = 'all', on affiche l'historique des litiges.
+        if ($request->input('status') === 'all') {
+            $query->whereNotNull('disputed_at');
+        } else {
+            $query->where('status', ReservationStatus::Disputed);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                // Recherche par ID de réservation
+                $q->where('id', 'like', "%{$search}%")
+                // Recherche par nom de client ou pseudo
+                ->orWhereHas('client', function($qClient) use ($search) {
+                    $qClient->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%")
+                            ->orWhere('username', 'like', "%{$search}%");
+                })
+                // Recherche par nom de studio
+                ->orWhereHas('studio', function($qStudio) use ($search) {
+                    $qStudio->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $disputes = $query->orderBy('disputed_at', 'desc')->paginate(20)->withQueryString();
 
         return view('admin.disputes.index', compact('disputes'));
     }
