@@ -99,7 +99,7 @@
                     @else
                         <div class="d-flex items-center ml-20 is-menu-opened-hide desktop-only-header">
                             @if(auth()->user()->is_admin)
-                                <a href="{{ route('admin.dashboard') }}" class="button px-20 fw-500 text-14 h-50 mr-20" style="background-color: #05a011 !important; color: white !important; border-radius: 4px;">Admin</a>
+                                <a href="{{ route('admin.dashboard') }}" class="button px-30 fw-400 text-14 -md h-50" style="background-color: #05a011 !important; color: white !important; border-radius: 4px;">Admin</a>
                             @endif
                             <a href="/" 
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
