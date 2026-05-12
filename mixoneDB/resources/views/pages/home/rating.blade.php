@@ -78,11 +78,13 @@
 
                     </div>
 
-                    <div class="d-flex items-center mt-60 sm:mt-20 js-testimonials-slider-pag">
-                        <div class="text-dark-1 fw-500 js-current">01</div>
-                        <div class="slider-scrollbar bg-border ml-20 mr-20 w-max-300 js-scrollbar"></div>
-                        <div class="text-dark-1 fw-500 js-all">{{ sprintf('%02d', max(1, $avis->count())) }}</div>
-                    </div>
+                    @if($avis->count() > 0)
+                        <div class="d-flex items-center mt-60 sm:mt-20 js-testimonials-slider-pag">
+                            <div class="text-dark-1 fw-500 js-current">01</div>
+                            <div class="slider-scrollbar bg-border ml-20 mr-20 w-max-300 js-scrollbar"></div>
+                            <div class="text-dark-1 fw-500 js-all">{{ sprintf('%02d', $avis->count()) }}</div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
