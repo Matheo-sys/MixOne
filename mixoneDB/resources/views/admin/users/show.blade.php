@@ -209,7 +209,7 @@
                                                     {{ $res->client?->first_name ?? 'Inconnu' }} (Propriétaire)
                                                 @endif
                                             </td>
-                                            <td>{{ $res->total_price }} €</td>
+                                            <td>{{ $res->price }} €</td>
                                             <td>
                                                 <span class="badge 
                                                     @if($res->status === \App\Enums\ReservationStatus::Confirmed) bg-green-1-05 text-green-1
