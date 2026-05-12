@@ -20,11 +20,12 @@ class UpdateStudioAction
     /**
      * @param Studio $studio
      * @param StudioDTO $dto
-     * @return bool
+     * @return array
      */
-    public function executer(Studio $studio, StudioDTO $dto): bool
+    public function executer(Studio $studio, StudioDTO $dto): array
     {
         $donnees = $dto->enTableau();
+        $needsModeration = false;
 
         // Gérer le géocodage
         $adresseComplete = trim("{$dto->adresse}, {$dto->ville}, {$dto->code_postal}, {$dto->pays}");
@@ -60,8 +61,8 @@ class UpdateStudioAction
                 $imagesAAprouver
             ));
             
-            // On informe via la session qu'un admin doit valider
-            session()->flash('info', 'Vos nouvelles images ont été envoyées pour modération. Elles apparaîtront une fois validées par nos administrateurs.');
+            \Illuminate\Support\Facades\Log::info("Demande de modération d'images créée pour le studio {$studio->id}", ['images' => array_keys($imagesAAprouver)]);
+            $needsModeration = true;
         }
 
         // On ne met PAS à jour les colonnes imageX dans $donnees
@@ -69,7 +70,12 @@ class UpdateStudioAction
             unset($donnees[$imgKey]);
         }
 
-        return $studio->update($donnees);
+        $success = $studio->update($donnees);
+
+        return [
+            'success' => $success,
+            'needs_moderation' => $needsModeration
+        ];
     }
 }
 

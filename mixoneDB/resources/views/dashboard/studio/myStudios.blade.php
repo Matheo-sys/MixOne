@@ -49,7 +49,7 @@
                                         </td>
                                         <td data-label="Statut">
                                             @if($studio->is_verified)
-                                                <span class="badge bg-green-1-05 text-green-1">Publié</span>
+                                                <span class="badge bg-green-1-05 text-green-2">Publié</span>
                                             @else
                                                 <span class="badge bg-blue-1-05 text-blue-1">En attente</span>
                                             @endif

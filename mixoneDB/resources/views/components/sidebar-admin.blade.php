@@ -26,8 +26,12 @@
 
         <div class="sidebar__item">
             <div class="sidebar__button {{ request()->routeIs('admin.moderation.*') ? '-is-active' : '' }}">
-                <a href="{{route('admin.moderation.index')}}" class="d-flex items-center text-15 lh-1 fw-500">
-                    Modération Images
+                <a href="{{route('admin.moderation.index')}}" class="d-flex items-center justify-between text-15 lh-1 fw-500">
+                    <span>Modération Images</span>
+                    @php $pCount = \App\Models\StudioImageRequest::where('status', 'pending')->count(); @endphp
+                    @if($pCount > 0)
+                        <span class="size-20 flex-center bg-red-1 rounded-full text-10 text-white fw-600 ml-10" style="min-width: 20px;">{{ $pCount }}</span>
+                    @endif
                 </a>
             </div>
         </div>

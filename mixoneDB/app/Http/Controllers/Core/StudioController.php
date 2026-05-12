@@ -416,11 +416,17 @@ class StudioController extends Controller
         Gate::authorize('mettreAJour', $studio);
 
         try {
-            $this->actionMettreAJourStudio->executer($studio, $requete->versDTO());
-            if ($requete->ajax()) {
-                return response()->json(['status' => 'success', 'message' => 'Studio modifié avec succès !']);
+            $resultat = $this->actionMettreAJourStudio->executer($studio, $requete->versDTO());
+            
+            $message = 'Studio modifié avec succès !';
+            if ($resultat['needs_moderation']) {
+                $message = 'Vos informations ont été mises à jour. Vos nouvelles images ont été envoyées pour modération et apparaîtront après validation.';
             }
-            return redirect()->route('dashboard.studio.edit', $studio)->with('success', 'Studio modifié avec succès !');
+
+            if ($requete->ajax()) {
+                return response()->json(['status' => 'success', 'message' => $message]);
+            }
+            return redirect()->route('dashboard.studio.edit', $studio)->with('success', $message);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Erreur mise à jour studio', [
                 'studio_id' => $studio->id,

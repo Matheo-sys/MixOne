@@ -16,6 +16,7 @@
             <thead class="bg-light-2">
                 <tr>
                     <th>ID</th>
+                    <th>Image</th>
                     <th>Nom du Studio</th>
                     <th>Propriétaire</th>
                     <th>Ville</th>
@@ -28,6 +29,11 @@
                 @forelse($studios as $studio)
                 <tr>
                     <td>#{{ $studio->id }}</td>
+                    <td>
+                        <div class="size-40 rounded-4 overflow-hidden">
+                            <img src="{{ $studio->image1 ? storage_url($studio->image1) : asset('media/img/backgrounds/11.jpg') }}" alt="image" class="h-full w-full object-cover">
+                        </div>
+                    </td>
                     <td class="fw-500">{{ $studio->name }}</td>
                     <td>{{ $studio->proprietaire->first_name ?? 'Inconnu' }} {{ $studio->proprietaire->last_name ?? '' }}</td>
                     <td>{{ $studio->city }}</td>

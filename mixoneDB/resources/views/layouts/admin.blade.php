@@ -64,7 +64,7 @@
             <div class="dashboard__content bg-light-2">
                 
                 @if(session('success'))
-                    <div class="px-20 py-15 mb-20 bg-green-1-05 text-green-1 rounded-4 text-14">
+                    <div class="px-20 py-15 mb-20 bg-green-1-05 text-green-2 rounded-4 text-14">
                         {{ session('success') }}
                     </div>
                 @endif
