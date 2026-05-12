@@ -213,6 +213,12 @@
          * Masque (supprime visuellement) une conversation
          */
         async function hideConversation(contactId) {
+            const idToHide = isNaN(contactId) ? contactId : parseInt(contactId);
+            
+            // Optimistic UI : on cache tout de suite
+            hiddenContacts.push(idToHide);
+            renderConversations();
+
             try {
                 const res = await fetch(`/tableau-de-bord/message/masquer/${contactId}`, {
                     method: 'POST',
@@ -221,12 +227,17 @@
                         'X-CSRF-TOKEN': config.csrfToken
                     }
                 });
-                if (res.ok) {
-                    hiddenContacts.push(contactId);
+                
+                if (!res.ok) {
+                    // Rollback si erreur serveur
+                    hiddenContacts = hiddenContacts.filter(id => id !== idToHide);
                     renderConversations();
                 }
             } catch (error) {
                 console.error('Erreur masquage conversation :', error);
+                // Rollback si erreur réseau
+                hiddenContacts = hiddenContacts.filter(id => id !== idToHide);
+                renderConversations();
             }
         };
 

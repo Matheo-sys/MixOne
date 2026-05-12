@@ -25,6 +25,11 @@
     position: relative;
 }
 
+.js-hide-conv:hover {
+    color: #D13535 !important;
+    transform: scale(1.1);
+}
+
 .messaging-button:hover {
     transform: scale(1.05);
     background-color: #4361ee;

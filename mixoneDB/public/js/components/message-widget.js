@@ -294,12 +294,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     }
     function _hideConversation() {
       _hideConversation = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(contactId) {
-        var res;
+        var idToHide, res;
         return _regeneratorRuntime().wrap(function _callee6$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
-              _context6.prev = 0;
-              _context6.next = 3;
+              idToHide = isNaN(contactId) ? contactId : parseInt(contactId); // Optimistic UI : on cache tout de suite
+              hiddenContacts.push(idToHide);
+              renderConversations();
+              _context6.prev = 3;
+              _context6.next = 6;
               return fetch("/tableau-de-bord/message/masquer/".concat(contactId), {
                 method: 'POST',
                 headers: {
@@ -307,23 +310,31 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   'X-CSRF-TOKEN': config.csrfToken
                 }
               });
-            case 3:
+            case 6:
               res = _context6.sent;
-              if (res.ok) {
-                hiddenContacts.push(contactId);
+              if (!res.ok) {
+                // Rollback si erreur serveur
+                hiddenContacts = hiddenContacts.filter(function (id) {
+                  return id !== idToHide;
+                });
                 renderConversations();
               }
-              _context6.next = 10;
+              _context6.next = 15;
               break;
-            case 7:
-              _context6.prev = 7;
-              _context6.t0 = _context6["catch"](0);
-              console.error('Erreur masquage conversation :', _context6.t0);
             case 10:
+              _context6.prev = 10;
+              _context6.t0 = _context6["catch"](3);
+              console.error('Erreur masquage conversation :', _context6.t0);
+              // Rollback si erreur réseau
+              hiddenContacts = hiddenContacts.filter(function (id) {
+                return id !== idToHide;
+              });
+              renderConversations();
+            case 15:
             case "end":
               return _context6.stop();
           }
-        }, _callee6, null, [[0, 7]]);
+        }, _callee6, null, [[3, 10]]);
       }));
       return _hideConversation.apply(this, arguments);
     }
