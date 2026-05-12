@@ -128,7 +128,13 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var username = user.username ? "@".concat(user.username) : '';
       var badgeColor = user.profile === 'studio' ? '#3554D1' : '#10b981';
       var badgeText = user.profile === 'studio' ? 'Studio' : 'Artiste';
-      var badge = user.profile ? "<span style=\"background: ".concat(badgeColor, "; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 6px;\">").concat(badgeText, "</span>") : '';
+
+      // Priorité au badge Admin
+      if (user.is_admin) {
+        badgeColor = '#D13535';
+        badgeText = 'Admin';
+      }
+      var badge = "<span style=\"background: ".concat(badgeColor, "; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 6px;\">").concat(badgeText, "</span>");
       return {
         name: name,
         username: username,

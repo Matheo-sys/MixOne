@@ -85,7 +85,7 @@ class MessageController extends Controller
     {
         $messages = Message::where('sender_id', Auth::id())
             ->orWhere('receiver_id', Auth::id())
-            ->with(['sender:id,uuid,first_name,last_name,avatar,username,profile', 'receiver:id,uuid,first_name,last_name,avatar,username,profile'])
+            ->with(['sender:id,uuid,first_name,last_name,avatar,username,profile,is_admin', 'receiver:id,uuid,first_name,last_name,avatar,username,profile,is_admin'])
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -128,7 +128,7 @@ class MessageController extends Controller
                   ->orWhere('last_name', 'like', "%{$recherche}%");
             })
             ->limit(10)
-            ->get(['id', 'uuid', 'first_name', 'last_name', 'avatar', 'username', 'profile']);
+            ->get(['id', 'uuid', 'first_name', 'last_name', 'avatar', 'username', 'profile', 'is_admin']);
 
         return response()->json($utilisateurs);
     }

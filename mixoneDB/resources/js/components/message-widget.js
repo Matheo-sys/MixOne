@@ -104,9 +104,17 @@
         function formatUserDisplay(user) {
             const name = `${user.first_name} ${user.last_name}`;
             const username = user.username ? `@${user.username}` : '';
-            const badgeColor = user.profile === 'studio' ? '#3554D1' : '#10b981';
-            const badgeText = user.profile === 'studio' ? 'Studio' : 'Artiste';
-            const badge = user.profile ? `<span style="background: ${badgeColor}; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 6px;">${badgeText}</span>` : '';
+            
+            let badgeColor = user.profile === 'studio' ? '#3554D1' : '#10b981';
+            let badgeText = user.profile === 'studio' ? 'Studio' : 'Artiste';
+
+            // Priorité au badge Admin
+            if (user.is_admin) {
+                badgeColor = '#D13535';
+                badgeText = 'Admin';
+            }
+
+            const badge = `<span style="background: ${badgeColor}; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 6px;">${badgeText}</span>`;
             return { name, username, badge };
         }
 
