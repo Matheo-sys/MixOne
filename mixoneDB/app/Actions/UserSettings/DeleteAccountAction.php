@@ -32,15 +32,18 @@ class DeleteAccountAction
         $utilisateur->city          = null;
         $utilisateur->state         = null;
         $utilisateur->zipcode       = null;
-        $utilisateur->bank_name     = null;
-        $utilisateur->iban          = null;
-        $utilisateur->bic           = null;
-        $utilisateur->password      = bcrypt(str()->random(40)); // Verrouille le compte
+        
+        // Sécuriser l'accès aux colonnes bancaires (au cas où elles n'existeraient pas ou poseraient problème)
+        if (isset($utilisateur->bank_name)) $utilisateur->bank_name = null;
+        if (isset($utilisateur->iban)) $utilisateur->iban = null;
+        if (isset($utilisateur->bic)) $utilisateur->bic = null;
+        
+        $utilisateur->password      = bcrypt(\Illuminate\Support\Str::random(40)); // Verrouille le compte
         $utilisateur->banned_at     = now(); // On utilise banned_at pour empêcher toute connexion future
         $utilisateur->save();
 
         // 3. Désactiver ses studios s'il en a (on les cache mais on garde la data pour les factures)
-        Studio::where('user_id', $utilisateur->id)->update(['is_verified' => false]);
+        \App\Models\Studio::where('user_id', $utilisateur->id)->update(['is_verified' => false]);
     }
 }
 

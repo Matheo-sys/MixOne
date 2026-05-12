@@ -115,12 +115,21 @@ class UserSettingsController extends Controller
      */
     public function supprimer(): RedirectResponse
     {
-        $utilisateur = Auth::user();
-        $this->actionSuppressionCompte->executer($utilisateur);
+        try {
+            $utilisateur = Auth::user();
+            $this->actionSuppressionCompte->executer($utilisateur);
 
-        Auth::logout();
+            Auth::logout();
 
-        return redirect()->route('home')->with('success', 'Votre compte a été supprimé avec succès.');
+            return redirect()->route('home')->with('success', 'Votre compte a été supprimé avec succès.');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Erreur suppression compte', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()->back()->with('error', 'Une erreur est survenue lors de la suppression de votre compte. Veuillez contacter l\'assistance.');
+        }
     }
 
     /**
