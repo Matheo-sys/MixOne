@@ -57,6 +57,13 @@
 {{-- @include('components.headerDB') --}}
 
 <main>
+    <div class="dashboard__header d-none md:d-flex items-center justify-between px-20 py-15 bg-white border-bottom-light">
+        <div class="fw-600 text-18 text-dark-1">MixOne Admin</div>
+        <button class="d-flex items-center text-dark-1" data-x-click="dashboard">
+            <i class="icon-menu text-20"></i>
+        </button>
+    </div>
+
     <div class="dashboard pt-30" data-x="dashboard" data-x-toggle="-is-sidebar-open">
         @include('components.sidebar-admin')
 

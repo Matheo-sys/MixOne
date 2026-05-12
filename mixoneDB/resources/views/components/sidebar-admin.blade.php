@@ -73,6 +73,12 @@
                     <i class="icon-home text-16 mr-10"></i> Dashboard Studio
                 </a>
             </div>
+
+            <div class="sidebar__button mt-10">
+                <a href="{{ route('home') }}" class="d-flex items-center text-15 lh-1 fw-500" style="color: #05a011;">
+                    <i class="icon-arrow-left text-16 mr-10"></i> Retour au Site Public
+                </a>
+            </div>
         </div>
         <div class="sidebar__item mt-10 border-top-light pt-10">
             <a href="/"

@@ -8,18 +8,28 @@
         <h1 class="text-30 lh-14 fw-600">Administration MixOne</h1>
         <div class="text-15 text-light-1">Cockpit de pilotage de la plateforme.</div>
     </div>
+    <div class="col-auto">
+        <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex items-center x-gap-10">
+            <label class="text-14 fw-500">Période :</label>
+            <select name="period" onchange="this.form.submit()" class="form-select border-light rounded-4 px-15 py-10">
+                <option value="7" {{ $period == '7' ? 'selected' : '' }}>7 derniers jours</option>
+                <option value="30" {{ $period == '30' ? 'selected' : '' }}>30 derniers jours</option>
+                <option value="all" {{ $period == 'all' ? 'selected' : '' }}>Depuis toujours</option>
+            </select>
+        </form>
+    </div>
 </div>
 
-{{-- SECTION 1 : KPIs PERFORMANCES (30 JOURS) --}}
-<h2 class="text-18 fw-500 mb-20">Performances (30 derniers jours)</h2>
+{{-- SECTION 1 : KPIs PERFORMANCES --}}
+<h2 class="text-18 fw-500 mb-20">Performances ({{ $periodLabel }})</h2>
 <div class="row y-gap-30 mb-40">
     <!-- Volume d'affaires -->
     <div class="col-xl-3 col-md-6">
         <div class="py-30 px-30 rounded-4 bg-white shadow-3">
             <div class="row y-gap-20 justify-between items-center flex-nowrap">
                 <div class="col-auto">
-                    <div class="fw-500 text-light-1">Volume Mensuel</div>
-                    <div class="text-30 fw-600 mt-5">{{ number_format($volume30Jours, 2) }} €</div>
+                    <div class="fw-500 text-light-1">Volume Généré</div>
+                    <div class="text-30 fw-600 mt-5">{{ number_format($volumePeriode, 2) }} €</div>
                     <div class="text-13 text-light-1 mt-5">Total historique: {{ number_format($volumeTotal, 2) }} €</div>
                 </div>
                 <div class="col-auto">
@@ -37,7 +47,7 @@
             <div class="row y-gap-20 justify-between items-center flex-nowrap">
                 <div class="col-auto">
                     <div class="fw-500 text-light-1">Commissions (Gains)</div>
-                    <div class="text-30 fw-600 mt-5" style="color: #05a011 !important;">{{ number_format($commission30Jours, 2) }} €</div>
+                    <div class="text-30 fw-600 mt-5" style="color: #05a011 !important;">{{ number_format($commissionPeriode, 2) }} €</div>
                     <div class="text-13 text-light-1 mt-5">Total historique: {{ number_format($commissionTotale, 2) }} €</div>
                 </div>
                 <div class="col-auto">
@@ -54,8 +64,8 @@
         <div class="py-30 px-30 rounded-4 bg-white shadow-3">
             <div class="row y-gap-20 justify-between items-center flex-nowrap">
                 <div class="col-auto">
-                    <div class="fw-500 text-light-1">Croissance Utilisateurs</div>
-                    <div class="text-30 fw-600 mt-5">+{{ $nouveauxUtilisateurs30j }}</div>
+                    <div class="fw-500 text-light-1">Nouveaux Inscrits</div>
+                    <div class="text-30 fw-600 mt-5">+{{ $nouveauxUtilisateursPeriode }}</div>
                     <div class="text-13 text-light-1 mt-5">Sur un total de {{ $totalUtilisateurs }} inscrits</div>
                 </div>
                 <div class="col-auto">
@@ -73,7 +83,7 @@
             <div class="row y-gap-20 justify-between items-center flex-nowrap">
                 <div class="col-auto">
                     <div class="fw-500 text-light-1">Nouvelles Réservations</div>
-                    <div class="text-30 fw-600 mt-5">{{ $reservations30j }}</div>
+                    <div class="text-30 fw-600 mt-5">{{ $reservationsPeriode }}</div>
                     <div class="text-13 text-light-1 mt-5">Total: {{ $reservationsTotales }} sessions</div>
                 </div>
                 <div class="col-auto">

@@ -14,6 +14,48 @@
     <div class="tabs -underline-2 js-tabs">
         <div class="tabs__content pt-30 js-tabs-content">
             <div class="tabs__pane -tab-item-1 is-tab-el-active">
+                
+                {{-- Barre de filtres --}}
+                <div class="row y-gap-20 items-center justify-between pb-30">
+                    <div class="col-12">
+                        <form action="{{ route('admin.users.index') }}" method="GET" class="row y-gap-20 items-end">
+                            <div class="col-auto">
+                                <div class="text-14 fw-500 mb-5">Recherche</div>
+                                <input type="text" name="search" value="{{ request('search') }}" placeholder="Nom, Email, Username..." class="border-light rounded-4 px-15 py-10">
+                            </div>
+                            
+                            <div class="col-auto">
+                                <div class="text-14 fw-500 mb-5">Profil</div>
+                                <select name="profile" class="form-select border-light rounded-4 px-15 py-10">
+                                    <option value="">Tous les profils</option>
+                                    <option value="artist" {{ request('profile') == 'artist' ? 'selected' : '' }}>Artiste</option>
+                                    <option value="studio" {{ request('profile') == 'studio' ? 'selected' : '' }}>Studio</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-auto">
+                                <div class="text-14 fw-500 mb-5">Statut</div>
+                                <select name="status" class="form-select border-light rounded-4 px-15 py-10">
+                                    <option value="">Tous les statuts</option>
+                                    <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>Vérifié</option>
+                                    <option value="unverified" {{ request('status') == 'unverified' ? 'selected' : '' }}>Non vérifié</option>
+                                    <option value="banned" {{ request('status') == 'banned' ? 'selected' : '' }}>Banni</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-auto">
+                                <button type="submit" class="button -md -blue-1 text-white px-20">Filtrer</button>
+                            </div>
+                            
+                            @if(request()->anyFilled(['search', 'profile', 'status']))
+                            <div class="col-auto">
+                                <a href="{{ route('admin.users.index') }}" class="button -md -light-1 text-dark-1 px-20">Réinitialiser</a>
+                            </div>
+                            @endif
+                        </form>
+                    </div>
+                </div>
+
                 <div class="overflow-scroll scroll-bar-1">
                     <table class="table-3 -border-bottom col-12">
                         <thead class="bg-light-2">

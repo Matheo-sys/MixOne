@@ -13,9 +13,40 @@ class UserController extends Controller
     /**
      * Liste des utilisateurs.
      */
-    public function liste(): View
+    public function liste(Request $request): View
     {
-        $utilisateurs = User::orderBy('created_at', 'desc')->paginate(20);
+        $query = User::query();
+
+        // Filtre Recherche
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('username', 'like', "%{$search}%");
+            });
+        }
+
+        // Filtre Profil
+        if ($request->filled('profile') && in_array($request->profile, ['artist', 'studio'])) {
+            $query->where('profile', $request->profile);
+        }
+
+        // Filtre Statut
+        if ($request->filled('status')) {
+            if ($request->status === 'banned') {
+                $query->whereNotNull('banned_at');
+            } elseif ($request->status === 'verified') {
+                $query->whereNotNull('email_verified_at')->whereNull('banned_at');
+            } elseif ($request->status === 'unverified') {
+                $query->whereNull('email_verified_at');
+            }
+        }
+
+        // Toujours garder les filtres pendant la pagination
+        $utilisateurs = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+
         return view('admin.users.index', ['users' => $utilisateurs]);
     }
 
