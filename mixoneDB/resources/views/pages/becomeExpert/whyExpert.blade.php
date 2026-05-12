@@ -15,8 +15,8 @@
     <div class="container">
         <div class="row">
             <div class="col-xl-4 col-md-7">
-                <h2 class="text-30 fw-600">Pourquoi devenir un studio Confirmé</h2>
-                <p class="mt-5">Vos studios ont beaucoup à offrir, faites le découvrir au monde entier et faites résonner votre talent GRATUITEMENT.</p>
+                <h2 class="text-30 fw-600">Pourquoi rejoindre MixOne ?</h2>
+                <p class="mt-5">Offrez à votre studio la visibilité qu'il mérite et rejoignez la première plateforme de réservation de studios en France.</p>
 
                 <div class="row y-gap-30 pt-60 md:pt-40">
 
@@ -25,8 +25,8 @@
                             <img class="size-50" src={{asset("media/img/featureIcons/1/1.svg")}} alt="image">
 
                             <div class="ml-15">
-                                <h4 class="text-18 fw-500">Meilleur prix garanti</h4>
-                                <p class="text-15 mt-10">Proposez vos services studios au meilleur prix, le vôtre.</p>
+                                <h4 class="text-18 fw-500">Liberté totale sur vos tarifs</h4>
+                                <p class="text-15 mt-10">Vous restez maître de vos prix. Proposez vos services selon votre propre grille tarifaire, sans contrainte.</p>
                             </div>
                         </div>
                     </div>
@@ -36,8 +36,8 @@
                             <img class="size-50" src={{asset("media/img/featureIcons/1/2.svg")}} alt="image">
 
                             <div class="ml-15">
-                                <h4 class="text-18 fw-500">Réservation facile et rapide</h4>
-                                <p class="text-15 mt-10">Facilitez la reservation de vos clients et gérez simplement vos sessions.</p>
+                                <h4 class="text-18 fw-500">Gestion simplifiée de l'agenda</h4>
+                                <p class="text-15 mt-10">Recevez des demandes claires, acceptez-les en un clic et gérez vos sessions depuis votre tableau de bord dédié.</p>
                             </div>
                         </div>
                     </div>
@@ -47,8 +47,8 @@
                             <img class="size-50" src={{asset("media/img/featureIcons/1/3.svg")}} alt="image">
 
                             <div class="ml-15">
-                                <h4 class="text-18 fw-500">Service client 24/7</h4>
-                                <p class="text-15 mt-10">Une équipe disponible à tout moment pour répondre à vos questions et vous accompagnez dans votre développement.</p>
+                                <h4 class="text-18 fw-500">Paiements sécurisés</h4>
+                                <p class="text-15 mt-10">Grâce à Stripe Connect, vos revenus sont garantis. Plus besoin de courir après les règlements, tout est automatisé.</p>
                             </div>
                         </div>
                     </div>

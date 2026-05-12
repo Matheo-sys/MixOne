@@ -217,6 +217,7 @@ class StudioController extends Controller
                 ->withInput()
                 ->with('active_tab', '2')
                 ->withErrors(['studio_error' => $msg]);
+        }
     }
 
     /**

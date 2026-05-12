@@ -4,18 +4,30 @@
 @section('meta_description', 'Réservez votre session au studio ' . $studio->name . ' à ' . $studio->city . '. Tarif : ' . $studio->hourly_rate . '€/h. Équipements professionnels et confort garantis.')
 
 @section('structured_data')
+@php
+    $jsonName = addslashes($studio->name);
+    $jsonDesc = addslashes(\Illuminate\Support\Str::limit($studio->description ?? 'Studio professionnel de musique disponible à la réservation sur MixOne.', 200));
+    $jsonAddress = addslashes($studio->address ?? '');
+    $jsonCity = addslashes($studio->city ?? '');
+    $jsonZipcode = $studio->zipcode ?? '';
+    $jsonImages = array_filter([
+        $studio->image1 ? storage_url($studio->image1) : null,
+        $studio->image2 ? storage_url($studio->image2) : null,
+        $studio->image3 ? storage_url($studio->image3) : null,
+    ]);
+@endphp
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "MusicVenue",
-  "name": "{{ e($studio->name) }}",
-  "description": "{{ e(Str::limit($studio->description ?? 'Studio professionnel de musique disponible à la réservation sur MixOne.', 200)) }}",
+  "name": "{{ $jsonName }}",
+  "description": "{{ $jsonDesc }}",
   "url": "{{ url()->current() }}",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "{{ e($studio->address) }}",
-    "addressLocality": "{{ e($studio->city) }}",
-    "postalCode": "{{ e($studio->zipcode) }}",
+    "streetAddress": "{{ $jsonAddress }}",
+    "addressLocality": "{{ $jsonCity }}",
+    "postalCode": "{{ $jsonZipcode }}",
     "addressCountry": "FR"
   },
   "geo": {
@@ -26,11 +38,7 @@
   "priceRange": "À partir de {{ $studio->hourly_rate }}€/h",
   "currenciesAccepted": "EUR",
   "paymentAccepted": "Carte bancaire",
-  "image": [
-    @if($studio->image1)"{{ storage_url($studio->image1) }}"@endif
-    @if($studio->image2), "{{ storage_url($studio->image2) }}"@endif
-    @if($studio->image3), "{{ storage_url($studio->image3) }}"@endif
-  ]
+  "image": {!! json_encode(array_values($jsonImages)) !!}
   @if($studio->nombre_avis > 0)
   ,"aggregateRating": {
     "@type": "AggregateRating",
@@ -64,7 +72,7 @@
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "{{ e($studio->name) }}",
+      "name": "{{ $jsonName }}",
       "item": "{{ url()->current() }}"
     }
   ]

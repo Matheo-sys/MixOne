@@ -9,11 +9,11 @@
                     Deviens Partenaire
                 </div>
                 <h1 class="text-50 md:text-35 fw-700 text-white mb-20 lh-12">
-                    Faisons résonner l'excellence <br><span class="text-blue-1">de ton Studio</span>
+                    Propulsez l'activité <br><span class="text-blue-1">de votre Studio</span>
                 </h1>
                 
                 <p class="text-white text-18 md:text-16 opacity-80 max-w-600 mx-auto">
-                    Faisons découvrir ton studio à la plus grande communauté d'artistes au meilleur prix.
+                    Rejoignez la plus grande communauté d'artistes en quête d'excellence. Automatisez vos réservations et concentrez-vous sur l'essentiel : la création.
                 </p>
 
                 <div class="d-inline-block mt-40 md:mt-30">

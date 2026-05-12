@@ -21,12 +21,12 @@
                                     <i class="icon-minus"></i>
                                 </div>
 
-                                <div class="button text-dark-1">What do I need to hire a car?</div>
+                                <div class="button text-dark-1">Combien coûte l'inscription de mon studio ?</div>
                             </div>
 
                             <div class="accordion__content">
                                 <div class="pt-20 pl-60">
-                                    <p class="text-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                                    <p class="text-15">L'inscription sur MixOne est entièrement gratuite. Vous ne payez aucun frais d'abonnement ou de mise en ligne. Nous prélevons une commission uniquement lorsqu'une réservation est confirmée et payée par un artiste.</p>
                                 </div>
                             </div>
                         </div>
@@ -40,12 +40,12 @@
                                     <i class="icon-minus"></i>
                                 </div>
 
-                                <div class="button text-dark-1">How old do I have to be to rent a car?</div>
+                                <div class="button text-dark-1">Comment sont gérés les paiements ?</div>
                             </div>
 
                             <div class="accordion__content">
                                 <div class="pt-20 pl-60">
-                                    <p class="text-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                                    <p class="text-15">Nous utilisons Stripe Connect pour garantir la sécurité des transactions. L'artiste paie lors de la réservation, et les fonds sont automatiquement transférés vers votre compte bancaire après la session, une fois que tout est confirmé.</p>
                                 </div>
                             </div>
                         </div>
@@ -59,12 +59,12 @@
                                     <i class="icon-minus"></i>
                                 </div>
 
-                                <div class="button text-dark-1">Can I book a hire car for someone else?</div>
+                                <div class="button text-dark-1">Puis-je refuser une demande de réservation ?</div>
                             </div>
 
                             <div class="accordion__content">
                                 <div class="pt-20 pl-60">
-                                    <p class="text-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                                    <p class="text-15">Bien sûr ! Vous gardez le contrôle total sur votre agenda. Lorsqu'un artiste fait une demande, vous avez la possibilité de l'accepter ou de la refuser selon vos disponibilités et vos critères.</p>
                                 </div>
                             </div>
                         </div>
@@ -78,12 +78,12 @@
                                     <i class="icon-minus"></i>
                                 </div>
 
-                                <div class="button text-dark-1">How do I find the cheapest car hire deal?</div>
+                                <div class="button text-dark-1">Quelle est la commission de MixOne ?</div>
                             </div>
 
                             <div class="accordion__content">
                                 <div class="pt-20 pl-60">
-                                    <p class="text-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                                    <p class="text-15">MixOne prélève une commission de 15% sur chaque réservation. Cela nous permet de maintenir la plateforme, d'assurer le marketing pour vous apporter de nouveaux clients et de garantir la sécurité des paiements.</p>
                                 </div>
                             </div>
                         </div>
@@ -97,12 +97,12 @@
                                     <i class="icon-minus"></i>
                                 </div>
 
-                                <div class="button text-dark-1">What should I look for when I&#39;m choosing a car?</div>
+                                <div class="button text-dark-1">Dois-je être présent lors de la session ?</div>
                             </div>
 
                             <div class="accordion__content">
                                 <div class="pt-20 pl-60">
-                                    <p class="text-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                                    <p class="text-15">C'est vous qui décidez de vos règles. Certains studios proposent des sessions avec ingénieur du son inclus, d'autres louent uniquement l'espace. Vous précisez ces détails dans la description de votre fiche studio.</p>
                                 </div>
                             </div>
                         </div>
