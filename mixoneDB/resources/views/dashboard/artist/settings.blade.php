@@ -176,9 +176,9 @@
 
                         {{-- Suppression du compte --}}
                         <div class="bg-red-3 rounded-4 px-30 py-30">
-                            <h4 class="text-18 fw-500 text-red-2">Anonymiser mon compte</h4>
+                            <h4 class="text-18 fw-500 text-red-2">Supprimer / Anonymiser mon compte</h4>
                             <p class="text-15 text-red-2 mt-10">
-                                Si vous demandez la suppression de votre compte, toutes vos données personnelles (nom, email, téléphone, etc.) seront **définitivement anonymisées**. Vos studios seront désactivés. Cette action est irréversible et vous ne pourrez plus vous connecter à ce compte.
+                                En confirmant, votre compte sera **définitivement supprimé** de l'interface publique. Toutes vos données personnelles seront anonymisées pour respecter votre vie privée tout en conservant l'historique légal des transactions. Vous ne pourrez plus vous connecter et vos studios seront désactivés.
                             </p>
                             
                             <form action="{{ route('dashboard.settings.delete') }}" method="POST" class="mt-20" id="delete-account-form">

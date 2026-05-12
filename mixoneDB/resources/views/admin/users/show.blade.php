@@ -72,7 +72,7 @@
                                 <form action="{{ route('admin.users.ban', $user) }}" method="POST" id="ban-form-{{ $user->id }}">
                                     @csrf
                                     <input type="hidden" name="reason" value="" id="ban-reason-{{ $user->id }}">
-                                    <button type="button" class="button -md -red-1 text-white w-100" onclick="banUserSwal({{ $user->id }})">
+                                    <button type="button" class="button -md bg-red-1 text-white w-100" onclick="banUserSwal({{ $user->id }})">
                                         <i class="icon-close text-16 mr-10"></i> Bannir
                                     </button>
                                 </form>
@@ -245,8 +245,8 @@
                                             <td class="px-20">{{ $res->price }} €</td>
                                             <td class="px-20">
                                                 <span class="badge 
-                                                    @if($res->status === \App\Enums\ReservationStatus::Confirmed) bg-green-1-05 text-green-1
-                                                    @elseif($res->status === \App\Enums\ReservationStatus::Pending) bg-yellow-1-05 text-yellow-1
+                                                    @if($res->status === \App\Enums\ReservationStatus::Confirmed) bg-green-1-05 text-green-2
+                                                    @elseif($res->status === \App\Enums\ReservationStatus::Pending) bg-yellow-1-05 text-yellow-2
                                                     @else bg-red-1-05 text-red-1 @endif">
                                                     {{ $res->status->label() }}
                                                 </span>
@@ -294,12 +294,12 @@
                                             <tr>
                                                 <td class="px-20">{{ $trans->created_at->format('d/m/Y H:i') }}</td>
                                                 <td class="px-20">
-                                                    <span class="badge {{ $trans->type == 'credit' ? 'bg-green-1-05 text-green-1' : 'bg-red-1-05 text-red-1' }}">
+                                                    <span class="badge {{ $trans->type == 'credit' ? 'bg-green-1-05 text-green-2' : 'bg-red-1-05 text-red-1' }}">
                                                         {{ $trans->type == 'credit' ? 'Crédit' : 'Débit' }}
                                                     </span>
                                                 </td>
                                                 <td class="px-20">{{ $trans->description }}</td>
-                                                <td class="px-20 fw-500 {{ $trans->type == 'credit' ? 'text-green-1' : 'text-red-1' }}">
+                                                <td class="px-20 fw-500 {{ $trans->type == 'credit' ? 'text-green-2' : 'text-red-1' }}">
                                                     {{ $trans->type == 'credit' ? '+' : '-' }}{{ $trans->amount }} €
                                                 </td>
                                             </tr>
@@ -349,7 +349,7 @@
                                                     <td class="px-20">{{ $r->created_at->format('d/m/Y') }}</td>
                                                     <td class="px-20">{{ $r->reporter->first_name }}</td>
                                                     <td class="px-20">{{ $r->reason }}</td>
-                                                    <td class="px-20"><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1-05 text-yellow-1' : 'bg-green-1-05 text-green-1' }}">{{ $r->status }}</span></td>
+                                                    <td class="px-20"><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1-05 text-yellow-2' : 'bg-green-1-05 text-green-2' }}">{{ $r->status }}</span></td>
                                                     <td class="px-20"><a href="{{ route('admin.reports.show', $r) }}" class="text-blue-1">Voir</a></td>
                                                 </tr>
                                             @empty
@@ -386,7 +386,7 @@
                                                     <td>{{ $r->created_at->format('d/m/Y') }}</td>
                                                     <td>{{ $r->reported->first_name }}</td>
                                                     <td>{{ $r->reason }}</td>
-                                                    <td><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1-05 text-yellow-1' : 'bg-green-1-05 text-green-1' }}">{{ $r->status }}</span></td>
+                                                    <td><span class="badge {{ $r->status == 'pending' ? 'bg-yellow-1-05 text-yellow-2' : 'bg-green-1-05 text-green-2' }}">{{ $r->status }}</span></td>
                                                     <td><a href="{{ route('admin.reports.show', $r) }}" class="text-blue-1">Voir</a></td>
                                                 </tr>
                                             @empty
@@ -458,7 +458,7 @@
                                     <tr>
                                         <td class="px-20">{{ $p->created_at->format('d/m/Y') }}</td>
                                         <td class="px-20">{{ $p->amount }}€</td>
-                                        <td class="px-20"><span class="badge {{ $p->status == 'pending' ? 'bg-yellow-1-05 text-yellow-1' : 'bg-green-1-05 text-green-1' }}">{{ $p->status }}</span></td>
+                                        <td class="px-20"><span class="badge {{ $p->status == 'pending' ? 'bg-yellow-1-05 text-yellow-2' : 'bg-green-1-05 text-green-2' }}">{{ $p->status }}</span></td>
                                     </tr>
                                 @empty
                                     <tr>

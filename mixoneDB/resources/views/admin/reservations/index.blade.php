@@ -88,9 +88,9 @@
                         @php
                             $status = $reservation->status;
                             $badgeClass = match($status) {
-                                \App\Enums\ReservationStatus::Pending   => 'bg-yellow-4 text-yellow-3',
+                                \App\Enums\ReservationStatus::Pending   => 'bg-yellow-1-05 text-yellow-2',
                                 \App\Enums\ReservationStatus::Confirmed => 'bg-blue-1-05 text-blue-1',
-                                \App\Enums\ReservationStatus::Completed => 'bg-green-1-05 text-green-1',
+                                \App\Enums\ReservationStatus::Completed => 'bg-green-1-05 text-green-2',
                                 \App\Enums\ReservationStatus::Disputed  => 'bg-red-1-05 text-red-1',
                                 \App\Enums\ReservationStatus::Cancelled, \App\Enums\ReservationStatus::Refused => 'bg-light-2 text-light-1',
                                 default => 'bg-light-2 text-dark-1',

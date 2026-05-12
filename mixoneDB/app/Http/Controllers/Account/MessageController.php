@@ -140,6 +140,7 @@ class MessageController extends Controller
         $rechercheUsername = ltrim($recherche, '@');
 
         $utilisateurs = User::where('id', '!=', Auth::id())
+            ->whereNull('banned_at') // Exclure les utilisateurs bannis ou anonymisés
             ->where(function($q) use ($recherche, $rechercheUsername) {
                 $q->where('username', 'like', "%{$rechercheUsername}%")
                   ->orWhere('first_name', 'like', "%{$recherche}%")
