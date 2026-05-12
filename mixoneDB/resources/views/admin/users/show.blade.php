@@ -201,12 +201,12 @@
                                     @forelse($allReservations as $res)
                                         <tr>
                                             <td>{{ $res->date->format('d/m/Y') }} à {{ $res->time_slot }}</td>
-                                            <td>{{ $res->studio->name }}</td>
+                                            <td>{{ $res->studio?->name ?? 'Studio supprimé' }}</td>
                                             <td>
                                                 @if($res->user_id === $user->id)
                                                     <span class="text-blue-1">Moi (Client)</span>
                                                 @else
-                                                    {{ $res->user->first_name }} (Propriétaire)
+                                                    {{ $res->user?->first_name ?? 'Inconnu' }} (Propriétaire)
                                                 @endif
                                             </td>
                                             <td>{{ $res->total_price }} €</td>
@@ -236,7 +236,7 @@
                         <div class="d-flex justify-between items-center mb-30">
                             <div>
                                 <div class="text-15 text-light-1">Solde actuel</div>
-                                <div class="text-22 fw-600 text-blue-1">{{ number_format($user->portefeuille->solde ?? 0, 2) }} €</div>
+                                <div class="text-22 fw-600 text-blue-1">{{ number_format($user->portefeuille?->solde ?? 0, 2) }} €</div>
                             </div>
                         </div>
 
