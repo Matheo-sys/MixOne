@@ -22,18 +22,22 @@ class UserController extends Controller
     /**
      * Détails d'un utilisateur.
      */
-    public function afficher(User $user): View
+    public function afficher(User $user)
     {
-        $user->load([
-            'studios', 
-            'reservations.studio', 
-            'reservationsRecues.client',
-            'portefeuille.transactions' => function($query) {
-                $query->orderBy('created_at', 'desc')->limit(10);
-            }
-        ]);
+        try {
+            $user->load([
+                'studios', 
+                'reservations.studio', 
+                'reservationsRecues.client',
+                'portefeuille.transactions' => function($query) {
+                    $query->orderBy('created_at', 'desc')->limit(10);
+                }
+            ]);
 
-        return view('admin.users.show', ['user' => $user]);
+            return view('admin.users.show', ['user' => $user]);
+        } catch (\Throwable $e) {
+            return "Erreur fatale : " . $e->getMessage() . " | Fichier : " . $e->getFile() . " | Ligne : " . $e->getLine();
+        }
     }
 
     /**
