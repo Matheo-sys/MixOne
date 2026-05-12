@@ -58,9 +58,12 @@ class UserController extends Controller
     /**
      * Bannir un utilisateur.
      */
-    public function bannir(User $user): RedirectResponse
+    public function bannir(User $user, Request $request): RedirectResponse
     {
-        $user->update(['banned_at' => now()]);
+        $user->update([
+            'banned_at' => now(),
+            'ban_reason' => $request->input('reason', 'Violation des conditions d\'utilisation.')
+        ]);
         return back()->with('success', 'Utilisateur banni avec succès.');
     }
 
@@ -69,7 +72,10 @@ class UserController extends Controller
      */
     public function debannir(User $user): RedirectResponse
     {
-        $user->update(['banned_at' => null]);
+        $user->update([
+            'banned_at' => null,
+            'ban_reason' => null
+        ]);
         return back()->with('success', 'Utilisateur débanni avec succès.');
     }
 

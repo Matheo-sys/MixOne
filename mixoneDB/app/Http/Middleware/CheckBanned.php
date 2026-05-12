@@ -20,12 +20,13 @@ class CheckBanned
     {
         if (Auth::check() && Auth::user()->banned_at) {
             $user = Auth::user();
+            $reason = $user->ban_reason ?: 'Violation des conditions d\'utilisation.';
             Auth::logout();
 
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('login')->with('error', 'Votre compte a été banni. Veuillez contacter l\'assistance pour plus d\'informations.');
+            return redirect()->route('login')->with('error', 'Votre compte a été banni pour la raison suivante : ' . $reason);
         }
 
         return $next($request);

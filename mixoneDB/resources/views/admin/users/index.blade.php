@@ -67,8 +67,9 @@
                                                 <button type="submit" class="px-15 py-5 text-white rounded-4 text-14 fw-500" style="background-color: #05a011 !important;">Débannir</button>
                                             </form>
                                         @else
-                                            <form action="{{ route('admin.users.ban', $user) }}" method="POST" onsubmit="return confirm('Bannir cet utilisateur ?');">
+                                            <form action="{{ route('admin.users.ban', $user) }}" method="POST" onsubmit="let reason = prompt('Raison du bannissement :', 'Violation des conditions d\'utilisation.'); if(reason === null) return false; this.querySelector('input[name=reason]').value = reason; return true;">
                                                 @csrf
+                                                <input type="hidden" name="reason" value="">
                                                 <button type="submit" class="px-15 py-5 bg-red-1 text-white rounded-4 text-14 fw-500">Bannir</button>
                                             </form>
                                         @endif

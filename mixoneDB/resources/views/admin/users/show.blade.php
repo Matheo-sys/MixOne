@@ -72,8 +72,9 @@
                                     </button>
                                 </form>
                             @else
-                                <form action="{{ route('admin.users.ban', $user) }}" method="POST" onsubmit="return confirm('Bannir cet utilisateur ?');">
+                                <form action="{{ route('admin.users.ban', $user) }}" method="POST" onsubmit="let reason = prompt('Raison du bannissement :', 'Violation des conditions d\'utilisation.'); if(reason === null) return false; this.querySelector('input[name=reason]').value = reason; return true;">
                                     @csrf
+                                    <input type="hidden" name="reason" value="">
                                     <button type="submit" class="button -md -red-1 text-white w-100">
                                         <i class="icon-close text-16 mr-10"></i> Bannir
                                     </button>
